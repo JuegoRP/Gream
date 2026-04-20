@@ -1,0 +1,64 @@
+<div class="bc-header max-w">
+  <button class="btn-back" onclick="App.goTo('map')">‹</button>
+  <div style="font-size:20px;font-weight:900;color:var(--green-dark);flex:1" id="bc-title"></div>
+  <button class="btn-ghost" onclick="App.goTo('stats')">📊</button>
+</div>
+
+<!-- Streak badges -->
+<div class="streak-section card-sm" style="margin-bottom:14px">
+  <div class="streak-title" id="streak-title"></div>
+  <div class="streak-row"   id="streakRow"></div>
+</div>
+
+<!-- World evolving badges -->
+<div class="card-sm max-w" style="margin-bottom:8px">
+  <div class="section-title" id="world-badges-title"
+    style="font-size:11px;font-weight:800;color:var(--green-mid);text-transform:uppercase;letter-spacing:.7px;margin-bottom:14px">
+  </div>
+  <div id="worldBadgeGrid"
+    style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;justify-items:center">
+  </div>
+</div>
+
+<!-- Badge level legend -->
+<div class="card-sm max-w" style="margin-bottom:20px">
+  <div class="section-title" id="legend-title"
+    style="font-size:11px;font-weight:800;color:var(--green-mid);text-transform:uppercase;letter-spacing:.7px;margin-bottom:12px">
+  </div>
+  <div id="legendGrid"
+    style="display:flex;flex-direction:column;gap:7px">
+  </div>
+</div>
+
+<script>
+(function(){
+  const lang = localStorage.getItem('gream_lang')||'en';
+  const labels = lang==='cs'
+    ? {worlds:'Světové odznaky',legend:'Jak odznaky rostou',tasks:'úkolů'}
+    : {worlds:'World Badges',  legend:'How badges evolve',  tasks:'tasks'};
+  document.getElementById('world-badges-title').textContent = labels.worlds;
+  document.getElementById('legend-title').textContent       = labels.legend;
+
+  const thresholds = [0,10,20,30,40,50,100];
+  const lvlNames   = lang==='cs'
+    ? ['Zárodek','Výhonek','Průzkumník','Strážce','Mistr','Legenda','Mudrc']
+    : ['Seed','Sprout','Explorer','Keeper','Master','Legend','Sage'];
+  const grid = document.getElementById('legendGrid');
+  thresholds.forEach((t,i) => {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:center;gap:10px;font-size:12px';
+    const next = thresholds[i+1];
+    const range = next ? `${t}–${next-1}` : `${t}+`;
+    row.innerHTML = `
+      <div style="width:28px;height:28px;border-radius:50%;background:var(--badge-lvl-${i},#ccc);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0" class="badge-lvl-${i}">
+        ${['🌰','🌱','🌿','🌳','🦋','🌍','🧙'][i]}
+      </div>
+      <div style="flex:1">
+        <span style="font-weight:800;color:var(--green-dark)">${lvlNames[i]}</span>
+        <span style="color:var(--green-mid);margin-left:6px">${range} ${labels.tasks}</span>
+      </div>
+    `;
+    grid.appendChild(row);
+  });
+})();
+</script>

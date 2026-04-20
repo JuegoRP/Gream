@@ -1,0 +1,84 @@
+<div class="set-header max-w">
+  <button class="btn-back" onclick="App.goTo('profiles')">‹</button>
+  <div style="font-size:20px;font-weight:900;color:var(--green-dark);flex:1" id="set-title"></div>
+</div>
+
+<!-- Language -->
+<div class="card-section">
+  <div class="section-title" id="ss-lang-title"></div>
+  <div class="set-row">
+    <div class="set-row-label" id="ss-lang-lbl"></div>
+    <div class="lang-set">
+      <button class="lbtn" id="ssEN" onclick="App.setLangSetting('en')">EN</button>
+      <button class="lbtn" id="ssCZ" onclick="App.setLangSetting('cs')">CZ</button>
+    </div>
+  </div>
+</div>
+
+<!-- Profile -->
+<div class="card-section" id="ss-profile-sec" style="display:none">
+  <div class="section-title" id="ss-profile-title"></div>
+
+  <!-- Avatar + photo -->
+  <div class="set-row">
+    <div class="set-row-label" id="ss-avatar"></div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div id="ssAvatarPreview"
+        style="width:48px;height:48px;border-radius:50%;background:var(--green-pale);display:flex;align-items:center;justify-content:center;font-size:24px;overflow:hidden;cursor:pointer"
+        onclick="App.openPhotoUpload()">
+      </div>
+      <button class="btn-ghost" onclick="App.openPhotoUpload()" style="font-size:12px">📷</button>
+      <button class="btn-ghost" onclick="App.removePhoto()" style="font-size:12px">✕</button>
+    </div>
+  </div>
+
+  <!-- Name -->
+  <div class="set-row">
+    <div class="set-row-label" id="ss-name-label"></div>
+    <input id="ssNameInput" class="input-field"
+      style="width:140px;padding:8px 10px;font-size:14px;margin:0">
+  </div>
+
+  <!-- Age + theme -->
+  <div class="set-row">
+    <div class="set-row-label" id="ss-age-label"></div>
+    <div class="age-set" id="ssAgeRow"></div>
+  </div>
+  <div class="set-row" style="border-bottom:none;padding-top:4px">
+    <div style="font-size:11px;color:var(--color-text-tertiary)" id="ssThemePreview"></div>
+  </div>
+</div>
+
+<!-- Family -->
+<div class="card-section">
+  <div class="section-title" id="ss-family-title"></div>
+
+  <div class="set-row">
+    <div>
+      <div class="set-row-label" id="ss-family-code-lbl"></div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div class="family-code" style="padding:8px 14px">
+        <div class="family-code-num" id="ssFamilyCodeNum">——</div>
+      </div>
+      <button class="btn-ghost" onclick="App.generateFamilyCode()" style="font-size:12px">🔄</button>
+    </div>
+  </div>
+
+  <div class="set-row" style="flex-direction:column;align-items:flex-start;gap:8px">
+    <div class="set-row-label" id="ss-family-join"></div>
+    <div style="display:flex;gap:8px;width:100%">
+      <input id="joinCodeInput" class="input-field"
+        style="flex:1;padding:9px 12px;font-size:14px;margin:0"
+        placeholder="XXXXXX">
+      <button class="btn-ghost" onclick="App.joinFamily()"
+        id="ss-join-btn" style="white-space:nowrap;padding:9px 14px">→</button>
+    </div>
+  </div>
+</div>
+
+<!-- Data -->
+<div class="card-section">
+  <div class="section-title" id="ss-data-title"></div>
+  <button class="btn-danger" id="ss-reset-btn" onclick="App.resetAll()"></button>
+</div>

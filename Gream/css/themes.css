@@ -1,0 +1,296 @@
+/* ═══════════════════════════════════
+   GREAM — themes.css
+   Age-based UI themes
+   Applied via body.age-4-6 / .age-7-9 / .age-10-15 / .age-15plus
+   Default (no class) = age-7-9 behaviour
+═══════════════════════════════════ */
+
+/* ─── SHARED THEME TOKENS ─── */
+:root {
+  --theme-btn-h:        56px;
+  --theme-font-size:    16px;
+  --theme-tile-h:       115px;
+  --theme-radius:       var(--r-lg);
+  --theme-anim-speed:   0.25s;
+  --theme-bg-overlay:   rgba(255,255,255,0.93);
+  --theme-text-primary: var(--green-deep);
+  --theme-accent:       var(--green-mid);
+  --theme-card-bg:      rgba(255,255,255,0.93);
+}
+
+/* ════════════════════════════════
+   AGE 4–6  — Jumbo, illustrated, spoken
+════════════════════════════════ */
+body.age-4-6 {
+  --theme-btn-h:        72px;
+  --theme-font-size:    18px;
+  --theme-tile-h:       140px;
+  --theme-radius:       var(--r-xl);
+}
+
+/* Bigger everything */
+body.age-4-6 .btn-primary,
+body.age-4-6 .btn-action    { min-height: var(--theme-btn-h); font-size: 19px; border-radius: var(--r-xl); }
+body.age-4-6 .btn-back      { width: 52px; height: 52px; font-size: 24px; }
+body.age-4-6 .wtile         { min-height: var(--theme-tile-h); border-radius: var(--r-xl); }
+body.age-4-6 .wtile-icon    { font-size: 52px; top: 14px; right: 14px; }
+body.age-4-6 .wtile-name    { font-size: 17px; }
+body.age-4-6 .card          { border-radius: var(--r-xl); padding: 24px 20px; }
+body.age-4-6 .ch-text       { font-size: 20px; line-height: 1.55; }
+body.age-4-6 .ch-hint       { font-size: 15px; padding: 13px 15px; }
+body.age-4-6 .app-name      { font-size: 48px; }
+
+/* TTS button — prominent, always visible */
+body.age-4-6 .btn-tts {
+  width: 64px; height: 64px; font-size: 28px;
+  bottom: calc(var(--sab) + 100px); right: 16px;
+  box-shadow: 0 6px 20px rgba(245,166,35,0.55);
+}
+
+/* Fewer worlds visible at once — show 2x2 grid not 3x2 */
+body.age-4-6 .worlds-grid {
+  grid-template-columns: 1fr 1fr;
+}
+
+/* Bouncy tap feedback */
+body.age-4-6 .wtile:active { transform: scale(0.93); }
+body.age-4-6 .btn-primary:active,
+body.age-4-6 .btn-action:active { transform: scale(0.95); }
+
+/* Larger avatar on map */
+body.age-4-6 .map-av  { width: 52px; height: 52px; font-size: 26px; }
+body.age-4-6 .map-name { font-size: 20px; }
+
+/* Step labels larger */
+body.age-4-6 .bp-step-icon  { font-size: 22px; }
+body.age-4-6 .bp-step-label { font-size: 11px; }
+
+/* Badge ring bigger */
+body.age-4-6 .badge-ring { width: 170px; height: 170px; }
+body.age-4-6 .badge-ring .be { font-size: 70px; }
+
+/* Input bigger */
+body.age-4-6 .input-field { font-size: 18px; padding: 16px 18px; }
+body.age-4-6 .age-btn     { font-size: 15px; padding: 12px 18px; }
+
+/* ════════════════════════════════
+   AGE 7–9  — Default, playful, progression-visible
+   (This is the base theme — minimal overrides needed)
+════════════════════════════════ */
+body.age-7-9 {
+  /* Base styles apply — just a few tweaks */
+}
+body.age-7-9 .worlds-grid { grid-template-columns: 1fr 1fr 1fr; }
+body.age-7-9 .btn-tts { display: none !important; } /* TTS on-demand via tap only */
+
+/* ════════════════════════════════
+   AGE 10–15 — Cleaner, darker, no "kiddie" feel
+════════════════════════════════ */
+body.age-10-15 {
+  --theme-btn-h:        48px;
+  --theme-font-size:    15px;
+  --theme-anim-speed:   0.15s;
+  background: #1a1f1a;
+  color: #e8f0e0;
+}
+
+/* Dark background */
+body.age-10-15 .bg-nature {
+  background: linear-gradient(180deg, #1a2a1a 0%, #1a1f1a 100%);
+}
+body.age-10-15 .bg-nature::before { background: linear-gradient(180deg, transparent, #1e2e1e); }
+body.age-10-15 .sun { opacity: 0.4; }
+body.age-10-15 .cloud { opacity: 0.15; }
+body.age-10-15 .bf { opacity: 0.3; }
+body.age-10-15 .top { opacity: 0.5; }
+body.age-10-15 .trunk { opacity: 0.5; }
+
+/* Cards dark */
+body.age-10-15 .card,
+body.age-10-15 .card-sm,
+body.age-10-15 .card-section,
+body.age-10-15 .ob-card,
+body.age-10-15 .badges-bar,
+body.age-10-15 .bp-card,
+body.age-10-15 .profile-card {
+  background: rgba(40,55,40,0.95);
+  border-color: rgba(100,140,80,0.2);
+  color: #e0ecd0;
+}
+
+/* Text on dark */
+body.age-10-15 .app-tagline,
+body.age-10-15 .ch-hint,
+body.age-10-15 .p-meta,
+body.age-10-15 .wtile-prog,
+body.age-10-15 .bb-label,
+body.age-10-15 .map-name    { color: #9aba80; }
+body.age-10-15 .ch-text     { color: #e8f0e0; }
+body.age-10-15 .app-name,
+body.age-10-15 .ch-world-name,
+body.age-10-15 .p-name      { color: #c8e8a0; }
+
+/* Streak pill dark */
+body.age-10-15 .streak-pill { background: rgba(40,55,40,0.95); color: var(--amber); }
+
+/* No confetti animation — too childish */
+body.age-10-15 .confetto { display: none; }
+
+/* Faster transitions */
+body.age-10-15 .screen       { transition: opacity 0.15s, transform 0.15s; }
+body.age-10-15 .wtile        { transition: transform 0.1s; }
+
+/* Tiles dark */
+body.age-10-15 .w-nature,
+body.age-10-15 .w-language,
+body.age-10-15 .w-logic,
+body.age-10-15 .w-feelings,
+body.age-10-15 .w-arts,
+body.age-10-15 .w-world { filter: brightness(0.85) saturate(0.9); }
+
+/* TTS hidden */
+body.age-10-15 .btn-tts { display: none !important; }
+
+/* Theme switcher visible in settings */
+body.age-10-15 .theme-switcher { display: flex; }
+
+/* Stats visible on map */
+body.age-10-15 .map-stats { display: flex; }
+
+/* ════════════════════════════════
+   AGE 15+ — Minimal, journal-like, calm
+════════════════════════════════ */
+body.age-15plus {
+  --theme-btn-h:        48px;
+  --theme-font-size:    15px;
+  --theme-anim-speed:   0.2s;
+  background: #f7f5f0;
+  color: #2a2a28;
+}
+
+/* Minimal background — no trees, faint sun */
+body.age-15plus .bg-nature {
+  background: linear-gradient(180deg, #f0ede6 0%, #f7f5f0 100%);
+}
+body.age-15plus .bg-nature::before { display: none; }
+body.age-15plus .sun  { opacity: 0.3; width: 44px; height: 44px; }
+body.age-15plus .cloud { opacity: 0.5; }
+body.age-15plus .bf   { display: none; }
+body.age-15plus .tree { display: none; }
+
+/* Cards minimal */
+body.age-15plus .card,
+body.age-15plus .card-sm,
+body.age-15plus .card-section,
+body.age-15plus .ob-card,
+body.age-15plus .bp-card {
+  background: white;
+  border: 0.5px solid rgba(0,0,0,0.1);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  border-radius: var(--r-lg);
+}
+
+/* Typography — larger, calmer */
+body.age-15plus .ch-text    { font-size: 18px; line-height: 1.65; color: #2a2a28; }
+body.age-15plus .ch-hint    { background: #f0ede6; color: #6a6a60; }
+body.age-15plus .app-name   { color: #2a2a28; letter-spacing: -0.5px; }
+body.age-15plus .app-tagline { color: #8a8a80; }
+
+/* Buttons minimal */
+body.age-15plus .btn-primary {
+  background: #2a2a28;
+  box-shadow: none;
+  border-radius: var(--r-md);
+  font-size: 16px;
+}
+body.age-15plus .btn-action {
+  box-shadow: none;
+  border-radius: var(--r-md);
+  border: 1px solid rgba(0,0,0,0.12);
+}
+body.age-15plus .btn-photo { background: #e8f0e0; color: #2a4a20; }
+body.age-15plus .btn-draw  { background: #f0ece0; color: #4a3a10; }
+body.age-15plus .btn-voice { background: #f0e8ec; color: #4a2030; }
+
+/* World tiles — muted, elegant */
+body.age-15plus .w-nature   { background: linear-gradient(135deg,#3d6e28,#1e3a14); }
+body.age-15plus .w-language { background: linear-gradient(135deg,#2a6a8a,#163848); }
+body.age-15plus .w-logic    { background: linear-gradient(135deg,#7a5010,#3a2408); }
+body.age-15plus .w-feelings { background: linear-gradient(135deg,#8a3050,#481828); }
+body.age-15plus .w-arts     { background: linear-gradient(135deg,#682878,#341440); }
+body.age-15plus .w-world    { background: linear-gradient(135deg,#482878,#241440); }
+
+/* Streak pill minimal */
+body.age-15plus .streak-pill {
+  background: white;
+  border: 0.5px solid rgba(0,0,0,0.1);
+  box-shadow: none;
+}
+
+/* Map bar */
+body.age-15plus .map-name { font-size: 17px; color: #2a2a28; }
+body.age-15plus .map-title { color: #8a4abc; }
+
+/* No big confetti — subtle */
+body.age-15plus .confetto { animation-duration: 3s; opacity: 0.6; }
+
+/* Badge ring minimal */
+body.age-15plus .badge-ring {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+}
+body.age-15plus #screen-badge-earned {
+  background: linear-gradient(160deg, #e8f0e0 0%, #f0ede6 100%);
+}
+body.age-15plus .b-congrats { color: #2a2a28; }
+body.age-15plus .b-sub      { color: #6a6a60; }
+body.age-15plus .badge-ring .bn { color: #2a2a28; }
+body.age-15plus .btn-continue { color: #2a4a20; box-shadow: 0 2px 12px rgba(0,0,0,0.1); }
+
+/* TTS hidden */
+body.age-15plus .btn-tts { display: none !important; }
+
+/* Journal emphasis — bigger text area in step done */
+body.age-15plus .sd-title { font-size: 22px; color: #2a2a28; }
+body.age-15plus .sd-sub   { font-size: 14px; color: #6a6a60; }
+
+/* ════════════════════════════════
+   DARK MODE PREFERENCE (system)
+   Only applies to 10-15 and 15+ themes
+════════════════════════════════ */
+@media (prefers-color-scheme: dark) {
+  body.age-15plus {
+    background: #1a1a18;
+    color: #e8e4dc;
+  }
+  body.age-15plus .bg-nature {
+    background: linear-gradient(180deg, #1e1e1c 0%, #1a1a18 100%);
+  }
+  body.age-15plus .card,
+  body.age-15plus .card-sm,
+  body.age-15plus .card-section,
+  body.age-15plus .ob-card,
+  body.age-15plus .bp-card {
+    background: #242420;
+    border-color: rgba(255,255,255,0.08);
+  }
+  body.age-15plus .btn-action { border-color: rgba(255,255,255,0.1); }
+  body.age-15plus .btn-photo  { background: #1e2e18; color: #9aba80; }
+  body.age-15plus .btn-draw   { background: #2a2010; color: #c8a060; }
+  body.age-15plus .btn-voice  { background: #2a1820; color: #c880a0; }
+  body.age-15plus .ch-text    { color: #e8e4dc; }
+  body.age-15plus .ch-hint    { background: #242420; color: #8a8a80; }
+  body.age-15plus .streak-pill { background: #242420; border-color: rgba(255,255,255,0.08); }
+  body.age-15plus .map-name   { color: #e8e4dc; }
+  body.age-15plus #screen-badge-earned { background: linear-gradient(160deg,#1e2a18 0%,#1a1a18 100%); }
+  body.age-15plus .b-congrats { color: #e8e4dc; }
+  body.age-15plus .btn-continue { background: #242420; color: #9aba80; }
+}
+
+/* ════════════════════════════════
+   REDUCED MOTION
+════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .anim-bounce, .anim-spin, .anim-pulse,
+  .sun, .bf, .confetto { animation: none !important; }
+  .screen { transition: opacity 0.1s !important; }
+}
