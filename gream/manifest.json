@@ -1,0 +1,18 @@
+{
+  "name": "Gream",
+  "short_name": "Gream",
+  "description": "One adventure every day. Educational outdoor game for kids.",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#cbe3a0",
+  "theme_color": "#2d5a1b",
+  "scope": "./",
+  "lang": "cs",
+  "categories": ["education", "kids", "games"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

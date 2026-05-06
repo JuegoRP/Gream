@@ -1,0 +1,40 @@
+{
+  "appId": "com.gream.app",
+  "appName": "Gream",
+  "webDir": ".",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https",
+    "iosScheme": "gream",
+    "hostname": "app"
+  },
+  "ios": {
+    "contentInset": "always",
+    "scheme": "Gream",
+    "backgroundColor": "#cbe3a0"
+  },
+  "android": {
+    "backgroundColor": "#cbe3a0",
+    "allowMixedContent": false,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": false
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 1500,
+      "launchAutoHide": true,
+      "backgroundColor": "#cbe3a0",
+      "androidSplashResourceName": "splash",
+      "androidScaleType": "CENTER_CROP",
+      "showSpinner": false,
+      "splashFullScreen": true,
+      "splashImmersive": true
+    },
+    "Geolocation": {
+      "permissions": ["coarseLocation", "fineLocation"]
+    },
+    "Camera": {
+      "permissions": ["camera", "photos"]
+    }
+  }
+}

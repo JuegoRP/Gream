@@ -1,0 +1,847 @@
+// ═══════════════════════════════════
+//  GREAM — i18n.js
+//  All translations EN / CZ
+// ═══════════════════════════════════
+
+export const T = {
+  en: {
+    // App
+    tagline: "One adventure every day 🌿",
+    // Onboarding
+    ob_name: "Your name", ob_av: "Choose your avatar",
+    ob_age: "How old are you?", ob_start: "Let's go! 🌱",
+    ob_placeholder: "Enter your name...",
+    // New 4-step onboarding
+    ob_step1_title: "Welcome to Gream",
+    ob_step1_sub:   "A magical world where curiosity helps things grow.",
+    ob_step1_btn:   "Let's begin",
+    ob_step2_title: "Meet your Gream",
+    ob_step2_sub:   "A tiny creature that grows with you. Feed it by exploring nature, art, language and more.",
+    ob_step2_btn:   "Sounds great",
+    ob_step3_title: "Ready your adventure",
+    ob_step3_sub:   "Two quick things to make Gream more fun. You can change these anytime.",
+    ob_step3_btn:   "Continue",
+    ob_step3_skip:  "Skip for now",
+    ob_perm_loc:        "Location",
+    ob_perm_loc_desc:   "Find places nearby and earn outdoor bonuses",
+    ob_perm_snd:        "Sound",
+    ob_perm_snd_desc:   "Cheerful chimes and your Gream's voice",
+    ob_perm_granted:    "Granted",
+    ob_step4_title: "What should we call you?",
+    ob_step4_sub:   "Just your first name is fine. Pick an avatar too.",
+
+    // ─── Onboarding v4 (with parent notice + GDPR) ───
+    ob_v4_step1_title: "Welcome to Gream",
+    ob_v4_step1_sub:   "A magical world where curiosity helps things grow. Made for kids and families.",
+    ob_v4_step1_btn:   "Let's begin",
+
+    ob_v4_step2_title: "For parents 👨‍👩‍👧",
+    ob_v4_step2_sub:   "Before your child plays, please review how Gream works.",
+    ob_v4_legal_data_name:  "All data stays on this device",
+    ob_v4_legal_data_desc:  "Name, progress, photos — never sent to any server. Local storage only.",
+    ob_v4_legal_loc_name:   "Location is private",
+    ob_v4_legal_loc_desc:   "Used only to find places nearby. Never stored remotely or shared.",
+    ob_v4_legal_cam_name:   "No ads, ever",
+    ob_v4_legal_cam_desc:   "Gream has no advertising, no tracking, and no third-party data sharing.",
+    ob_v4_legal_ads_name:   "No ads, no tracking, no analytics",
+    ob_v4_legal_ads_desc:   "Gream contains no advertising and no third-party tracking. No selling of data.",
+    ob_v4_legal_fineprint:  "Children under 13: parental consent required (COPPA/GDPR-K). For ages 4–6, an adult should help with first setup.",
+    ob_v4_consent:          "I'm a parent or guardian and I consent on behalf of my child.",
+    ob_v4_step2_btn:        "I understand",
+
+    ob_v4_step3_title: "Meet the Greams",
+    ob_v4_step3_sub:   "Tiny creatures that live in your curiosity. Feed yours by exploring nature, art, ideas and feelings. Watch it grow!",
+    ob_v4_step3_btn:   "Cool",
+
+    ob_v4_step4_title: "Quick setup",
+    ob_v4_step4_sub:   "Two optional things. Change anytime in settings.",
+
+    ob_v4_step5_title: "Welcome, friend",
+    ob_v4_step5_sub:   "Just a name and avatar — that's all we need.",
+
+    ob_v4_step6_title: "A mystery egg 🥚",
+    ob_v4_step6_sub:   "Your Gream is hiding inside — complete 12 tasks and it will hatch. The way you play will reveal who it is!",
+    ob_v4_step6_btn:   "Let's find out! 🌱",
+    // Profiles
+    ps_title: "Who's playing?", ps_sub: "Choose your profile",
+    ps_add: "+ Add profile", settings: "Settings",
+    // Map
+    map_new: "New challenge!", map_done: "Done ✅",
+    worlds: {
+      nature:   "Nature",
+      language: "Language",
+      logic:    "Logic",
+      feelings: "Feelings & Me",
+      arts:     "Arts & Music",
+      world:    "World & Culture"
+    },
+    // Challenge
+    ch_label: "Today's challenge",
+    btn_photo: "Take a photo",
+    btn_draw:  "Draw it",
+    btn_voice: "Say it out loud",
+    btn_write: "Write it down",
+    draw_label:  "Draw your proof 🎨",
+    draw_done:   "✅ Done!",
+    write_label: "Write your answer ✍️",
+    write_done:  "✅ Done!",
+    write_hint:  "Write at least a few words...",
+    bp_title:   "Badge progress",
+    step_lbl:   n => `Step ${n}`,
+    // Step done
+    step_done_title: "Step done!",
+    step_done_sub:   (n, t) => `${n} of ${t} steps completed`,
+    next_step:  "Next step →",
+    come_back:  "Come back tomorrow",
+    // Badge earned
+    congrats:      "Amazing!",
+    badge_earned:  "You earned a new badge!",
+    badge_evolved: "Your badge evolved!",
+    continue:      "🌿 Back to map",
+    // Badges screen
+    my_badges:    "My Badges",
+    streak_title: "🔥 Streak badges",
+    bb_label:     "My badges",
+    tasks_done:   n => `${n} tasks done`,
+    // Settings
+    set_title:    "Settings",
+    ss_lang:      "Language",       ss_lang_lbl:    "App language",
+    ss_profile:   "Profile",        ss_age:         "Age group",
+    ss_data:      "Data",           ss_reset:       "Reset all data",
+    ss_name:      "Display name",   ss_avatar:      "Avatar",
+    ss_family:    "Family",         ss_family_code: "Your family code",
+    ss_family_join:"Join a family", ss_join_placeholder: "Enter family code...",
+    ss_join_btn:  "Join",
+    ss_sound:     "Sound",           ss_sound_on: "Sound on",
+    ss_geo:       "Location",        ss_geo_set:  "Set home pin",
+    ss_geo_clear: "Clear home pin",  ss_geo_set_hint: "Tap to mark this place as your home. Outdoor challenges will check distance from here.",
+    ss_geo_set_done: "Home pin set ✓",
+    // Geo & outdoor
+    geo_required:    "Go outside!",
+    geo_required_sub: "This challenge needs you to be outdoors.",
+    geo_check_btn:   "I'm outside →",
+    geo_too_close:   "Still very close to home — go a bit further!",
+    geo_too_far:     "You're far from home — be careful!",
+    geo_no_signal:   "Can't read your location. Try again in a moment.",
+    geo_indoor_ok:   "OK from home",
+    geo_outdoor_bonus:"+3 seeds outdoor bonus",
+    geo_at_poi:      "You arrived! 📍",
+    geo_walk_to:     "Walk to: ",
+    geo_distance:    m => `${m} m away`,
+    // Map view
+    map_view_btn:    "Map",
+    map_back_btn:    "← Worlds",
+    map_no_poi:      "No interesting places found nearby. Try the regular challenges!",
+    map_poi_loading: "Looking around for interesting places...",
+    // Wardrobe
+    ward_title:      "Shop",
+    ward_avatars:    "Avatars",
+    ward_frames:     "Frames",
+    ward_backgrounds:"Backgrounds",
+    ward_eggs:      "Seeds",
+    ward_locked:     "🔒 Locked",
+    ward_owned:      "Owned",
+    ward_equipped:   "Equipped",
+    ward_equip:      "Equip",
+    ward_buy:        "Buy",
+    ward_not_enough: "Not enough seeds",
+    ward_unlocked:   "New unlock! 🎉",
+    seeds_lbl:       "🌱 seeds",
+    seeds_earned:    n => `+${n} 🌱`,
+    history_title:   "Recent activity",
+    history_empty:   "No tasks completed yet — start your first one!",
+    history_btn:     "History",
+
+    // Settings v5 — Privacy + GDPR
+    ss_privacy_title:   "Privacy & legal",
+    ss_privacy_lbl:     "Privacy policy",
+    ss_terms_lbl:       "Terms of use",
+    ss_data_info:       "Your data is stored only on this device. Tap below to permanently delete everything (GDPR right to erasure).",
+    // Stats
+    stats_title:  "Stats",
+    stats_total:  "Total tasks",
+    stats_streak: "Best streak",
+    stats_worlds: "Worlds explored",
+    stats_badges: "Badges earned",
+    lb_title:     "Leaderboard",
+    lb_empty:     "No data yet — keep going!",
+    // Streak days
+    streak_days: d => `${d} day${d === 1 ? '' : 's'}`,
+    // Step types — label, icon, action
+    steps: {
+      nature:   [{label:"Discover", icon:"🌿", type:"choice"}, {label:"Describe", icon:"✍️", type:"choice"}, {label:"Count",   icon:"🔢", type:"number"}],
+      language: [{label:"Choose",   icon:"🎯", type:"choice"}, {label:"Write",    icon:"✍️", type:"choice"}, {label:"Count",   icon:"🔢", type:"number"}],
+      logic:    [{label:"Think",    icon:"🧩", type:"choice"}, {label:"Explain",  icon:"✍️", type:"choice"}, {label:"Number",  icon:"🔢", type:"number"}],
+      feelings: [{label:"Feel",     icon:"💛", type:"choice"}, {label:"Describe", icon:"✍️", type:"choice"}, {label:"Reflect", icon:"🎯", type:"choice"}],
+      arts:     [{label:"Choose",   icon:"🎵", type:"choice"}, {label:"Describe", icon:"✍️", type:"choice"}, {label:"Count",   icon:"🔢", type:"number"}],
+      world:    [{label:"Discover", icon:"🌍", type:"choice"}, {label:"Describe", icon:"✍️", type:"choice"}, {label:"Number",  icon:"🔢", type:"number"}]
+    },
+    // Challenges by world and age
+    challenges: {
+      nature: {
+        "4-6": [
+          {text:"Which of these lives in a forest?", hint:"Think about animals you know!", action:"choice", choices:[{text:"🦊 Fox",value:"fox"},{text:"🐠 Clownfish",value:"fish"},{text:"🦈 Shark",value:"shark"}], check:{type:"choice",correct:"fox"}, mode:"outdoor_bonus"},
+          {text:"How many legs does a spider have?", hint:"More than a dog, less than a hundred!", action:"number", check:{type:"number",answer:8,tolerance:0}, mode:"outdoor_bonus"},
+          {text:"Where do most fish live?", action:"choice", choices:[{text:"🌊 In water",value:"water"},{text:"🌳 In trees",value:"trees"},{text:"🏔️ On mountains",value:"mountains"}], check:{type:"choice",correct:"water"}, mode:"outdoor_bonus"},
+          {text:"Which animal makes honey?", hint:"It buzzes and has black stripes!", action:"choice", choices:[{text:"🐝 Bee",value:"bee"},{text:"🦋 Butterfly",value:"butterfly"},{text:"🐞 Ladybug",value:"ladybug"}], check:{type:"choice",correct:"bee"}, mode:"outdoor_bonus"},
+          {text:"How many legs does a cat have?", action:"number", check:{type:"number",answer:4,tolerance:0}, mode:"outdoor_bonus"},
+          {text:"Which of these is a living thing?", action:"choice", choices:[{text:"🌸 Flower",value:"flower"},{text:"🪨 Rock",value:"rock"},{text:"💧 Water",value:"water"}], check:{type:"choice",correct:"flower"}, mode:"outdoor_bonus"}
+        ],
+        "7-9": [
+          {text:"What do plants need to grow?", hint:"Think about what you'd give a plant every day.", action:"choice", choices:[{text:"🌊 Water & sun",value:"water_sun"},{text:"🍫 Chocolate",value:"choco"},{text:"🧊 Ice only",value:"ice"}], check:{type:"choice",correct:"water_sun"}, mode:"outdoor_bonus"},
+          {text:"How many teeth does an adult human have?", hint:"Not counting wisdom teeth!", action:"number", check:{type:"number",answer:28,tolerance:4}, mode:"outdoor_bonus"},
+          {text:"Which of these animals is nocturnal (active at night)?", action:"choice", choices:[{text:"🦉 Owl",value:"owl"},{text:"🐿️ Squirrel",value:"squirrel"},{text:"🦋 Butterfly",value:"butterfly"}], check:{type:"choice",correct:"owl"}, mode:"outdoor_bonus"},
+          {text:"The process where plants make food from sunlight is called ____.", action:"fill_blank", blank:{before:"The process where plants make food from sunlight is called",after:".",correct:"photosynthesis"}, check:{type:"fill_blank",correct:"photosynthesis"}, mode:"outdoor_bonus"},
+          {text:"Put the seasons in order starting from spring:", action:"sort", items:["❄️ Winter","🌸 Spring","☀️ Summer","🍂 Autumn"], check:{type:"sort",correct:["🌸 Spring","☀️ Summer","🍂 Autumn","❄️ Winter"]}, mode:"outdoor_bonus"},
+          {text:"Which animal is a mammal?", action:"choice", choices:[{text:"🐬 Dolphin",value:"dolphin"},{text:"🐊 Crocodile",value:"croc"},{text:"🦎 Lizard",value:"lizard"}], check:{type:"choice",correct:"dolphin"}, mode:"outdoor_bonus"},
+          {text:"How many days does it take Earth to orbit the Sun?", hint:"How many days in a year?", action:"number", check:{type:"number",answer:365,tolerance:1}, mode:"outdoor_bonus"},
+          {text:"How many stages does a butterfly's life cycle have?", action:"number", check:{type:"number",answer:4,tolerance:0}, mode:"outdoor_bonus"}
+        ],
+        "10-15": [
+          {text:"What is photosynthesis?", hint:"What do plants make from sunlight?", action:"choice", choices:[{text:"🌞 Converting sunlight into food",value:"correct"},{text:"🌙 Sleeping during daytime",value:"wrong1"},{text:"💧 Drinking rainwater only",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"How many bones does a human adult have?", hint:"It's more than 200!", action:"number", check:{type:"number",answer:206,tolerance:10}, mode:"outdoor_bonus"},
+          {text:"Which organism is a primary producer in most food chains?", action:"choice", choices:[{text:"🌿 Plant",value:"plant"},{text:"🦁 Lion",value:"lion"},{text:"🦅 Eagle",value:"eagle"}], check:{type:"choice",correct:"plant"}, mode:"outdoor_bonus"},
+          {text:"What is the largest organ in the human body?", action:"choice", choices:[{text:"🫀 Heart",value:"heart"},{text:"🧠 Brain",value:"brain"},{text:"🩺 Skin",value:"skin"}], check:{type:"choice",correct:"skin"}, mode:"outdoor_bonus"},
+          {text:"Approximately how many cells are in the human body? (in trillions)", hint:"It's a very large number!", action:"number", check:{type:"number",answer:37,tolerance:10}, mode:"outdoor_bonus"},
+          {text:"In a food chain, what do we call an animal that only eats plants?", action:"choice", choices:[{text:"Herbivore",value:"correct"},{text:"Carnivore",value:"wrong1"},{text:"Omnivore",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
+        ],
+        "15+": [
+          {text:"Which process converts nitrogen gas into forms usable by plants?", action:"choice", choices:[{text:"Nitrogen fixation",value:"correct"},{text:"Photosynthesis",value:"wrong1"},{text:"Transpiration",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Approximately what percentage of Earth's atmosphere is oxygen?", hint:"It's about a fifth!", action:"number", check:{type:"number",answer:21,tolerance:2}, mode:"outdoor_bonus"},
+          {text:"Which term describes an organism that breaks down dead material into nutrients?", action:"choice", choices:[{text:"Decomposer",value:"correct"},{text:"Producer",value:"wrong1"},{text:"Apex predator",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Roughly how many years ago did the dinosaurs go extinct? (in millions)", action:"number", check:{type:"number",answer:66,tolerance:5}, mode:"outdoor_bonus"},
+          {text:"What is the scientific term for species that only exist in one specific location?", action:"choice", choices:[{text:"Endemic",value:"correct"},{text:"Invasive",value:"wrong1"},{text:"Migratory",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"How many chambers does a human heart have?", action:"number", check:{type:"number",answer:4,tolerance:0}, mode:"indoor_ok"}
+        ]
+      },
+      language: {
+        "4-6": [
+          {text:"Which one is a greeting?", hint:"What do you say when you meet someone?", action:"choice", choices:[{text:"Hello! 👋",value:"hello"},{text:"Goodbye! 👋",value:"bye"},{text:"Apple 🍎",value:"apple"}], check:{type:"choice",correct:"hello"}, mode:"outdoor_bonus"},
+          {text:"How many letters are in the word CAT?", hint:"C-A-T", action:"number", check:{type:"number",answer:3,tolerance:0}, mode:"indoor_ok"},
+          {text:"How many letters are in your first name? Count them!", action:"number", check:{type:"number",answer:null}, mode:"indoor_ok"},
+          {text:"Which of these is a colour?", action:"choice", choices:[{text:"🔵 Blue",value:"blue"},{text:"🍰 Cake",value:"cake"},{text:"🐕 Dog",value:"dog"}], check:{type:"choice",correct:"blue"}, mode:"outdoor_bonus"},
+          {text:"How many letters are in the word ELEPHANT?", hint:"Count them one by one!", action:"number", check:{type:"number",answer:8,tolerance:0}, mode:"indoor_ok"},
+          {text:"Which of these is an adjective (describing word)?", action:"choice", choices:[{text:"Fluffy 🐰",value:"fluffy"},{text:"Run 🏃",value:"run"},{text:"Apple 🍎",value:"apple"}], check:{type:"choice",correct:"fluffy"}, mode:"outdoor_bonus"}
+        ],
+        "7-9": [
+          {text:"What is an antonym of the word HAPPY?", action:"choice", choices:[{text:"Sad 😢",value:"sad"},{text:"Joyful 😄",value:"joyful"},{text:"Big 🐘",value:"big"}], check:{type:"choice",correct:"sad"}, mode:"outdoor_bonus"},
+          {text:"How many vowels are in the English alphabet?", hint:"A, E, ...", action:"number", check:{type:"number",answer:5,tolerance:0}, mode:"indoor_ok"},
+          {text:"Which of these words is a noun?", action:"choice", choices:[{text:"🏠 House",value:"house"},{text:"Run 🏃",value:"run"},{text:"Happy 😄",value:"happy"}], check:{type:"choice",correct:"house"}, mode:"outdoor_bonus"},
+          {text:"Put words in order to make a sentence:", action:"sort", items:["cats","all","I","love"], check:{type:"sort",correct:["I","love","all","cats"]}, mode:"outdoor_bonus"},
+          {text:"A synonym for BIG is ____.", action:"fill_blank", blank:{before:"A synonym for BIG is",after:".",correct:"large"}, check:{type:"fill_blank",correct:"large"}, mode:"outdoor_bonus"},
+          {text:"What part of speech is the word 'quickly'?", action:"choice", choices:[{text:"Adverb",value:"adverb"},{text:"Noun",value:"noun"},{text:"Verb",value:"verb"}], check:{type:"choice",correct:"adverb"}, mode:"outdoor_bonus"},
+          {text:"How many letters are in the English alphabet?", action:"number", check:{type:"number",answer:26,tolerance:0}, mode:"indoor_ok"},
+          {text:"Which of these verbs is in the past tense?", action:"choice", choices:[{text:"Walked",value:"correct"},{text:"Walk",value:"wrong1"},{text:"Walking",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
+        ],
+        "10-15": [
+          {text:"Which literary device is used in: 'The wind whispered secrets'?", action:"choice", choices:[{text:"Personification",value:"correct"},{text:"Rhyme",value:"wrong1"},{text:"Alliteration",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"How many languages are estimated to exist in the world?", hint:"Thousands!", action:"number", check:{type:"number",answer:7000,tolerance:1000}, mode:"indoor_ok"},
+          {text:"Which sentence contains a metaphor?", action:"choice", choices:[{text:"Life is a journey",value:"correct"},{text:"She runs very fast",value:"wrong1"},{text:"The dog barked loudly",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Which of these is an example of alliteration?", action:"choice", choices:[{text:"Peter Piper picked peppers",value:"correct"},{text:"The moon is a lantern",value:"wrong1"},{text:"It was as cold as ice",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Shakespeare wrote approximately how many plays?", action:"number", check:{type:"number",answer:37,tolerance:3}, mode:"indoor_ok"},
+          {text:"Which of these is a key feature of a persuasive text?", action:"choice", choices:[{text:"Uses evidence and opinions",value:"correct"},{text:"Only uses questions",value:"wrong1"},{text:"Never uses facts",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
+        ],
+        "15+": [
+          {text:"What literary device gives human qualities to non-human things?", action:"choice", choices:[{text:"Personification",value:"correct"},{text:"Alliteration",value:"wrong1"},{text:"Onomatopoeia",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Approximately how many languages are spoken in Africa?", hint:"It's over a thousand!", action:"number", check:{type:"number",answer:2000,tolerance:500}, mode:"indoor_ok"},
+          {text:"Which grammatical mood expresses hypothetical or wishful situations?", action:"choice", choices:[{text:"Subjunctive",value:"correct"},{text:"Indicative",value:"wrong1"},{text:"Imperative",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"How many letters are in the English alphabet?", action:"number", check:{type:"number",answer:26,tolerance:0}, mode:"indoor_ok"},
+          {text:"Which ancient writing system used wedge-shaped marks on clay tablets?", action:"choice", choices:[{text:"Cuneiform",value:"correct"},{text:"Hieroglyphics",value:"wrong1"},{text:"Runes",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"What is a word that sounds like what it represents called?", action:"choice", choices:[{text:"Onomatopoeia",value:"correct"},{text:"Metaphor",value:"wrong1"},{text:"Simile",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
+        ]
+      },
+      logic: {
+        "4-6": [
+          {text:"What comes next? 🔴 🔵 🔴 🔵 🔴 __", action:"choice", choices:[{text:"🔵 Blue",value:"blue"},{text:"🟡 Yellow",value:"yellow"},{text:"🟢 Green",value:"green"}], check:{type:"choice",correct:"blue"}, mode:"outdoor_bonus"},
+          {text:"If you have 3 apples and eat 1, how many are left?", action:"number", check:{type:"number",answer:2,tolerance:0}, mode:"indoor_ok"},
+          {text:"Which of these shapes has the most sides?", action:"choice", choices:[{text:"⬡ Hexagon (6)",value:"hexagon"},{text:"🔺 Triangle (3)",value:"triangle"},{text:"⬛ Square (4)",value:"square"}], check:{type:"choice",correct:"hexagon"}, mode:"outdoor_bonus"},
+          {text:"Which shape has 3 sides?", action:"choice", choices:[{text:"🔺 Triangle",value:"triangle"},{text:"⬛ Square",value:"square"},{text:"⭕ Circle",value:"circle"}], check:{type:"choice",correct:"triangle"}, mode:"outdoor_bonus"},
+          {text:"What is 5 + 5?", action:"number", check:{type:"number",answer:10,tolerance:0}, mode:"indoor_ok"},
+          {text:"What is big, round, and yellow in the sky?", action:"choice", choices:[{text:"☀️ The Sun",value:"sun"},{text:"🌙 The Moon",value:"moon"},{text:"⭐ A Star",value:"star"}], check:{type:"choice",correct:"sun"}, mode:"outdoor_bonus"}
+        ],
+        "7-9": [
+          {text:"Which shape has 4 equal sides and 4 right angles?", action:"choice", choices:[{text:"Square ⬛",value:"square"},{text:"Triangle 🔺",value:"triangle"},{text:"Circle ⭕",value:"circle"}], check:{type:"choice",correct:"square"}, mode:"outdoor_bonus"},
+          {text:"A baker makes 24 rolls. She puts them into bags of 6. How many bags does she fill?", action:"number", check:{type:"number",answer:4,tolerance:0}, mode:"indoor_ok"},
+          {text:"15 cookies shared equally among 3 friends — how many does each get?", action:"number", check:{type:"number",answer:5,tolerance:0}, mode:"indoor_ok"},
+          {text:"7 × 8 = ____", action:"fill_blank", blank:{before:"7 × 8 =",after:"",correct:"56"}, check:{type:"fill_blank",correct:"56"}, mode:"outdoor_bonus"},
+          {text:"What is 100 minus 37?", action:"number", check:{type:"number",answer:63,tolerance:0}, mode:"indoor_ok"},
+          {text:"Which of these is an odd number?", action:"choice", choices:[{text:"7",value:"7"},{text:"8",value:"8"},{text:"12",value:"12"}], check:{type:"choice",correct:"7"}, mode:"outdoor_bonus"},
+          {text:"A snail travels 3 cm per minute. How far does it travel in 10 minutes? (in cm)", action:"number", check:{type:"number",answer:30,tolerance:0}, mode:"indoor_ok"},
+          {text:"What comes next in the pattern: 2, 4, 6, 8, __?", action:"number", check:{type:"number",answer:10,tolerance:0}, mode:"indoor_ok"}
+        ],
+        "10-15": [
+          {text:"What is the next prime number after 7?", action:"choice", choices:[{text:"11",value:"correct"},{text:"9",value:"wrong1"},{text:"12",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"A train travels 60 km/h for 2.5 hours. How many km does it travel?", action:"number", check:{type:"number",answer:150,tolerance:0}, mode:"indoor_ok"},
+          {text:"Which problem-solving strategy involves breaking a problem into smaller parts?", action:"choice", choices:[{text:"Decomposition",value:"correct"},{text:"Memorisation",value:"wrong1"},{text:"Repetition",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Which type of reasoning goes from specific cases to a general conclusion?", action:"choice", choices:[{text:"Inductive",value:"correct"},{text:"Deductive",value:"wrong1"},{text:"Abductive",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"What is the square root of 144?", action:"number", check:{type:"number",answer:12,tolerance:0}, mode:"indoor_ok"},
+          {text:"If a number multiplied by itself equals 81, what is the number?", action:"number", check:{type:"number",answer:9,tolerance:0}, mode:"indoor_ok"}
+        ],
+        "15+": [
+          {text:"If all bloops are razzles and all razzles are lazzles, are all bloops definitely lazzles?", action:"choice", choices:[{text:"Yes — transitive logic",value:"correct"},{text:"No — can't tell",value:"wrong1"},{text:"Only sometimes",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"A prime number has exactly how many factors?", action:"number", check:{type:"number",answer:2,tolerance:0}, mode:"indoor_ok"},
+          {text:"Which approach tries all possibilities systematically until a solution is found?", action:"choice", choices:[{text:"Brute force",value:"correct"},{text:"Heuristic",value:"wrong1"},{text:"Greedy algorithm",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"In binary, what is 1011 in decimal?", hint:"8+2+1", action:"number", check:{type:"number",answer:11,tolerance:0}, mode:"indoor_ok"},
+          {text:"Which logical error involves attacking the person rather than the argument?", action:"choice", choices:[{text:"Ad hominem",value:"correct"},{text:"Straw man",value:"wrong1"},{text:"False dichotomy",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"How many sides does a regular hexagon have?", action:"number", check:{type:"number",answer:6,tolerance:0}, mode:"indoor_ok"}
+        ]
+      },
+      feelings: {
+        "4-6": [
+          {text:"How do you feel when you hug someone you love?", action:"choice", choices:[{text:"Happy & warm 🥰",value:"happy"},{text:"Scared 😨",value:"scared"},{text:"Bored 😴",value:"bored"}], check:{type:"choice",correct:"happy"}, mode:"outdoor_bonus"},
+          {text:"How many people do you love most in the world? Write the number!", hint:"There's no wrong answer here!", action:"number", check:{type:"number",answer:null}, mode:"outdoor_bonus"},
+          {text:"Which of these usually makes people feel happy?", action:"choice", choices:[{text:"Getting a hug 🤗",value:"hug"},{text:"Being alone and bored 😴",value:"bored"},{text:"Losing something 😢",value:"lost"}], check:{type:"choice",correct:"hug"}, mode:"outdoor_bonus"},
+          {text:"Which face shows that someone is surprised?", action:"choice", choices:[{text:"😲 This one!",value:"correct"},{text:"😴 This one",value:"wrong1"},{text:"😠 This one",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"If you feel sad, counting slowly to ___ can help you calm down.", action:"fill_blank", blank:{before:"Counting slowly to",after:"can help you calm down.",correct:"10"}, check:{type:"fill_blank",correct:"10"}, mode:"outdoor_bonus"},
+          {text:"How do you usually feel after helping someone?", action:"choice", choices:[{text:"Good and proud 😊",value:"good"},{text:"Sad and tired 😢",value:"sad"},{text:"Angry 😠",value:"angry"}], check:{type:"choice",correct:"good"}, mode:"outdoor_bonus"}
+        ],
+        "7-9": [
+          {text:"What's the best way to help a friend who is sad?", action:"choice", choices:[{text:"Listen and be with them 🤝",value:"correct"},{text:"Ignore them and walk away",value:"wrong1"},{text:"Tell them to stop being sad",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"On a scale of 1-10, how happy do you feel today?", hint:"Just your honest number!", action:"number", check:{type:"number",answer:null}, mode:"outdoor_bonus"},
+          {text:"Which of these situations would most likely make you feel proud?", action:"choice", choices:[{text:"Finishing something difficult 🏆",value:"correct"},{text:"Forgetting your homework 📚",value:"wrong1"},{text:"Sleeping through an alarm ⏰",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Match each animal to what it eats:", action:"match", pairs:[{a:"🐇 Rabbit",b:"🥕 Carrots"},{a:"🦁 Lion",b:"🥩 Meat"},{a:"🐝 Bee",b:"🌸 Nectar"}], check:{type:"match"}, mode:"outdoor_bonus"},
+          {text:"Which of these is NOT a way to deal with anger in a healthy way?", action:"choice", choices:[{text:"Yelling at someone",value:"correct"},{text:"Taking deep breaths",value:"wrong1"},{text:"Drawing how you feel",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"How many hours of sleep do most 7-9 year olds need each night?", hint:"It's between 8 and 12!", action:"number", check:{type:"number",answer:10,tolerance:2}, mode:"outdoor_bonus"},
+          {text:"Which activity is scientifically shown to improve mood?", action:"choice", choices:[{text:"Exercise 🏃",value:"correct"},{text:"Staying in bed all day 🛏️",value:"wrong1"},{text:"Eating lots of sugar 🍬",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
+        ],
+        "10-15": [
+          {text:"What is empathy?", action:"choice", choices:[{text:"Understanding how others feel",value:"correct"},{text:"Feeling angry at others",value:"wrong1"},{text:"Only thinking about yourself",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"How many basic emotions do psychologists commonly identify? (Ekman's model)", hint:"Think primary emotions — fear, anger...", action:"number", check:{type:"number",answer:6,tolerance:1}, mode:"outdoor_bonus"},
+          {text:"What term describes feeling two opposing emotions at the same time?", action:"choice", choices:[{text:"Ambivalence",value:"correct"},{text:"Empathy",value:"wrong1"},{text:"Apathy",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Which term describes the ability to understand and manage your own emotions?", action:"choice", choices:[{text:"Emotional intelligence",value:"correct"},{text:"Impulsiveness",value:"wrong1"},{text:"Extroversion",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Psychologists say it takes approximately how many days to form a new habit?", hint:"Between 20 and 70 days!", action:"number", check:{type:"number",answer:21,tolerance:10}, mode:"outdoor_bonus"},
+          {text:"Which quality is most associated with emotional intelligence?", action:"choice", choices:[{text:"Self-awareness",value:"correct"},{text:"Stubbornness",value:"wrong1"},{text:"Impulsiveness",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
+        ],
+        "15+": [
+          {text:"What psychological concept describes the discomfort of holding two conflicting beliefs?", action:"choice", choices:[{text:"Cognitive dissonance",value:"correct"},{text:"Confirmation bias",value:"wrong1"},{text:"Dunning-Kruger effect",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Roughly how many distinct emotions can humans recognise on a face? (approximately)", action:"number", check:{type:"number",answer:21,tolerance:5}, mode:"indoor_ok"},
+          {text:"What is the term for feeling pleasure at another's misfortune (borrowed from German)?", action:"choice", choices:[{text:"Schadenfreude",value:"correct"},{text:"Weltanschauung",value:"wrong1"},{text:"Angst",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"On a scale 1–10, how well do you think you handle uncertainty today?", action:"number", check:{type:"number",answer:null}, mode:"indoor_ok"},
+          {text:"Which attachment style is characterised by discomfort with closeness?", action:"choice", choices:[{text:"Avoidant",value:"correct"},{text:"Secure",value:"wrong1"},{text:"Anxious",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"How many of Ekman's basic emotions can you name? Try writing the count!", hint:"Fear, anger, disgust, surprise, happiness, sadness", action:"number", check:{type:"number",answer:6,tolerance:1}, mode:"indoor_ok"}
+        ]
+      },
+      arts: {
+        "4-6": [
+          {text:"What do you mix to make green?", action:"choice", choices:[{text:"🔵 Blue + 🟡 Yellow",value:"correct"},{text:"🔴 Red + 🔵 Blue",value:"wrong1"},{text:"🔴 Red + 🟡 Yellow",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"How many strings does a guitar have?", action:"number", check:{type:"number",answer:6,tolerance:0}, mode:"outdoor_bonus"},
+          {text:"Which of these is NOT a musical instrument?", action:"choice", choices:[{text:"🪑 Chair",value:"chair"},{text:"🎹 Piano",value:"piano"},{text:"🥁 Drums",value:"drums"}], check:{type:"choice",correct:"chair"}, mode:"outdoor_bonus"},
+          {text:"Which of these is a musical instrument?", action:"choice", choices:[{text:"🥁 Drum",value:"drum"},{text:"🍕 Pizza",value:"pizza"},{text:"🪑 Chair",value:"chair"}], check:{type:"choice",correct:"drum"}, mode:"outdoor_bonus"},
+          {text:"A rainbow has how many colours?", action:"number", check:{type:"number",answer:7,tolerance:0}, mode:"outdoor_bonus"},
+          {text:"How many primary colours are there?", action:"number", check:{type:"number",answer:3,tolerance:0}, mode:"outdoor_bonus"}
+        ],
+        "7-9": [
+          {text:"Which famous artist painted the Mona Lisa?", action:"choice", choices:[{text:"Leonardo da Vinci 🎨",value:"correct"},{text:"Pablo Picasso",value:"wrong1"},{text:"Vincent van Gogh",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"How many notes are in a standard Western musical scale?", hint:"Do Re Mi Fa Sol La Ti...", action:"number", check:{type:"number",answer:7,tolerance:0}, mode:"outdoor_bonus"},
+          {text:"Which painting technique uses small dots of colour to create an image?", action:"choice", choices:[{text:"Pointillism",value:"correct"},{text:"Fresco",value:"wrong1"},{text:"Watercolour",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Match artist to their style:", action:"match", pairs:[{a:"Dalí",b:"Surrealism"},{a:"Monet",b:"Impressionism"},{a:"Picasso",b:"Cubism"}], check:{type:"match"}, mode:"outdoor_bonus"},
+          {text:"What colour do you get by mixing red and white?", action:"choice", choices:[{text:"🌸 Pink",value:"pink"},{text:"🟠 Orange",value:"orange"},{text:"🟣 Purple",value:"purple"}], check:{type:"choice",correct:"pink"}, mode:"outdoor_bonus"},
+          {text:"A piano has how many keys?", hint:"More than 50!", action:"number", check:{type:"number",answer:88,tolerance:0}, mode:"outdoor_bonus"},
+          {text:"How many strings does a standard violin have?", action:"number", check:{type:"number",answer:4,tolerance:0}, mode:"outdoor_bonus"}
+        ],
+        "10-15": [
+          {text:"What art movement was Salvador Dalí associated with?", action:"choice", choices:[{text:"Surrealism",value:"correct"},{text:"Impressionism",value:"wrong1"},{text:"Cubism",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Beethoven wrote 9 symphonies. How many did Mozart write? (approximately)", hint:"A lot more!", action:"number", check:{type:"number",answer:41,tolerance:5}, mode:"outdoor_bonus"},
+          {text:"Which colour is most commonly associated with calm and trust in colour psychology?", action:"choice", choices:[{text:"Blue",value:"correct"},{text:"Red",value:"wrong1"},{text:"Yellow",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"What is the golden ratio approximately equal to?", action:"choice", choices:[{text:"1.618",value:"correct"},{text:"3.14",value:"wrong1"},{text:"2.718",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Van Gogh sold how many paintings during his lifetime?", hint:"Surprisingly few!", action:"number", check:{type:"number",answer:1,tolerance:1}, mode:"outdoor_bonus"},
+          {text:"Which music genre originated in African-American communities in the early 20th century?", action:"choice", choices:[{text:"Jazz",value:"correct"},{text:"Classical",value:"wrong1"},{text:"Opera",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
+        ],
+        "15+": [
+          {text:"Which art movement rejected tradition and embraced chance and absurdity?", action:"choice", choices:[{text:"Dadaism",value:"correct"},{text:"Romanticism",value:"wrong1"},{text:"Neoclassicism",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"How many keys does a standard piano have?", action:"number", check:{type:"number",answer:88,tolerance:0}, mode:"indoor_ok"},
+          {text:"Which technique involves applying thick paint to create texture and dimension?", action:"choice", choices:[{text:"Impasto",value:"correct"},{text:"Sfumato",value:"wrong1"},{text:"Chiaroscuro",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"In music theory, how many semitones are in an octave?", action:"number", check:{type:"number",answer:12,tolerance:0}, mode:"indoor_ok"},
+          {text:"Which Japanese art form involves folding paper into shapes?", action:"choice", choices:[{text:"Origami",value:"correct"},{text:"Ikebana",value:"wrong1"},{text:"Manga",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Approximately in which century did the Renaissance begin?", action:"number", check:{type:"number",answer:14,tolerance:1}, mode:"indoor_ok"}
+        ]
+      },
+      world: {
+        "4-6": [
+          {text:"Which continent is the largest?", action:"choice", choices:[{text:"🌏 Asia",value:"correct"},{text:"🌍 Africa",value:"wrong1"},{text:"🌎 America",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"How many continents are there on Earth?", action:"number", check:{type:"number",answer:7,tolerance:0}, mode:"outdoor_bonus"},
+          {text:"Which country has the Eiffel Tower?", action:"choice", choices:[{text:"🇫🇷 France",value:"france"},{text:"🇬🇧 England",value:"england"},{text:"🇩🇪 Germany",value:"germany"}], check:{type:"choice",correct:"france"}, mode:"outdoor_bonus"},
+          {text:"Which flag has a red circle on a white background?", hint:"It's in Asia!", action:"choice", choices:[{text:"🇯🇵 Japan",value:"japan"},{text:"🇨🇳 China",value:"china"},{text:"🇰🇷 South Korea",value:"korea"}], check:{type:"choice",correct:"japan"}, mode:"outdoor_bonus"},
+          {text:"How many oceans are there on Earth?", action:"number", check:{type:"number",answer:5,tolerance:0}, mode:"outdoor_bonus"},
+          {text:"Sushi originally comes from which country?", action:"choice", choices:[{text:"🇯🇵 Japan",value:"japan"},{text:"🇨🇳 China",value:"china"},{text:"🇧🇷 Brazil",value:"brazil"}], check:{type:"choice",correct:"japan"}, mode:"outdoor_bonus"}
+        ],
+        "7-9": [
+          {text:"What is the capital city of France?", action:"choice", choices:[{text:"🗼 Paris",value:"correct"},{text:"🏰 London",value:"wrong1"},{text:"🎭 Rome",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Approximately how many countries are there in the world?", hint:"It's around 190-200.", action:"number", check:{type:"number",answer:195,tolerance:10}, mode:"outdoor_bonus"},
+          {text:"Which of these is a traditional Japanese celebration?", action:"choice", choices:[{text:"Hanami (cherry blossom viewing)",value:"correct"},{text:"Carnival in Brazil",value:"wrong1"},{text:"Mardi Gras in New Orleans",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"The capital of France is ____.", action:"fill_blank", blank:{before:"The capital of France is",after:".",correct:"Paris"}, check:{type:"fill_blank",correct:"Paris"}, mode:"outdoor_bonus"},
+          {text:"Which of these is the official language of Brazil?", action:"choice", choices:[{text:"Portuguese",value:"correct"},{text:"Spanish",value:"wrong1"},{text:"English",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"How many time zones does Russia span?", hint:"It's a very wide country!", action:"number", check:{type:"number",answer:11,tolerance:1}, mode:"outdoor_bonus"},
+          {text:"Which city is known as 'The Big Apple'?", action:"choice", choices:[{text:"New York",value:"correct"},{text:"Chicago",value:"wrong1"},{text:"Los Angeles",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
+        ],
+        "10-15": [
+          {text:"Which ocean is the largest on Earth?", action:"choice", choices:[{text:"🌊 Pacific Ocean",value:"correct"},{text:"Atlantic Ocean",value:"wrong1"},{text:"Indian Ocean",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Roughly how many people live on Earth? (in billions)", action:"number", check:{type:"number",answer:8,tolerance:1}, mode:"outdoor_bonus"},
+          {text:"Which greenhouse gas is the largest contributor to climate change from human activities?", action:"choice", choices:[{text:"CO₂ (carbon dioxide)",value:"correct"},{text:"Helium",value:"wrong1"},{text:"Nitrogen",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Which international body has 193 member states and promotes world peace?", action:"choice", choices:[{text:"United Nations (UN)",value:"correct"},{text:"World Trade Organization",value:"wrong1"},{text:"NATO",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Approximately how many people lack access to clean drinking water worldwide? (in millions)", hint:"Far too many!", action:"number", check:{type:"number",answer:700,tolerance:200}, mode:"outdoor_bonus"},
+          {text:"The Day of the Dead (Día de los Muertos) is a tradition from which country?", action:"choice", choices:[{text:"Mexico",value:"correct"},{text:"Spain",value:"wrong1"},{text:"Argentina",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
+        ],
+        "15+": [
+          {text:"Which international agreement set binding targets to reduce greenhouse gas emissions?", action:"choice", choices:[{text:"Paris Agreement (2015)",value:"correct"},{text:"Kyoto Protocol (1997)",value:"wrong1"},{text:"Montreal Protocol (1987)",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Approximately how many countries are members of the United Nations?", action:"number", check:{type:"number",answer:193,tolerance:5}, mode:"indoor_ok"},
+          {text:"Which economic term describes the total value of goods/services produced in a country?", action:"choice", choices:[{text:"GDP (Gross Domestic Product)",value:"correct"},{text:"GNI (Gross National Income)",value:"wrong1"},{text:"HDI (Human Development Index)",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"How many permanent members does the UN Security Council have?", action:"number", check:{type:"number",answer:5,tolerance:0}, mode:"indoor_ok"},
+          {text:"Which continent has the highest number of countries?", action:"choice", choices:[{text:"Africa 🌍",value:"correct"},{text:"Asia 🌏",value:"wrong1"},{text:"Europe 🌍",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Approximately how many people live on Earth today? (billions)", action:"number", check:{type:"number",answer:8,tolerance:1}, mode:"outdoor_bonus"}
+        ]
+      }
+    },
+    // Badge levels per world (7 levels: 0,10,20,30,40,50,100)
+    badgeLevels: {
+      nature:   [{e:"🌰",n:"Egg",lvl:0},{e:"🌱",n:"Sprout",lvl:1},{e:"🌿",n:"Explorer",lvl:2},{e:"🌳",n:"Nature Keeper",lvl:3},{e:"🦋",n:"Naturalist",lvl:4},{e:"🌍",n:"Guardian",lvl:5},{e:"🧙",n:"Nature Sage",lvl:6}],
+      language: [{e:"📖",n:"Reader",lvl:0},{e:"✏️",n:"Writer",lvl:1},{e:"🗣️",n:"Speaker",lvl:2},{e:"📝",n:"Word Master",lvl:3},{e:"🌍",n:"Linguist",lvl:4},{e:"🎭",n:"Storyteller",lvl:5},{e:"👑",n:"Language Legend",lvl:6}],
+      logic:    [{e:"🔢",n:"Counter",lvl:0},{e:"🧩",n:"Puzzler",lvl:1},{e:"🔍",n:"Detective",lvl:2},{e:"📐",n:"Mathematician",lvl:3},{e:"⚙️",n:"Engineer",lvl:4},{e:"🧠",n:"Genius",lvl:5},{e:"👑",n:"Logic Master",lvl:6}],
+      feelings: [{e:"💭",n:"Dreamer",lvl:0},{e:"💛",n:"Feeler",lvl:1},{e:"🤝",n:"Friend",lvl:2},{e:"🧘",n:"Calm Mind",lvl:3},{e:"🦸",n:"Brave Heart",lvl:4},{e:"🌈",n:"Empath",lvl:5},{e:"👑",n:"Wise Soul",lvl:6}],
+      arts:     [{e:"✏️",n:"Doodler",lvl:0},{e:"🎨",n:"Artist",lvl:1},{e:"🎵",n:"Musician",lvl:2},{e:"🖌️",n:"Creator",lvl:3},{e:"🎭",n:"Performer",lvl:4},{e:"💎",n:"Visionary",lvl:5},{e:"👑",n:"Art Legend",lvl:6}],
+      world:    [{e:"🗺️",n:"Curious One",lvl:0},{e:"🧭",n:"Explorer",lvl:1},{e:"🍎",n:"Chef",lvl:2},{e:"📸",n:"Journalist",lvl:3},{e:"🏛️",n:"Culture Keeper",lvl:4},{e:"🌏",n:"World Citizen",lvl:5},{e:"👑",n:"Global Legend",lvl:6}]
+    },
+    // Task thresholds for badge levels
+    badgeThresholds: [0, 10, 20, 30, 40, 50, 100],
+    // Streak badges
+    streakBadges: [
+      {days:3,  e:"🌿", desc:"3 days in a row"},
+      {days:7,  e:"🌟", desc:"7 days — 1 week!"},
+      {days:14, e:"🔥", desc:"14 days — 2 weeks!"},
+      {days:30, e:"🏆", desc:"30 days — 1 month!"},
+      {days:60, e:"💎", desc:"60 days — 2 months!"},
+      {days:100,e:"👑", desc:"100 days — legend!"}
+    ],
+    // Profile titles based on total tasks
+    profileTitles: [
+      {min:0,   title:""},
+      {min:10,  title:"Adventurer"},
+      {min:30,  title:"Explorer"},
+      {min:60,  title:"Pathfinder"},
+      {min:100, title:"Champion"},
+      {min:200, title:"Legend"},
+      {min:365, title:"Sage"}
+    ]
+  },
+
+  // ─── CZECH ───
+  cs: {
+    tagline: "Každý den jedno dobrodružství 🌿",
+    ob_name: "Tvoje jméno", ob_av: "Vyber si avatara",
+    ob_age: "Kolik ti je let?", ob_start: "Jdeme na to! 🌱",
+    ob_placeholder: "Zadej své jméno...",
+    ob_step1_title: "Vítej v Gream",
+    ob_step1_sub:   "Svět, kde zvědavost pomáhá věcem růst.",
+    ob_step1_btn:   "Pojďme začít",
+    ob_step2_title: "Poznej svého Greamíka",
+    ob_step2_sub:   "Malou bytost, která roste s tebou. Krmíš ji, když objevuješ přírodu, umění, jazyk a další.",
+    ob_step2_btn:   "Super",
+    ob_step3_title: "Připrav si dobrodružství",
+    ob_step3_sub:   "Dvě rychlé věci pro lepší zážitek. Kdykoliv můžeš změnit v nastavení.",
+    ob_step3_btn:   "Pokračovat",
+    ob_step3_skip:  "Přeskočit",
+    ob_perm_loc:        "Poloha",
+    ob_perm_loc_desc:   "Najdi místa kolem sebe a získávej bonusy za venkovní výzvy",
+    ob_perm_snd:        "Zvuk",
+    ob_perm_snd_desc:   "Veselé tóny a hlas tvého Greamíka",
+    ob_perm_granted:    "Povoleno",
+    ob_step4_title: "Jak ti budeme říkat?",
+    ob_step4_sub:   "Stačí křestní jméno. Vyber si i avatara.",
+
+    // ─── Onboarding v4 ───
+    ob_v4_step1_title: "Vítej v Gream",
+    ob_v4_step1_sub:   "Svět, kde zvědavost pomáhá věcem růst. Pro děti i celou rodinu.",
+    ob_v4_step1_btn:   "Pojďme začít",
+
+    ob_v4_step2_title: "Pro rodiče 👨‍👩‍👧",
+    ob_v4_step2_sub:   "Než si dítě začne hrát, prosím přečtěte si, jak Gream funguje.",
+    ob_v4_legal_data_name:  "Všechna data zůstávají v zařízení",
+    ob_v4_legal_data_desc:  "Jméno, postup, fotky — nikdy se neposílají na server. Pouze lokálně.",
+    ob_v4_legal_loc_name:   "Poloha je soukromá",
+    ob_v4_legal_loc_desc:   "Slouží jen k hledání míst poblíž. Nikam se neukládá ani nesdílí.",
+    ob_v4_legal_cam_name:   "Žádné reklamy",
+    ob_v4_legal_cam_desc:   "Gream neobsahuje reklamy, tracking ani sdílení dat s třetími stranami.",
+    ob_v4_legal_ads_name:   "Žádné reklamy, sledování ani analytika",
+    ob_v4_legal_ads_desc:   "Gream neobsahuje žádné reklamy ani třetí strany. Data se neprodávají.",
+    ob_v4_legal_fineprint:  "Děti do 13 let: vyžaduje souhlas rodiče (COPPA/GDPR-K). U 4–6 let by měl s prvním nastavením pomoci dospělý.",
+    ob_v4_consent:          "Jsem rodič nebo zákonný zástupce a souhlasím za své dítě.",
+    ob_v4_step2_btn:        "Rozumím",
+
+    ob_v4_step3_title: "Poznej Greamíky",
+    ob_v4_step3_sub:   "Malé bytosti, které žijí v tvojí zvědavosti. Krm svého výzvami z přírody, umění, jazyka i pocitů. Sleduj, jak roste!",
+    ob_v4_step3_btn:   "Super",
+
+    ob_v4_step4_title: "Rychlé nastavení",
+    ob_v4_step4_sub:   "Dvě nepovinné věci. Můžeš kdykoliv změnit v nastavení.",
+
+    ob_v4_step5_title: "Vítej, kamaráde",
+    ob_v4_step5_sub:   "Jen jméno a avatar — víc nepotřebujeme.",
+
+    ob_v4_step6_title: "Záhadné vajíčko 🥚",
+    ob_v4_step6_sub:   "Tvůj Greamík se skrývá uvnitř — splň 12 úkolů a vylíhne se. Způsob, jakým hraješ, odhalí, kdo to je!",
+    ob_v4_step6_btn:   "Pojďme zjistit! 🌱",
+    ps_title: "Kdo hraje?", ps_sub: "Vyber svůj profil",
+    ps_add: "+ Přidat profil", settings: "Nastavení",
+    map_new: "Nová výzva!", map_done: "Splněno ✅",
+    worlds: {
+      nature:   "Příroda",
+      language: "Jazyk",
+      logic:    "Logika",
+      feelings: "Pocity a já",
+      arts:     "Umění & hudba",
+      world:    "Svět & kultura"
+    },
+    ch_label: "Dnešní výzva",
+    btn_photo: "Vyfotit důkaz",
+    btn_draw:  "Nakreslit",
+    btn_voice: "Říct nahlas",
+    btn_write: "Napsat odpověď",
+    draw_label:  "Nakresli svůj důkaz 🎨",
+    draw_done:   "✅ Hotovo!",
+    write_label: "Napiš svou odpověď ✍️",
+    write_done:  "✅ Hotovo!",
+    write_hint:  "Napiš alespoň pár slov...",
+    bp_title:   "Postup k odznaku",
+    step_lbl:   n => `Krok ${n}`,
+    step_done_title: "Krok splněn!",
+    step_done_sub:   (n, t) => `${n} ze ${t} kroků splněno`,
+    next_step:  "Další krok →",
+    come_back:  "Vrátit se zítra",
+    congrats:      "Výborně!",
+    badge_earned:  "Získal/a jsi nový odznak!",
+    badge_evolved: "Tvůj odznak se proměnil!",
+    continue:      "🌿 Zpět do světa",
+    my_badges:    "Moje odznaky",
+    streak_title: "🔥 Streak odznaky",
+    bb_label:     "Moje odznaky",
+    tasks_done:   n => `${n} úkolů splněno`,
+    set_title:    "Nastavení",
+    ss_lang:      "Jazyk",           ss_lang_lbl:    "Jazyk aplikace",
+    ss_profile:   "Profil",          ss_age:         "Věková skupina",
+    ss_data:      "Data",            ss_reset:       "Smazat vše",
+    ss_name:      "Zobrazené jméno", ss_avatar:      "Avatar",
+    ss_family:    "Rodina",          ss_family_code: "Váš rodinný kód",
+    ss_family_join:"Připojit se k rodině", ss_join_placeholder: "Zadej rodinný kód...",
+    ss_join_btn:  "Připojit",
+    ss_sound:     "Zvuk",            ss_sound_on: "Zvuk zapnut",
+    ss_geo:       "Poloha",          ss_geo_set:  "Nastavit domov",
+    ss_geo_clear: "Smazat domov",    ss_geo_set_hint: "Klepni pro označení tohoto místa jako domova. Venkovní výzvy budou kontrolovat vzdálenost odsud.",
+    ss_geo_set_done: "Domov nastaven ✓",
+    geo_required:    "Jdi ven!",
+    geo_required_sub: "Tato výzva vyžaduje, abys byl/a venku.",
+    geo_check_btn:   "Jsem venku →",
+    geo_too_close:   "Pořád jsi blízko domova — popojdi kousek dál!",
+    geo_too_far:     "Jsi dost daleko od domova — buď opatrný/á!",
+    geo_no_signal:   "Nedaří se zjistit tvou polohu. Zkus to za chvíli.",
+    geo_indoor_ok:   "Z domu OK",
+    geo_outdoor_bonus:"+3 semínek venkovní bonus",
+    geo_at_poi:      "Jsi na místě! 📍",
+    geo_walk_to:     "Jdi na: ",
+    geo_distance:    m => `${m} m daleko`,
+    map_view_btn:    "Mapa",
+    map_back_btn:    "← Světy",
+    map_no_poi:      "Žádná zajímavá místa v okolí. Zkus klasické výzvy!",
+    map_poi_loading: "Hledám zajímavá místa kolem tebe...",
+    ward_title:      "Obchod",
+    ward_avatars:    "Avataři",
+    ward_frames:     "Rámečky",
+    ward_backgrounds:"Pozadí",
+    ward_eggs:      "Semínka",
+    ward_locked:     "🔒 Zamčeno",
+    ward_owned:      "Máš",
+    ward_equipped:   "Nasazeno",
+    ward_equip:      "Nasadit",
+    ward_buy:        "Koupit",
+    ward_not_enough: "Nemáš dost semínek",
+    ward_unlocked:   "Nové odemčeno! 🎉",
+    seeds_lbl:       "🌱 semínek",
+    seeds_earned:    n => `+${n} 🌱`,
+    history_title:   "Nedávná aktivita",
+    history_empty:   "Zatím žádné splněné úkoly — začni první!",
+    history_btn:     "Historie",
+
+    // Settings v5
+    ss_privacy_title:   "Soukromí a právní",
+    ss_privacy_lbl:     "Zásady ochrany soukromí",
+    ss_terms_lbl:       "Podmínky použití",
+    ss_data_info:       "Tvá data jsou uložena pouze v tomto zařízení. Klepnutím níže je trvale smažeš (právo na výmaz dle GDPR).",
+    stats_title:  "Statistiky",
+    stats_total:  "Celkem úkolů",
+    stats_streak: "Nejdelší série",
+    stats_worlds: "Světů prozkoumáno",
+    stats_badges: "Odznaků získáno",
+    lb_title:     "Žebříček",
+    lb_empty:     "Zatím žádná data — pokračuj!",
+    streak_days: d => `${d} ${d===1?'den':d<5?'dny':'dní'}`,
+    steps: {
+      nature:   [{label:"Objev",    icon:"🌿",type:"choice"},{label:"Popiš",   icon:"✍️",type:"choice"},{label:"Spočítej", icon:"🔢",type:"number"}],
+      language: [{label:"Vyber",    icon:"🎯",type:"choice"},{label:"Napiš",   icon:"✍️",type:"choice"},{label:"Spočítej", icon:"🔢",type:"number"}],
+      logic:    [{label:"Přemýšlej",icon:"🧩",type:"choice"},{label:"Vysvětli",icon:"✍️",type:"choice"},{label:"Číslo",    icon:"🔢",type:"number"}],
+      feelings: [{label:"Pocit",    icon:"💛",type:"choice"},{label:"Popiš",   icon:"✍️",type:"choice"},{label:"Zamysli",  icon:"🎯",type:"choice"}],
+      arts:     [{label:"Vyber",    icon:"🎵",type:"choice"},{label:"Popiš",   icon:"✍️",type:"choice"},{label:"Spočítej", icon:"🔢",type:"number"}],
+      world:    [{label:"Objev",    icon:"🌍",type:"choice"},{label:"Popiš",   icon:"✍️",type:"choice"},{label:"Číslo",    icon:"🔢",type:"number"}]
+    },
+    challenges: {
+      nature: {
+        "4-6": [
+          {text:"Co z toho žije v lese?", hint:"Vzpomeň si na zvířata, která znáš!", action:"choice", choices:[{text:"🦊 Liška",value:"liška"},{text:"🐠 Klaun",value:"ryba"},{text:"🦈 Žralok",value:"žralok"}], check:{type:"choice",correct:"liška"}, mode:"outdoor_bonus"},
+          {text:"Kolik noh má pavouk?", hint:"Více než pes, méně než sto!", action:"number", check:{type:"number",answer:8,tolerance:0}, mode:"outdoor_bonus"},
+          {text:"Kde žije většina ryb?", action:"choice", choices:[{text:"🌊 Ve vodě",value:"voda"},{text:"🌳 Na stromech",value:"stromy"},{text:"🏔️ V horách",value:"hory"}], check:{type:"choice",correct:"voda"}, mode:"outdoor_bonus"},
+          {text:"Které zvíře vyrábí med?", hint:"Bzučí a má černé pruhy!", action:"choice", choices:[{text:"🐝 Včela",value:"včela"},{text:"🦋 Motýl",value:"motýl"},{text:"🐞 Berušku",value:"beruška"}], check:{type:"choice",correct:"včela"}, mode:"outdoor_bonus"},
+          {text:"Kolik nohou má kočka?", action:"number", check:{type:"number",answer:4,tolerance:0}, mode:"outdoor_bonus"},
+          {text:"Které z těchto je živá věc?", action:"choice", choices:[{text:"🌸 Květ",value:"květ"},{text:"🪨 Kámen",value:"kámen"},{text:"💧 Voda",value:"voda"}], check:{type:"choice",correct:"květ"}, mode:"outdoor_bonus"}
+        ],
+        "7-9": [
+          {text:"Co rostliny potřebují k růstu?", hint:"Co dáváš rostlině každý den?", action:"choice", choices:[{text:"🌊 Vodu a slunce",value:"voda_slunce"},{text:"🍫 Čokoládu",value:"cokolada"},{text:"🧊 Jen led",value:"led"}], check:{type:"choice",correct:"voda_slunce"}, mode:"outdoor_bonus"},
+          {text:"Kolik zubů má dospělý člověk? (bez moudrákú)", hint:"Kolem 28", action:"number", check:{type:"number",answer:28,tolerance:4}, mode:"outdoor_bonus"},
+          {text:"Které z těchto zvířat je noční (aktivní v noci)?", action:"choice", choices:[{text:"🦉 Sova",value:"sova"},{text:"🐿️ Veverka",value:"veverka"},{text:"🦋 Motýl",value:"motýl"}], check:{type:"choice",correct:"sova"}, mode:"outdoor_bonus"},
+          {text:"Proces, při kterém rostliny vyrábějí potravu ze slunečního světla, se jmenuje ____.", action:"fill_blank", blank:{before:"Tento proces se jmenuje",after:".",correct:"fotosyntéza"}, check:{type:"fill_blank",correct:"fotosyntéza"}, mode:"outdoor_bonus"},
+          {text:"Seřaď roční doby od jara:", action:"sort", items:["❄️ Zima","🌸 Jaro","☀️ Léto","🍂 Podzim"], check:{type:"sort",correct:["🌸 Jaro","☀️ Léto","🍂 Podzim","❄️ Zima"]}, mode:"outdoor_bonus"},
+          {text:"Které zvíře je savec?", action:"choice", choices:[{text:"🐬 Delfín",value:"delfín"},{text:"🐊 Krokodýl",value:"krokodýl"},{text:"🦎 Ještěrka",value:"ještěrka"}], check:{type:"choice",correct:"delfín"}, mode:"outdoor_bonus"},
+          {text:"Kolik dní trvá oběh Země kolem Slunce?", hint:"Kolik dní má rok?", action:"number", check:{type:"number",answer:365,tolerance:1}, mode:"outdoor_bonus"},
+          {text:"Kolik stádií má životní cyklus motýla?", action:"number", check:{type:"number",answer:4,tolerance:0}, mode:"outdoor_bonus"}
+        ],
+        "10-15": [
+          {text:"Co je fotosyntéza?", hint:"Co rostliny vyrábí ze slunečního světla?", action:"choice", choices:[{text:"🌞 Přeměna světla v potravu",value:"correct"},{text:"🌙 Spánek během dne",value:"wrong1"},{text:"💧 Pití dešťové vody",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Kolik kostí má dospělý člověk?", hint:"Více než 200!", action:"number", check:{type:"number",answer:206,tolerance:10}, mode:"outdoor_bonus"},
+          {text:"Který organismus je primárním producentem ve většině potravních řetězců?", action:"choice", choices:[{text:"🌿 Rostlina",value:"rostlina"},{text:"🦁 Lev",value:"lev"},{text:"🦅 Orel",value:"orel"}], check:{type:"choice",correct:"rostlina"}, mode:"outdoor_bonus"},
+          {text:"Který orgán je největší v lidském těle?", action:"choice", choices:[{text:"🩺 Kůže",value:"kůže"},{text:"🫀 Srdce",value:"srdce"},{text:"🧠 Mozek",value:"mozek"}], check:{type:"choice",correct:"kůže"}, mode:"outdoor_bonus"},
+          {text:"Přibližně kolik buněk má lidské tělo? (v bilionech)", hint:"Je to velmi velké číslo!", action:"number", check:{type:"number",answer:37,tolerance:10}, mode:"outdoor_bonus"},
+          {text:"Jak nazýváme zvíře, které jí pouze rostliny?", action:"choice", choices:[{text:"Býložravec",value:"correct"},{text:"Masožravec",value:"wrong1"},{text:"Všežravec",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
+        ],
+        "15+": [
+          {text:"Který proces přeměňuje dusík na formy využitelné rostlinami?", action:"choice", choices:[{text:"Fixace dusíku",value:"correct"},{text:"Fotosyntéza",value:"wrong1"},{text:"Transpirace",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Přibližně kolik procent zemské atmosféry tvoří kyslík?", hint:"Asi pětina!", action:"number", check:{type:"number",answer:21,tolerance:2}, mode:"outdoor_bonus"},
+          {text:"Jak se nazývá organismus rozkládající mrtvou hmotu na živiny?", action:"choice", choices:[{text:"Rozkladač (dekompozitor)",value:"correct"},{text:"Producent",value:"wrong1"},{text:"Vrcholový predátor",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Přibližně před kolika miliony let vyhynuli dinosauři?", action:"number", check:{type:"number",answer:66,tolerance:5}, mode:"outdoor_bonus"},
+          {text:"Jak se nazývají druhy vyskytující se pouze na jednom konkrétním místě?", action:"choice", choices:[{text:"Endemické druhy",value:"correct"},{text:"Invazivní druhy",value:"wrong1"},{text:"Migrující druhy",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Kolik komor má lidské srdce?", action:"number", check:{type:"number",answer:4,tolerance:0}, mode:"indoor_ok"}
+        ]
+      },
+      language: {
+        "4-6": [
+          {text:"Které slovo je pozdrav?", hint:"Co říkáš, když někoho potkáš?", action:"choice", choices:[{text:"Ahoj! 👋",value:"ahoj"},{text:"Nashle! 👋",value:"nashle"},{text:"Jablko 🍎",value:"jablko"}], check:{type:"choice",correct:"ahoj"}, mode:"outdoor_bonus"},
+          {text:"Kolik písmen má slovo KŮŇ?", hint:"K-Ů-Ň", action:"number", check:{type:"number",answer:3,tolerance:0}, mode:"indoor_ok"},
+          {text:"Kolik písmen má tvoje jméno? Spočítej je!", action:"number", check:{type:"number",answer:null}, mode:"indoor_ok"},
+          {text:"Které slovo je barva?", action:"choice", choices:[{text:"🔵 Modrá",value:"modrá"},{text:"🍰 Dort",value:"dort"},{text:"🐕 Pes",value:"pes"}], check:{type:"choice",correct:"modrá"}, mode:"outdoor_bonus"},
+          {text:"Kolik písmen má slovo SLON?", hint:"Počítej jedno po druhém!", action:"number", check:{type:"number",answer:4,tolerance:0}, mode:"indoor_ok"},
+          {text:"Které z těchto je přídavné jméno (popisující slovo)?", action:"choice", choices:[{text:"Chlupatý 🐰",value:"chlupatý"},{text:"Běžet 🏃",value:"běžet"},{text:"Jablko 🍎",value:"jablko"}], check:{type:"choice",correct:"chlupatý"}, mode:"outdoor_bonus"}
+        ],
+        "7-9": [
+          {text:"Co je opak slova VESELÝ?", action:"choice", choices:[{text:"Smutný 😢",value:"smutný"},{text:"Radostný 😄",value:"radostný"},{text:"Velký 🐘",value:"velký"}], check:{type:"choice",correct:"smutný"}, mode:"outdoor_bonus"},
+          {text:"Kolik samohlásek je v češtině? (krátké i dlouhé)", hint:"a, á, e, é, i, í...", action:"number", check:{type:"number",answer:10,tolerance:2}, mode:"indoor_ok"},
+          {text:"Které z těchto slov je podstatné jméno?", action:"choice", choices:[{text:"🏠 Dům",value:"dům"},{text:"Běžet 🏃",value:"běžet"},{text:"Šťastný 😄",value:"šťastný"}], check:{type:"choice",correct:"dům"}, mode:"outdoor_bonus"},
+          {text:"Seřaď slova do správné věty:", action:"sort", items:["kočky","všechny","miluji","já"], check:{type:"sort",correct:["já","miluji","všechny","kočky"]}, mode:"outdoor_bonus"},
+          {text:"Synonymum slova VELKÝ je ____.", action:"fill_blank", blank:{before:"Synonymum slova VELKÝ je",after:".",correct:"obrovský"}, check:{type:"fill_blank",correct:"obrovský"}, mode:"outdoor_bonus"},
+          {text:"Jaký je slovní druh slova 'rychle'?", action:"choice", choices:[{text:"Příslovce",value:"příslovce"},{text:"Podstatné jméno",value:"podstatné"},{text:"Sloveso",value:"sloveso"}], check:{type:"choice",correct:"příslovce"}, mode:"outdoor_bonus"},
+          {text:"Kolik písmen má česká abeceda?", action:"number", check:{type:"number",answer:42,tolerance:1}, mode:"indoor_ok"},
+          {text:"Které z těchto sloves je v minulém čase?", action:"choice", choices:[{text:"Šel",value:"correct"},{text:"Jít",value:"wrong1"},{text:"Jde",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
+        ],
+        "10-15": [
+          {text:"Jaký jazykový prostředek je v: 'Vítr šeptal tajemství'?", action:"choice", choices:[{text:"Personifikace",value:"correct"},{text:"Rým",value:"wrong1"},{text:"Metafora",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Kolik jazyků se přibližně mluví na světě?", hint:"Tisíce!", action:"number", check:{type:"number",answer:7000,tolerance:1000}, mode:"indoor_ok"},
+          {text:"Která věta obsahuje metaforu?", action:"choice", choices:[{text:"Život je cesta",value:"correct"},{text:"Ona běží velmi rychle",value:"wrong1"},{text:"Pes hlasitě štěkal",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Která z těchto možností je příkladem aliterace?", action:"choice", choices:[{text:"Petr Plán plnil plány pilně",value:"correct"},{text:"Měsíc je lucerna na nebi",value:"wrong1"},{text:"Bylo to chladné jako led",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Shakespeare napsal přibližně kolik her?", action:"number", check:{type:"number",answer:37,tolerance:3}, mode:"indoor_ok"},
+          {text:"Co je klíčovým rysem přesvědčivého textu?", action:"choice", choices:[{text:"Používá důkazy a názory",value:"correct"},{text:"Obsahuje jen otázky",value:"wrong1"},{text:"Nikdy neuvádí fakta",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
+        ],
+        "15+": [
+          {text:"Jaký literární prostředek přiřazuje lidské vlastnosti nelidským věcem?", action:"choice", choices:[{text:"Personifikace",value:"correct"},{text:"Aliterace",value:"wrong1"},{text:"Onomatopoeia",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Přibližně kolik jazyků se mluví v Africe?", hint:"Více než tisíc!", action:"number", check:{type:"number",answer:2000,tolerance:500}, mode:"indoor_ok"},
+          {text:"Který gramatický způsob vyjadřuje hypotetické situace?", action:"choice", choices:[{text:"Kondicionál",value:"correct"},{text:"Indikativ",value:"wrong1"},{text:"Imperativ",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Kolik písmen má česká abeceda?", action:"number", check:{type:"number",answer:42,tolerance:1}, mode:"indoor_ok"},
+          {text:"Jak se jmenuje starověký systém písma s klínovými znaky?", action:"choice", choices:[{text:"Klínové písmo",value:"correct"},{text:"Hieroglyfy",value:"wrong1"},{text:"Runy",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Jak se nazývá slovo, které zní jako to, co označuje?", action:"choice", choices:[{text:"Onomatopoeia",value:"correct"},{text:"Metafora",value:"wrong1"},{text:"Přirovnání",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
+        ]
+      },
+      logic: {
+        "4-6": [
+          {text:"Co přijde dál? 🔴 🔵 🔴 🔵 🔴 __", action:"choice", choices:[{text:"🔵 Modrá",value:"modrá"},{text:"🟡 Žlutá",value:"žlutá"},{text:"🟢 Zelená",value:"zelená"}], check:{type:"choice",correct:"modrá"}, mode:"outdoor_bonus"},
+          {text:"Máš 3 jablka a jedno sníš. Kolik ti zbyde?", action:"number", check:{type:"number",answer:2,tolerance:0}, mode:"indoor_ok"},
+          {text:"Který z těchto tvarů má nejvíce stran?", action:"choice", choices:[{text:"⬡ Šestiúhelník (6)",value:"šestiúhelník"},{text:"🔺 Trojúhelník (3)",value:"trojúhelník"},{text:"⬛ Čtverec (4)",value:"čtverec"}], check:{type:"choice",correct:"šestiúhelník"}, mode:"outdoor_bonus"},
+          {text:"Který tvar má 3 strany?", action:"choice", choices:[{text:"🔺 Trojúhelník",value:"trojúhelník"},{text:"⬛ Čtverec",value:"čtverec"},{text:"⭕ Kruh",value:"kruh"}], check:{type:"choice",correct:"trojúhelník"}, mode:"outdoor_bonus"},
+          {text:"Kolik je 5 + 5?", action:"number", check:{type:"number",answer:10,tolerance:0}, mode:"indoor_ok"},
+          {text:"Co je velké, kulaté a žluté na obloze?", action:"choice", choices:[{text:"☀️ Slunce",value:"slunce"},{text:"🌙 Měsíc",value:"měsíc"},{text:"⭐ Hvězda",value:"hvězda"}], check:{type:"choice",correct:"slunce"}, mode:"outdoor_bonus"}
+        ],
+        "7-9": [
+          {text:"Který tvar má 4 stejné strany a 4 pravé úhly?", action:"choice", choices:[{text:"Čtverec ⬛",value:"čtverec"},{text:"Trojúhelník 🔺",value:"trojúhelník"},{text:"Kruh ⭕",value:"kruh"}], check:{type:"choice",correct:"čtverec"}, mode:"outdoor_bonus"},
+          {text:"Pekař upeče 24 rohlíků a dá je do sáčků po 6. Kolik sáčků naplní?", action:"number", check:{type:"number",answer:4,tolerance:0}, mode:"indoor_ok"},
+          {text:"15 sušenek rozdělíš rovnoměrně mezi 3 kamarády. Kolik dostane každý?", action:"number", check:{type:"number",answer:5,tolerance:0}, mode:"indoor_ok"},
+          {text:"7 × 8 = ____", action:"fill_blank", blank:{before:"7 × 8 =",after:"",correct:"56"}, check:{type:"fill_blank",correct:"56"}, mode:"outdoor_bonus"},
+          {text:"Kolik je 100 minus 37?", action:"number", check:{type:"number",answer:63,tolerance:0}, mode:"indoor_ok"},
+          {text:"Které z těchto čísel je liché?", action:"choice", choices:[{text:"7",value:"7"},{text:"8",value:"8"},{text:"12",value:"12"}], check:{type:"choice",correct:"7"}, mode:"outdoor_bonus"},
+          {text:"Šnek pluje 3 cm za minutu. Jak daleko ujede za 10 minut? (v cm)", action:"number", check:{type:"number",answer:30,tolerance:0}, mode:"indoor_ok"},
+          {text:"Co přijde dál v posloupnosti: 2, 4, 6, 8, __?", action:"number", check:{type:"number",answer:10,tolerance:0}, mode:"indoor_ok"}
+        ],
+        "10-15": [
+          {text:"Jaké je nejmenší prvočíslo větší než 7?", action:"choice", choices:[{text:"11",value:"11"},{text:"9",value:"9"},{text:"12",value:"12"}], check:{type:"choice",correct:"11"}, mode:"outdoor_bonus"},
+          {text:"Vlak jede 60 km/h po dobu 2,5 hodiny. Kolik km ujede?", action:"number", check:{type:"number",answer:150,tolerance:0}, mode:"indoor_ok"},
+          {text:"Která strategie řešení problémů spočívá v jeho rozdělení na menší části?", action:"choice", choices:[{text:"Dekompozice",value:"correct"},{text:"Memorování",value:"wrong1"},{text:"Opakování",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Který typ uvažování přechází od konkrétních příkladů k obecnému závěru?", action:"choice", choices:[{text:"Induktivní",value:"correct"},{text:"Deduktivní",value:"wrong1"},{text:"Abdukce",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Jaká je odmocnina čísla 144?", action:"number", check:{type:"number",answer:12,tolerance:0}, mode:"indoor_ok"},
+          {text:"Číslo vynásobené samo sebou dá 81. Jaké je to číslo?", action:"number", check:{type:"number",answer:9,tolerance:0}, mode:"indoor_ok"}
+        ],
+        "15+": [
+          {text:"Pokud jsou všechny blůpy hrůzy a všechny hrůzy jsou lůzy — jsou všechny blůpy lůzy?", action:"choice", choices:[{text:"Ano — tranzitivní logika",value:"correct"},{text:"Ne — nedá se říct",value:"wrong1"},{text:"Jen někdy",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Prvočíslo má přesně kolik dělitelů?", action:"number", check:{type:"number",answer:2,tolerance:0}, mode:"indoor_ok"},
+          {text:"Jak se nazývá přístup systematicky zkoušející všechny možnosti?", action:"choice", choices:[{text:"Brute force (hrubá síla)",value:"correct"},{text:"Heuristika",value:"wrong1"},{text:"Hladový algoritmus",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Kolik je binární číslo 1011 v desítkové soustavě?", hint:"8+2+1", action:"number", check:{type:"number",answer:11,tolerance:0}, mode:"indoor_ok"},
+          {text:"Jak se jmenuje logický klam, kdy napadáme osobu, ne argument?", action:"choice", choices:[{text:"Ad hominem",value:"correct"},{text:"Slaměný panák",value:"wrong1"},{text:"Falešné dilema",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Kolik stran má pravidelný šestiúhelník?", action:"number", check:{type:"number",answer:6,tolerance:0}, mode:"indoor_ok"}
+        ]
+      },
+      feelings: {
+        "4-6": [
+          {text:"Jak se cítíš, když obejmeš někoho, koho miluješ?", action:"choice", choices:[{text:"Šťastně a teple 🥰",value:"šťastně"},{text:"Strašidelně 😨",value:"strach"},{text:"Nudím se 😴",value:"nuda"}], check:{type:"choice",correct:"šťastně"}, mode:"outdoor_bonus"},
+          {text:"Kolik lidí máš nejraději na světě? Napiš číslo!", hint:"Neexistuje špatná odpověď!", action:"number", check:{type:"number",answer:null}, mode:"outdoor_bonus"},
+          {text:"Co lidi obvykle dělá šťastnými?", action:"choice", choices:[{text:"Objetí od milovaného člověka 🤗",value:"objetí"},{text:"Nuda a samota 😴",value:"nuda"},{text:"Ztratit věc 😢",value:"ztratit"}], check:{type:"choice",correct:"objetí"}, mode:"outdoor_bonus"}
+        ],
+        "7-9": [
+          {text:"Jak nejlépe pomoci kamarádovi, který je smutný?", action:"choice", choices:[{text:"Poslechnout ho a být s ním 🤝",value:"correct"},{text:"Odejít a ignorovat ho",value:"wrong1"},{text:"Říct mu, ať přestane být smutný",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Na škále 1–10, jak dobře se dnes cítíš?", hint:"Jen tvoje upřímné číslo!", action:"number", check:{type:"number",answer:null}, mode:"outdoor_bonus"},
+          {text:"Která situace by tě nejspíš naplnila pýchou?", action:"choice", choices:[{text:"Dokončit těžký úkol 🏆",value:"correct"},{text:"Zapomenout domácí úkol 📚",value:"wrong1"},{text:"Prošvihnout alarm ⏰",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
+        ,
+          {text:"Spoj zvíře s tím co jí:", action:"match", pairs:[{a:"🐇 Králík",b:"🥕 Mrkev"},{a:"🦁 Lev",b:"🥩 Maso"},{a:"🐝 Včela",b:"🌸 Nektar"}], check:{type:"match"}, mode:"outdoor_bonus"}],
+        "10-15": [
+          {text:"Co je empatie?", action:"choice", choices:[{text:"Rozumět tomu, jak se cítí druzí",value:"correct"},{text:"Zlobit se na ostatní",value:"wrong1"},{text:"Myslet jen na sebe",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Kolik základních emocí psychologové běžně rozlišují? (Ekmanův model)", hint:"Strach, zlost...", action:"number", check:{type:"number",answer:6,tolerance:1}, mode:"outdoor_bonus"},
+          {text:"Jaký výraz popisuje pocit dvou protichůdných emocí zároveň?", action:"choice", choices:[{text:"Ambivalence",value:"correct"},{text:"Empatie",value:"wrong1"},{text:"Apatie",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
+        ],
+        "15+": [
+          {text:"Které z těchto NENÍ jednou z 5 fází smutku (Kübler-Ross)?", action:"choice", choices:[{text:"Vzrušení",value:"correct"},{text:"Popření",value:"wrong1"},{text:"Přijetí",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Kolik myšlenek prý člověk za den průměrně má? (v tisících)", hint:"Překvapivě velké číslo!", action:"number", check:{type:"number",answer:60,tolerance:20}, mode:"outdoor_bonus"},
+          {text:"Jak se psychologicky nazývá aktualizace přesvědčení na základě nových důkazů?", action:"choice", choices:[{text:"Kognitivní aktualizace",value:"correct"},{text:"Kognitivní disonance",value:"wrong1"},{text:"Potvrzovací zkreslení",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
+        ],
+        "15+": [
+          {text:"Jaký literární prostředek přiřazuje lidské vlastnosti nelidským věcem?", action:"choice", choices:[{text:"Personifikace",value:"correct"},{text:"Aliterace",value:"wrong1"},{text:"Onomatopoeia",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Přibližně kolik jazyků se mluví v Africe?", hint:"Více než tisíc!", action:"number", check:{type:"number",answer:2000,tolerance:500}, mode:"indoor_ok"},
+          {text:"Který gramatický způsob vyjadřuje hypotetické situace?", action:"choice", choices:[{text:"Kondicionál",value:"correct"},{text:"Indikativ",value:"wrong1"},{text:"Imperativ",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Kolik písmen má česká abeceda?", action:"number", check:{type:"number",answer:42,tolerance:1}, mode:"indoor_ok"},
+          {text:"Jak se jmenuje starověký systém písma s klínovými znaky?", action:"choice", choices:[{text:"Klínové písmo",value:"correct"},{text:"Hieroglyfy",value:"wrong1"},{text:"Runy",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Jak se nazývá slovo, které zní jako to, co označuje?", action:"choice", choices:[{text:"Onomatopoeia (zvukomalba)",value:"correct"},{text:"Metafora",value:"wrong1"},{text:"Přirovnání",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
+        ],
+        "15+": [
+          {text:"Pokud jsou všechny blůpy hrůzy a všechny hrůzy jsou lůzy — jsou všechny blůpy lůzy?", action:"choice", choices:[{text:"Ano — tranzitivní logika",value:"correct"},{text:"Ne — nedá se říct",value:"wrong1"},{text:"Jen někdy",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Prvočíslo má přesně kolik dělitelů?", action:"number", check:{type:"number",answer:2,tolerance:0}, mode:"indoor_ok"},
+          {text:"Jak se nazývá přístup systematicky zkoušející všechny možnosti?", action:"choice", choices:[{text:"Brute force (hrubá síla)",value:"correct"},{text:"Heuristika",value:"wrong1"},{text:"Hladový algoritmus",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Kolik je binární číslo 1011 v desítkové soustavě?", hint:"8+2+1", action:"number", check:{type:"number",answer:11,tolerance:0}, mode:"indoor_ok"},
+          {text:"Jak se jmenuje logický klam, kdy napadáme osobu, ne argument?", action:"choice", choices:[{text:"Ad hominem",value:"correct"},{text:"Slaměný panák",value:"wrong1"},{text:"Falešné dilema",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Kolik stran má pravidelný šestiúhelník?", action:"number", check:{type:"number",answer:6,tolerance:0}, mode:"indoor_ok"}
+        ]
+      },
+      arts: {
+        "4-6": [
+          {text:"Co smícháš, abys dostal/a zelenou barvu?", action:"choice", choices:[{text:"🔵 Modrá + 🟡 Žlutá",value:"correct"},{text:"🔴 Červená + 🔵 Modrá",value:"wrong1"},{text:"🔴 Červená + 🟡 Žlutá",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Kolik strun má kytara?", action:"number", check:{type:"number",answer:6,tolerance:0}, mode:"outdoor_bonus"},
+          {text:"Které z těchto NENÍ hudební nástroj?", action:"choice", choices:[{text:"🪑 Židle",value:"židle"},{text:"🎹 Klavír",value:"klavír"},{text:"🥁 Bubny",value:"bubny"}], check:{type:"choice",correct:"židle"}, mode:"outdoor_bonus"}
+        ,
+          {text:"Jaká barva vznikne smícháním modré a žluté?", action:"choice", choices:[{text:"Zelená 🟢",value:"correct"},{text:"Fialová",value:"wrong1"},{text:"Oranžová",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Kolik strun má klasická kytara?", action:"number", check:{type:"number",answer:6,tolerance:0}, mode:"outdoor_bonus"},
+          {text:"Co drží malíř v ruce, když maluje?", action:"choice", choices:[{text:"Štětec 🖌️",value:"correct"},{text:"Kladivo",value:"wrong1"},{text:"Lžíci",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}],
+        "7-9": [
+          {text:"Kdo namaloval Monu Lisu?", action:"choice", choices:[{text:"Leonardo da Vinci 🎨",value:"correct"},{text:"Pablo Picasso",value:"wrong1"},{text:"Vincent van Gogh",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Kolik not má standardní hudební stupnice?", hint:"Do Re Mi Fa Sol La Ti...", action:"number", check:{type:"number",answer:7,tolerance:0}, mode:"outdoor_bonus"},
+          {text:"Kolik strun má standardní housle?", action:"number", check:{type:"number",answer:4,tolerance:0}, mode:"outdoor_bonus"}
+        ,
+          {text:"Spoj umělce s jeho stylem:", action:"match", pairs:[{a:"Dalí",b:"Surrealismus"},{a:"Monet",b:"Impresionismus"},{a:"Picasso",b:"Kubismus"}], check:{type:"match"}, mode:"outdoor_bonus"},
+          {text:"Kolik čar má nota celá (celá nota)?", action:"choice", choices:[{text:"Žádné — je to prázdná hlavička",value:"correct"},{text:"Jednu svislou",value:"wrong1"},{text:"Dvě vodorovné",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Kolik barev má duha?", action:"number", check:{type:"number",answer:7,tolerance:0}, mode:"outdoor_bonus"},
+          {text:"Jak se jmenuje technika, kdy umělec skládá různé materiály na plátno?", action:"choice", choices:[{text:"Koláž",value:"correct"},{text:"Freska",value:"wrong1"},{text:"Lepty",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Kolik oktáv má klavír?", hint:"Hodně — zkus odhadnout!", action:"number", check:{type:"number",answer:7,tolerance:1}, mode:"indoor_ok"}],
+        "10-15": [
+          {text:"S jakým uměleckým směrem je spojen Salvador Dalí?", action:"choice", choices:[{text:"Surrealismus",value:"correct"},{text:"Impresionismus",value:"wrong1"},{text:"Kubismus",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Beethoven napsal 9 symfonií. Kolik jich napsal Mozart? (přibližně)", hint:"Mnohem více!", action:"number", check:{type:"number",answer:41,tolerance:5}, mode:"outdoor_bonus"},
+          {text:"Která barva je v psychologii barev nejčastěji spojována s klidem a důvěrou?", action:"choice", choices:[{text:"Modrá",value:"correct"},{text:"Červená",value:"wrong1"},{text:"Žlutá",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
+        ,
+          {text:"Který umělecký styl se vyznačuje zkreslením reality a snovými motivy?", action:"choice", choices:[{text:"Surrealismus",value:"correct"},{text:"Impresionismus",value:"wrong1"},{text:"Kubismus",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Kolik půltónů tvoří oktávu v evropské hudební tradici?", action:"number", check:{type:"number",answer:12,tolerance:0}, mode:"indoor_ok"},
+          {text:"Který skladatel byl hluchý, přesto skládal symfonie?", action:"choice", choices:[{text:"Ludwig van Beethoven 🎵",value:"correct"},{text:"Wolfgang Mozart",value:"wrong1"},{text:"Johann Bach",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}],
+        "15+": [
+          {text:"Který z těchto principů je klíčový pro minimalistické umění?", action:"choice", choices:[{text:"Odstranit vše nepodstatné",value:"correct"},{text:"Přidat co nejvíce prvků",value:"wrong1"},{text:"Přesně kopírovat klasické styly",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Louvre v Paříži drží přibližně kolik uměleckých děl? (v tisících)", action:"number", check:{type:"number",answer:380,tolerance:50}, mode:"outdoor_bonus"},
+          {text:"Jak se nazývá umění, které zobrazuje reálný svět co nejpřesněji?", action:"choice", choices:[{text:"Realismus",value:"correct"},{text:"Abstrakcionismus",value:"wrong1"},{text:"Expresionismus",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
+        ,
+          {text:"Který malíř namaloval Hvězdnou noc?", action:"choice", choices:[{text:"Vincent van Gogh 🌙",value:"correct"},{text:"Pablo Picasso",value:"wrong1"},{text:"Salvador Dalí",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Kolik strun má standardní housle?", action:"number", check:{type:"number",answer:4,tolerance:0}, mode:"indoor_ok"},
+          {text:"Který umělecký styl se vyznačuje lomenými liniemi a geometrickými tvary?", action:"choice", choices:[{text:"Kubismus",value:"correct"},{text:"Surrealismus",value:"wrong1"},{text:"Impresionismus",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}]
+      },
+      world: {
+        "4-6": [
+          {text:"Který kontinent je největší?", action:"choice", choices:[{text:"🌏 Asie",value:"correct"},{text:"🌍 Afrika",value:"wrong1"},{text:"🌎 Amerika",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Kolik kontinentů je na Zemi?", action:"number", check:{type:"number",answer:7,tolerance:0}, mode:"outdoor_bonus"},
+          {text:"Ve které zemi stojí Eiffelova věž?", action:"choice", choices:[{text:"🇫🇷 Francie",value:"francie"},{text:"🇬🇧 Anglie",value:"anglie"},{text:"🇩🇪 Německo",value:"německo"}], check:{type:"choice",correct:"francie"}, mode:"outdoor_bonus"}
+        ,
+          {text:"Na jakém kontinentu leží Egypt?", action:"choice", choices:[{text:"Afrika 🌍",value:"correct"},{text:"Asie",value:"wrong1"},{text:"Evropa",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Kolik kontinentů je na světě?", action:"number", check:{type:"number",answer:7,tolerance:0}, mode:"outdoor_bonus"},
+          {text:"Která barva je na vlajce České republiky?", action:"choice", choices:[{text:"Červená, bílá a modrá",value:"correct"},{text:"Zelená a žlutá",value:"wrong1"},{text:"Jen bílá",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}],
+        "7-9": [
+          {text:"Jaké je hlavní město Francie?", action:"choice", choices:[{text:"🗼 Paříž",value:"correct"},{text:"🏰 Londýn",value:"wrong1"},{text:"🎭 Řím",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Přibližně kolik zemí existuje na světě?", hint:"Kolem 190–200.", action:"number", check:{type:"number",answer:195,tolerance:10}, mode:"outdoor_bonus"},
+          {text:"Ze které země pochází sushi?", action:"choice", choices:[{text:"🇯🇵 Japonsko",value:"japonsko"},{text:"🇨🇳 Čína",value:"čína"},{text:"🇧🇷 Brazílie",value:"brazílie"}], check:{type:"choice",correct:"japonsko"}, mode:"outdoor_bonus"}
+        ,
+          {text:"Hlavní město Francie je ____.", action:"fill_blank", blank:{before:"Hlavní město Francie je",after:".",correct:"Paříž"}, check:{type:"fill_blank",correct:"Paříž"}, mode:"outdoor_bonus"},
+          {text:"Jaká je přibližná populace Česka v milionech?", action:"number", check:{type:"number",answer:10,tolerance:1}, mode:"outdoor_bonus"},
+          {text:"Která řeka protéká Prahou?", action:"choice", choices:[{text:"Vltava",value:"correct"},{text:"Labe",value:"wrong1"},{text:"Morava",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Kolik zemí sousedí s Českou republikou?", action:"number", check:{type:"number",answer:4,tolerance:0}, mode:"outdoor_bonus"},
+          {text:"Ve kterém světadílu leží Brazílie?", action:"choice", choices:[{text:"Jižní Amerika 🌎",value:"correct"},{text:"Afrika",value:"wrong1"},{text:"Asie",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}],
+        "10-15": [
+          {text:"Který oceán je největší na Zemi?", action:"choice", choices:[{text:"🌊 Tichý oceán",value:"correct"},{text:"Atlantický oceán",value:"wrong1"},{text:"Indický oceán",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Přibližně kolik lidí žije na Zemi? (v miliardách)", action:"number", check:{type:"number",answer:8,tolerance:1}, mode:"outdoor_bonus"},
+          {text:"Který skleníkový plyn je největším přispěvatelem ke klimatické změně z lidské činnosti?", action:"choice", choices:[{text:"CO₂ (oxid uhličitý)",value:"correct"},{text:"Helium",value:"wrong1"},{text:"Dusík",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
+        ,
+          {text:"Jak se nazývá globální síť počítačů, která propojuje celý svět?", action:"choice", choices:[{text:"Internet",value:"correct"},{text:"Intranet",value:"wrong1"},{text:"Extranet",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Přibližně kolik procent světové populace žije v Asii?", action:"number", check:{type:"number",answer:60,tolerance:5}, mode:"indoor_ok"},
+          {text:"Který oceán je největší na světě?", action:"choice", choices:[{text:"Tichý oceán",value:"correct"},{text:"Atlantský oceán",value:"wrong1"},{text:"Indický oceán",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}],
+        "15+": [
+          {text:"Která mezinárodní dohoda stanovila cíl omezit globální oteplování na 1,5 °C?", action:"choice", choices:[{text:"Pařížská dohoda (2015)",value:"correct"},{text:"Kjótský protokol (1997)",value:"wrong1"},{text:"Montrealský protokol (1987)",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Přibližně kolik jazyků se mluví v Africe?", hint:"Kontinent s neobyčejnou jazykovou rozmanitostí", action:"number", check:{type:"number",answer:2000,tolerance:500}, mode:"outdoor_bonus"},
+          {text:"Která dohoda stanovila cíl omezit oteplování na 1,5 °C?", action:"choice", choices:[{text:"Pařížská dohoda",value:"correct"},{text:"Kjótský protokol",value:"wrong1"},{text:"Montrealský protokol",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
+        ,
+          {text:"Která mezinárodní organizace koordinuje zdravotní politiku na globální úrovni?", action:"choice", choices:[{text:"WHO (Světová zdravotnická organizace)",value:"correct"},{text:"UNESCO",value:"wrong1"},{text:"NATO",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Přibližně kolik procent světové populace nemá přístup k bezpečné pitné vodě?", action:"number", check:{type:"number",answer:25,tolerance:10}, mode:"outdoor_bonus"},
+          {text:"Který systém ekonomiky je v současnosti nejrozšířenější na světě?", action:"choice", choices:[{text:"Smíšená tržní ekonomika",value:"correct"},{text:"Čistý komunismus",value:"wrong1"},{text:"Feudalismus",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}]
+      }
+    },
+    badgeLevels: {
+      nature:   [{e:"🌰",n:"Vajíčko",lvl:0},{e:"🌱",n:"Výhonek",lvl:1},{e:"🌿",n:"Průzkumník",lvl:2},{e:"🌳",n:"Strážce přírody",lvl:3},{e:"🦋",n:"Přírodovědec",lvl:4},{e:"🌍",n:"Ochránce",lvl:5},{e:"🧙",n:"Mudrc přírody",lvl:6}],
+      language: [{e:"📖",n:"Čtenář",lvl:0},{e:"✏️",n:"Pisatel",lvl:1},{e:"🗣️",n:"Mluvčí",lvl:2},{e:"📝",n:"Mistr slov",lvl:3},{e:"🌍",n:"Lingvista",lvl:4},{e:"🎭",n:"Vypravěč",lvl:5},{e:"👑",n:"Jazyková legenda",lvl:6}],
+      logic:    [{e:"🔢",n:"Počítač",lvl:0},{e:"🧩",n:"Hádankář",lvl:1},{e:"🔍",n:"Detektiv",lvl:2},{e:"📐",n:"Matematik",lvl:3},{e:"⚙️",n:"Inženýr",lvl:4},{e:"🧠",n:"Génius",lvl:5},{e:"👑",n:"Mistr logiky",lvl:6}],
+      feelings: [{e:"💭",n:"Snílek",lvl:0},{e:"💛",n:"Cítič",lvl:1},{e:"🤝",n:"Kamarád",lvl:2},{e:"🧘",n:"Klidná mysl",lvl:3},{e:"🦸",n:"Odvážné srdce",lvl:4},{e:"🌈",n:"Empatik",lvl:5},{e:"👑",n:"Moudrá duše",lvl:6}],
+      arts:     [{e:"✏️",n:"Čmáralka",lvl:0},{e:"🎨",n:"Umělec",lvl:1},{e:"🎵",n:"Muzikant",lvl:2},{e:"🖌️",n:"Tvůrce",lvl:3},{e:"🎭",n:"Performer",lvl:4},{e:"💎",n:"Vizionář",lvl:5},{e:"👑",n:"Umělecká legenda",lvl:6}],
+      world:    [{e:"🗺️",n:"Zvídavý",lvl:0},{e:"🧭",n:"Průzkumník",lvl:1},{e:"🍎",n:"Kuchař",lvl:2},{e:"📸",n:"Novinář",lvl:3},{e:"🏛️",n:"Strážce kultury",lvl:4},{e:"🌏",n:"Světoobčan",lvl:5},{e:"👑",n:"Světová legenda",lvl:6}]
+    },
+    badgeThresholds: [0, 10, 20, 30, 40, 50, 100],
+    streakBadges: [
+      {days:3,  e:"🌿", desc:"3 dny v řadě"},
+      {days:7,  e:"🌟", desc:"7 dní — celý týden!"},
+      {days:14, e:"🔥", desc:"14 dní — 2 týdny!"},
+      {days:30, e:"🏆", desc:"30 dní — celý měsíc!"},
+      {days:60, e:"💎", desc:"60 dní — 2 měsíce!"},
+      {days:100,e:"👑", desc:"100 dní — legenda!"}
+    ],
+    profileTitles: [
+      {min:0,   title:""},
+      {min:10,  title:"Dobroduh"},
+      {min:30,  title:"Průzkumník"},
+      {min:60,  title:"Stopař"},
+      {min:100, title:"Šampion"},
+      {min:200, title:"Legenda"},
+      {min:365, title:"Mudrc"}
+    ]
+  }
+};
+
+export function getLang() {
+  const stored = localStorage.getItem('gream_lang');
+  if (stored) return stored;
+  // Auto-detect from browser locale on first run
+  const locale = (navigator.language || 'en').toLowerCase();
+  const detected = locale.startsWith('cs') || locale.startsWith('sk') ? 'cs' : 'en';
+  localStorage.setItem('gream_lang', detected);
+  return detected;
+}
+export function setLang(l) {
+  localStorage.setItem('gream_lang', l);
+}export function tr() {
+  return T[getLang()] || T.en;
+}

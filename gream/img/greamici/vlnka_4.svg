@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300">
+  <circle cx="150" cy="160" r="160" fill="#9b59b6" opacity="0.12"/>
+  <circle cx="150" cy="155" r="140" fill="#9b59b6" opacity="0.25"/>
+  <text x="150" y="170" font-size="150" text-anchor="middle" dominant-baseline="middle">🎨</text>
+  <text x="150" y="260" font-size="14" text-anchor="middle" fill="#9b59b6" font-family="sans-serif" font-weight="bold">Vlnka · 4</text>
+</svg>
