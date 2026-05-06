@@ -1,0 +1,14 @@
+<div class="card" style="max-width:420px;margin:auto;text-align:center">
+  <div style="font-size:80px;margin:8px 0 16px">🌳</div>
+  <h2 id="geoGateTitle" style="font-size:24px;font-weight:900;color:var(--green-deep);margin:0 0 8px"></h2>
+  <p id="geoGateSub" style="font-size:15px;color:var(--green-mid);margin:0 0 24px;line-height:1.5"></p>
+
+  <button id="geoGateBtn" class="btn-primary" style="width:100%;max-width:300px;margin:0 auto 10px"
+    onclick="window._geoOnConfirm && window._geoOnConfirm()"></button>
+
+  <button id="geoGateSkipBtn" class="btn-ghost" style="width:100%;max-width:300px;margin:0 auto 10px;padding:12px;background:rgba(255,255,255,0.6);border:none;border-radius:14px;font-family:inherit;font-weight:800;color:var(--green-mid);cursor:pointer;font-size:14px"
+    onclick="window._geoOnSkip && window._geoOnSkip()"></button>
+
+  <button class="btn-secondary" style="background:none;border:none;font-family:inherit;font-weight:700;color:var(--green-mid);cursor:pointer;font-size:13px;padding:6px"
+    onclick="window._geoOnCancel && window._geoOnCancel()">←</button>
+</div>

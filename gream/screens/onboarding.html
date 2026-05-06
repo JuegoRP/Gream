@@ -1,0 +1,170 @@
+<div class="ob-flow" id="obFlow">
+
+  <!-- STEP 1: Welcome (kid-friendly) -->
+  <div class="ob-step active" data-step="1">
+    <div class="ob-art">
+      <div class="ob-glow"></div>
+      <span class="ob-emoji">🌱</span>
+    </div>
+    <h1 class="ob-title" id="obTitle1">Welcome</h1>
+    <p class="ob-sub" id="obSub1"></p>
+    <button class="btn-primary ob-btn" onclick="App.obNext()" id="obBtn1">Continue</button>
+  </div>
+
+  <!-- STEP 2: Parent notice + legal (REQUIRED before any data collection) -->
+  <div class="ob-step" data-step="2">
+    <div class="ob-art">
+      <span class="ob-emoji">👨‍👩‍👧</span>
+    </div>
+    <h1 class="ob-title" id="obTitle2">For parents</h1>
+    <p class="ob-sub" id="obSub2"></p>
+
+    <div class="ob-legal-box" id="obLegalBox">
+      <div class="ob-legal-row">
+        <span class="ob-legal-icon">🔒</span>
+        <div>
+          <div class="ob-legal-name" id="obLegalDataName"></div>
+          <div class="ob-legal-desc" id="obLegalDataDesc"></div>
+        </div>
+      </div>
+      <div class="ob-legal-row">
+        <span class="ob-legal-icon">📍</span>
+        <div>
+          <div class="ob-legal-name" id="obLegalLocName"></div>
+          <div class="ob-legal-desc" id="obLegalLocDesc"></div>
+        </div>
+      </div>
+      <div class="ob-legal-row">
+        <span class="ob-legal-icon">📷</span>
+        <div>
+          <div class="ob-legal-name" id="obLegalCamName"></div>
+          <div class="ob-legal-desc" id="obLegalCamDesc"></div>
+        </div>
+      </div>
+      <div class="ob-legal-row">
+        <span class="ob-legal-icon">🚫</span>
+        <div>
+          <div class="ob-legal-name" id="obLegalAdsName"></div>
+          <div class="ob-legal-desc" id="obLegalAdsDesc"></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="ob-legal-fineprint" id="obLegalFineprint"></p>
+
+    <label class="ob-consent-row" id="obConsentRow">
+      <input type="checkbox" id="obConsentCheck" onchange="App.obToggleConsent()">
+      <span id="obConsentText"></span>
+    </label>
+
+    <button class="btn-primary ob-btn" onclick="App.obNext()" id="obBtn2" disabled>Continue</button>
+  </div>
+
+  <!-- STEP 3: The Greamík story -->
+  <div class="ob-step" data-step="3">
+    <div class="ob-art">
+      <div class="ob-art-greams">
+        <span style="font-size:50px;animation:greamIdle 3s ease-in-out infinite">🌳</span>
+        <span style="font-size:50px;animation:greamIdle 3s ease-in-out infinite 0.4s">📖</span>
+        <span style="font-size:50px;animation:greamIdle 3s ease-in-out infinite 0.8s">🎨</span>
+      </div>
+    </div>
+    <h1 class="ob-title" id="obTitle3">Meet Greamíci</h1>
+    <p class="ob-sub" id="obSub3"></p>
+    <button class="btn-primary ob-btn" onclick="App.obNext()" id="obBtn3">Continue</button>
+  </div>
+
+  <!-- STEP 4: Permissions -->
+  <div class="ob-step" data-step="4">
+    <div class="ob-art">
+      <span class="ob-emoji">⚙️</span>
+    </div>
+    <h1 class="ob-title" id="obTitle4">Quick setup</h1>
+    <p class="ob-sub" id="obSub4"></p>
+
+    <div class="ob-perm-list">
+      <button class="ob-perm-row" id="obPermLoc" onclick="App.obAskLocation()">
+        <span class="ob-perm-icon">📍</span>
+        <div class="ob-perm-text">
+          <div class="ob-perm-name" id="obPermLocName"></div>
+          <div class="ob-perm-desc" id="obPermLocDesc"></div>
+        </div>
+        <span class="ob-perm-state" id="obPermLocState">→</span>
+      </button>
+      <button class="ob-perm-row" id="obPermSnd" onclick="App.obAskSound()">
+        <span class="ob-perm-icon">🔊</span>
+        <div class="ob-perm-text">
+          <div class="ob-perm-name" id="obPermSndName"></div>
+          <div class="ob-perm-desc" id="obPermSndDesc"></div>
+        </div>
+        <span class="ob-perm-state" id="obPermSndState">→</span>
+      </button>
+    </div>
+
+    <button class="btn-primary ob-btn" onclick="App.obNext()" id="obBtn4">Continue</button>
+    <button class="ob-btn-skip" onclick="App.obNext()" id="obBtnSkip">Skip for now</button>
+  </div>
+
+  <!-- STEP 5: Name + avatar + age (essential profile) -->
+  <div class="ob-step" data-step="5">
+    <div class="ob-art">
+      <span class="ob-emoji">👋</span>
+    </div>
+    <h1 class="ob-title" id="obTitle5">What's your name?</h1>
+    <p class="ob-sub" id="obSub5"></p>
+
+    <input class="name-input input-field" id="nameInput" maxlength="20"
+      placeholder="" oninput="App.validateOb()" autocomplete="off">
+
+    <div class="ob-label" id="ob-av-lbl" style="margin-top:14px"></div>
+    <div class="avatar-row">
+      <div class="av-opt active" data-av="🧒" onclick="App.pickAvatar(this)">🧒</div>
+      <div class="av-opt" data-av="👧" onclick="App.pickAvatar(this)">👧</div>
+      <div class="av-opt" data-av="👦" onclick="App.pickAvatar(this)">👦</div>
+      <div class="av-opt" data-av="🧑" onclick="App.pickAvatar(this)">🧑</div>
+      <div class="av-opt" data-av="🌟" onclick="App.pickAvatar(this)">🌟</div>
+      <div class="av-opt" data-av="🦊" onclick="App.pickAvatar(this)">🦊</div>
+      <div class="av-opt" data-av="🐻" onclick="App.pickAvatar(this)">🐻</div>
+      <div class="av-opt" data-av="🐸" onclick="App.pickAvatar(this)">🐸</div>
+    </div>
+
+    <div class="ob-label" id="ob-age-lbl" style="margin-top:18px;font-size:13px;font-weight:700;color:var(--green-mid);text-align:center"></div>
+    <div style="display:flex;gap:8px;justify-content:center;margin-top:8px;flex-wrap:wrap">
+      <button class="age-btn active" data-age="4-6" onclick="App.pickAge(this,'4-6')" style="padding:9px 16px;border-radius:50px;border:2px solid rgba(74,138,46,0.35);background:var(--green-mid);color:white;font-family:inherit;font-weight:800;font-size:13px;cursor:pointer">4–6</button>
+      <button class="age-btn" data-age="7-9" onclick="App.pickAge(this,'7-9')" style="padding:9px 16px;border-radius:50px;border:2px solid rgba(74,138,46,0.35);background:white;color:var(--green-deep);font-family:inherit;font-weight:800;font-size:13px;cursor:pointer">7–9</button>
+      <button class="age-btn" data-age="10-12" onclick="App.pickAge(this,'10-12')" style="padding:9px 16px;border-radius:50px;border:2px solid rgba(74,138,46,0.35);background:white;color:var(--green-deep);font-family:inherit;font-weight:800;font-size:13px;cursor:pointer">10–12</button>
+      <button class="age-btn" data-age="10-15" onclick="App.pickAge(this,'10-15')" style="padding:9px 16px;border-radius:50px;border:2px solid rgba(74,138,46,0.35);background:white;color:var(--green-deep);font-family:inherit;font-weight:800;font-size:13px;cursor:pointer">10–15</button>
+      <button class="age-btn" data-age="15+" onclick="App.pickAge(this,'15+')" style="padding:9px 16px;border-radius:50px;border:2px solid rgba(74,138,46,0.35);background:white;color:var(--green-deep);font-family:inherit;font-weight:800;font-size:13px;cursor:pointer">15+</button>
+    </div>
+
+    <button class="btn-primary ob-btn" id="btnOb" onclick="App.createProfile()" disabled>Start</button>
+  </div>
+
+  <!-- STEP 6: Seed reveal (final delight moment) -->
+  <div class="ob-step" data-step="6">
+    <div class="ob-seed-jar">
+      <div class="ob-seed-jar-glow"></div>
+      <div class="ob-seed-jar-glass">
+        <img src="img/greamici/seed_1.png" class="ob-seed-img"
+             style="width:72px;height:72px;object-fit:contain;image-rendering:pixelated;animation:obFloat 2.5s ease-in-out infinite"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <div class="ob-seed-emoji" style="display:none">🥚</div>
+      </div>
+      <div class="ob-seed-jar-base"></div>
+    </div>
+    <h1 class="ob-title" id="obTitle6">Your seed</h1>
+    <p class="ob-sub" id="obSub6"></p>
+    <button class="btn-primary ob-btn" onclick="App.obFinish()" id="obBtn6">Let's begin</button>
+  </div>
+
+  <!-- Step indicators (dots) -->
+  <div class="ob-dots" id="obDots">
+    <span class="ob-dot active" data-step="1"></span>
+    <span class="ob-dot" data-step="2"></span>
+    <span class="ob-dot" data-step="3"></span>
+    <span class="ob-dot" data-step="4"></span>
+    <span class="ob-dot" data-step="5"></span>
+    <span class="ob-dot" data-step="6"></span>
+  </div>
+
+</div>

@@ -1,0 +1,87 @@
+<div class="set-header max-w">
+  <button class="btn-back" onclick="App.goTo('home')">‹</button>
+  <div style="font-size:20px;font-weight:900;color:var(--green-dark);flex:1" id="set-title"></div>
+</div>
+
+<!-- Language -->
+<div class="card-section">
+  <div class="section-title" id="ss-lang-title"></div>
+  <div class="set-row">
+    <div class="set-row-label" id="ss-lang-lbl"></div>
+    <div class="lang-set">
+      <button class="lbtn" id="ssEN" onclick="App.setLangSetting('en')">EN</button>
+      <button class="lbtn" id="ssCZ" onclick="App.setLangSetting('cs')">CZ</button>
+    </div>
+  </div>
+</div>
+
+<!-- Profile -->
+<div class="card-section" id="ss-profile-sec">
+  <div class="section-title" id="ss-profile-title"></div>
+
+  <div class="set-row">
+    <div class="set-row-label" id="ss-avatar"></div>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div id="ssAvatarPreview"
+        style="width:48px;height:48px;border-radius:50%;background:var(--green-pale);display:flex;align-items:center;justify-content:center;font-size:24px;overflow:hidden;cursor:pointer"
+        onclick="App.openPhotoUpload()">
+      </div>
+      <button class="btn-ghost" onclick="App.openPhotoUpload()" style="font-size:12px">📷</button>
+      <button class="btn-ghost" onclick="App.removePhoto()" style="font-size:12px">✕</button>
+    </div>
+  </div>
+
+  <div class="set-row">
+    <div class="set-row-label" id="ss-name-label"></div>
+    <input id="ssNameInput" class="input-field"
+      style="width:140px;padding:8px 10px;font-size:14px;margin:0">
+  </div>
+</div>
+
+<!-- Sound -->
+<div class="card-section">
+  <div class="section-title" id="ss-sound-title"></div>
+  <div class="set-row">
+    <div class="set-row-label" id="ss-sound-lbl"></div>
+    <label class="switch">
+      <input type="checkbox" id="ssSoundToggle" onchange="App.toggleSound(this.checked)">
+      <span class="slider"></span>
+    </label>
+  </div>
+</div>
+
+<!-- Location / Home pin -->
+<div class="card-section">
+  <div class="section-title" id="ss-geo-title"></div>
+  <div class="set-row" style="flex-direction:column;align-items:flex-start;gap:8px">
+    <div class="set-row-label" id="ss-geo-hint" style="font-size:12px;line-height:1.4;font-weight:600;color:var(--green-mid)"></div>
+    <div style="display:flex;gap:8px;width:100%;align-items:center">
+      <button class="btn-primary" id="ss-geo-set-btn" onclick="App.setHomePin()" style="flex:1;padding:10px;font-size:14px"></button>
+      <button class="btn-ghost" id="ssClearHomeBtn" onclick="App.clearHomePin()" style="display:none;padding:10px 14px;font-size:14px">✕</button>
+    </div>
+    <div id="ssGeoStatus" style="font-size:12px;font-weight:700;color:var(--green-mid)"></div>
+  </div>
+</div>
+
+<!-- Privacy & Legal -->
+<div class="card-section">
+  <div class="section-title" id="ss-privacy-title"></div>
+  <button class="btn-ghost" onclick="App.openPrivacyInfo()" style="width:100%;text-align:left;padding:12px 14px" id="ss-privacy-btn">
+    🔒 <span id="ss-privacy-lbl"></span>
+  </button>
+  <button class="btn-ghost" onclick="App.openTermsInfo()" style="width:100%;text-align:left;padding:12px 14px;margin-top:6px" id="ss-terms-btn">
+    📄 <span id="ss-terms-lbl"></span>
+  </button>
+</div>
+
+<!-- Data / GDPR delete -->
+<div class="card-section">
+  <div class="section-title" id="ss-data-title"></div>
+  <div style="font-size:11px;color:var(--green-mid);font-weight:600;margin-bottom:10px;line-height:1.4" id="ss-data-info"></div>
+  <button class="btn-danger" id="ss-reset-btn" onclick="App.resetAll()"></button>
+</div>
+
+<!-- Version -->
+<div style="text-align:center;font-size:10px;color:var(--green-mid);font-weight:600;margin-top:14px;opacity:0.6">
+  Gream <span id="ssVersion">v5</span>
+</div>
