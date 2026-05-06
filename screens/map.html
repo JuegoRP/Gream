@@ -1,12 +1,12 @@
 <div class="home-bar">
-  <button class="home-av" id="mapAv" onclick="App.goTo('profiles')"></button>
+  <button class="home-av" id="mapAv" onclick="App.showTab('hub')"></button>
   <div class="home-bar-info">
     <div class="home-greeting" id="mapGreeting"></div>
     <div class="home-name" id="mapName"></div>
   </div>
   <div class="home-pills">
     <div class="streak-pill" onclick="App.goTo('badges')">🔥 <span id="streakNum">0</span></div>
-    <div class="seed-pill" onclick="App.goTo('wardrobe')">🥚 <span id="seedNum">0</span></div>
+    <div class="seed-pill" onclick="App.showTab('hub')">🌱 <span id="seedNum">0</span></div>
   </div>
 </div>
 
@@ -27,18 +27,21 @@
     <div class="home-jar-base"></div>
   </div>
 
-  <!-- Gream sprite mode (after first task) -->
+  <!-- Gream sprite mode (after hatching) -->
   <img id="greamSprite" class="gream-sprite" alt="" onclick="App.tapGream()" style="display:none">
   <div class="gream-shadow" id="greamShadow" style="display:none"></div>
 
   <div class="gream-speech" id="greamSpeech"></div>
 </div>
 
-<!-- Gream/seed display name -->
+<!-- Gream display name + stage info -->
 <div class="gream-info">
   <div class="gream-display-name" id="greamDisplayName"></div>
   <div class="gream-stage-info" id="greamStageInfo"></div>
 </div>
+
+<!-- Compact needs bar (only after hatching) -->
+<div class="needs-bar" id="needsBar" style="display:none"></div>
 
 <!-- Two main actions: Indoor / Outdoor -->
 <div class="home-choices">
@@ -55,25 +58,6 @@
       <div class="home-choice-title" id="hcOutdoorTitle">Pojďme ven</div>
       <div class="home-choice-sub" id="hcOutdoorSub">Najdi místa kolem</div>
     </div>
-  </button>
-</div>
-
-<!-- Compact needs bar (only after Greamík hatched) -->
-<div class="needs-bar" id="needsBar" style="display:none"></div>
-
-<!-- Quick actions -->
-<div class="quick-actions">
-  <button class="qa-btn" onclick="App.showMapPicker()">
-    <span class="qa-icon">🗺️</span><span id="qaMapLbl">Map</span>
-  </button>
-  <button class="qa-btn" onclick="App.goTo('wardrobe')">
-    <span class="qa-icon">🛒</span><span id="qaWardLbl">Shop</span>
-  </button>
-  <button class="qa-btn" onclick="App.goTo('history')">
-    <span class="qa-icon">📜</span><span id="qaHistLbl">History</span>
-  </button>
-  <button class="qa-btn" onclick="App.goTo('settings')">
-    <span class="qa-icon">⚙️</span><span id="qaSetLbl">Settings</span>
   </button>
 </div>
 

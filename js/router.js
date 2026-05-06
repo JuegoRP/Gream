@@ -165,6 +165,19 @@ export const Router = {
       const showToggle = ['onboarding', 'profiles'].includes(screenId);
       toggle.classList.toggle('hidden', !showToggle);
     }
+
+    // Show/hide tab bar and set active tab
+    const TAB_SCREENS = { map: 'garden', home: 'garden', 'map-view': 'map', hub: 'hub' };
+    const activeTab = TAB_SCREENS[screenId] || null;
+    const tabBar = document.getElementById('tabBar');
+    if (tabBar) {
+      tabBar.classList.toggle('hidden', !activeTab);
+      document.body.classList.toggle('show-tabs', !!activeTab);
+      if (activeTab) {
+        tabBar.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById('tab-' + activeTab)?.classList.add('active');
+      }
+    }
   },
 
   // ─── Show a pre-existing screen (camera etc.) ───

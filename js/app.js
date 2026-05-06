@@ -254,7 +254,7 @@ window.App = {
     this._initOfflineBanner();
     try { Geo.invalidateIfMoved(500); } catch {}
     // Prefetch frequently-used screens into cache so navigation is instant
-    Router.prefetch(['challenge', 'step-done', 'badge-earned', 'home', 'map']);
+    Router.prefetch(['challenge', 'step-done', 'badge-earned', 'home', 'map', 'hub']);
     console.log('[Gream] Init complete.');
   },
 
@@ -350,6 +350,86 @@ window.App = {
 
   // ─── Navigation ───
   async goTo(screen, data) { await Router.show(screen, data); },
+
+  // ─── Tab bar switching ───
+  showTab(tab) {
+    const lang = getLang();
+    if (tab === 'garden') {
+      Router.show('map');
+    } else if (tab === 'map') {
+      this.openMapView('nature');
+    } else if (tab === 'hub') {
+      Router.show('hub');
+    }
+    // Update tab labels with current lang
+    const labels = {
+      garden: lang === 'cs' ? 'Zahrada' : 'Garden',
+      map:    lang === 'cs' ? 'Mapa'    : 'Map',
+      hub:    lang === 'cs' ? 'Já'      : 'Me',
+    };
+    for (const [k, v] of Object.entries(labels)) {
+      const el = document.getElementById('tabLbl' + k.charAt(0).toUpperCase() + k.slice(1));
+      if (el) el.textContent = v;
+    }
+  },
+
+  // ─── Hub screen ───
+  async renderHub() {
+    const p = Profiles.active();
+    if (!p) return;
+    const lang = getLang();
+    const cs = lang === 'cs';
+
+    // Avatar
+    const hubAv = document.getElementById('hubAv');
+    if (hubAv) {
+      if (p.hasPhoto) {
+        const photo = Profiles.getPhoto(p.id);
+        hubAv.innerHTML = photo
+          ? `<img src="${photo}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
+          : (p.avatar || '🧒');
+      } else { hubAv.textContent = p.avatar || '🧒'; }
+    }
+    this._setText('hubName', p.name || '');
+    this._setText('hubSeedsLbl', cs ? 'Semínka' : 'Seeds');
+    this._setText('hubSeeds',    `🌱 ${Skins.getSeeds(p.id)}`);
+
+    // Streak sub
+    const streak = p.streak || 0;
+    this._setText('hubSub', streak > 0
+      ? `🔥 ${streak} ${cs ? (streak === 1 ? 'den v řadě' : streak < 5 ? 'dny v řadě' : 'dní v řadě') : (streak === 1 ? 'day streak' : 'day streak')}`
+      : (cs ? 'Začni svou sérii!' : 'Start your streak!'));
+
+    // Trial banner
+    const sub = Subscription.get(p.id);
+    const banner = document.getElementById('hubTrialBanner');
+    if (banner && sub.inTrial) {
+      banner.style.display = 'flex';
+      this._setText('hubTrialText', cs
+        ? `Premium zkouška — zbývá ${sub.trialDaysLeft} ${sub.trialDaysLeft === 1 ? 'den' : sub.trialDaysLeft < 5 ? 'dny' : 'dní'}`
+        : `Premium trial — ${sub.trialDaysLeft} day${sub.trialDaysLeft !== 1 ? 's' : ''} left`);
+      this._setText('hubTrialSub', cs ? 'Plný přístup zdarma po dobu zkušební doby' : 'Full access free during trial');
+    } else if (banner) {
+      banner.style.display = 'none';
+    }
+
+    // Labels (bilingual)
+    this._setText('hubShopLbl',   cs ? 'Šatník'     : 'Shop');
+    this._setText('hubShopSub',   cs ? 'Skiny & boosters' : 'Skins & boosters');
+    this._setText('hubRankLbl',   cs ? 'Žebříček'   : 'Ranking');
+    this._setText('hubRankSub',   cs ? 'Porovnej se s ostatními' : 'Compare with others');
+    this._setText('hubBadgesLbl', cs ? 'Odznaky'    : 'Badges');
+    this._setText('hubBadgesSub', cs ? 'Tvůj postup' : 'Your progress');
+    this._setText('hubHistLbl',   cs ? 'Historie'   : 'History');
+    this._setText('hubHistSub',   cs ? 'Splněné úkoly' : 'Completed tasks');
+    this._setText('hubStatsLbl',  cs ? 'Statistiky' : 'Stats');
+    this._setText('hubStatsSub',  cs ? 'Přehled aktivity' : 'Activity overview');
+    this._setText('hubSetLbl',    cs ? 'Nastavení'  : 'Settings');
+    this._setText('hubSetSub',    cs ? 'Jazyk, profil, info' : 'Language, profile, info');
+
+    // Also update tab labels
+    this.showTab('hub');
+  },
 
   // ─── Language (settings only) ───
 
@@ -2891,6 +2971,7 @@ document.addEventListener('screen:ready', ({ detail: { screenId } }) => {
     case 'profiles':    App.renderProfiles();   break;
     case 'map':         App.renderMap();         break;
     case 'home':        App.renderMap();         break;
+    case 'hub':         App.renderHub();         break;
     case 'badges':      App.renderBadges();      break;
     case 'ranking':     App.renderRanking();     break;
     case 'settings':      App.renderSettings();      break;

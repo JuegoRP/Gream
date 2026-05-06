@@ -67,6 +67,21 @@
 <!-- SCREEN CONTAINER — screens injected here -->
 <div id="screenContainer"></div>
 
+<!-- BOTTOM TAB BAR -->
+<nav id="tabBar" class="tab-bar hidden">
+  <button class="tab-btn" id="tab-garden" onclick="App.showTab('garden')">
+    <span class="tab-icon">🌱</span>
+    <span class="tab-lbl" id="tabLblGarden">Garden</span>
+  </button>
+  <button class="tab-btn" id="tab-map" onclick="App.showTab('map')">
+    <span class="tab-icon">🗺️</span>
+    <span class="tab-lbl" id="tabLblMap">Map</span>
+  </button>
+  <button class="tab-btn" id="tab-hub" onclick="App.showTab('hub')">
+    <span class="tab-icon">☰</span>
+    <span class="tab-lbl" id="tabLblHub">Me</span>
+  </button>
+</nav>
 
 <script type="module" src="js/app.js"></script>
 <script>
