@@ -1106,8 +1106,6 @@ window.App = {
   },
 
   async openWorld(world) {
-    const p = Profiles.active();
-    if (p?.age === '4-6') Feedback.tap();
     await Challenge.open(world);
   },
 
