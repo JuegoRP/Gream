@@ -159,8 +159,9 @@ function makePoiDot(L, poi, userPos, onTap) {
   });
 
   dot.on('click', () => {
-    if (userPos) {
-      const d = Math.round(distM(userPos, { lat: poi.lat, lon: poi.lon }));
+    const cur = _userPos;
+    if (cur) {
+      const d = Math.round(distM(cur, { lat: poi.lat, lon: poi.lon }));
       if (d > PROXIMITY_M) { onTap(poi, dot, { tooFar: true, dist: d }); return; }
     }
     onTap(poi, dot, { tooFar: false });

@@ -164,12 +164,12 @@ export const Skins = {
   // ─── Equipped skin/frame/bg ───
   getEquipped(profileId) {
     const m = loadMap(KEY_EQUIPPED);
-    return m[profileId] || { avatar: 'av_default', frame: 'fr_none', bg: 'bg_default' };
+    return m[profileId] || { avatar: 'av_default', frame: 'fr_none', bg: 'bg_default', accessory: null };
   },
 
   setEquipped(profileId, slot, id) {
     const m = loadMap(KEY_EQUIPPED);
-    if (!m[profileId]) m[profileId] = { avatar: 'av_default', frame: 'fr_none', bg: 'bg_default' };
+    if (!m[profileId]) m[profileId] = { avatar: 'av_default', frame: 'fr_none', bg: 'bg_default', accessory: null };
     m[profileId][slot] = id;
     saveMap(KEY_EQUIPPED, m);
   },

@@ -67,12 +67,14 @@ export const Speech = {
     // Voices may not be loaded yet — try to load
     if (!this._voicesLoaded) {
       this._loadVoices();
-      // If still empty, wait for voiceschanged
-      if (!this._bestVoice) {
+      // If still empty, wait for voiceschanged (once only)
+      if (!this._bestVoice && !this._voiceRetryPending) {
+        this._voiceRetryPending = true;
         this._synth.onvoiceschanged = () => {
+          this._synth.onvoiceschanged = null;
+          this._voiceRetryPending = false;
           this._loadVoices();
           this.speak(text, onEnd);
-          this._synth.onvoiceschanged = null;
         };
         return;
       }

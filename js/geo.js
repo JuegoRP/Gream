@@ -72,7 +72,7 @@ export const Geo = {
           resolve(p);
         },
         err => reject(err),
-        { enableHighAccuracy: highAccuracy, timeout: 12000, maximumAge: 30000 }
+        { enableHighAccuracy: highAccuracy, timeout: 15000, maximumAge: 10000 }
       );
     });
   },

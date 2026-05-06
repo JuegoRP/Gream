@@ -97,7 +97,7 @@ export const Draw = {
     fresh.id     = 'drawCanvas';   // ← keep the id so clear() / done() find it
     fresh.width  = canvas.width;
     fresh.height = canvas.height;
-    canvas.parentNode.replaceChild(fresh, canvas);
+    if (canvas.parentNode) canvas.parentNode.replaceChild(fresh, canvas);
 
     // White background
     const ctx = fresh.getContext('2d');

@@ -1942,6 +1942,17 @@ window.App = {
     }
   },
 
+  setLang(l) {
+    setLang(l);
+    this._syncLangBtns();
+    const currentScreen = document.querySelector('.screen.active')?.id;
+    if (currentScreen === 'screen-onboarding') {
+      this.renderOnboarding();
+    }
+    const p = Profiles.active();
+    if (p) Profiles.update(p.id, { lang: l });
+  },
+
   setLangSetting(l) {
     setLang(l);
     const p = Profiles.active();
@@ -2004,20 +2015,25 @@ window.App = {
     this._setText('mapViewSub',   lang === 'cs' ? 'Hledám zajímavá místa…' : 'Finding places nearby…');
     this._setText('mapLoadingMsg', lang === 'cs' ? 'Hledám zajímavá místa…' : 'Finding places nearby…');
 
-    let pos = null;
-    if (!pos) {
-      // No cache at all — wait briefly (first ever open)
+    // Try last known position first for instant map open
+    let pos = Geo.lastPosition();
+    if (pos && Date.now() - pos.t < 120000) {
+      // Fresh cached position — show map immediately, refresh GPS in background
+      Geo.getPosition().catch(() => {});
+    } else {
+      // No fresh cache — wait for GPS (iOS needs up to 12s for cold start)
+      pos = null;
       try {
         pos = await Promise.race([
           Geo.getPosition(),
-          new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 5000))
+          new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 12000))
         ]);
       } catch {}
-    } else {
-      // Has cache — show map right away, refresh GPS quietly in background
-      Geo.getPosition().catch(() => {});
+      if (!pos) {
+        // Last resort: use stale cached position rather than hardcoded fallback
+        pos = Geo.lastPosition() || { lat: 50.0875, lon: 14.4214, fallback: true };
+      }
     }
-    if (!pos) pos = { lat: 50.0875, lon: 14.4214, fallback: true };
 
     // World filter pills
     const WORLDS = ['nature','language','logic','feelings','arts','world'];

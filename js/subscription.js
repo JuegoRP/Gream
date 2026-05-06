@@ -12,7 +12,7 @@ const SEED_COST_EXTRA_TASK = 8; // semínek za 1 extra domácí úkol
 export const FREE_DAILY_INDOOR   = 2;
 export const PREMIUM_DAILY_INDOOR = 6;
 export const FREE_MAX_WITH_SEEDS  = 6;  // free uživatel může koupit až 6/den celkem
-export const TRIAL_DAYS          = 14;
+export const TRIAL_DAYS          = 7;
 
 function load() {
   try { return JSON.parse(localStorage.getItem(KEY_SUB) || '{}'); } catch { return {}; }
