@@ -237,7 +237,7 @@ window.App = {
     const active   = Profiles.active();
     console.log('[Gream] Profiles:', profiles.length, 'Active:', active?.name || 'none');
 
-    if (active) this.applyTheme(active.age);
+    if (active) this.applyCosmetics();
 
     if (!profiles.length) {
       console.log('[Gream] → onboarding');
@@ -318,16 +318,6 @@ window.App = {
     window.addEventListener('online',  updateBanner);
     window.addEventListener('offline', updateBanner);
     updateBanner();
-  },
-
-  // ─── Apply age theme to body ───
-  applyTheme(age) {
-    const map = { '4-6':'age-4-6', '7-9':'age-7-9', '10-15':'age-10-15', '15+':'age-15plus' };
-    const cls = map[age] || 'age-7-9';
-    document.body.className = document.body.className.replace(/\bage-[\w-]+/g,'').trim();
-    document.body.classList.add(cls);
-    // Reapply cosmetics so they're not lost when class is rewritten
-    this.applyCosmetics();
   },
 
   // ─── Apply equipped frame + background ───
@@ -489,7 +479,6 @@ window.App = {
     this._setText('obSub5',   t.ob_v4_step5_sub);
     this._setAttr('nameInput', 'placeholder', t.ob_placeholder);
     this._setText('ob-av-lbl', t.ob_av);
-    this._setText('ob-age-lbl', getLang() === 'cs' ? 'Věk' : 'Age');
     this._setText('btnOb',     t.ob_start);
 
     // Step 6 — Egg reveal
@@ -633,7 +622,7 @@ window.App = {
     // Mark consent timestamp
     try { localStorage.setItem('gream_consent_at', String(Date.now())); } catch {}
     document.getElementById('nameInput').value = '';
-    this.applyTheme(_obAge || '7-9');
+    this.applyCosmetics();
     // Move to egg reveal step instead of jumping to map
     this._obStep = 6;
     this._renderObStep();
@@ -707,7 +696,7 @@ window.App = {
     Profiles.setActive(id);
     const p = Profiles.all().find(x => x.id === id);
     if (p?.lang) { setLang(p.lang); this._syncLangBtns(); }
-    if (p?.age)  { this.applyTheme(p.age); }
+    this.applyCosmetics();
     await Router.show('map');
   },
 
@@ -983,18 +972,23 @@ window.App = {
   },
 
   _initSpriteCanvases(root) {
+    const dpr = Math.min(window.devicePixelRatio || 1, 3);
     const canvases = (root || document).querySelectorAll('canvas[data-sprite-sheet]');
     canvases.forEach(canvas => {
       const src  = canvas.dataset.spriteSheet;
       const mood = canvas.dataset.spriteMood || 'happy';
       const [sx, sy] = this._moodToQuad(mood);
-      const w = canvas.width  || 52;
-      const h = canvas.height || 52;
+      const cssW = parseInt(canvas.getAttribute('width')) || 52;
+      const cssH = parseInt(canvas.getAttribute('height')) || 52;
+      canvas.width  = cssW * dpr;
+      canvas.height = cssH * dpr;
+      canvas.style.width  = cssW + 'px';
+      canvas.style.height = cssH + 'px';
       const img = new Image();
       img.src = src;
       const draw = () => {
         const ctx = canvas.getContext('2d');
-        this._drawSpriteCell(ctx, img, sx, sy, w, h);
+        this._drawSpriteCell(ctx, img, sx, sy, cssW * dpr, cssH * dpr);
       };
       if (img.complete) draw();
       else { img.onload = draw; img.onerror = () => {}; }
@@ -1019,16 +1013,21 @@ window.App = {
     const mood = pet.mood || 'happy';
     const [sx, sy] = this._moodToQuad(mood);
     const SIZE = 160;
+    const dpr = Math.min(window.devicePixelRatio || 1, 3);
 
     let canvas = document.getElementById('greamSpriteCanvas');
     if (!canvas) {
       canvas = document.createElement('canvas');
       canvas.id = 'greamSpriteCanvas';
-      canvas.width = SIZE; canvas.height = SIZE;
+      canvas.style.width  = SIZE + 'px';
+      canvas.style.height = SIZE + 'px';
       canvas.onclick = spriteEl.onclick;
       spriteEl.parentElement.insertBefore(canvas, spriteEl);
       spriteEl.style.display = 'none';
     }
+    // Keep canvas buffer matched to current DPR for crisp rendering on retina
+    const bufW = SIZE * dpr;
+    if (canvas.width !== bufW) { canvas.width = bufW; canvas.height = bufW; }
     canvas.classList.toggle('shiny', spriteEl.classList.contains('shiny'));
 
     const redraw = canvas.dataset.src !== src || canvas.dataset.mood !== mood;
@@ -1037,12 +1036,12 @@ window.App = {
       canvas.dataset.mood = mood;
       const img = new Image();
       img.src = src;
-      const draw = () => this._drawSpriteCell(canvas.getContext('2d'), img, sx, sy, SIZE, SIZE);
+      const draw = () => this._drawSpriteCell(canvas.getContext('2d'), img, sx, sy, bufW, bufW);
       img.onerror = () => {
         // Stage 3/4 not uploaded yet — fall back to stage 2
         const fallback = new Image();
         fallback.src = src.replace(/_[34]\.png$/, '_2.png');
-        fallback.onload = () => this._drawSpriteCell(canvas.getContext('2d'), fallback, sx, sy, SIZE, SIZE);
+        fallback.onload = () => this._drawSpriteCell(canvas.getContext('2d'), fallback, sx, sy, bufW, bufW);
       };
       if (img.complete && img.naturalWidth) draw();
       else img.onload = draw;
@@ -1979,32 +1978,7 @@ window.App = {
     if (psec) psec.style.display = p ? 'block' : 'none';
     if (p) {
       this._setText('ss-profile-title', t.ss_profile);
-      this._setText('ss-age-label',     t.ss_age);
       this._setText('ss-name-label',    t.ss_name);
-      // age buttons
-      const row = document.getElementById('ssAgeRow');
-      if (row) {
-        row.innerHTML = '';
-        ['4-6','7-9','10-15','15+'].forEach(a => {
-          const btn = document.createElement('button');
-          btn.className = 'abtn' + (p.age === a ? ' active' : '');
-          btn.textContent = a;
-          btn.onclick = () => {
-            Profiles.update(p.id, { age: a });
-            this.applyTheme(a);
-            this.renderSettings();
-          };
-          row.appendChild(btn);
-        });
-      }
-      // Theme preview label
-      const themeLabels = {
-        en: { '4-6':'Jumbo UI, auto voice, big buttons', '7-9':'Playful, colorful, full map', '10-15':'Clean dark UI, fast, no baby stuff', '15+':'Minimal, calm, journal-like' },
-        cs: { '4-6':'Velké UI, automatický hlas, mega tlačítka', '7-9':'Hravé, barevné, celá mapa', '10-15':'Čisté tmavé UI, rychlé, bez dětských prvků', '15+':'Minimální, klidné, deníkový styl' }
-      };
-      const lang2 = getLang();
-      const themeDesc = themeLabels[lang2]?.[p.age] || '';
-      this._setText('ssThemePreview', themeDesc);
       const prev = document.getElementById('ssAvatarPreview');
       if (prev) {
         if (p.hasPhoto) {
