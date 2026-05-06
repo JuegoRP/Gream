@@ -201,14 +201,14 @@ export const Geo = {
     return { atPOI: dist <= requiredMeters, dist: Math.round(dist), pos };
   },
 
-  async checkOutdoor(age) {
+  async checkOutdoor() {
     const pos = await this.getPosition().catch(() => null);
     if (!pos) return { outside: false, error: 'no-position' };
     const home = this.getHome();
     if (!home) return { outside: true, pos };
     const dist = this.distance(home, pos);
-    const rule = ({ '4-6': { min: 50, max: 500 }, '7-9': { min: 30, max: 5000 } }[age]) || { min: 30, max: Infinity };
-    return { outside: dist >= rule.min && dist <= rule.max, distFromHome: Math.round(dist), pos, rule };
+    const rule = { min: 30, max: Infinity };
+    return { outside: dist >= rule.min, distFromHome: Math.round(dist), pos };
   },
 
   async tagWithLocation(proof) {

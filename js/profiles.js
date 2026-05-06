@@ -34,6 +34,7 @@ export const Profiles = {
     const id = 'p' + Date.now();
     const profile = {
       id, name, avatar, age, lang,
+      difficulty: 'medium',
       streak: 0,
       bestStreak: 0,
       lastDate: '',

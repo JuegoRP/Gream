@@ -1931,6 +1931,24 @@ window.App = {
     this._setText('ss-privacy-title', t.ss_privacy_title);
     this._setText('ss-privacy-lbl',   t.ss_privacy_lbl);
     this._setText('ss-terms-lbl',     t.ss_terms_lbl);
+    // Difficulty section
+    const cs = getLang() === 'cs';
+    this._setText('ss-diff-title', cs ? 'Obtížnost' : 'Difficulty');
+    this._setText('ss-diff-hint',  cs
+      ? 'Těžší úkoly = více semínek. Snadné 1×, Střední 1.5×, Těžké 2×, Extrémní 3×'
+      : 'Harder tasks = more seeds. Easy 1×, Medium 1.5×, Hard 2×, Extreme 3×');
+    this._setText('diffLblEasy',    cs ? 'Snadné'   : 'Easy');
+    this._setText('diffLblMedium',  cs ? 'Střední'  : 'Medium');
+    this._setText('diffLblHard',    cs ? 'Těžké'    : 'Hard');
+    this._setText('diffLblExtreme', cs ? 'Extrémní' : 'Extreme');
+    const curDiff = Profiles.active()?.difficulty || 'medium';
+    document.querySelectorAll('.diff-btn').forEach(btn => {
+      const active = btn.dataset.diff === curDiff;
+      btn.style.background     = active ? 'var(--green-mid)' : 'white';
+      btn.style.color          = active ? 'white' : 'var(--green-deep)';
+      btn.style.borderColor    = active ? 'var(--green-mid)' : 'rgba(74,138,46,0.25)';
+    });
+
     this._setText('ss-sound-title', t.ss_sound);
     this._setText('ss-sound-lbl',   t.ss_sound_on);
     this._setText('ss-geo-title',   t.ss_geo);
@@ -2031,6 +2049,14 @@ window.App = {
     }
     const p = Profiles.active();
     if (p) Profiles.update(p.id, { lang: l });
+  },
+
+  setDifficulty(diff) {
+    const p = Profiles.active();
+    if (!p) return;
+    Profiles.update(p.id, { difficulty: diff });
+    this.renderSettings();
+    Feedback.tap();
   },
 
   setLangSetting(l) {

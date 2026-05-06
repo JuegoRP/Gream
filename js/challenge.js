@@ -51,18 +51,24 @@ export const Challenge = {
     const t   = tr();
     const lang = localStorage.getItem('gream_lang') || 'en';
 
-    // ─── boost_lucky: let user pick difficulty ───
-    let age = p.age || '4-6';
+    // ─── Difficulty → challenge key mapping ───
+    const DIFF_KEY = { easy: '4-6', medium: '7-9', hard: '10-15', extreme: '15+' };
+    let difficulty = p.difficulty || 'medium';
+
+    // boost_lucky: let user temporarily override difficulty
     const luckyBoost = Skins.getPendingBoost(p.id);
     if (luckyBoost === 'boost_lucky') {
       const picked = await this._pickDifficultyOverlay(lang);
-      if (picked) { Skins.consumePendingBoost(p.id); age = picked; }
+      if (picked) { Skins.consumePendingBoost(p.id); difficulty = picked; }
     }
+
+    this._difficulty = difficulty;
+    const ageKey = DIFF_KEY[difficulty] || '7-9';
 
     let challenges = t.challenges[world];
     let steps = Array.isArray(challenges)
       ? challenges
-      : (challenges?.[age] || challenges?.['4-6'] || []);
+      : (challenges?.[ageKey] || challenges?.['7-9'] || challenges?.['4-6'] || []);
 
     const stepsDone   = Profiles.getBadgeProgress(p.id, world);
     this._currentStep = Math.min(stepsDone, steps.length - 1);
@@ -76,7 +82,7 @@ export const Challenge = {
     // Geo gate only when: (a) NOT indoor mode, (b) challenge requires outdoor, (c) NOT launched from POI map (POI = already verified intent)
     const mode = challenge.mode || 'indoor_ok';
     if (!this._indoorMode && !this._targetPOI && mode === 'outdoor_required') {
-      const gateOk = await this._geoGate(age);
+      const gateOk = await this._geoGate();
       if (!gateOk) {
         Router.show('home');
         return;
@@ -92,11 +98,11 @@ export const Challenge = {
 
   // ─── Geo gate: silently check GPS, fall back gracefully ───
   // No blocking screen — GPS permission is handled by the OS dialog on mobile.
-  async _geoGate(age) {
+  async _geoGate() {
     let result;
     try {
       result = await Promise.race([
-        Geo.checkOutdoor(age),
+        Geo.checkOutdoor(),
         new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 8000))
       ]);
     } catch (err) {
@@ -115,10 +121,10 @@ export const Challenge = {
   },
 
   _fill(world, challenge, stepDefs, badge, p, t) {
-    const stepsDone = Profiles.getBadgeProgress(p.id, world);
-    const age  = p.age || '4-6';
-    const mode = challenge.mode || 'indoor_ok';
-    const lang = localStorage.getItem('gream_lang') || 'en';
+    const stepsDone  = Profiles.getBadgeProgress(p.id, world);
+    const difficulty = this._difficulty || p.difficulty || 'medium';
+    const mode       = challenge.mode || 'indoor_ok';
+    const lang       = localStorage.getItem('gream_lang') || 'en';
 
     this._set('chWorldName',  t.worlds[world]);
     this._set('chIcon',       WORLD_ICONS[world]);
@@ -179,7 +185,7 @@ export const Challenge = {
     }
 
     const actionType = challenge.action || stepDefs[this._currentStep]?.type || 'choice';
-    this._renderActionButtons(actionType, age, t);
+    this._renderActionButtons(actionType, difficulty, t);
 
     // ─── Boost_skip button: appears if boost is active ───
     if (p && Skins.getPendingBoost(p.id) === 'boost_skip') {
@@ -550,7 +556,7 @@ export const Challenge = {
     if (this._currentChallenge?.mode === 'outdoor_bonus' && !this._wasOutdoor) {
       try {
         const p = Profiles.active();
-        const r = await Geo.checkOutdoor(p?.age || '7-9');
+        const r = await Geo.checkOutdoor();
         if (r.outside) this._wasOutdoor = true;
       } catch {}
     }
@@ -605,13 +611,15 @@ export const Challenge = {
     const newCount  = (fresh?.worldTasks?.[this._world] || 0);
     const evolved   = Badges.didEvolve(prevCount, newCount);
 
-    // ─── Award eggs (scaled by score, apply boost_2x if active) ───
+    // ─── Award seeds (score × difficulty × boost_2x) ───
+    const DIFF_MULT = { easy: 1.0, medium: 1.5, hard: 2.0, extreme: 3.0 };
     const scoreMultiplier = (this._lastScore || 100) / 100;
-    const activeBoost = Skins.consumePendingBoost(p.id);
+    const diffMultiplier  = DIFF_MULT[this._difficulty || p.difficulty || 'medium'] || 1.5;
+    const activeBoost     = Skins.consumePendingBoost(p.id);
     const boostMultiplier = (activeBoost === 'boost_2x') ? 2 : 1;
-    Skins.awardForTask(p.id, this._wasOutdoor, scoreMultiplier * boostMultiplier);
+    Skins.awardForTask(p.id, this._wasOutdoor, scoreMultiplier * diffMultiplier * boostMultiplier);
+    const lang = localStorage.getItem('gream_lang') || 'en';
     if (activeBoost === 'boost_2x') {
-      const lang = localStorage.getItem('gream_lang') || 'en';
       setTimeout(() => this._showToast(lang === 'cs' ? '✨ 2× semínka aktivní!' : '✨ 2× seeds boost!'), 400);
     }
     if (result.stepsComplete) Skins.awardForBadge(p.id);
@@ -873,9 +881,10 @@ export const Challenge = {
       const overlay = document.createElement('div');
       overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;z-index:999;padding:20px';
       const levels = [
-        { id: '4-6',   label: lang === 'cs' ? '🟢 Snadné (4–6 let)' : '🟢 Easy (4–6)' },
-        { id: '7-9',   label: lang === 'cs' ? '🟡 Střední (7–9 let)' : '🟡 Medium (7–9)' },
-        { id: '10-12', label: lang === 'cs' ? '🔴 Těžké (10–12 let)' : '🔴 Hard (10–12)' },
+        { id: 'easy',    label: lang === 'cs' ? '🟢 Snadné'   : '🟢 Easy' },
+        { id: 'medium',  label: lang === 'cs' ? '🟡 Střední'  : '🟡 Medium' },
+        { id: 'hard',    label: lang === 'cs' ? '🔴 Těžké'    : '🔴 Hard' },
+        { id: 'extreme', label: lang === 'cs' ? '⚡ Extrémní' : '⚡ Extreme' },
       ];
       overlay.innerHTML = `
         <div style="background:white;border-radius:20px;padding:24px;max-width:320px;width:100%;text-align:center">
