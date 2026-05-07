@@ -7,16 +7,13 @@
 
 // Scene → ordered list of tracks to try (first available wins)
 const SCENE_MUSIC = {
-  menu:      ['audio/music_menu.mp3',      'audio/music_garden.ogg'],
-  challenge: ['audio/music_challenge.mp3', 'audio/music_calm.ogg'],
-  outdoor:   ['audio/music_outdoor.mp3',   'audio/music_garden.ogg'],
+  menu:      ['audio/music_menu.mp3'],
+  challenge: ['audio/music_challenge.mp3'],
+  outdoor:   ['audio/music_outdoor.mp3'],
 };
 
-// Fallback: keep old generic list for procedural fallback
-const MUSIC_FILES = [
-  'audio/music_garden.ogg',
-  'audio/music_calm.ogg',
-];
+// Fallback list used by startMusic() — procedural synth if empty
+const MUSIC_FILES = [];
 
 const FADE_MS      = 800;   // crossfade duration
 const FADE_TICK_MS = 40;    // interval for volume stepping
