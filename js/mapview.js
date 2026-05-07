@@ -143,7 +143,7 @@ function makePoiDot(L, poi, userPos, onTap) {
     fillOp = 0.85;
     stroke = '#2a6a1e';
     sw     = 2;
-    r      = 8;
+    r      = 16;
   } else {
     fill   = '#bbb';
     fillOp = 0.45;
@@ -157,6 +157,10 @@ function makePoiDot(L, poi, userPos, onTap) {
     color: stroke, weight: sw,
     interactive: true, bubblingMouseEvents: false
   });
+
+  if (nearby && !litUp) {
+    dot.on('add', () => { if (dot._path) dot._path.classList.add('poi-nearby'); });
+  }
 
   dot.on('click', () => {
     const cur = _userPos;
@@ -205,6 +209,8 @@ export const MapView = {
       s.textContent = `
         @keyframes poiGlow { 0%{width:0;height:0;opacity:.9} 100%{width:110px;height:110px;opacity:0} }
         @keyframes greamPulse { 0%,100%{transform:scale(1);opacity:.55} 50%{transform:scale(1.6);opacity:.12} }
+        @keyframes poiNearbyPulse { 0%,100%{opacity:1} 50%{opacity:0.45} }
+        .poi-nearby { animation: poiNearbyPulse 1.4s ease-in-out infinite; }
         .leaflet-container{font-family:'Nunito',sans-serif!important}
         .leaflet-control-zoom{display:none!important}
         .leaflet-control-attribution{font-size:9px!important;opacity:.35!important}
@@ -281,13 +287,14 @@ export const MapView = {
     _poiLayers.forEach(({ poi, dot }) => {
       if ((poi.worldsDone || []).length > 0) return;
       const nearby = _userPos ? distM(_userPos, { lat: poi.lat, lon: poi.lon }) <= PROXIMITY_M : false;
+      dot.setRadius(nearby ? 16 : 6);
       dot.setStyle({
-        radius: nearby ? 8 : 6,
         fillColor: nearby ? '#5a9a3e' : '#bbb',
         fillOpacity: nearby ? 0.85 : 0.45,
         color: nearby ? '#2a6a1e' : '#999',
         weight: nearby ? 2 : 1,
       });
+      if (dot._path) dot._path.classList.toggle('poi-nearby', nearby);
     });
   },
 

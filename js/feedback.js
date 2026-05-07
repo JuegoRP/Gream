@@ -8,6 +8,12 @@ const _cache = {};
 let _soundEnabled = true;
 let _audioCtx = null;
 
+// OGG Vorbis is not supported by iOS/Safari — detect at init time
+const _ogg = (() => {
+  try { return new window.Audio().canPlayType('audio/ogg; codecs="vorbis"') !== ''; } catch { return false; }
+})();
+const _ext = _ogg ? '.ogg' : '.wav';
+
 try {
   const stored = localStorage.getItem('gream_sound');
   if (stored === 'off') _soundEnabled = false;
@@ -15,7 +21,7 @@ try {
 
 function getAudio(name) {
   if (!_cache[name]) {
-    const a = new Audio(SOUND_BASE + name + '.wav');
+    const a = new Audio(SOUND_BASE + name + _ext);
     a.preload = 'auto';
     _cache[name] = a;
   }
