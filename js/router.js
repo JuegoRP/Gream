@@ -6,6 +6,7 @@
 // ═══════════════════════════════════
 
 const SCREEN_DIR = 'screens/';
+const SCREEN_VER = 'v5.1'; // bump to bust per-session cache
 let _history = [];
 let _screensCache = {};
 let _transitioning = false;
@@ -98,7 +99,7 @@ export const Router = {
     if (!html) {
       const loaderTimer = setTimeout(showLoading, 120);
       try {
-        const res = await fetch(`${SCREEN_DIR}${screenId}.html`);
+        const res = await fetch(`${SCREEN_DIR}${screenId}.html?v=${SCREEN_VER}`);
         if (!res.ok) {
           throw new Error(`HTTP ${res.status} for ${screenId}.html`);
         }
@@ -207,7 +208,7 @@ export const Router = {
   prefetch(screenIds) {
     screenIds.forEach(id => {
       if (_screensCache[id]) return;
-      fetch(`${SCREEN_DIR}${id}.html`)
+      fetch(`${SCREEN_DIR}${id}.html?v=${SCREEN_VER}`)
         .then(r => r.ok ? r.text() : null)
         .then(html => { if (html) _screensCache[id] = html; })
         .catch(() => {});

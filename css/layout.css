@@ -54,10 +54,9 @@ body.show-tabs #screen-map-view {
   padding-bottom: calc(var(--sab) + 58px) !important;
 }
 
-/* Garden screens are full-bleed — all content is absolute-positioned overlays */
+/* Garden screens — green background to match Já tab */
 #screen-map, #screen-home {
-  padding: 0 !important;
-  overflow: hidden;
+  background: linear-gradient(180deg, #d4edaa 0%, #f0f8e8 60%, #e8f5d0 100%);
 }
 #screen-map-view {
   display: flex !important;

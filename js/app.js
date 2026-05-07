@@ -414,11 +414,14 @@ window.App = {
       banner.style.display = 'none';
     }
 
-    // Subscribe section — show when not premium
+    // Subscribe section — hide only when actually paid (trial users see it too)
     const subSec = document.getElementById('hubSubscribeSection');
     if (subSec) {
-      subSec.style.display = sub.isPremium ? 'none' : 'block';
-      this._setText('hubSubscribeLbl', cs ? 'Předplatit Premium ⭐' : 'Subscribe to Premium ⭐');
+      const hasPaid = !!sub.premiumSince;
+      subSec.style.display = hasPaid ? 'none' : 'block';
+      this._setText('hubSubscribeLbl', sub.inTrial
+        ? (cs ? `Předplatit — zkouška ještě ${sub.trialDaysLeft} dní ⭐` : `Subscribe — ${sub.trialDaysLeft} trial days left ⭐`)
+        : (cs ? 'Předplatit Premium ⭐' : 'Subscribe to Premium ⭐'));
     }
 
     // Labels (bilingual)

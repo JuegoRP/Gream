@@ -1,5 +1,18 @@
-<!-- Full-screen garden stage (back-target from settings) -->
-<div class="gream-stage" id="greamStage" style="position:absolute;inset:0;height:100%;max-width:100%;border-radius:0;box-shadow:none">
+<!-- Top bar -->
+<div class="home-bar" style="width:100%;max-width:480px">
+  <button class="home-av" id="mapAv" onclick="App.goTo('profiles')"></button>
+  <div class="home-bar-info">
+    <div class="home-greeting" id="mapGreeting"></div>
+    <div class="home-name" id="mapName"></div>
+  </div>
+  <div class="home-pills">
+    <div class="streak-pill" onclick="App.goTo('badges')">🔥 <span id="streakNum">0</span></div>
+    <div class="seed-pill" onclick="App.showTab('hub')">🌱 <span id="seedNum">0</span></div>
+  </div>
+</div>
+
+<!-- Garden stage card -->
+<div class="gream-stage" id="greamStage">
   <div class="gream-bg"></div>
   <div class="gream-floor"></div>
 
@@ -19,26 +32,15 @@
   <div class="gream-speech" id="greamSpeech"></div>
 </div>
 
-<!-- Floating top bar -->
-<div class="home-bar" style="position:absolute;top:calc(var(--sat,0px) + 8px);left:0;right:0;z-index:20;padding:0 16px;box-sizing:border-box">
-  <button class="home-av" id="mapAv" onclick="App.goTo('profiles')"></button>
-  <div class="home-bar-info">
-    <div class="home-greeting" id="mapGreeting"></div>
-    <div class="home-name" id="mapName"></div>
-  </div>
-  <div class="home-pills">
-    <div class="streak-pill" onclick="App.goTo('badges')">🔥 <span id="streakNum">0</span></div>
-    <div class="seed-pill" onclick="App.showTab('hub')">🌱 <span id="seedNum">0</span></div>
-  </div>
-</div>
+<!-- Greamík name (tap to rename) -->
+<div id="greamDisplayName"
+  style="font-size:20px;font-weight:900;color:var(--green-deep);cursor:pointer;text-align:center;padding:8px 12px 0;width:100%;max-width:480px"
+  onclick="App.promptRenameGream()"></div>
 
-<!-- Bottom overlay -->
-<div style="position:absolute;bottom:calc(var(--sab,0px) + 72px);left:0;right:0;z-index:20;padding:0 20px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;gap:10px">
-  <div id="greamDisplayName"
-    style="font-size:20px;font-weight:900;color:white;text-shadow:0 1px 6px rgba(0,0,0,0.6);cursor:pointer;text-align:center;padding:4px 12px"
-    onclick="App.promptRenameGream()"></div>
+<!-- Start indoor challenge button -->
+<div style="width:100%;max-width:380px;padding:8px 0">
   <button class="btn-primary" onclick="App.startIndoor()"
-    style="width:100%;max-width:320px;padding:14px 20px;font-size:16px">
+    style="padding:14px 20px;font-size:16px">
     🏠 <span id="hcIndoorTitle">Doma klid</span>
   </button>
 </div>
