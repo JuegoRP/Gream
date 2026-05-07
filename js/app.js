@@ -858,13 +858,15 @@ window.App = {
     this.applyCosmetics();
 
     // First-run tutorial
-    if ((pet.tasksFor || 0) === 0) {
+    const tutorialSeen = !!localStorage.getItem('gream_tutorial_v1');
+    if (!tutorialSeen) {
+      // Tutorial covers everything — don't show the hint arrow at the same time
+      document.getElementById('frHint')?.remove();
+      setTimeout(() => this._showTutorial(lang), 800);
+    } else if ((pet.tasksFor || 0) === 0) {
       this._showFirstRunHint(lang);
     } else {
       document.getElementById('frHint')?.remove();
-    }
-    if (!localStorage.getItem('gream_tutorial_v1')) {
-      setTimeout(() => this._showTutorial(lang), 800);
     }
 
     // Trial banner (first 7 days)

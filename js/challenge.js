@@ -538,13 +538,15 @@ export const Challenge = {
       const WRONG_PENALTY = 3;
       const p = (await import('./profiles.js').then(m => m.Profiles)).active();
       let penaltyApplied = false;
+      let remaining = 0;
       if (p) {
         const { Skins } = await import('./skins.js');
         penaltyApplied = Skins.spendSeeds(p.id, WRONG_PENALTY);
+        remaining = Skins.getSeeds(p.id);
       }
       const msg = lang === 'cs'
-        ? penaltyApplied ? `❌ Špatně! −${WRONG_PENALTY} semínka. Zkus jinou otázku.` : `❌ Špatně! Zkus jinou otázku.`
-        : penaltyApplied ? `❌ Wrong! −${WRONG_PENALTY} seeds. Try a different question.` : `❌ Wrong! Try a different question.`;
+        ? penaltyApplied ? `❌ Špatně! −${WRONG_PENALTY} semínka (zbývá ${remaining}). Zkus jinou otázku.` : `❌ Špatně! Zkus jinou otázku.`
+        : penaltyApplied ? `❌ Wrong! −${WRONG_PENALTY} seeds (${remaining} left). Try a different question.` : `❌ Wrong! Try a different question.`;
 
       setTimeout(() => {
         this._showToast(msg);
@@ -876,19 +878,19 @@ export const Challenge = {
     overlay.style.cssText = 'position:fixed;inset:0;background:rgba(15,42,7,0.92);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;padding:24px;animation:fadeIn 0.4s ease';
     overlay.innerHTML = `
       <div style="text-align:center;max-width:320px;width:100%">
-        <div style="font-size:14px;font-weight:800;color:rgba(255,255,255,0.6);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px">
+        <div style="font-size:14px;font-weight:800;color:rgba(255,255,255,0.6);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;animation:slideUp 0.4s ease 0.1s both">
           ${lang === 'cs' ? 'Vajíčko se vylíhlo!' : 'Your egg has hatched!'}
         </div>
         <canvas data-sprite-sheet="img/greamici/${arch}_2.png" data-sprite-mood="happy"
           width="120" height="120"
-          style="width:120px;height:120px;image-rendering:pixelated;display:block;margin:0 auto 12px;animation:greamIdle 2s ease-in-out infinite"></canvas>
-        <div style="font-size:20px;font-weight:900;color:white;margin-bottom:6px">${defaultName}</div>
-        <div style="font-size:14px;font-weight:700;color:rgba(135,194,109,0.9);margin-bottom:8px">${archTitle}</div>
+          style="width:120px;height:120px;image-rendering:pixelated;display:block;margin:0 auto 12px;animation:scaleIn 0.5s cubic-bezier(0.2,0.8,0.3,1.2) 0.3s both,greamIdle 2s ease-in-out 0.8s infinite"></canvas>
+        <div style="font-size:20px;font-weight:900;color:white;margin-bottom:6px;animation:slideUp 0.4s ease 0.5s both">${defaultName}</div>
+        <div style="font-size:14px;font-weight:700;color:rgba(135,194,109,0.9);margin-bottom:8px;animation:fadeIn 0.3s ease 0.65s both">${archTitle}</div>
         ${greamResult.isShiny ? `<div style="font-size:13px;font-weight:800;color:#f5d020;margin-bottom:14px">✨ ${lang === 'cs' ? 'A je VZÁCNÝ!' : "And it's SHINY!"}</div>` : ''}
-        <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:20px">
+        <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:20px;animation:fadeIn 0.3s ease 0.8s both">
           ${lang === 'cs' ? '(Klepni na jméno v zahradě pro přejmenování)' : '(Tap the name in garden to rename)'}
         </div>
-        <button id="archRevealBtn" style="padding:14px 32px;border-radius:50px;border:none;background:var(--green-mid,#4a8a2e);color:white;font-family:inherit;font-weight:800;font-size:16px;cursor:pointer;box-shadow:0 4px 20px rgba(74,138,46,0.4)">
+        <button id="archRevealBtn" style="padding:14px 32px;border-radius:50px;border:none;background:var(--green-mid,#4a8a2e);color:white;font-family:inherit;font-weight:800;font-size:16px;cursor:pointer;box-shadow:0 4px 20px rgba(74,138,46,0.4);animation:popIn 0.4s cubic-bezier(0.2,0.8,0.3,1.2) 0.95s both">
           ${lang === 'cs' ? '🌱 Pojďme na to!' : '🌱 Let\u2019s go!'}
         </button>
       </div>
