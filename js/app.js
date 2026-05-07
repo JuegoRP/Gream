@@ -2988,14 +2988,11 @@ window.App = {
 
     this._setText('wardTitle',      lang === 'cs' ? '🥚 Moji Greamíci' : '🥚 My Greams');
     this._setText('wardSeeds',      Skins.getSeeds(p.id));
-    this._setText('wardTabGreams',  lang === 'cs' ? '🥚 Greamíci' : '🥚 Greams');
-    this._setText('wardTabBoosts',  lang === 'cs' ? '✨ Boosty' : '✨ Boosts');
-    this._setText('wardTabAcc',     lang === 'cs' ? '🎩 Doplňky' : '🎩 Accessories');
-    this._setText('wardTabAvatars', t.ward_avatars);
-    this._setText('wardTabFrames',  t.ward_frames);
-    this._setText('wardTabBg',      lang === 'cs' ? '🌄 Pozadí' : '🌄 Backgrounds');
+    // Tab emoji labels are static in HTML — only title needs updating
+    this._setText('wardTitle', lang === 'cs' ? '🥚 Greamíci' : '🥚 My Greams');
 
-    this.wardSwitchTab(this._wardTab || 'greams');
+    const safeTab = ['greams','boosts','avatars','frames','bg'].includes(this._wardTab) ? this._wardTab : 'greams';
+    this.wardSwitchTab(safeTab);
   },
 
   _renderNewGreamBanner(profileId, lang) {
@@ -3076,8 +3073,6 @@ window.App = {
       this._renderWardrobeGreams();
     } else if (tab === 'boosts') {
       this._renderWardrobeBoosts();
-    } else if (tab === 'acc') {
-      this._renderWardrobeAccessories();
     } else if (tab === 'bg') {
       this.renderBgShop();
     } else {

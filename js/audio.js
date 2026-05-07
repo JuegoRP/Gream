@@ -1,8 +1,8 @@
 // ═══════════════════════════════════
-//  GREAM — audio.js  v4
+//  GREAM — audio.js  v5
 //  Scene-based music, clean fade out → gap → fade in.
-//  Seamless loop via crossfade on repeat only.
-//  No procedural fallback. No overlap between scenes.
+//  Native loop (el.loop=true) — no new elements on repeat,
+//  no mobile autoplay block after 2 cycles.
 // ═══════════════════════════════════
 
 const SCENE_MUSIC = {
@@ -13,8 +13,7 @@ const SCENE_MUSIC = {
 
 const FADE_OUT_MS  = 800;
 const FADE_IN_MS   = 700;
-const SWITCH_GAP   = 200;    // silent pause between fade-out and fade-in
-const LOOP_FADE_MS = 1000;   // crossfade duration for seamless loop repeat
+const SWITCH_GAP   = 200;
 const FADE_TICK_MS = 40;
 const TARGET_VOL   = 0.25;
 
@@ -48,8 +47,8 @@ function _fadeVolume(el, fromVol, toVol, durationMs, onDone) {
 function _startAudio(src) {
   return new Promise((resolve, reject) => {
     const el = new window.Audio(src);
-    el.loop = false;
-    el.volume = 0;
+    el.loop    = true;   // native infinite loop — no new elements needed
+    el.volume  = 0;
     el.preload = 'auto';
     const p = el.play();
     if (!p) { reject(); return; }
@@ -57,47 +56,20 @@ function _startAudio(src) {
   });
 }
 
-// Seamless loop: crossfade near end of track (both play briefly)
-function _attachLoop(el, src, gen) {
-  let armed = false;
-  const check = () => {
-    if (_generation !== gen || !el.duration || armed) return;
-    if (el.duration - el.currentTime > LOOP_FADE_MS / 1000 + 0.5) return;
-    armed = true;
-    el.removeEventListener('timeupdate', check);
-    _fadeVolume(el, el.volume, 0, LOOP_FADE_MS, () => { try { el.pause(); } catch {} });
-    _startAudio(src).then(newEl => {
-      if (_generation !== gen) { try { newEl.pause(); } catch {} return; }
-      _musicEl = newEl;
-      _fadeVolume(newEl, 0, TARGET_VOL, Math.round(LOOP_FADE_MS * 0.8), null);
-      _attachLoop(newEl, src, gen);
-    }).catch(() => {
-      // Buffer miss — restart same element
-      if (_generation === gen) {
-        el.currentTime = 0; el.play().catch(() => {});
-        armed = false;
-        _attachLoop(el, src, gen);
-      }
-    });
-  };
-  el.addEventListener('timeupdate', check);
-}
-
 export const Audio = {
   init() {
     try { _enabled = localStorage.getItem('gream_sound') !== 'off'; } catch {}
   },
 
-  // Called on every touch/click — starts or retries music until it's actually playing
+  // Called on every touch/click — starts or retries until actually playing
   onUserGesture() {
     if (!_enabled) return;
-    if (_musicEl && !_musicEl.paused) return; // already playing, ignore
+    if (_musicEl && !_musicEl.paused) return;
     this.switchScene(_currentScene || 'menu');
   },
 
   switchScene(scene) {
     if (!_enabled) return;
-    // Skip only if same scene AND audio element is actually running
     if (scene === _currentScene && _running && _musicEl) return;
 
     const src = SCENE_MUSIC[scene];
@@ -116,9 +88,7 @@ export const Audio = {
         if (_generation !== gen) { try { el.pause(); } catch {} return; }
         _musicEl = el;
         _fadeVolume(el, 0, TARGET_VOL, FADE_IN_MS, null);
-        _attachLoop(el, src, gen);
       }).catch(() => {
-        // Autoplay blocked (mobile) — reset so onUserGesture retries
         if (_generation === gen) _running = false;
       });
     };

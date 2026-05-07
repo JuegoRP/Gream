@@ -430,21 +430,23 @@
 /* ─── WARDROBE TABS ─── */
 .ward-tab {
   flex:1;
-  padding:10px 8px;
-  border-radius:12px;
+  padding:10px 4px;
+  border-radius:14px;
   border:none;
   background:rgba(255,255,255,0.6);
   font-family:'Nunito',sans-serif;
   font-weight:800;
   color:var(--green-mid);
-  font-size:13px;
+  font-size:22px;
   cursor:pointer;
   transition:all 0.2s ease;
+  line-height:1;
 }
 .ward-tab.active {
   background:linear-gradient(135deg,var(--green-mid),var(--green-dark));
   color:white;
   box-shadow:0 2px 8px rgba(74,138,46,0.3);
+  transform:scale(1.06);
 }
 
 /* ─── SWITCH TOGGLE (settings) ─── */
