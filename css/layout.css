@@ -11,7 +11,8 @@
   display: flex; flex-direction: column;
   align-items: center; justify-content: flex-start;
   padding: calc(var(--sat) + 16px) 20px calc(var(--sab) + 20px);
-  overflow-y: auto; -webkit-overflow-scrolling: touch;
+  overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch;
+  max-width: 100vw;
   transition: opacity var(--t-slow), transform var(--t-slow);
 }
 .screen.hidden      { opacity:0; pointer-events:none; transform:scale(0.97); }

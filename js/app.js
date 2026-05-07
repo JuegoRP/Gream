@@ -354,7 +354,7 @@ window.App = {
     // Update tab labels with current lang
     const labels = {
       garden: lang === 'cs' ? 'Zahrada' : 'Garden',
-      map:    lang === 'cs' ? 'Mapa'    : 'Map',
+      map:    lang === 'cs' ? 'Svět'    : 'World',
       hub:    lang === 'cs' ? 'Já'      : 'Me',
     };
     for (const [k, v] of Object.entries(labels)) {
@@ -826,8 +826,8 @@ window.App = {
     // ─── Indoor / Outdoor button labels ───
     this._setText('hcIndoorTitle',  lang === 'cs' ? 'Doma klid' : 'Stay home');
     this._setText('hcIndoorSub',    lang === 'cs' ? 'Krátký úkol z domova' : 'A quick task from home');
-    this._setText('hcOutdoorTitle', lang === 'cs' ? 'Pojďme ven!' : "Let's go out!");
-    this._setText('hcOutdoorSub',   lang === 'cs' ? 'Najdi místa kolem' : 'Find places nearby');
+    this._setText('hcOutdoorTitle', lang === 'cs' ? 'Venkovní výzva' : 'Outdoor Quest');
+    this._setText('hcOutdoorSub',   lang === 'cs' ? 'Nejbližší místo v okolí' : 'Nearest place near you');
 
     // Quick action labels
     this._setText('qaMapLbl',   t.map_view_btn);
@@ -887,32 +887,51 @@ window.App = {
         if (dcCountdown) dcCountdown.textContent = '';
       }
     }
+
+    // Difficulty quick-picker — highlight active button, set label
+    const curDiff = p.difficulty || 'medium';
+    this._setText('dqLabel', lang === 'cs' ? 'Obtížnost:' : 'Difficulty:');
+    this._updateDiffPills(curDiff);
   },
 
-  // ─── Render HP needs row ───
+  _updateDiffPills(diff) {
+    document.querySelectorAll('.dq-btn').forEach(btn => {
+      const active = btn.dataset.diff === diff;
+      btn.style.background  = active ? 'var(--green-mid)' : 'rgba(255,255,255,0.85)';
+      btn.style.color       = active ? 'white' : 'var(--green-mid)';
+      btn.style.borderColor = active ? 'var(--green-mid)' : 'rgba(74,138,46,0.2)';
+    });
+  },
+
+  setDifficultyFromGarden(diff) {
+    const p = Profiles.active();
+    if (!p) return;
+    Profiles.update(p.id, { difficulty: diff });
+    this._updateDiffPills(diff);
+    this._updateDiffBtns(diff);
+    Feedback.tap();
+  },
+
+  // ─── Render mood ring (replaces 6-dot HP bar) ───
   _renderNeedsBar(pet) {
     const bar = document.getElementById('needsBar');
     if (!bar || !pet) return;
     const lang = getLang();
-    bar.innerHTML = '';
-    const needIcons = {
-      water: '💧', sun: '☀️', food: '🍎',
-      love: '💛', color: '🎨', space: '🌌'
+    const mood = pet.mood || 'neutral';
+    const moodData = {
+      happy:   { emoji: '😊', color: 'var(--green-mid)', label: lang === 'cs' ? 'Šťastný' : 'Happy' },
+      neutral: { emoji: '😐', color: '#999', label: lang === 'cs' ? 'Klidný' : 'Calm' },
+      sad:     { emoji: '😢', color: '#6a9fe0', label: lang === 'cs' ? 'Smutný' : 'Sad' },
+      serious: { emoji: '😠', color: '#e07060', label: lang === 'cs' ? 'Nesvůj' : 'Off' },
     };
-    const order = ['water','sun','food','love','color','space'];
-    order.forEach(k => {
-      const v = pet.hp[k] || 0;
-      const div = document.createElement('div');
-      div.className = 'need-dot';
-      const cls = v < 20 ? 'critical' : v < 40 ? 'low' : '';
-      div.innerHTML = `
-        <span class="need-dot-icon">${needIcons[k]}</span>
-        <div class="need-dot-bar">
-          <div class="need-dot-fill ${cls}" style="width:${v}%"></div>
-        </div>
-      `;
-      bar.appendChild(div);
-    });
+    const d = moodData[mood] || moodData.neutral;
+    bar.innerHTML = `
+      <div style="display:flex;align-items:center;gap:6px;justify-content:center;padding:4px 12px;border-radius:50px;background:rgba(255,255,255,0.7);border:1.5px solid ${d.color}22;cursor:default" onclick="App.tapGream()">
+        <span style="font-size:16px">${d.emoji}</span>
+        <span style="font-size:11px;font-weight:800;color:${d.color}">${d.label}</span>
+      </div>
+    `;
+    bar.style.justifyContent = 'center';
   },
 
   // ─── User taps the Gream — playful reaction ───
@@ -955,12 +974,12 @@ window.App = {
     const cw = maxX - minX + 1 + PAD*2;
     const ch = maxY - minY + 1 + PAD*2;
 
-    // Scale to fit canvas while preserving aspect ratio
-    const scale = Math.min(canvasW / cw, canvasH / ch);
+    // Target 80% of canvas height so all archetypes appear at consistent visual size
+    const scale = Math.min(canvasW * 0.80 / cw, canvasH * 0.80 / ch);
     const dw = Math.round(cw * scale);
     const dh = Math.round(ch * scale);
-    const dx = Math.round((canvasW - dw) / 2);
-    const dy = Math.round((canvasH - dh) / 2);
+    const dx = Math.round((canvasW - dw) / 2); // center horizontally
+    const dy = Math.round(canvasH - dh);         // bottom-align so sprite "stands"
 
     ctx.clearRect(0, 0, canvasW, canvasH);
     ctx.imageSmoothingEnabled = false;
@@ -1283,7 +1302,11 @@ window.App = {
         : `Buy extra task for ${cost} 🌱?`;
       // Show confirm overlay
       this._confirmSeedSpend(msg, cost, () => {
-        Skins.addSeeds(p.id, -cost);
+        if (!Skins.spendSeeds(p.id, cost)) {
+          const lang2 = localStorage.getItem('gream_lang') || 'en';
+          this._showToast?.(lang2 === 'cs' ? 'Nemáš dost semínek!' : 'Not enough seeds!');
+          return;
+        }
         this._setText('seedNum', Skins.getSeeds(p.id));
         this._doStartIndoor(p);
       });
@@ -2027,8 +2050,19 @@ window.App = {
     const p = Profiles.active();
     if (!p) return;
     Profiles.update(p.id, { difficulty: diff });
+    this._updateDiffBtns(diff);
+    this._updateDiffPills(diff);
     this.renderSettings();
     Feedback.tap();
+  },
+
+  _updateDiffBtns(diff) {
+    document.querySelectorAll('.diff-btn').forEach(btn => {
+      const active = btn.dataset.diff === diff;
+      btn.style.background  = active ? 'var(--green-mid)' : 'white';
+      btn.style.color       = active ? 'white' : 'var(--green-deep)';
+      btn.style.borderColor = active ? 'var(--green-mid)' : 'rgba(74,138,46,0.25)';
+    });
   },
 
   setLangSetting(l) {

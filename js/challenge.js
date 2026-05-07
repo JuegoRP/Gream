@@ -263,8 +263,8 @@ export const Challenge = {
     label.textContent = lang === 'cs' ? 'Napiš číslo:' : 'Enter a number:';
 
     const input = document.createElement('input');
-    input.type = 'number';
-    input.inputMode = 'numeric';
+    input.type = 'text';
+    input.inputMode = 'decimal';
     input.placeholder = lang === 'cs' ? 'Tvoje odpověď...' : 'Your answer...';
     input.style.cssText = `
       width:100%;padding:16px 18px;font-size:24px;font-weight:900;
@@ -514,15 +514,46 @@ export const Challenge = {
       return;
     }
 
-    // Choice wrong answer: show toast, reduce seeds, but allow proceeding after 1.5s
+    // Choice wrong answer: show correct answer banner, require tap to continue
     if (!result.passed && check?.type === 'choice') {
       Feedback.error();
       const card = document.querySelector('.card');
       if (card) Feedback.flashError(card);
-      this._showToast(result.feedback || (lang === 'cs' ? 'Špatně! Dostaneš méně semínek.' : 'Wrong! You\'ll get fewer seeds.'));
-      this._lastScore = 30; // Reduced reward for wrong choice
-      setTimeout(() => this._completeStep(), 800);
-      // Don't release — _completeStep will navigate away
+      this._lastScore = 30;
+
+      const correctVals = check.correct
+        ? (Array.isArray(check.correct) ? check.correct.map(String) : [String(check.correct)])
+        : [];
+
+      // Highlight correct button green
+      document.querySelectorAll('#screen-challenge .btn-choice').forEach(btn => {
+        const t = btn.textContent.trim();
+        if (correctVals.some(cv => cv.toLowerCase() === t.toLowerCase())) {
+          btn.style.background = 'rgba(74,138,46,0.2)';
+          btn.style.borderColor = 'var(--green-mid)';
+          btn.style.color = 'var(--green-deep)';
+        }
+      });
+
+      if (card && correctVals.length) {
+        const banner = document.createElement('div');
+        banner.style.cssText = 'margin-top:12px;padding:10px 14px;background:rgba(74,138,46,0.1);border:2px solid rgba(74,138,46,0.3);border-radius:12px;text-align:center;font-size:13px;font-weight:700;color:var(--green-deep)';
+        banner.textContent = lang === 'cs' ? `✓ Správná odpověď: ${correctVals[0]}` : `✓ Correct answer: ${correctVals[0]}`;
+        const continueBtn = document.createElement('button');
+        continueBtn.className = 'btn-primary';
+        continueBtn.style.cssText = 'width:100%;margin-top:10px';
+        continueBtn.textContent = lang === 'cs' ? 'Rozumím →' : 'Got it →';
+        continueBtn.onclick = () => {
+          continueBtn.disabled = true;
+          this._validating = false;
+          this._completeStep();
+        };
+        card.appendChild(banner);
+        card.appendChild(continueBtn);
+      } else {
+        // No correct answer text available — auto-advance after short delay
+        setTimeout(() => { this._validating = false; this._completeStep(); }, 1200);
+      }
       return;
     }
 
@@ -629,10 +660,9 @@ export const Challenge = {
     const greamResult = Gream.feedFromTask(p.id, this._world, this._wasOutdoor);
 
     // ─── Show name prompt when Gream evolves to stage 2 (first time) ───
-    if (greamResult?.evolved && greamResult.toStage === 2 && !greamResult.gream.name) {
-      // Archetype reveal first (if just resolved), then name prompt
-      const delay = greamResult.archetypeResolved ? 3000 : 1500;
-      setTimeout(() => this._promptGreamName(greamResult.gream), delay);
+    // Skip if archetypeResolved — _showArchetypeReveal overlay handles naming in that case
+    if (greamResult?.evolved && greamResult.toStage === 2 && !greamResult.gream.name && !greamResult.archetypeResolved) {
+      setTimeout(() => this._promptGreamName(greamResult.gream), 1500);
     }
 
     // ─── Archetype reveal overlay at hatching ───
@@ -736,9 +766,12 @@ export const Challenge = {
       box-shadow:0 10px 30px rgba(0,0,0,0.3); text-align:center;
     `;
     card.innerHTML = `
-      <img src="img/greamici/${gream.archetype ? `${gream.archetype}_${gream.stage}` : 'seed_1'}.png"
-        style="width:96px;height:96px;image-rendering:pixelated;margin:0 auto 12px;display:block"
-        onerror="this.style.fontSize='64px';this.style.width='auto';this.textContent='🥚'">
+      ${gream.archetype
+        ? `<canvas data-sprite-sheet="img/greamici/${gream.archetype}_${gream.stage}.png" data-sprite-mood="happy"
+             width="96" height="96"
+             style="width:96px;height:96px;image-rendering:pixelated;display:block;margin:0 auto 12px"></canvas>`
+        : `<div style="font-size:64px;text-align:center;margin:0 auto 12px">🥚</div>`
+      }
       <h3 style="font-size:18px;font-weight:900;color:var(--green-deep);margin:0 0 6px">${title}</h3>
       <p style="font-size:13px;color:var(--green-mid);font-weight:600;margin:0 0 16px;line-height:1.4">${sub}</p>
       <input type="text" id="greamNameInput" maxlength="20" placeholder="${placeholder}"
@@ -749,6 +782,7 @@ export const Challenge = {
       <button id="greamNameSkip" class="btn-ghost" style="width:100%">${btnSkip}</button>
     `;
     overlay.appendChild(card);
+    if (window.App?._initSpriteCanvases) App._initSpriteCanvases(overlay);
     document.body.appendChild(overlay);
     setTimeout(() => document.getElementById('greamNameInput')?.focus(), 200);
 

@@ -667,6 +667,7 @@ body.bg-starry { background:linear-gradient(180deg,#0d1b3d,#2c3e7a 50%,#4a5fa3);
   box-shadow:0 4px 12px rgba(0,0,0,0.15);
   opacity:0; pointer-events:none;
   transition:opacity 0.3s ease, transform 0.3s ease;
+  z-index:10;
 }
 .gream-speech.show { opacity:1; transform:translateX(-50%) translateY(4px); }
 .gream-speech::before {
@@ -689,8 +690,8 @@ body.bg-starry { background:linear-gradient(180deg,#0d1b3d,#2c3e7a 50%,#4a5fa3);
 
 /* Needs bar (6 dots showing HP for each need) */
 .needs-bar {
-  display:grid; grid-template-columns:repeat(6, 1fr); gap:6px;
-  max-width:380px; margin:8px auto 12px; padding:0 4px;
+  display:flex; justify-content:center;
+  max-width:380px; margin:6px auto 10px; padding:0 4px;
 }
 .need-dot {
   display:flex; flex-direction:column; align-items:center; gap:3px;

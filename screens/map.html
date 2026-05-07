@@ -61,6 +61,15 @@
   </button>
 </div>
 
+<!-- Difficulty quick-picker -->
+<div id="diffQuick" style="display:flex;align-items:center;gap:6px;justify-content:center;margin-top:6px;max-width:420px;width:100%">
+  <span style="font-size:10px;font-weight:700;color:var(--green-mid);opacity:0.7" id="dqLabel">Obtížnost:</span>
+  <button class="dq-btn" data-diff="easy"    onclick="App.setDifficultyFromGarden('easy')"    style="padding:5px 10px;border-radius:50px;border:2px solid rgba(74,138,46,0.2);background:rgba(255,255,255,0.85);font-family:inherit;font-size:11px;font-weight:800;cursor:pointer;color:var(--green-mid);transition:all 0.15s">🟢</button>
+  <button class="dq-btn" data-diff="medium"  onclick="App.setDifficultyFromGarden('medium')"  style="padding:5px 10px;border-radius:50px;border:2px solid rgba(74,138,46,0.2);background:rgba(255,255,255,0.85);font-family:inherit;font-size:11px;font-weight:800;cursor:pointer;color:var(--green-mid);transition:all 0.15s">🟡</button>
+  <button class="dq-btn" data-diff="hard"    onclick="App.setDifficultyFromGarden('hard')"    style="padding:5px 10px;border-radius:50px;border:2px solid rgba(74,138,46,0.2);background:rgba(255,255,255,0.85);font-family:inherit;font-size:11px;font-weight:800;cursor:pointer;color:var(--green-mid);transition:all 0.15s">🔴</button>
+  <button class="dq-btn" data-diff="extreme" onclick="App.setDifficultyFromGarden('extreme')" style="padding:5px 10px;border-radius:50px;border:2px solid rgba(74,138,46,0.2);background:rgba(255,255,255,0.85);font-family:inherit;font-size:11px;font-weight:800;cursor:pointer;color:var(--green-mid);transition:all 0.15s">⚡</button>
+</div>
+
 <!-- Daily counter -->
 <div class="daily-counter" id="dailyCounter" style="display:none">
   <span id="dailyCountText"></span>
