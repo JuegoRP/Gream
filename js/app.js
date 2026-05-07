@@ -3067,7 +3067,7 @@ window.App = {
     const wardGrid = document.getElementById('wardGrid');
     const bgGrid = document.getElementById('bgShopGrid');
     if (wardGrid) wardGrid.style.display = tab === 'bg' ? 'none' : '';
-    if (bgGrid) bgGrid.style.display = tab === 'bg' ? 'grid' : 'none';
+    if (bgGrid) bgGrid.style.display = tab === 'bg' ? 'flex' : 'none';
 
     if (tab === 'greams') {
       this._renderWardrobeGreams();
@@ -3397,56 +3397,48 @@ window.App = {
         };
         eGrid.appendChild(btn);
       });
-    } else if (tab === 'frames' || tab === 'bg') {
-      const items = tab === 'frames' ? SKIN_CATALOG.frames : SKIN_CATALOG.backgrounds;
-      const slot  = tab === 'frames' ? 'frame' : 'bg';
-      const seeds = Skins.getSeeds(p.id);
+    } else if (tab === 'frames') {
+      const items  = SKIN_CATALOG.frames;
+      const seeds  = Skins.getSeeds(p.id);
+      const cs     = lang === 'cs';
 
+      grid.style.cssText = 'max-width:420px;margin:0 auto;display:flex;flex-direction:column;gap:10px';
+      grid.innerHTML = `<div style="font-size:12px;color:#888;font-weight:700;margin-bottom:4px">${cs ? 'Rámy pro tvůj avatar' : 'Frames for your avatar'}</div>`;
+
+      const FRAME_EMOJIS = { fr_none:'◯', fr_leaf:'🍃', fr_gold:'⭐', fr_rainbow:'🌈', fr_galaxy:'🌌' };
       items.forEach(item => {
         const isOwned    = owned.has(item.id);
-        const isEquipped = equipped[slot] === item.id;
+        const isEquipped = equipped.frame === item.id;
         const canAfford  = seeds >= item.cost;
-
-        const card = document.createElement('button');
-        card.style.cssText = `
-          display:flex; flex-direction:column; align-items:center; gap:6px;
-          padding:12px 6px 8px; border-radius:14px; border:none;
-          background:${isEquipped ? 'linear-gradient(135deg,#cbe3a0,#a8cd7c)' : 'rgba(255,255,255,0.85)'};
-          cursor:pointer; font-family:inherit;
-          border:2px solid ${isEquipped ? 'var(--green-mid)' : 'transparent'};
-          min-height:120px; position:relative;
-        `;
-        // Visual preview
-        const previewEmoji = tab === 'frames'
-          ? (item.id === 'fr_none' ? '◯' : item.id === 'fr_leaf' ? '🍃' : item.id === 'fr_gold' ? '⭐' : item.id === 'fr_rainbow' ? '🌈' : '🌌')
-          : (item.id === 'bg_default' ? '🌿' : item.id === 'bg_sunset' ? '🌅' : item.id === 'bg_forest' ? '🌲' : item.id === 'bg_ocean' ? '🌊' : '🌃');
+        const card = document.createElement('div');
+        card.style.cssText = `background:white;border-radius:16px;padding:14px 16px;border:2px solid ${isEquipped ? 'var(--green-mid)' : 'rgba(0,0,0,0.07)'};display:flex;align-items:center;gap:14px;box-shadow:${isEquipped ? '0 4px 12px rgba(74,138,46,0.2)' : '0 2px 8px rgba(0,0,0,0.05)'};cursor:pointer`;
+        const statusBtn = isOwned
+          ? `<span style="padding:8px 14px;border-radius:50px;background:${isEquipped ? 'var(--green-mid)' : '#f0f0f0'};color:${isEquipped ? 'white' : 'var(--green-mid)'};font-weight:800;font-size:13px;font-family:inherit;flex-shrink:0">${isEquipped ? (cs?'✓ Aktivní':'✓ Active') : t.ward_equip}</span>`
+          : `<button style="padding:8px 14px;border-radius:50px;border:none;background:${canAfford ? 'var(--green-mid)' : '#ddd'};color:${canAfford ? 'white' : '#aaa'};font-family:inherit;font-weight:800;font-size:13px;cursor:${canAfford?'pointer':'not-allowed'};flex-shrink:0">🌱 ${item.cost}</button>`;
         card.innerHTML = `
-          <span style="font-size:30px">${previewEmoji}</span>
-          <span style="font-size:10px;font-weight:800;color:var(--green-deep);text-align:center;line-height:1.1">${item.name?.[lang] || item.id}</span>
-          <span style="font-size:11px;font-weight:800;color:${isOwned ? 'var(--green-mid)' : (canAfford ? 'var(--orange)' : '#999')}">
-            ${isOwned ? (isEquipped ? '✓' : t.ward_equip) : `🌱 ${item.cost}`}
-          </span>
+          <div style="font-size:34px;flex-shrink:0;width:48px;text-align:center">${FRAME_EMOJIS[item.id] || '🖼️'}</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:15px;font-weight:800;color:var(--green-deep)">${item.name?.[lang] || item.id}</div>
+            ${item.cost === 0 ? `<div style="font-size:12px;color:var(--green-mid);font-weight:700">${cs?'Zdarma':'Free'}</div>` : ''}
+          </div>
+          ${statusBtn}
         `;
         card.onclick = () => {
           if (isOwned) {
             Feedback.pop();
-            Skins.setEquipped(p.id, slot, item.id);
-            this._renderWardrobeGrid(tab);
+            Skins.setEquipped(p.id, 'frame', item.id);
+            this._renderWardrobeGrid('frames');
           } else if (canAfford) {
             const r = Skins.buyCosmetic(p.id, item.id);
             if (r.ok) {
               Feedback.coin();
-              Skins.setEquipped(p.id, slot, item.id);
+              Skins.setEquipped(p.id, 'frame', item.id);
               this._setText('wardSeeds', Skins.getSeeds(p.id));
-              this._renderWardrobeGrid(tab);
+              this._renderWardrobeGrid('frames');
             }
           } else {
             Feedback.error();
-            const toast = document.createElement('div');
-            toast.style.cssText = 'position:fixed;bottom:120px;left:50%;transform:translateX(-50%);background:#1a3d0a;color:white;padding:12px 20px;border-radius:50px;font-weight:700;z-index:999';
-            toast.textContent = t.ward_not_enough;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 2500);
+            this._showToast(t.ward_not_enough);
           }
         };
         grid.appendChild(card);
@@ -3732,20 +3724,28 @@ window.App = {
 
     const container = document.getElementById('bgShopGrid');
     if (!container) return;
-    container.innerHTML = '';
+    container.style.cssText = 'max-width:420px;margin:0 auto;display:flex;flex-direction:column;gap:10px';
+    container.innerHTML = `<div style="font-size:12px;color:#888;font-weight:700;margin-bottom:4px">${cs ? 'Pozadí pro tvoji zahradu' : 'Backgrounds for your garden'}</div>`;
 
     SKIN_CATALOG.backgrounds.forEach(bg => {
       const isOwned = bg.cost === 0 || owned.includes(bg.id);
       const isEquipped = equipped.id === bg.id;
+      const canAfford = seeds >= bg.cost;
       const card = document.createElement('div');
-      card.style.cssText = `border-radius:12px;overflow:hidden;border:3px solid ${isEquipped ? 'var(--green-mid)' : 'rgba(0,0,0,0.1)'};cursor:pointer;position:relative;background:#f5f5f5`;
+      card.style.cssText = `background:white;border-radius:16px;overflow:hidden;border:2px solid ${isEquipped ? 'var(--green-mid)' : 'rgba(0,0,0,0.07)'};display:flex;align-items:center;gap:0;box-shadow:${isEquipped ? '0 4px 12px rgba(74,138,46,0.2)' : '0 2px 8px rgba(0,0,0,0.05)'};cursor:pointer`;
+      const bgPreview = bg.file
+        ? `url('img/backgrounds/${bg.file}') center/cover`
+        : 'linear-gradient(135deg,#87ceeb,#5a9a3a)';
+      const statusBtn = isOwned
+        ? `<span style="padding:8px 14px;border-radius:50px;background:${isEquipped ? 'var(--green-mid)' : '#f0f0f0'};color:${isEquipped ? 'white' : 'var(--green-mid)'};font-weight:800;font-size:13px;font-family:inherit;flex-shrink:0;white-space:nowrap">${isEquipped ? (cs?'✓ Aktivní':'✓ Active') : (cs?'Nasadit':'Equip')}</span>`
+        : `<span style="padding:8px 14px;border-radius:50px;background:${canAfford ? 'var(--green-mid)' : '#ddd'};color:${canAfford ? 'white' : '#aaa'};font-weight:800;font-size:13px;flex-shrink:0;white-space:nowrap">🌱 ${bg.cost}</span>`;
       card.innerHTML = `
-        <div style="width:100%;height:80px;background:${bg.file ? `url('img/backgrounds/${bg.file}') center/cover` : 'linear-gradient(135deg,#5ba4d4,#5a9a3a)'};"></div>
-        <div style="padding:6px 8px">
-          <div style="font-size:12px;font-weight:800;color:var(--green-deep)">${bg.name[lang] || bg.name.cs}</div>
-          <div style="font-size:11px;color:#888;margin-top:2px">${isOwned ? (isEquipped ? (cs?'✓ Aktivní':'✓ Active') : (cs?'Vlastníš':'Owned')) : `🌱 ${bg.cost}`}</div>
+        <div style="width:72px;height:58px;flex-shrink:0;background:${bgPreview}"></div>
+        <div style="flex:1;min-width:0;padding:0 12px">
+          <div style="font-size:15px;font-weight:800;color:var(--green-deep)">${bg.name[lang] || bg.name.cs}</div>
+          ${bg.cost === 0 ? `<div style="font-size:12px;color:var(--green-mid);font-weight:700">${cs?'Zdarma':'Free'}</div>` : ''}
         </div>
-        ${isEquipped ? '<div style="position:absolute;top:4px;right:4px;background:var(--green-mid);color:white;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px">✓</div>' : ''}
+        <div style="padding:0 14px 0 0;flex-shrink:0">${statusBtn}</div>
       `;
       card.onclick = () => {
         const result = Skins.purchaseBg(p.id, bg.id);

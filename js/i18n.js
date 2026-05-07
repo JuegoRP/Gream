@@ -189,7 +189,14 @@ export const T = {
           {text:"Which animal has a shell on its back?", action:"choice", choices:[{text:"🐢 Tortoise",value:"tortoise"},{text:"🐇 Rabbit",value:"rabbit"},{text:"🦊 Fox",value:"fox"}], check:{type:"choice",correct:"tortoise"}, mode:"outdoor_bonus"},
           {text:"How many wings does a butterfly have?", action:"number", check:{type:"number",answer:4,tolerance:0}, mode:"outdoor_bonus"},
           {text:"Which of these grows from a seed?", action:"choice", choices:[{text:"🌻 Sunflower",value:"sunflower"},{text:"🪨 Rock",value:"rock"},{text:"🌊 Wave",value:"wave"}], check:{type:"choice",correct:"sunflower"}, mode:"outdoor_bonus"},
-          {text:"What do you call a baby dog?", action:"choice", choices:[{text:"Puppy 🐶",value:"puppy"},{text:"Kitten 🐱",value:"kitten"},{text:"Cub 🐻",value:"cub"}], check:{type:"choice",correct:"puppy"}, mode:"outdoor_bonus"}
+          {text:"What do you call a baby dog?", action:"choice", choices:[{text:"Puppy 🐶",value:"puppy"},{text:"Kitten 🐱",value:"kitten"},{text:"Cub 🐻",value:"cub"}], check:{type:"choice",correct:"puppy"}, mode:"outdoor_bonus"},
+          {text:"Which animal is the tallest on land?", action:"choice", choices:[{text:"🦒 Giraffe",value:"giraffe"},{text:"🐘 Elephant",value:"elephant"},{text:"🦁 Lion",value:"lion"}], check:{type:"choice",correct:"giraffe"}, mode:"outdoor_bonus"},
+          {text:"How many legs does an insect have?", action:"number", check:{type:"number",answer:6,tolerance:0}, mode:"outdoor_bonus"},
+          {text:"What do birds build to raise their young?", action:"choice", choices:[{text:"🪹 A nest",value:"nest"},{text:"🏠 A house",value:"house"},{text:"🕳️ A burrow",value:"burrow"}], check:{type:"choice",correct:"nest"}, mode:"outdoor_bonus"},
+          {text:"Which animal is known for changing color to blend in?", action:"choice", choices:[{text:"🦎 Chameleon",value:"chameleon"},{text:"🐕 Dog",value:"dog"},{text:"🐟 Fish",value:"fish"}], check:{type:"choice",correct:"chameleon"}, mode:"outdoor_bonus"},
+          {text:"What do frogs start life as?", action:"choice", choices:[{text:"🐸 Tadpoles",value:"tadpoles"},{text:"🐶 Puppies",value:"puppies"},{text:"🐛 Caterpillars",value:"caterpillars"}], check:{type:"choice",correct:"tadpoles"}, mode:"outdoor_bonus"},
+          {text:"What is the term for an animal that eats only meat?", action:"choice", choices:[{text:"Carnivore 🦁",value:"carnivore"},{text:"Herbivore 🐰",value:"herbivore"},{text:"Omnivore 🐻",value:"omnivore"}], check:{type:"choice",correct:"carnivore"}, mode:"outdoor_bonus"},
+          {text:"Which of these is a reptile?", action:"choice", choices:[{text:"🐢 Tortoise",value:"tortoise"},{text:"🐸 Frog",value:"frog"},{text:"🐝 Bee",value:"bee"}], check:{type:"choice",correct:"tortoise"}, mode:"outdoor_bonus"}
         ],
         "7-9": [
           {text:"What do plants need to grow?", hint:"Think about what you'd give a plant every day.", action:"choice", choices:[{text:"🌊 Water & sun",value:"water_sun"},{text:"🍫 Chocolate",value:"choco"},{text:"🧊 Ice only",value:"ice"}], check:{type:"choice",correct:"water_sun"}, mode:"outdoor_bonus"},
@@ -201,7 +208,14 @@ export const T = {
           {text:"How many days does it take Earth to orbit the Sun?", hint:"How many days in a year?", action:"number", check:{type:"number",answer:365,tolerance:1}, mode:"outdoor_bonus"},
           {text:"How many stages does a butterfly's life cycle have?", action:"number", check:{type:"number",answer:4,tolerance:0}, mode:"outdoor_bonus"},
           {text:"Which gas do plants absorb from the air to make food?", action:"choice", choices:[{text:"Carbon dioxide (CO₂)",value:"correct"},{text:"Oxygen (O₂)",value:"wrong1"},{text:"Nitrogen (N₂)",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
-          {text:"What is the name for animals that eat both plants and meat?", action:"choice", choices:[{text:"Omnivores",value:"correct"},{text:"Herbivores",value:"wrong1"},{text:"Carnivores",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
+          {text:"What is the name for animals that eat both plants and meat?", action:"choice", choices:[{text:"Omnivores",value:"correct"},{text:"Herbivores",value:"wrong1"},{text:"Carnivores",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"What scientific field studies insects?", action:"choice", choices:[{text:"Entomology",value:"correct"},{text:"Ornithology",value:"wrong1"},{text:"Botany",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Which organ do fish use to breathe underwater?", action:"choice", choices:[{text:"Gills",value:"correct"},{text:"Lungs",value:"wrong1"},{text:"Skin",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"How many hearts does an octopus have?", hint:"More than one!", action:"number", check:{type:"number",answer:3,tolerance:0}, mode:"outdoor_bonus"},
+          {text:"What is the hard outer layer of a tree trunk called?", action:"choice", choices:[{text:"Bark",value:"correct"},{text:"Rind",value:"wrong1"},{text:"Shell",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Which is the fastest land animal?", action:"choice", choices:[{text:"🐆 Cheetah",value:"correct"},{text:"🦁 Lion",value:"wrong1"},{text:"🦓 Zebra",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"What gas do humans breathe out?", action:"choice", choices:[{text:"Carbon dioxide (CO₂)",value:"correct"},{text:"Oxygen (O₂)",value:"wrong1"},{text:"Hydrogen (H₂)",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"What is the term for animals that eat only plants?", action:"choice", choices:[{text:"Herbivores",value:"correct"},{text:"Carnivores",value:"wrong1"},{text:"Scavengers",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
         ],
         "10-15": [
           {text:"What is photosynthesis?", hint:"What do plants make from sunlight?", action:"choice", choices:[{text:"🌞 Converting sunlight into food",value:"correct"},{text:"🌙 Sleeping during daytime",value:"wrong1"},{text:"💧 Drinking rainwater only",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -213,7 +227,14 @@ export const T = {
           {text:"Which type of rock is formed from cooled lava?", action:"choice", choices:[{text:"Igneous",value:"correct"},{text:"Sedimentary",value:"wrong1"},{text:"Metamorphic",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"How many chromosomes do humans have in each body cell?", action:"number", check:{type:"number",answer:46,tolerance:0}, mode:"indoor_ok"},
           {text:"Which planet in our solar system has the most moons?", action:"choice", choices:[{text:"Saturn",value:"correct"},{text:"Jupiter",value:"wrong1"},{text:"Uranus",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
-          {text:"What is the powerhouse of the cell?", action:"choice", choices:[{text:"Mitochondria",value:"correct"},{text:"Nucleus",value:"wrong1"},{text:"Ribosome",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
+          {text:"What is the powerhouse of the cell?", action:"choice", choices:[{text:"Mitochondria",value:"correct"},{text:"Nucleus",value:"wrong1"},{text:"Ribosome",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"What is the process called when water evaporates from plant leaves?", action:"choice", choices:[{text:"Transpiration",value:"correct"},{text:"Condensation",value:"wrong1"},{text:"Respiration",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Which kingdom do mushrooms belong to?", action:"choice", choices:[{text:"Fungi",value:"correct"},{text:"Plantae",value:"wrong1"},{text:"Animalia",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"What is the approximate age of the Earth in billions of years?", action:"number", check:{type:"number",answer:4,tolerance:1}, mode:"indoor_ok"},
+          {text:"Which term describes animals active at dawn and dusk?", action:"choice", choices:[{text:"Crepuscular",value:"correct"},{text:"Nocturnal",value:"wrong1"},{text:"Diurnal",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"What is the process by which water vapor cools and becomes liquid?", action:"choice", choices:[{text:"Condensation",value:"correct"},{text:"Evaporation",value:"wrong1"},{text:"Transpiration",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"What is the scientific study of fungi called?", action:"choice", choices:[{text:"Mycology",value:"correct"},{text:"Botany",value:"wrong1"},{text:"Zoology",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"The Amazon rainforest produces approximately what percentage of Earth's oxygen?", hint:"About a fifth!", action:"number", check:{type:"number",answer:20,tolerance:5}, mode:"indoor_ok"}
         ],
         "15+": [
           {text:"Which process converts nitrogen gas into forms usable by plants?", action:"choice", choices:[{text:"Nitrogen fixation",value:"correct"},{text:"Photosynthesis",value:"wrong1"},{text:"Transpiration",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -225,7 +246,13 @@ export const T = {
           {text:"Which molecule carries genetic information in most living organisms?", action:"choice", choices:[{text:"DNA",value:"correct"},{text:"ATP",value:"wrong1"},{text:"RNA",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"Approximately what percentage of Earth's surface is covered by water?", action:"number", check:{type:"number",answer:71,tolerance:4}, mode:"indoor_ok"},
           {text:"What is the term for the symbiotic relationship where both organisms benefit?", action:"choice", choices:[{text:"Mutualism",value:"correct"},{text:"Parasitism",value:"wrong1"},{text:"Commensalism",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
-          {text:"How many base pairs are in the human genome? (in billions)", hint:"About 3 billion!", action:"number", check:{type:"number",answer:3,tolerance:1}, mode:"indoor_ok"}
+          {text:"How many base pairs are in the human genome? (in billions)", hint:"About 3 billion!", action:"number", check:{type:"number",answer:3,tolerance:1}, mode:"indoor_ok"},
+          {text:"Which chemical element forms the backbone of all organic molecules?", action:"choice", choices:[{text:"Carbon",value:"correct"},{text:"Oxygen",value:"wrong1"},{text:"Nitrogen",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"What is CRISPR-Cas9 primarily used for?", action:"choice", choices:[{text:"Gene editing",value:"correct"},{text:"Protein synthesis",value:"wrong1"},{text:"Cell imaging",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Which process do bacteria use to share genetic material between cells?", action:"choice", choices:[{text:"Conjugation",value:"correct"},{text:"Mitosis",value:"wrong1"},{text:"Meiosis",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"What was the Cambrian Explosion?", action:"choice", choices:[{text:"Rapid diversification of animal life ~540 million years ago",value:"correct"},{text:"A massive volcanic event",value:"wrong1"},{text:"The event that wiped out the dinosaurs",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"What is the biological term for the total genetic material of an organism?", action:"choice", choices:[{text:"Genome",value:"correct"},{text:"Proteome",value:"wrong1"},{text:"Phenotype",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Which gas is produced as a waste product of aerobic respiration?", action:"choice", choices:[{text:"Carbon dioxide",value:"correct"},{text:"Oxygen",value:"wrong1"},{text:"Methane",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
         ]
       },
       language: {
@@ -239,7 +266,13 @@ export const T = {
           {text:"Which of these is an animal?", action:"choice", choices:[{text:"🐘 Elephant",value:"elephant"},{text:"🍎 Apple",value:"apple"},{text:"🪑 Chair",value:"chair"}], check:{type:"choice",correct:"elephant"}, mode:"outdoor_bonus"},
           {text:"How many letters are in the word DOG?", action:"number", check:{type:"number",answer:3,tolerance:0}, mode:"indoor_ok"},
           {text:"Which word rhymes with CAT?", action:"choice", choices:[{text:"Hat 🎩",value:"hat"},{text:"Dog 🐕",value:"dog"},{text:"Sun ☀️",value:"sun"}], check:{type:"choice",correct:"hat"}, mode:"indoor_ok"},
-          {text:"Which of these is a verb (action word)?", action:"choice", choices:[{text:"Jump 🏃",value:"jump"},{text:"Big 🐘",value:"big"},{text:"Tree 🌳",value:"tree"}], check:{type:"choice",correct:"jump"}, mode:"outdoor_bonus"}
+          {text:"Which of these is a verb (action word)?", action:"choice", choices:[{text:"Jump 🏃",value:"jump"},{text:"Big 🐘",value:"big"},{text:"Tree 🌳",value:"tree"}], check:{type:"choice",correct:"jump"}, mode:"outdoor_bonus"},
+          {text:"Which of these words describes how something smells?", action:"choice", choices:[{text:"Stinky 🦨",value:"stinky"},{text:"Loud 🔊",value:"loud"},{text:"Fast 🏃",value:"fast"}], check:{type:"choice",correct:"stinky"}, mode:"outdoor_bonus"},
+          {text:"How many letters are in the word RAINBOW?", action:"number", check:{type:"number",answer:7,tolerance:0}, mode:"indoor_ok"},
+          {text:"Which of these is a number word?", action:"choice", choices:[{text:"Seven 7️⃣",value:"seven"},{text:"Run 🏃",value:"run"},{text:"Happy 😊",value:"happy"}], check:{type:"choice",correct:"seven"}, mode:"indoor_ok"},
+          {text:"Which sentence has two words?", action:"choice", choices:[{text:"Dogs run.",value:"correct"},{text:"I",value:"wrong1"},{text:"The big brown dog runs very fast.",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Which of these words is a colour AND a fruit?", action:"choice", choices:[{text:"Orange 🟠",value:"orange"},{text:"Apple 🍎",value:"apple"},{text:"Chair 🪑",value:"chair"}], check:{type:"choice",correct:"orange"}, mode:"outdoor_bonus"},
+          {text:"How many letters are in the word BUTTERFLY?", action:"number", check:{type:"number",answer:9,tolerance:0}, mode:"indoor_ok"}
         ],
         "7-9": [
           {text:"What is an antonym of the word HAPPY?", action:"choice", choices:[{text:"Sad 😢",value:"sad"},{text:"Joyful 😄",value:"joyful"},{text:"Big 🐘",value:"big"}], check:{type:"choice",correct:"sad"}, mode:"outdoor_bonus"},
@@ -251,7 +284,13 @@ export const T = {
           {text:"How many letters are in the English alphabet?", action:"number", check:{type:"number",answer:26,tolerance:0}, mode:"indoor_ok"},
           {text:"Which of these verbs is in the past tense?", action:"choice", choices:[{text:"Walked",value:"correct"},{text:"Walk",value:"wrong1"},{text:"Walking",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"What is a group of words that forms a complete thought called?", action:"choice", choices:[{text:"A sentence",value:"correct"},{text:"A paragraph",value:"wrong1"},{text:"A syllable",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
-          {text:"How many syllables are in the word 'ELEPHANT'?", action:"number", check:{type:"number",answer:3,tolerance:0}, mode:"indoor_ok"}
+          {text:"How many syllables are in the word 'ELEPHANT'?", action:"number", check:{type:"number",answer:3,tolerance:0}, mode:"indoor_ok"},
+          {text:"Which of these words is a conjunction (joining word)?", action:"choice", choices:[{text:"And",value:"correct"},{text:"Run",value:"wrong1"},{text:"Blue",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"What is a word that means the same as another called?", action:"choice", choices:[{text:"Synonym",value:"correct"},{text:"Antonym",value:"wrong1"},{text:"Homophone",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"How many sentences does a paragraph usually contain? (minimum)", action:"number", check:{type:"number",answer:3,tolerance:2}, mode:"indoor_ok"},
+          {text:"Which of these is a proper noun?", action:"choice", choices:[{text:"London 🏙️",value:"correct"},{text:"city",value:"wrong1"},{text:"river",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Which word sounds the same as 'KNIGHT' but is spelled differently?", action:"choice", choices:[{text:"Night 🌙",value:"correct"},{text:"Kneel",value:"wrong1"},{text:"Light",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"What do we call a word that imitates a sound (like 'buzz' or 'crash')?", action:"choice", choices:[{text:"Onomatopoeia",value:"correct"},{text:"Alliteration",value:"wrong1"},{text:"Simile",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
         ],
         "10-15": [
           {text:"Which literary device is used in: 'The wind whispered secrets'?", action:"choice", choices:[{text:"Personification",value:"correct"},{text:"Rhyme",value:"wrong1"},{text:"Alliteration",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -263,7 +302,12 @@ export const T = {
           {text:"What is the study of the origin and history of words called?", action:"choice", choices:[{text:"Etymology",value:"correct"},{text:"Phonology",value:"wrong1"},{text:"Syntax",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"Which sentence uses a simile?", action:"choice", choices:[{text:"She swims like a fish",value:"correct"},{text:"She is a fish",value:"wrong1"},{text:"The fish swam quickly",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"How many books are in the Harry Potter series?", action:"number", check:{type:"number",answer:7,tolerance:0}, mode:"indoor_ok"},
-          {text:"Which tense describes an action that started in the past and continues now?", action:"choice", choices:[{text:"Present perfect",value:"correct"},{text:"Simple past",value:"wrong1"},{text:"Future simple",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
+          {text:"Which tense describes an action that started in the past and continues now?", action:"choice", choices:[{text:"Present perfect",value:"correct"},{text:"Simple past",value:"wrong1"},{text:"Future simple",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"What is the term for a story told from the perspective of 'you'?", action:"choice", choices:[{text:"Second-person narration",value:"correct"},{text:"First-person narration",value:"wrong1"},{text:"Third-person omniscient",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Approximately how many words does the Oxford English Dictionary contain?", hint:"Hundreds of thousands!", action:"number", check:{type:"number",answer:600000,tolerance:200000}, mode:"indoor_ok"},
+          {text:"Which of these is an example of dramatic irony?", action:"choice", choices:[{text:"The audience knows a secret the character doesn't",value:"correct"},{text:"A character exaggerates their feelings",value:"wrong1"},{text:"Two words start with the same sound",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"What is a haiku?", action:"choice", choices:[{text:"A Japanese poem with 5-7-5 syllables",value:"correct"},{text:"A Greek epic poem",value:"wrong1"},{text:"A rhyming couplet",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Which type of text aims to retell events in order?", action:"choice", choices:[{text:"Chronological recount",value:"correct"},{text:"Persuasive essay",value:"wrong1"},{text:"Descriptive poem",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
         ],
         "15+": [
           {text:"What literary device gives human qualities to non-human things?", action:"choice", choices:[{text:"Personification",value:"correct"},{text:"Alliteration",value:"wrong1"},{text:"Onomatopoeia",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
@@ -275,7 +319,12 @@ export const T = {
           {text:"Which language family does English belong to?", action:"choice", choices:[{text:"Indo-European",value:"correct"},{text:"Sino-Tibetan",value:"wrong1"},{text:"Afro-Asiatic",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"How many letters does the longest word in the Oxford English Dictionary have? (approximately)", hint:"It's a lung disease name — 45 letters!", action:"number", check:{type:"number",answer:45,tolerance:5}, mode:"indoor_ok"},
           {text:"Which narrative technique tells a story from the perspective of 'I'?", action:"choice", choices:[{text:"First-person narration",value:"correct"},{text:"Third-person omniscient",value:"wrong1"},{text:"Second-person narration",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
-          {text:"What is the term for a word that means the opposite of another?", action:"choice", choices:[{text:"Antonym",value:"correct"},{text:"Synonym",value:"wrong1"},{text:"Homonym",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
+          {text:"What is the term for a word that means the opposite of another?", action:"choice", choices:[{text:"Antonym",value:"correct"},{text:"Synonym",value:"wrong1"},{text:"Homonym",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"What is the study of how language sounds are organized called?", action:"choice", choices:[{text:"Phonology",value:"correct"},{text:"Morphology",value:"wrong1"},{text:"Syntax",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"How many tones does Mandarin Chinese have?", action:"number", check:{type:"number",answer:4,tolerance:1}, mode:"indoor_ok"},
+          {text:"What is a 'false friend' in language learning?", action:"choice", choices:[{text:"A word that looks similar in two languages but means something different",value:"correct"},{text:"A grammar rule that has many exceptions",value:"wrong1"},{text:"A word borrowed from another language unchanged",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"What is the Sapir-Whorf hypothesis about?", action:"choice", choices:[{text:"Language influences how we perceive the world",value:"correct"},{text:"All languages share a universal grammar",value:"wrong1"},{text:"Children learn language through imitation only",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Which language has the most native speakers worldwide?", action:"choice", choices:[{text:"Mandarin Chinese",value:"correct"},{text:"English",value:"wrong1"},{text:"Spanish",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
         ]
       },
       logic: {
@@ -289,7 +338,13 @@ export const T = {
           {text:"If you have 2 cats and 3 dogs, how many animals do you have in total?", action:"number", check:{type:"number",answer:5,tolerance:0}, mode:"indoor_ok"},
           {text:"What comes next? 1, 2, 3, 4, __", action:"number", check:{type:"number",answer:5,tolerance:0}, mode:"indoor_ok"},
           {text:"Which of these is the biggest?", action:"choice", choices:[{text:"🐘 Elephant",value:"elephant"},{text:"🐭 Mouse",value:"mouse"},{text:"🐕 Dog",value:"dog"}], check:{type:"choice",correct:"elephant"}, mode:"outdoor_bonus"},
-          {text:"How many sides does a square have?", action:"number", check:{type:"number",answer:4,tolerance:0}, mode:"outdoor_bonus"}
+          {text:"How many sides does a square have?", action:"number", check:{type:"number",answer:4,tolerance:0}, mode:"outdoor_bonus"},
+          {text:"If you have 10 sweets and give away 3, how many do you have left?", action:"number", check:{type:"number",answer:7,tolerance:0}, mode:"indoor_ok"},
+          {text:"What comes next? ⭐🌙⭐🌙⭐__", action:"choice", choices:[{text:"🌙 Moon",value:"moon"},{text:"☀️ Sun",value:"sun"},{text:"⭐ Star",value:"star"}], check:{type:"choice",correct:"moon"}, mode:"outdoor_bonus"},
+          {text:"Which of these is an even number?", action:"choice", choices:[{text:"6",value:"6"},{text:"7",value:"7"},{text:"9",value:"9"}], check:{type:"choice",correct:"6"}, mode:"indoor_ok"},
+          {text:"A hen lays 2 eggs every day. How many eggs does she lay in 3 days?", action:"number", check:{type:"number",answer:6,tolerance:0}, mode:"indoor_ok"},
+          {text:"What is 10 + 10?", action:"number", check:{type:"number",answer:20,tolerance:0}, mode:"indoor_ok"},
+          {text:"Which of these shapes has no corners?", action:"choice", choices:[{text:"⭕ Circle",value:"circle"},{text:"🔺 Triangle",value:"triangle"},{text:"⬛ Square",value:"square"}], check:{type:"choice",correct:"circle"}, mode:"outdoor_bonus"}
         ],
         "7-9": [
           {text:"Which shape has 4 equal sides and 4 right angles?", action:"choice", choices:[{text:"Square ⬛",value:"square"},{text:"Triangle 🔺",value:"triangle"},{text:"Circle ⭕",value:"circle"}], check:{type:"choice",correct:"square"}, mode:"outdoor_bonus"},
@@ -301,7 +356,13 @@ export const T = {
           {text:"A snail travels 3 cm per minute. How far does it travel in 10 minutes? (in cm)", action:"number", check:{type:"number",answer:30,tolerance:0}, mode:"indoor_ok"},
           {text:"What comes next in the pattern: 2, 4, 6, 8, __?", action:"number", check:{type:"number",answer:10,tolerance:0}, mode:"indoor_ok"},
           {text:"If a toy costs $4 and you pay with $10, how much change do you get?", action:"number", check:{type:"number",answer:6,tolerance:0}, mode:"indoor_ok"},
-          {text:"What is 9 × 9?", action:"number", check:{type:"number",answer:81,tolerance:0}, mode:"indoor_ok"}
+          {text:"What is 9 × 9?", action:"number", check:{type:"number",answer:81,tolerance:0}, mode:"indoor_ok"},
+          {text:"What is 1000 divided by 4?", action:"number", check:{type:"number",answer:250,tolerance:0}, mode:"indoor_ok"},
+          {text:"A bus has 32 seats, 18 are taken. How many seats are empty?", action:"number", check:{type:"number",answer:14,tolerance:0}, mode:"indoor_ok"},
+          {text:"Which of these numbers is divisible by both 2 and 3?", action:"choice", choices:[{text:"12",value:"12"},{text:"10",value:"10"},{text:"14",value:"14"}], check:{type:"choice",correct:"12"}, mode:"indoor_ok"},
+          {text:"What is 25% of 80?", action:"number", check:{type:"number",answer:20,tolerance:0}, mode:"indoor_ok"},
+          {text:"A square has a perimeter of 24. What is the length of one side?", action:"number", check:{type:"number",answer:6,tolerance:0}, mode:"indoor_ok"},
+          {text:"What is 12 squared?", action:"number", check:{type:"number",answer:144,tolerance:0}, mode:"indoor_ok"}
         ],
         "10-15": [
           {text:"What is the next prime number after 7?", action:"choice", choices:[{text:"11",value:"correct"},{text:"9",value:"wrong1"},{text:"12",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -313,7 +374,13 @@ export const T = {
           {text:"A rectangle has a length of 8 and width of 5. What is its area?", action:"number", check:{type:"number",answer:40,tolerance:0}, mode:"indoor_ok"},
           {text:"How many prime numbers are there between 1 and 20?", action:"number", check:{type:"number",answer:8,tolerance:0}, mode:"indoor_ok"},
           {text:"Which of these fractions is the largest?", action:"choice", choices:[{text:"3/4",value:"correct"},{text:"1/2",value:"wrong1"},{text:"2/3",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
-          {text:"If x + 5 = 12, what is x?", action:"number", check:{type:"number",answer:7,tolerance:0}, mode:"indoor_ok"}
+          {text:"If x + 5 = 12, what is x?", action:"number", check:{type:"number",answer:7,tolerance:0}, mode:"indoor_ok"},
+          {text:"What is the perimeter of a rectangle with length 9 and width 4?", action:"number", check:{type:"number",answer:26,tolerance:0}, mode:"indoor_ok"},
+          {text:"How many degrees are in a full rotation?", action:"number", check:{type:"number",answer:360,tolerance:0}, mode:"indoor_ok"},
+          {text:"Which of these is NOT a prime number?", action:"choice", choices:[{text:"9",value:"correct"},{text:"7",value:"wrong1"},{text:"11",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"A car uses 6 litres of fuel per 100 km. How much fuel to travel 250 km?", action:"number", check:{type:"number",answer:15,tolerance:0}, mode:"indoor_ok"},
+          {text:"What is 2 to the power of 5?", action:"number", check:{type:"number",answer:32,tolerance:0}, mode:"indoor_ok"},
+          {text:"Which type of triangle has all three sides of different lengths?", action:"choice", choices:[{text:"Scalene",value:"correct"},{text:"Isosceles",value:"wrong1"},{text:"Equilateral",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
         ],
         "15+": [
           {text:"If all bloops are razzles and all razzles are lazzles, are all bloops definitely lazzles?", action:"choice", choices:[{text:"Yes — transitive logic",value:"correct"},{text:"No — can't tell",value:"wrong1"},{text:"Only sometimes",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
@@ -325,7 +392,12 @@ export const T = {
           {text:"What is the sum of the interior angles of a triangle? (in degrees)", action:"number", check:{type:"number",answer:180,tolerance:0}, mode:"indoor_ok"},
           {text:"Which of these best describes a recursive function?", action:"choice", choices:[{text:"A function that calls itself",value:"correct"},{text:"A function that never ends",value:"wrong1"},{text:"A function with no parameters",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"In Boolean logic, what is TRUE AND FALSE?", action:"choice", choices:[{text:"FALSE",value:"correct"},{text:"TRUE",value:"wrong1"},{text:"NULL",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
-          {text:"What is the Fibonacci sequence rule?", action:"choice", choices:[{text:"Each number is the sum of the two before it",value:"correct"},{text:"Each number doubles the previous one",value:"wrong1"},{text:"Each number adds a fixed constant",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
+          {text:"What is the Fibonacci sequence rule?", action:"choice", choices:[{text:"Each number is the sum of the two before it",value:"correct"},{text:"Each number doubles the previous one",value:"wrong1"},{text:"Each number adds a fixed constant",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"What is the Big O notation O(n²) used to describe?", action:"choice", choices:[{text:"Quadratic time complexity",value:"correct"},{text:"Linear time complexity",value:"wrong1"},{text:"Constant time complexity",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Which logical statement is equivalent to NOT (A AND B)?", action:"choice", choices:[{text:"(NOT A) OR (NOT B) — De Morgan's law",value:"correct"},{text:"(NOT A) AND (NOT B)",value:"wrong1"},{text:"A OR B",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"What is the minimum number of moves to solve a 3-ring Tower of Hanoi?", hint:"Formula: 2ⁿ - 1", action:"number", check:{type:"number",answer:7,tolerance:0}, mode:"indoor_ok"},
+          {text:"Which sorting algorithm has an average time complexity of O(n log n)?", action:"choice", choices:[{text:"Merge sort",value:"correct"},{text:"Bubble sort",value:"wrong1"},{text:"Selection sort",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"In a graph, if every vertex is connected to every other vertex, what is it called?", action:"choice", choices:[{text:"Complete graph",value:"correct"},{text:"Bipartite graph",value:"wrong1"},{text:"Tree",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
         ]
       },
       feelings: {
@@ -339,7 +411,12 @@ export const T = {
           {text:"Which emoji shows someone who is crying?", action:"choice", choices:[{text:"😭 This one",value:"correct"},{text:"😂 This one",value:"wrong1"},{text:"😎 This one",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"What do you do when you are angry to feel better?", action:"choice", choices:[{text:"Take a deep breath 😮‍💨",value:"correct"},{text:"Hit something 👊",value:"wrong1"},{text:"Scream at everyone",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"How many different feelings can you name right now?", hint:"Happy, sad, angry... keep going!", action:"number", check:{type:"number",answer:null}, mode:"indoor_ok"},
-          {text:"Which of these is a kind thing to say to a friend?", action:"choice", choices:[{text:"You did a great job! 🌟",value:"correct"},{text:"You are so slow",value:"wrong1"},{text:"Nobody likes you",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
+          {text:"Which of these is a kind thing to say to a friend?", action:"choice", choices:[{text:"You did a great job! 🌟",value:"correct"},{text:"You are so slow",value:"wrong1"},{text:"Nobody likes you",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"What do we call the feeling when you are waiting for something exciting?", action:"choice", choices:[{text:"Excitement 🎉",value:"correct"},{text:"Sadness 😢",value:"wrong1"},{text:"Anger 😠",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"How do you feel when you do something brave?", action:"choice", choices:[{text:"Proud and strong 💪",value:"correct"},{text:"Silly 🤪",value:"wrong1"},{text:"Invisible",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"What is a good way to show a friend you care?", action:"choice", choices:[{text:"Listen to them 👂",value:"correct"},{text:"Ignore them",value:"wrong1"},{text:"Take their toys",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"How many fingers do you use to show you're OK? (the thumb-up sign)", action:"number", check:{type:"number",answer:1,tolerance:0}, mode:"outdoor_bonus"},
+          {text:"Which of these is a face that shows surprise?", action:"choice", choices:[{text:"😮 Open mouth",value:"correct"},{text:"😴 Closed eyes",value:"wrong1"},{text:"😐 Blank face",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
         ],
         "7-9": [
           {text:"What's the best way to help a friend who is sad?", action:"choice", choices:[{text:"Listen and be with them 🤝",value:"correct"},{text:"Ignore them and walk away",value:"wrong1"},{text:"Tell them to stop being sad",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -351,7 +428,12 @@ export const T = {
           {text:"What does it mean to be empathetic?", action:"choice", choices:[{text:"Understanding how others feel",value:"correct"},{text:"Only thinking about yourself",value:"wrong1"},{text:"Being very loud",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"Which of these feelings is the opposite of calm?", action:"choice", choices:[{text:"Anxious 😰",value:"correct"},{text:"Peaceful 😌",value:"wrong1"},{text:"Content 😊",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"How many friends do you feel comfortable talking to about your problems?", hint:"Any number is fine!", action:"number", check:{type:"number",answer:null}, mode:"indoor_ok"},
-          {text:"Which of these is a good way to cheer yourself up when sad?", action:"choice", choices:[{text:"Do something you enjoy 🎨",value:"correct"},{text:"Stay in a dark room all day",value:"wrong1"},{text:"Eat nothing",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
+          {text:"Which of these is a good way to cheer yourself up when sad?", action:"choice", choices:[{text:"Do something you enjoy 🎨",value:"correct"},{text:"Stay in a dark room all day",value:"wrong1"},{text:"Eat nothing",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"What is a good way to calm down when you feel overwhelmed?", action:"choice", choices:[{text:"Take slow deep breaths 😮‍💨",value:"correct"},{text:"Watch lots of screens",value:"wrong1"},{text:"Bottle up your feelings",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Which of these helps build a strong friendship?", action:"choice", choices:[{text:"Trust and honesty 🤝",value:"correct"},{text:"Always winning arguments",value:"wrong1"},{text:"Keeping secrets from each other",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"What is the difference between feeling shy and feeling scared?", action:"choice", choices:[{text:"Shyness is about social situations, fear is about perceived danger",value:"correct"},{text:"They are exactly the same feeling",value:"wrong1"},{text:"Shyness is always stronger",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"How many minutes of physical activity do experts recommend for children per day?", hint:"It's less than 2 hours!", action:"number", check:{type:"number",answer:60,tolerance:15}, mode:"outdoor_bonus"},
+          {text:"Which of these is a sign that someone is listening carefully?", action:"choice", choices:[{text:"Making eye contact and nodding",value:"correct"},{text:"Looking at their phone",value:"wrong1"},{text:"Interrupting frequently",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
         ],
         "10-15": [
           {text:"What is empathy?", action:"choice", choices:[{text:"Understanding how others feel",value:"correct"},{text:"Feeling angry at others",value:"wrong1"},{text:"Only thinking about yourself",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -363,7 +445,12 @@ export const T = {
           {text:"What is the term for the process of naming and accepting your own feelings?", action:"choice", choices:[{text:"Emotional labelling",value:"correct"},{text:"Suppression",value:"wrong1"},{text:"Projection",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"Which part of the brain is most associated with processing emotions?", action:"choice", choices:[{text:"Amygdala",value:"correct"},{text:"Cerebellum",value:"wrong1"},{text:"Prefrontal cortex",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"On a scale of 1–10, how confident do you feel about expressing your emotions today?", action:"number", check:{type:"number",answer:null}, mode:"indoor_ok"},
-          {text:"Which of these is a healthy boundary-setting phrase?", action:"choice", choices:[{text:"I feel uncomfortable when you do that",value:"correct"},{text:"You always make me angry",value:"wrong1"},{text:"Whatever, I don't care",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
+          {text:"Which of these is a healthy boundary-setting phrase?", action:"choice", choices:[{text:"I feel uncomfortable when you do that",value:"correct"},{text:"You always make me angry",value:"wrong1"},{text:"Whatever, I don't care",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"What is the term for judging others through your own cultural lens?", action:"choice", choices:[{text:"Ethnocentrism",value:"correct"},{text:"Empathy",value:"wrong1"},{text:"Cultural relativism",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"How many stages of moral development did Kohlberg identify?", action:"number", check:{type:"number",answer:6,tolerance:1}, mode:"indoor_ok"},
+          {text:"What is 'social comparison theory' about?", action:"choice", choices:[{text:"We evaluate ourselves by comparing to others",value:"correct"},{text:"We only compare ourselves to celebrities",value:"wrong1"},{text:"Comparing prices in stores",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Which phenomenon makes us assume others share our opinions and preferences?", action:"choice", choices:[{text:"False consensus effect",value:"correct"},{text:"Halo effect",value:"wrong1"},{text:"Anchoring bias",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"What is 'active listening' primarily about?", action:"choice", choices:[{text:"Fully focusing on and engaging with what the speaker says",value:"correct"},{text:"Listening while doing another task",value:"wrong1"},{text:"Waiting for your turn to speak",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
         ],
         "15+": [
           {text:"What psychological concept describes the discomfort of holding two conflicting beliefs?", action:"choice", choices:[{text:"Cognitive dissonance",value:"correct"},{text:"Confirmation bias",value:"wrong1"},{text:"Dunning-Kruger effect",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
@@ -375,7 +462,12 @@ export const T = {
           {text:"Which psychological defence mechanism involves attributing one's own unwanted feelings to others?", action:"choice", choices:[{text:"Projection",value:"correct"},{text:"Repression",value:"wrong1"},{text:"Rationalisation",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"What is the 'negativity bias' in psychology?", action:"choice", choices:[{text:"Our tendency to weigh negative experiences more heavily",value:"correct"},{text:"Always expecting the worst outcome",value:"wrong1"},{text:"Only remembering bad events",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"Which stage comes AFTER 'bargaining' in Kübler-Ross's five stages of grief?", action:"choice", choices:[{text:"Depression",value:"correct"},{text:"Anger",value:"wrong1"},{text:"Acceptance",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
-          {text:"What term describes the belief that your abilities can grow with effort and learning?", action:"choice", choices:[{text:"Growth mindset",value:"correct"},{text:"Fixed mindset",value:"wrong1"},{text:"Confirmation bias",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
+          {text:"What term describes the belief that your abilities can grow with effort and learning?", action:"choice", choices:[{text:"Growth mindset",value:"correct"},{text:"Fixed mindset",value:"wrong1"},{text:"Confirmation bias",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Which theory suggests personality develops through resolving crises at each life stage?", action:"choice", choices:[{text:"Erikson's psychosocial development",value:"correct"},{text:"Maslow's hierarchy of needs",value:"wrong1"},{text:"Piaget's cognitive stages",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"What is 'emotional contagion'?", action:"choice", choices:[{text:"Unconsciously catching others' emotions",value:"correct"},{text:"Spreading illness through mood",value:"wrong1"},{text:"Forcing emotions on others",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"How many needs are in Maslow's hierarchy of needs?", action:"number", check:{type:"number",answer:5,tolerance:0}, mode:"indoor_ok"},
+          {text:"What is 'toxic positivity'?", action:"choice", choices:[{text:"Dismissing negative feelings with forced positivity",value:"correct"},{text:"Being too optimistic about outcomes",value:"wrong1"},{text:"Using happiness to manipulate",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Which technique involves writing thoughts non-stop to process emotions?", action:"choice", choices:[{text:"Expressive writing / journaling",value:"correct"},{text:"Cognitive behavioral therapy",value:"wrong1"},{text:"Desensitisation",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
         ]
       },
       arts: {
@@ -389,7 +481,13 @@ export const T = {
           {text:"What colour do you get by mixing red and yellow?", action:"choice", choices:[{text:"🟠 Orange",value:"orange"},{text:"🟣 Purple",value:"purple"},{text:"🟢 Green",value:"green"}], check:{type:"choice",correct:"orange"}, mode:"outdoor_bonus"},
           {text:"Which of these is something you draw with?", action:"choice", choices:[{text:"✏️ Pencil",value:"pencil"},{text:"🍎 Apple",value:"apple"},{text:"🪑 Chair",value:"chair"}], check:{type:"choice",correct:"pencil"}, mode:"indoor_ok"},
           {text:"What do you call a picture you take with a camera?", action:"choice", choices:[{text:"A photograph 📷",value:"correct"},{text:"A drawing ✏️",value:"wrong1"},{text:"A sculpture 🗿",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
-          {text:"How many strings does a violin have?", action:"number", check:{type:"number",answer:4,tolerance:0}, mode:"outdoor_bonus"}
+          {text:"How many strings does a violin have?", action:"number", check:{type:"number",answer:4,tolerance:0}, mode:"outdoor_bonus"},
+          {text:"What do you call art made from clay shaped by hand and baked?", action:"choice", choices:[{text:"Pottery / ceramics 🏺",value:"correct"},{text:"Painting 🎨",value:"wrong1"},{text:"Collage ✂️",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Which of these colours is made by mixing blue and red?", action:"choice", choices:[{text:"🟣 Purple",value:"purple"},{text:"🟠 Orange",value:"orange"},{text:"🟢 Green",value:"green"}], check:{type:"choice",correct:"purple"}, mode:"outdoor_bonus"},
+          {text:"What do we call the story told in a ballet or opera?", action:"choice", choices:[{text:"Libretto / narrative",value:"correct"},{text:"Score",value:"wrong1"},{text:"Tempo",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"How many black keys are on a piano octave?", action:"number", check:{type:"number",answer:5,tolerance:0}, mode:"indoor_ok"},
+          {text:"Which instrument makes sound by blowing through a reed?", action:"choice", choices:[{text:"🎷 Saxophone",value:"correct"},{text:"🎸 Guitar",value:"wrong1"},{text:"🥁 Drums",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"What colour do you get by mixing all primary colours of paint together?", action:"choice", choices:[{text:"Black (dark brown)",value:"correct"},{text:"White",value:"wrong1"},{text:"Grey",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
         ],
         "7-9": [
           {text:"Which famous artist painted the Mona Lisa?", action:"choice", choices:[{text:"Leonardo da Vinci 🎨",value:"correct"},{text:"Pablo Picasso",value:"wrong1"},{text:"Vincent van Gogh",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -401,7 +499,12 @@ export const T = {
           {text:"Which of these artists is known for painting sunflowers?", action:"choice", choices:[{text:"Vincent van Gogh",value:"correct"},{text:"Leonardo da Vinci",value:"wrong1"},{text:"Michelangelo",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"What do you call art made by gluing different materials onto a surface?", action:"choice", choices:[{text:"Collage",value:"correct"},{text:"Fresco",value:"wrong1"},{text:"Etching",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"How many keys does a full piano keyboard have?", action:"number", check:{type:"number",answer:88,tolerance:0}, mode:"indoor_ok"},
-          {text:"Which instrument family do drums belong to?", action:"choice", choices:[{text:"Percussion",value:"correct"},{text:"String",value:"wrong1"},{text:"Woodwind",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
+          {text:"Which instrument family do drums belong to?", action:"choice", choices:[{text:"Percussion",value:"correct"},{text:"String",value:"wrong1"},{text:"Woodwind",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"What is the term for the lightness or darkness of a colour?", action:"choice", choices:[{text:"Value / tone",value:"correct"},{text:"Hue",value:"wrong1"},{text:"Saturation",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Which Italian word means 'to perform very loudly' in music?", action:"choice", choices:[{text:"Fortissimo (ff)",value:"correct"},{text:"Pianissimo (pp)",value:"wrong1"},{text:"Mezzo forte (mf)",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"What is the name of the famous painting showing a man's outstretched arms in a circle?", action:"choice", choices:[{text:"Vitruvian Man — da Vinci",value:"correct"},{text:"The Scream — Munch",value:"wrong1"},{text:"Girl with Pearl Earring — Vermeer",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"What style of painting uses dots or short brushstrokes of pure colour?", action:"choice", choices:[{text:"Impressionism",value:"correct"},{text:"Realism",value:"wrong1"},{text:"Abstract",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Which clef is used for most treble instrument sheet music?", action:"choice", choices:[{text:"Treble clef (G clef)",value:"correct"},{text:"Bass clef (F clef)",value:"wrong1"},{text:"Alto clef",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
         ],
         "10-15": [
           {text:"What art movement was Salvador Dalí associated with?", action:"choice", choices:[{text:"Surrealism",value:"correct"},{text:"Impressionism",value:"wrong1"},{text:"Cubism",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -413,7 +516,12 @@ export const T = {
           {text:"Which famous sculptor created 'David'?", action:"choice", choices:[{text:"Michelangelo",value:"correct"},{text:"Donatello",value:"wrong1"},{text:"Rodin",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"In music, how many beats are in a 4/4 time signature per bar?", action:"number", check:{type:"number",answer:4,tolerance:0}, mode:"indoor_ok"},
           {text:"Which art movement is associated with Claude Monet?", action:"choice", choices:[{text:"Impressionism",value:"correct"},{text:"Cubism",value:"wrong1"},{text:"Dadaism",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
-          {text:"How many semitones are in a Western musical octave?", action:"number", check:{type:"number",answer:12,tolerance:0}, mode:"indoor_ok"}
+          {text:"How many semitones are in a Western musical octave?", action:"number", check:{type:"number",answer:12,tolerance:0}, mode:"indoor_ok"},
+          {text:"Which of the following composers was part of the Romantic era?", action:"choice", choices:[{text:"Frédéric Chopin",value:"correct"},{text:"Johann Sebastian Bach",value:"wrong1"},{text:"Antonio Vivaldi",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"What is a 'leitmotif' in music?", action:"choice", choices:[{text:"A recurring musical theme associated with a character or idea",value:"correct"},{text:"A type of musical key",value:"wrong1"},{text:"The tempo of a piece",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"In the 20th century, which artist pioneered Cubism?", action:"choice", choices:[{text:"Pablo Picasso",value:"correct"},{text:"Henri Matisse",value:"wrong1"},{text:"Georges Seurat",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Van Gogh is most associated with which country?", action:"choice", choices:[{text:"Netherlands 🇳🇱",value:"correct"},{text:"France 🇫🇷",value:"wrong1"},{text:"Spain 🇪🇸",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"What does 'tempo' mean in music?", action:"choice", choices:[{text:"The speed of the music",value:"correct"},{text:"The volume of the music",value:"wrong1"},{text:"The key of the music",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
         ],
         "15+": [
           {text:"Which art movement rejected tradition and embraced chance and absurdity?", action:"choice", choices:[{text:"Dadaism",value:"correct"},{text:"Romanticism",value:"wrong1"},{text:"Neoclassicism",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
@@ -425,7 +533,12 @@ export const T = {
           {text:"Which term describes a painting technique using light and shadow to create depth?", action:"choice", choices:[{text:"Chiaroscuro",value:"correct"},{text:"Impasto",value:"wrong1"},{text:"Pointillism",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"What is the name of John Cage's famous silent composition?", action:"choice", choices:[{text:"4'33\"",value:"correct"},{text:"Silence No. 1",value:"wrong1"},{text:"The Void",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"In the 12-tone technique, how many distinct pitches are used in a tone row?", action:"number", check:{type:"number",answer:12,tolerance:0}, mode:"indoor_ok"},
-          {text:"Which movement championed the idea that everyday objects could be art (e.g., Duchamp's urinal)?", action:"choice", choices:[{text:"Dadaism / Conceptual art",value:"correct"},{text:"Impressionism",value:"wrong1"},{text:"Baroque",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
+          {text:"Which movement championed the idea that everyday objects could be art (e.g., Duchamp's urinal)?", action:"choice", choices:[{text:"Dadaism / Conceptual art",value:"correct"},{text:"Impressionism",value:"wrong1"},{text:"Baroque",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"What is the term for music that tells a story or depicts a scene without words?", action:"choice", choices:[{text:"Programme music",value:"correct"},{text:"Absolute music",value:"wrong1"},{text:"Chamber music",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Who painted 'The Birth of Venus'?", action:"choice", choices:[{text:"Sandro Botticelli",value:"correct"},{text:"Raphael",value:"wrong1"},{text:"Titian",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"In music, what is a 'counterpoint'?", action:"choice", choices:[{text:"Two independent melodic lines played simultaneously",value:"correct"},{text:"A sudden change in volume",value:"wrong1"},{text:"A pause in the music",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"What is the term for the complete set of tones in which a piece of music is written?", action:"choice", choices:[{text:"Key",value:"correct"},{text:"Tempo",value:"wrong1"},{text:"Time signature",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Approximately how many paintings did Picasso create in his lifetime?", hint:"It's in the thousands!", action:"number", check:{type:"number",answer:20000,tolerance:10000}, mode:"indoor_ok"}
         ]
       },
       world: {
@@ -439,7 +552,13 @@ export const T = {
           {text:"Which country is shaped like a boot?", action:"choice", choices:[{text:"🇮🇹 Italy",value:"italy"},{text:"🇪🇸 Spain",value:"spain"},{text:"🇫🇷 France",value:"france"}], check:{type:"choice",correct:"italy"}, mode:"outdoor_bonus"},
           {text:"What is the biggest animal in the world?", action:"choice", choices:[{text:"🐋 Blue whale",value:"correct"},{text:"🐘 Elephant",value:"wrong1"},{text:"🦒 Giraffe",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"What language is spoken in the USA?", action:"choice", choices:[{text:"English",value:"correct"},{text:"Spanish",value:"wrong1"},{text:"French",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
-          {text:"How many colours are on the Italian flag?", action:"number", check:{type:"number",answer:3,tolerance:0}, mode:"outdoor_bonus"}
+          {text:"How many colours are on the Italian flag?", action:"number", check:{type:"number",answer:3,tolerance:0}, mode:"outdoor_bonus"},
+          {text:"Which country's flag has a maple leaf on it?", action:"choice", choices:[{text:"🇨🇦 Canada",value:"canada"},{text:"🇺🇸 USA",value:"usa"},{text:"🇦🇺 Australia",value:"australia"}], check:{type:"choice",correct:"canada"}, mode:"outdoor_bonus"},
+          {text:"Which city is the capital of the UK?", action:"choice", choices:[{text:"🇬🇧 London",value:"london"},{text:"Edinburgh",value:"edinburgh"},{text:"Manchester",value:"manchester"}], check:{type:"choice",correct:"london"}, mode:"outdoor_bonus"},
+          {text:"What is the biggest country in the world by area?", action:"choice", choices:[{text:"🇷🇺 Russia",value:"russia"},{text:"🇨🇳 China",value:"china"},{text:"🇺🇸 USA",value:"usa"}], check:{type:"choice",correct:"russia"}, mode:"outdoor_bonus"},
+          {text:"Which continent does Brazil belong to?", action:"choice", choices:[{text:"🌎 South America",value:"correct"},{text:"🌍 Africa",value:"wrong1"},{text:"🌏 Asia",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"How many stars are on the Chinese flag?", action:"number", check:{type:"number",answer:5,tolerance:0}, mode:"outdoor_bonus"},
+          {text:"Which animal is the national symbol of Australia?", action:"choice", choices:[{text:"🦘 Kangaroo",value:"correct"},{text:"🐨 Koala",value:"wrong1"},{text:"🦜 Parrot",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
         ],
         "7-9": [
           {text:"What is the capital city of France?", action:"choice", choices:[{text:"🗼 Paris",value:"correct"},{text:"🏰 London",value:"wrong1"},{text:"🎭 Rome",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -451,7 +570,13 @@ export const T = {
           {text:"Which city is known as 'The Big Apple'?", action:"choice", choices:[{text:"New York",value:"correct"},{text:"Chicago",value:"wrong1"},{text:"Los Angeles",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"What is the capital of Australia?", action:"choice", choices:[{text:"Canberra",value:"correct"},{text:"Sydney",value:"wrong1"},{text:"Melbourne",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"How many stars are on the flag of the United States?", action:"number", check:{type:"number",answer:50,tolerance:0}, mode:"outdoor_bonus"},
-          {text:"Which country is home to the Amazon rainforest (mostly)?", action:"choice", choices:[{text:"Brazil",value:"correct"},{text:"Colombia",value:"wrong1"},{text:"Peru",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
+          {text:"Which country is home to the Amazon rainforest (mostly)?", action:"choice", choices:[{text:"Brazil",value:"correct"},{text:"Colombia",value:"wrong1"},{text:"Peru",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"What is the capital of Japan?", action:"choice", choices:[{text:"🇯🇵 Tokyo",value:"correct"},{text:"Osaka",value:"wrong1"},{text:"Kyoto",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Which mountain is the highest in the world?", action:"choice", choices:[{text:"🏔️ Mount Everest",value:"correct"},{text:"K2",value:"wrong1"},{text:"Mont Blanc",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"How many stripes are on the US flag?", action:"number", check:{type:"number",answer:13,tolerance:0}, mode:"outdoor_bonus"},
+          {text:"What is the capital of Germany?", action:"choice", choices:[{text:"🇩🇪 Berlin",value:"correct"},{text:"Munich",value:"wrong1"},{text:"Hamburg",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Which river is the longest in the world?", action:"choice", choices:[{text:"🌊 Nile",value:"correct"},{text:"Amazon",value:"wrong1"},{text:"Mississippi",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"What is the currency used in Japan?", action:"choice", choices:[{text:"Yen ¥",value:"correct"},{text:"Yuan ¥",value:"wrong1"},{text:"Won ₩",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
         ],
         "10-15": [
           {text:"Which ocean is the largest on Earth?", action:"choice", choices:[{text:"🌊 Pacific Ocean",value:"correct"},{text:"Atlantic Ocean",value:"wrong1"},{text:"Indian Ocean",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -463,7 +588,13 @@ export const T = {
           {text:"Which country has the longest coastline in the world?", action:"choice", choices:[{text:"Canada",value:"correct"},{text:"Russia",value:"wrong1"},{text:"Australia",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"Approximately what percentage of the world's fresh water is locked in glaciers and ice caps?", action:"number", check:{type:"number",answer:69,tolerance:8}, mode:"indoor_ok"},
           {text:"Which ancient wonder of the world still exists today?", action:"choice", choices:[{text:"The Great Pyramid of Giza",value:"correct"},{text:"The Colossus of Rhodes",value:"wrong1"},{text:"The Lighthouse of Alexandria",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
-          {text:"Which continent has no permanent human residents and is governed by international treaty?", action:"choice", choices:[{text:"Antarctica",value:"correct"},{text:"Arctic",value:"wrong1"},{text:"Greenland",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
+          {text:"Which continent has no permanent human residents and is governed by international treaty?", action:"choice", choices:[{text:"Antarctica",value:"correct"},{text:"Arctic",value:"wrong1"},{text:"Greenland",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"What is the term for the seasonal winds that bring heavy rains to South Asia?", action:"choice", choices:[{text:"Monsoon",value:"correct"},{text:"Typhoon",value:"wrong1"},{text:"Chinook",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Which religion has the most followers worldwide?", action:"choice", choices:[{text:"Christianity",value:"correct"},{text:"Islam",value:"wrong1"},{text:"Hinduism",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"How many time zones does the USA span?", action:"number", check:{type:"number",answer:6,tolerance:1}, mode:"indoor_ok"},
+          {text:"What is the capital of South Africa? (one of three)", action:"choice", choices:[{text:"Pretoria (executive capital)",value:"correct"},{text:"Cape Town",value:"wrong1"},{text:"Johannesburg",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"The Silk Road historically connected which two regions?", action:"choice", choices:[{text:"China and the Mediterranean/Europe",value:"correct"},{text:"India and Africa",value:"wrong1"},{text:"Americas and Europe",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Which country has won the most FIFA World Cups?", action:"choice", choices:[{text:"Brazil 🇧🇷 (5 times)",value:"correct"},{text:"Germany 🇩🇪",value:"wrong1"},{text:"Italy 🇮🇹",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
         ],
         "15+": [
           {text:"Which international agreement set binding targets to reduce greenhouse gas emissions?", action:"choice", choices:[{text:"Paris Agreement (2015)",value:"correct"},{text:"Kyoto Protocol (1997)",value:"wrong1"},{text:"Montreal Protocol (1987)",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -475,7 +606,12 @@ export const T = {
           {text:"Which political system is characterised by rule by a single all-powerful leader?", action:"choice", choices:[{text:"Authoritarianism",value:"correct"},{text:"Democracy",value:"wrong1"},{text:"Federalism",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"The Human Development Index (HDI) measures countries on how many dimensions?", action:"number", check:{type:"number",answer:3,tolerance:0}, mode:"indoor_ok"},
           {text:"Which global issue is primarily addressed by the SDGs (Sustainable Development Goals)?", action:"choice", choices:[{text:"Poverty, inequality, and climate",value:"correct"},{text:"Military security only",value:"wrong1"},{text:"Space exploration",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
-          {text:"Approximately how many refugees were displaced worldwide in 2023? (in millions)", hint:"A record high!", action:"number", check:{type:"number",answer:110,tolerance:20}, mode:"indoor_ok"}
+          {text:"Approximately how many refugees were displaced worldwide in 2023? (in millions)", hint:"A record high!", action:"number", check:{type:"number",answer:110,tolerance:20}, mode:"indoor_ok"},
+          {text:"Which economic concept describes the value of the next best alternative foregone?", action:"choice", choices:[{text:"Opportunity cost",value:"correct"},{text:"Sunk cost",value:"wrong1"},{text:"Marginal cost",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Which country has the highest nominal GDP in the world?", action:"choice", choices:[{text:"USA 🇺🇸",value:"correct"},{text:"China 🇨🇳",value:"wrong1"},{text:"Japan 🇯🇵",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"What is the term for the spread of cultural elements from one society to another?", action:"choice", choices:[{text:"Cultural diffusion",value:"correct"},{text:"Assimilation",value:"wrong1"},{text:"Globalisation",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"How many member states does the European Union currently have? (approx.)", action:"number", check:{type:"number",answer:27,tolerance:2}, mode:"indoor_ok"},
+          {text:"Which theory in international relations emphasizes cooperation through institutions?", action:"choice", choices:[{text:"Liberal institutionalism",value:"correct"},{text:"Realism",value:"wrong1"},{text:"Constructivism",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
         ]
       }
     },
@@ -680,7 +816,14 @@ export const T = {
           {text:"Které zvíře má krunýř na zádech?", action:"choice", choices:[{text:"🐢 Želva",value:"želva"},{text:"🐇 Králík",value:"králík"},{text:"🦊 Liška",value:"liška"}], check:{type:"choice",correct:"želva"}, mode:"outdoor_bonus"},
           {text:"Kolik křídel má motýl?", action:"number", check:{type:"number",answer:4,tolerance:0}, mode:"outdoor_bonus"},
           {text:"Co vyroste ze semínka?", action:"choice", choices:[{text:"🌻 Slunečnice",value:"slunečnice"},{text:"🪨 Kámen",value:"kámen"},{text:"🌊 Vlna",value:"vlna"}], check:{type:"choice",correct:"slunečnice"}, mode:"outdoor_bonus"},
-          {text:"Jak se nazývá mládě psa?", action:"choice", choices:[{text:"Štěně 🐶",value:"štěně"},{text:"Kotě 🐱",value:"kotě"},{text:"Mládě 🐻",value:"mládě"}], check:{type:"choice",correct:"štěně"}, mode:"outdoor_bonus"}
+          {text:"Jak se nazývá mládě psa?", action:"choice", choices:[{text:"Štěně 🐶",value:"štěně"},{text:"Kotě 🐱",value:"kotě"},{text:"Mládě 🐻",value:"mládě"}], check:{type:"choice",correct:"štěně"}, mode:"outdoor_bonus"},
+          {text:"Které zvíře je na souši nejvyšší?", action:"choice", choices:[{text:"🦒 Žirafa",value:"žirafa"},{text:"🐘 Slon",value:"slon"},{text:"🦁 Lev",value:"lev"}], check:{type:"choice",correct:"žirafa"}, mode:"outdoor_bonus"},
+          {text:"Kolik noh má hmyz?", action:"number", check:{type:"number",answer:6,tolerance:0}, mode:"outdoor_bonus"},
+          {text:"Co staví ptáci pro svá mláďata?", action:"choice", choices:[{text:"🪹 Hnízdo",value:"hnízdo"},{text:"🏠 Dům",value:"dům"},{text:"🕳️ Noru",value:"nora"}], check:{type:"choice",correct:"hnízdo"}, mode:"outdoor_bonus"},
+          {text:"Které zvíře mění barvu, aby splynulo s okolím?", action:"choice", choices:[{text:"🦎 Chameleon",value:"chameleon"},{text:"🐕 Pes",value:"pes"},{text:"🐟 Ryba",value:"ryba"}], check:{type:"choice",correct:"chameleon"}, mode:"outdoor_bonus"},
+          {text:"Jako co se rodí žáby?", action:"choice", choices:[{text:"🐸 Jako pulci",value:"pulci"},{text:"🐶 Jako štěňata",value:"štěňata"},{text:"🐛 Jako housenky",value:"housenky"}], check:{type:"choice",correct:"pulci"}, mode:"outdoor_bonus"},
+          {text:"Jak se nazývá zvíře, které jí pouze maso?", action:"choice", choices:[{text:"Masožravec 🦁",value:"masožravec"},{text:"Býložravec 🐰",value:"býložravec"},{text:"Všežravec 🐻",value:"všežravec"}], check:{type:"choice",correct:"masožravec"}, mode:"outdoor_bonus"},
+          {text:"Které z těchto je plaz?", action:"choice", choices:[{text:"🐢 Želva",value:"želva"},{text:"🐸 Žába",value:"žába"},{text:"🐝 Včela",value:"včela"}], check:{type:"choice",correct:"želva"}, mode:"outdoor_bonus"}
         ],
         "7-9": [
           {text:"Co rostliny potřebují k růstu?", hint:"Co dáváš rostlině každý den?", action:"choice", choices:[{text:"🌊 Vodu a slunce",value:"voda_slunce"},{text:"🍫 Čokoládu",value:"cokolada"},{text:"🧊 Jen led",value:"led"}], check:{type:"choice",correct:"voda_slunce"}, mode:"outdoor_bonus"},
@@ -692,7 +835,13 @@ export const T = {
           {text:"Kolik dní trvá oběh Země kolem Slunce?", hint:"Kolik dní má rok?", action:"number", check:{type:"number",answer:365,tolerance:1}, mode:"outdoor_bonus"},
           {text:"Kolik stádií má životní cyklus motýla?", action:"number", check:{type:"number",answer:4,tolerance:0}, mode:"outdoor_bonus"},
           {text:"Který plyn rostliny pohlcují ze vzduchu pro výrobu potravy?", action:"choice", choices:[{text:"Oxid uhličitý (CO₂)",value:"correct"},{text:"Kyslík (O₂)",value:"wrong1"},{text:"Dusík (N₂)",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
-          {text:"Jak se nazývají zvířata, která jedí rostliny i maso?", action:"choice", choices:[{text:"Všežravci",value:"correct"},{text:"Býložravci",value:"wrong1"},{text:"Masožravci",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
+          {text:"Jak se nazývají zvířata, která jedí rostliny i maso?", action:"choice", choices:[{text:"Všežravci",value:"correct"},{text:"Býložravci",value:"wrong1"},{text:"Masožravci",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Jaká vědecká disciplína studuje hmyz?", action:"choice", choices:[{text:"Entomologie",value:"correct"},{text:"Ornitologie",value:"wrong1"},{text:"Botanika",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Čím dýchají ryby pod vodou?", action:"choice", choices:[{text:"Žábrami",value:"correct"},{text:"Plícemi",value:"wrong1"},{text:"Kůží",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Kolik srdcí má chobotnice?", hint:"Více než jedno!", action:"number", check:{type:"number",answer:3,tolerance:0}, mode:"outdoor_bonus"},
+          {text:"Jak se jmenuje tvrdá vnější vrstva kmenu stromu?", action:"choice", choices:[{text:"Kůra",value:"correct"},{text:"Slupka",value:"wrong1"},{text:"Skořápka",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Které je nejrychlejší suchozemské zvíře?", action:"choice", choices:[{text:"🐆 Gepard",value:"correct"},{text:"🦁 Lev",value:"wrong1"},{text:"🦓 Zebra",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Který plyn vydechuje člověk?", action:"choice", choices:[{text:"Oxid uhličitý (CO₂)",value:"correct"},{text:"Kyslík (O₂)",value:"wrong1"},{text:"Vodík (H₂)",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
         ],
         "10-15": [
           {text:"Co je fotosyntéza?", hint:"Co rostliny vyrábí ze slunečního světla?", action:"choice", choices:[{text:"🌞 Přeměna světla v potravu",value:"correct"},{text:"🌙 Spánek během dne",value:"wrong1"},{text:"💧 Pití dešťové vody",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -704,7 +853,14 @@ export const T = {
           {text:"Který typ horniny vzniká z chladnoucí lávy?", action:"choice", choices:[{text:"Vyvřelá (magmatická)",value:"correct"},{text:"Sedimentární",value:"wrong1"},{text:"Metamorfovaná",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"Kolik chromozomů mají lidské buňky?", action:"number", check:{type:"number",answer:46,tolerance:0}, mode:"indoor_ok"},
           {text:"Která planeta sluneční soustavy má nejvíce měsíců?", action:"choice", choices:[{text:"Saturn",value:"correct"},{text:"Jupiter",value:"wrong1"},{text:"Uran",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
-          {text:"Jak se nazývá organela, která je 'elektrárnou' buňky?", action:"choice", choices:[{text:"Mitochondrie",value:"correct"},{text:"Jádro",value:"wrong1"},{text:"Ribozom",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
+          {text:"Jak se nazývá organela, která je 'elektrárnou' buňky?", action:"choice", choices:[{text:"Mitochondrie",value:"correct"},{text:"Jádro",value:"wrong1"},{text:"Ribozom",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Jak se nazývá proces, při němž se voda odpařuje z listů rostlin?", action:"choice", choices:[{text:"Transpirace",value:"correct"},{text:"Kondenzace",value:"wrong1"},{text:"Dýchání",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Do které říše patří houby?", action:"choice", choices:[{text:"Houby (Fungi)",value:"correct"},{text:"Rostliny",value:"wrong1"},{text:"Živočichové",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Přibližně kolik miliard let je stará Země?", action:"number", check:{type:"number",answer:4,tolerance:1}, mode:"indoor_ok"},
+          {text:"Jak se nazývají zvířata, která jsou aktivní za úsvitu a soumraku?", action:"choice", choices:[{text:"Soumračná",value:"correct"},{text:"Noční",value:"wrong1"},{text:"Denní",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Jak se nazývá přeměna vodní páry v kapalinu?", action:"choice", choices:[{text:"Kondenzace",value:"correct"},{text:"Odpařování",value:"wrong1"},{text:"Transpirace",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Jak se nazývá věda studující houby?", action:"choice", choices:[{text:"Mykologie",value:"correct"},{text:"Botanika",value:"wrong1"},{text:"Zoologie",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Přibližně kolik procent zemského kyslíku produkuje Amazonie?", hint:"Asi pětina!", action:"number", check:{type:"number",answer:20,tolerance:5}, mode:"indoor_ok"}
         ],
         "15+": [
           {text:"Který proces přeměňuje dusík na formy využitelné rostlinami?", action:"choice", choices:[{text:"Fixace dusíku",value:"correct"},{text:"Fotosyntéza",value:"wrong1"},{text:"Transpirace",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -716,7 +872,12 @@ export const T = {
           {text:"Která molekula nese genetickou informaci u většiny živých organismů?", action:"choice", choices:[{text:"DNA",value:"correct"},{text:"ATP",value:"wrong1"},{text:"RNA",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"Přibližně kolik procent zemského povrchu pokrývá voda?", action:"number", check:{type:"number",answer:71,tolerance:4}, mode:"indoor_ok"},
           {text:"Jak se nazývá symbiotický vztah, z něhož těží oba organismy?", action:"choice", choices:[{text:"Mutualismus",value:"correct"},{text:"Parazitismus",value:"wrong1"},{text:"Komenzalismus",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
-          {text:"Kolik miliard párů bází má lidský genom? (přibližně)", hint:"Asi 3 miliardy!", action:"number", check:{type:"number",answer:3,tolerance:1}, mode:"indoor_ok"}
+          {text:"Kolik miliard párů bází má lidský genom? (přibližně)", hint:"Asi 3 miliardy!", action:"number", check:{type:"number",answer:3,tolerance:1}, mode:"indoor_ok"},
+          {text:"Který chemický prvek tvoří základ všech organických molekul?", action:"choice", choices:[{text:"Uhlík",value:"correct"},{text:"Kyslík",value:"wrong1"},{text:"Dusík",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"K čemu se primárně využívá technologie CRISPR-Cas9?", action:"choice", choices:[{text:"Editace genů",value:"correct"},{text:"Syntéza bílkovin",value:"wrong1"},{text:"Zobrazování buněk",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Jak se nazývá proces, při němž si bakterie předávají genetický materiál?", action:"choice", choices:[{text:"Konjugace",value:"correct"},{text:"Mitóza",value:"wrong1"},{text:"Meióza",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Co bylo kambrická exploze?", action:"choice", choices:[{text:"Rychlá diverzifikace živočišného života před ~540 mil. lety",value:"correct"},{text:"Sopečná katastrofa",value:"wrong1"},{text:"Vyhynutí dinosaurů",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Jaký plyn vzniká jako vedlejší produkt aerobního dýchání?", action:"choice", choices:[{text:"Oxid uhličitý",value:"correct"},{text:"Kyslík",value:"wrong1"},{text:"Metan",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
         ]
       },
       language: {
@@ -730,7 +891,13 @@ export const T = {
           {text:"Které z těchto je zvíře?", action:"choice", choices:[{text:"🐘 Slon",value:"slon"},{text:"🍎 Jablko",value:"jablko"},{text:"🪑 Židle",value:"židle"}], check:{type:"choice",correct:"slon"}, mode:"outdoor_bonus"},
           {text:"Kolik písmen má slovo PES?", action:"number", check:{type:"number",answer:3,tolerance:0}, mode:"indoor_ok"},
           {text:"Které slovo se rýmuje s KOČKA?", action:"choice", choices:[{text:"Nočka 🌙",value:"nočka"},{text:"Pes 🐕",value:"pes"},{text:"Strom 🌳",value:"strom"}], check:{type:"choice",correct:"nočka"}, mode:"indoor_ok"},
-          {text:"Které z těchto slov je sloveso (děj)?", action:"choice", choices:[{text:"Skákat 🏃",value:"skákat"},{text:"Velký 🐘",value:"velký"},{text:"Strom 🌳",value:"strom"}], check:{type:"choice",correct:"skákat"}, mode:"outdoor_bonus"}
+          {text:"Které z těchto slov je sloveso (děj)?", action:"choice", choices:[{text:"Skákat 🏃",value:"skákat"},{text:"Velký 🐘",value:"velký"},{text:"Strom 🌳",value:"strom"}], check:{type:"choice",correct:"skákat"}, mode:"outdoor_bonus"},
+          {text:"Které z těchto slov popisuje, jak něco voní?", action:"choice", choices:[{text:"Smradlavý 🦨",value:"smradlavý"},{text:"Hlasitý 🔊",value:"hlasitý"},{text:"Rychlý 🏃",value:"rychlý"}], check:{type:"choice",correct:"smradlavý"}, mode:"outdoor_bonus"},
+          {text:"Kolik písmen má slovo DUHA?", action:"number", check:{type:"number",answer:4,tolerance:0}, mode:"indoor_ok"},
+          {text:"Které z těchto slov je číslovka?", action:"choice", choices:[{text:"Sedm 7️⃣",value:"sedm"},{text:"Běžet 🏃",value:"běžet"},{text:"Veselý 😊",value:"veselý"}], check:{type:"choice",correct:"sedm"}, mode:"indoor_ok"},
+          {text:"Kolik písmen má slovo MOTÝL?", action:"number", check:{type:"number",answer:5,tolerance:0}, mode:"indoor_ok"},
+          {text:"Které z těchto slov je zároveň barva i ovoce?", action:"choice", choices:[{text:"Pomeranč 🟠",value:"pomeranč"},{text:"Jablko 🍎",value:"jablko"},{text:"Židle 🪑",value:"židle"}], check:{type:"choice",correct:"pomeranč"}, mode:"outdoor_bonus"},
+          {text:"Kolik slabik má slovo ČOKOLÁDA?", action:"number", check:{type:"number",answer:4,tolerance:0}, mode:"indoor_ok"}
         ],
         "7-9": [
           {text:"Co je opak slova VESELÝ?", action:"choice", choices:[{text:"Smutný 😢",value:"smutný"},{text:"Radostný 😄",value:"radostný"},{text:"Velký 🐘",value:"velký"}], check:{type:"choice",correct:"smutný"}, mode:"outdoor_bonus"},
@@ -742,7 +909,13 @@ export const T = {
           {text:"Kolik písmen má česká abeceda?", action:"number", check:{type:"number",answer:42,tolerance:1}, mode:"indoor_ok"},
           {text:"Které z těchto sloves je v minulém čase?", action:"choice", choices:[{text:"Šel",value:"correct"},{text:"Jít",value:"wrong1"},{text:"Jde",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"Co je to věta?", action:"choice", choices:[{text:"Skupina slov vyjadřující ucelený myšlenkový celek",value:"correct"},{text:"Jeden samostatný výraz",value:"wrong1"},{text:"Jen přídavné jméno",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
-          {text:"Kolik slabik má slovo SLON-CE?", action:"number", check:{type:"number",answer:2,tolerance:0}, mode:"indoor_ok"}
+          {text:"Kolik slabik má slovo SLON-CE?", action:"number", check:{type:"number",answer:2,tolerance:0}, mode:"indoor_ok"},
+          {text:"Které z těchto slov je spojka (slovo spojující věty)?", action:"choice", choices:[{text:"A, ale, nebo",value:"correct"},{text:"Rychle",value:"wrong1"},{text:"Modrý",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Jak se nazývá slovo, které má stejný nebo podobný význam jako jiné?", action:"choice", choices:[{text:"Synonymum",value:"correct"},{text:"Antonymum",value:"wrong1"},{text:"Homonymum",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Kolik vět by měl mít alespoň jeden odstavec?", action:"number", check:{type:"number",answer:3,tolerance:2}, mode:"indoor_ok"},
+          {text:"Které z těchto je vlastní podstatné jméno?", action:"choice", choices:[{text:"Praha 🏙️",value:"correct"},{text:"město",value:"wrong1"},{text:"řeka",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Kolik slabik má slovo POHÁDKA?", action:"number", check:{type:"number",answer:3,tolerance:0}, mode:"indoor_ok"},
+          {text:"Jak se nazývá slovo, které napodobuje zvuk (jako 'bzz' nebo 'prásk')?", action:"choice", choices:[{text:"Zvukomalba (onomatopoeia)",value:"correct"},{text:"Metafora",value:"wrong1"},{text:"Přirovnání",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
         ],
         "10-15": [
           {text:"Jaký jazykový prostředek je v: 'Vítr šeptal tajemství'?", action:"choice", choices:[{text:"Personifikace",value:"correct"},{text:"Rým",value:"wrong1"},{text:"Metafora",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -754,7 +927,12 @@ export const T = {
           {text:"Jak se nazývá věda o původu a historii slov?", action:"choice", choices:[{text:"Etymologie",value:"correct"},{text:"Fonologie",value:"wrong1"},{text:"Syntax",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"Která věta obsahuje přirovnání?", action:"choice", choices:[{text:"Plave jako ryba",value:"correct"},{text:"Je to ryba",value:"wrong1"},{text:"Ryba rychle plavala",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"Kolik dílů má Harry Potter?", action:"number", check:{type:"number",answer:7,tolerance:0}, mode:"indoor_ok"},
-          {text:"Který čas vyjadřuje děj začatý v minulosti, který stále trvá?", action:"choice", choices:[{text:"Přítomný čas (probíhající děj)",value:"correct"},{text:"Minulý čas prostý",value:"wrong1"},{text:"Budoucí čas",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
+          {text:"Který čas vyjadřuje děj začatý v minulosti, který stále trvá?", action:"choice", choices:[{text:"Přítomný čas (probíhající děj)",value:"correct"},{text:"Minulý čas prostý",value:"wrong1"},{text:"Budoucí čas",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Jak se nazývá příběh vyprávěný v ich-formě (osobou 'já')?", action:"choice", choices:[{text:"Er-forma ich-vypravěče",value:"correct"},{text:"Vševědoucí vypravěč",value:"wrong1"},{text:"Druhoosobní vyprávění",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Co je to drama?", action:"choice", choices:[{text:"Literární dílo určené k inscenaci na jevišti",value:"correct"},{text:"Epická báseň",value:"wrong1"},{text:"Novinový článek",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Kolik knih obsahuje série o Harrym Potterovi?", action:"number", check:{type:"number",answer:7,tolerance:0}, mode:"indoor_ok"},
+          {text:"Co je haiku?", action:"choice", choices:[{text:"Japonská báseň o 3 verších (5-7-5 slabik)",value:"correct"},{text:"Řecká epická báseň",value:"wrong1"},{text:"Rýmovaná dvojice veršů",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Jak nazýváme text, jehož cílem je přesvědčit čtenáře?", action:"choice", choices:[{text:"Přesvědčivý (argumentační) text",value:"correct"},{text:"Popisný text",value:"wrong1"},{text:"Vypravování",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
         ],
         "15+": [
           {text:"Jaký literární prostředek přiřazuje lidské vlastnosti nelidským věcem?", action:"choice", choices:[{text:"Personifikace",value:"correct"},{text:"Aliterace",value:"wrong1"},{text:"Onomatopoeia",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
@@ -766,7 +944,12 @@ export const T = {
           {text:"Do které jazykové rodiny patří čeština?", action:"choice", choices:[{text:"Indoevropská — slovanská větev",value:"correct"},{text:"Uralská",value:"wrong1"},{text:"Semitská",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"Jak se nazývá vypravěčský postup, kdy příběh líčí postava v první osobě?", action:"choice", choices:[{text:"Er-forma ich-vypravěče",value:"correct"},{text:"Vševědoucí vypravěč",value:"wrong1"},{text:"Druhoosobní vyprávění",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"Co je antonymum?", action:"choice", choices:[{text:"Slovo s opačným významem",value:"correct"},{text:"Slovo se stejným významem",value:"wrong1"},{text:"Slovo stejně znějící",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
-          {text:"Přibližně kolik slov obsahuje aktivní slovník průměrného dospělého mluvčího češtiny?", hint:"Tisíce!", action:"number", check:{type:"number",answer:20000,tolerance:10000}, mode:"indoor_ok"}
+          {text:"Přibližně kolik slov obsahuje aktivní slovník průměrného dospělého mluvčího češtiny?", hint:"Tisíce!", action:"number", check:{type:"number",answer:20000,tolerance:10000}, mode:"indoor_ok"},
+          {text:"Jak se nazývá věda o zvukové stavbě jazyka?", action:"choice", choices:[{text:"Fonologie",value:"correct"},{text:"Morfologie",value:"wrong1"},{text:"Syntax",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Kolik tónů má mandarínská čínština?", action:"number", check:{type:"number",answer:4,tolerance:1}, mode:"indoor_ok"},
+          {text:"Co jsou 'falešní přátelé' v jazykovém vzdělávání?", action:"choice", choices:[{text:"Slova podobná ve dvou jazycích, ale s jiným významem",value:"correct"},{text:"Gramatická pravidla s výjimkami",value:"wrong1"},{text:"Slova převzatá beze změny z jiného jazyka",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Který jazyk má nejvíce rodilých mluvčích na světě?", action:"choice", choices:[{text:"Mandarínská čínština",value:"correct"},{text:"Angličtina",value:"wrong1"},{text:"Španělština",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Jak se nazývá vědní disciplína, která zkoumá, jak jazyk ovlivňuje myšlení?", action:"choice", choices:[{text:"Psycholingvistika / Sapir-Whorfova hypotéza",value:"correct"},{text:"Rétorika",value:"wrong1"},{text:"Grafologie",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
         ]
       },
       logic: {
@@ -780,7 +963,13 @@ export const T = {
           {text:"Máš 2 kočky a 3 psy. Kolik máš zvířat celkem?", action:"number", check:{type:"number",answer:5,tolerance:0}, mode:"indoor_ok"},
           {text:"Co přijde dál? 1, 2, 3, 4, __", action:"number", check:{type:"number",answer:5,tolerance:0}, mode:"indoor_ok"},
           {text:"Které z těchto je největší?", action:"choice", choices:[{text:"🐘 Slon",value:"slon"},{text:"🐭 Myš",value:"myš"},{text:"🐕 Pes",value:"pes"}], check:{type:"choice",correct:"slon"}, mode:"outdoor_bonus"},
-          {text:"Kolik stran má čtverec?", action:"number", check:{type:"number",answer:4,tolerance:0}, mode:"outdoor_bonus"}
+          {text:"Kolik stran má čtverec?", action:"number", check:{type:"number",answer:4,tolerance:0}, mode:"outdoor_bonus"},
+          {text:"Máš 10 bonbonů a 3 rozdáš. Kolik ti zbyde?", action:"number", check:{type:"number",answer:7,tolerance:0}, mode:"indoor_ok"},
+          {text:"Co přijde dál? ⭐🌙⭐🌙⭐__", action:"choice", choices:[{text:"🌙 Měsíc",value:"měsíc"},{text:"☀️ Slunce",value:"slunce"},{text:"⭐ Hvězda",value:"hvězda"}], check:{type:"choice",correct:"měsíc"}, mode:"outdoor_bonus"},
+          {text:"Které z těchto čísel je sudé?", action:"choice", choices:[{text:"6",value:"6"},{text:"7",value:"7"},{text:"9",value:"9"}], check:{type:"choice",correct:"6"}, mode:"indoor_ok"},
+          {text:"Slepice snáší 2 vejce každý den. Kolik vajec snese za 3 dny?", action:"number", check:{type:"number",answer:6,tolerance:0}, mode:"indoor_ok"},
+          {text:"Kolik je 10 + 10?", action:"number", check:{type:"number",answer:20,tolerance:0}, mode:"indoor_ok"},
+          {text:"Který z těchto tvarů nemá rohy?", action:"choice", choices:[{text:"⭕ Kruh",value:"kruh"},{text:"🔺 Trojúhelník",value:"trojúhelník"},{text:"⬛ Čtverec",value:"čtverec"}], check:{type:"choice",correct:"kruh"}, mode:"outdoor_bonus"}
         ],
         "7-9": [
           {text:"Který tvar má 4 stejné strany a 4 pravé úhly?", action:"choice", choices:[{text:"Čtverec ⬛",value:"čtverec"},{text:"Trojúhelník 🔺",value:"trojúhelník"},{text:"Kruh ⭕",value:"kruh"}], check:{type:"choice",correct:"čtverec"}, mode:"outdoor_bonus"},
@@ -792,7 +981,13 @@ export const T = {
           {text:"Šnek ujde 3 cm za minutu. Jak daleko ujede za 10 minut? (v cm)", action:"number", check:{type:"number",answer:30,tolerance:0}, mode:"indoor_ok"},
           {text:"Co přijde dál v posloupnosti: 2, 4, 6, 8, __?", action:"number", check:{type:"number",answer:10,tolerance:0}, mode:"indoor_ok"},
           {text:"Hračka stojí 40 Kč, zaplatíš 100 Kč. Kolik dostaneš zpět?", action:"number", check:{type:"number",answer:60,tolerance:0}, mode:"indoor_ok"},
-          {text:"Kolik je 9 × 9?", action:"number", check:{type:"number",answer:81,tolerance:0}, mode:"indoor_ok"}
+          {text:"Kolik je 9 × 9?", action:"number", check:{type:"number",answer:81,tolerance:0}, mode:"indoor_ok"},
+          {text:"Kolik je 1000 děleno 4?", action:"number", check:{type:"number",answer:250,tolerance:0}, mode:"indoor_ok"},
+          {text:"Autobus má 32 míst, 18 je obsazených. Kolik míst je volných?", action:"number", check:{type:"number",answer:14,tolerance:0}, mode:"indoor_ok"},
+          {text:"Které z těchto čísel je dělitelné 2 i 3?", action:"choice", choices:[{text:"12",value:"12"},{text:"10",value:"10"},{text:"14",value:"14"}], check:{type:"choice",correct:"12"}, mode:"indoor_ok"},
+          {text:"Kolik je 25 % z čísla 80?", action:"number", check:{type:"number",answer:20,tolerance:0}, mode:"indoor_ok"},
+          {text:"Čtverec má obvod 24. Jak dlouhá je jedna strana?", action:"number", check:{type:"number",answer:6,tolerance:0}, mode:"indoor_ok"},
+          {text:"Kolik je 12 na druhou?", action:"number", check:{type:"number",answer:144,tolerance:0}, mode:"indoor_ok"}
         ],
         "10-15": [
           {text:"Jaké je nejmenší prvočíslo větší než 7?", action:"choice", choices:[{text:"11",value:"11"},{text:"9",value:"9"},{text:"12",value:"12"}], check:{type:"choice",correct:"11"}, mode:"outdoor_bonus"},
@@ -804,7 +999,13 @@ export const T = {
           {text:"Obdélník má délku 8 a šířku 5. Jaký je jeho obsah?", action:"number", check:{type:"number",answer:40,tolerance:0}, mode:"indoor_ok"},
           {text:"Kolik prvočísel je mezi 1 a 20?", action:"number", check:{type:"number",answer:8,tolerance:0}, mode:"indoor_ok"},
           {text:"Který zlomek je největší?", action:"choice", choices:[{text:"3/4",value:"correct"},{text:"1/2",value:"wrong1"},{text:"2/3",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
-          {text:"Pokud x + 5 = 12, jaké je x?", action:"number", check:{type:"number",answer:7,tolerance:0}, mode:"indoor_ok"}
+          {text:"Pokud x + 5 = 12, jaké je x?", action:"number", check:{type:"number",answer:7,tolerance:0}, mode:"indoor_ok"},
+          {text:"Jaký je obvod obdélníku s délkou 9 a šířkou 4?", action:"number", check:{type:"number",answer:26,tolerance:0}, mode:"indoor_ok"},
+          {text:"Kolik stupňů má plný úhel?", action:"number", check:{type:"number",answer:360,tolerance:0}, mode:"indoor_ok"},
+          {text:"Které z těchto čísel NENÍ prvočíslo?", action:"choice", choices:[{text:"9",value:"correct"},{text:"7",value:"wrong1"},{text:"11",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Auto spotřebuje 6 litrů na 100 km. Kolik litrů na 250 km?", action:"number", check:{type:"number",answer:15,tolerance:0}, mode:"indoor_ok"},
+          {text:"Kolik je 2 na pátou mocninu?", action:"number", check:{type:"number",answer:32,tolerance:0}, mode:"indoor_ok"},
+          {text:"Jaký trojúhelník má všechny tři strany různě dlouhé?", action:"choice", choices:[{text:"Různostranný",value:"correct"},{text:"Rovnoramenný",value:"wrong1"},{text:"Rovnostranný",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
         ],
         "15+": [
           {text:"Pokud jsou všechny blůpy hrůzy a všechny hrůzy jsou lůzy — jsou všechny blůpy lůzy?", action:"choice", choices:[{text:"Ano — tranzitivní logika",value:"correct"},{text:"Ne — nedá se říct",value:"wrong1"},{text:"Jen někdy",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
@@ -816,7 +1017,12 @@ export const T = {
           {text:"Kolik stupňů je součet vnitřních úhlů trojúhelníku?", action:"number", check:{type:"number",answer:180,tolerance:0}, mode:"indoor_ok"},
           {text:"Co nejlépe popisuje rekurzivní funkci?", action:"choice", choices:[{text:"Funkce, která volá samu sebe",value:"correct"},{text:"Funkce, která nikdy neskončí",value:"wrong1"},{text:"Funkce bez parametrů",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"V Booleově logice: co je TRUE AND FALSE?", action:"choice", choices:[{text:"FALSE",value:"correct"},{text:"TRUE",value:"wrong1"},{text:"NULL",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
-          {text:"Jaké je pravidlo Fibonacciho posloupnosti?", action:"choice", choices:[{text:"Každé číslo je součet dvou předchozích",value:"correct"},{text:"Každé číslo je dvojnásobek předchozího",value:"wrong1"},{text:"Každé číslo přidá pevnou konstantu",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
+          {text:"Jaké je pravidlo Fibonacciho posloupnosti?", action:"choice", choices:[{text:"Každé číslo je součet dvou předchozích",value:"correct"},{text:"Každé číslo je dvojnásobek předchozího",value:"wrong1"},{text:"Každé číslo přidá pevnou konstantu",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Co označuje složitost O(n²) v algoritmech?", action:"choice", choices:[{text:"Kvadratická časová složitost",value:"correct"},{text:"Lineární časová složitost",value:"wrong1"},{text:"Konstantní časová složitost",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Co říká De Morganův zákon pro NOT (A AND B)?", action:"choice", choices:[{text:"(NOT A) NEBO (NOT B)",value:"correct"},{text:"(NOT A) A (NOT B)",value:"wrong1"},{text:"A NEBO B",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Jaký je minimální počet tahů k vyřešení 3-diskovém Hanojských věží?", hint:"Vzorec: 2ⁿ - 1", action:"number", check:{type:"number",answer:7,tolerance:0}, mode:"indoor_ok"},
+          {text:"Který třídící algoritmus má průměrnou složitost O(n log n)?", action:"choice", choices:[{text:"Merge sort",value:"correct"},{text:"Bubble sort",value:"wrong1"},{text:"Selection sort",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"V teorii grafů: jak se nazývá graf, kde každý vrchol je spojen s každým jiným?", action:"choice", choices:[{text:"Úplný graf",value:"correct"},{text:"Bipartitní graf",value:"wrong1"},{text:"Strom",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
         ]
       },
       feelings: {
@@ -830,7 +1036,12 @@ export const T = {
           {text:"Který obličejový výraz ukazuje pláč?", action:"choice", choices:[{text:"😭 Tenhle",value:"correct"},{text:"😂 Tenhle",value:"wrong1"},{text:"😎 Tenhle",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"Co děláš, když se zlobíš, aby ti bylo lépe?", action:"choice", choices:[{text:"Zhluboka se nadechnu 😮‍💨",value:"correct"},{text:"Biju věci 👊",value:"wrong1"},{text:"Křičím na všechny",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"Kolik různých pocitů dokážeš teď vyjmenovat?", hint:"Radost, smutek, vztek... dál!", action:"number", check:{type:"number",answer:null}, mode:"indoor_ok"},
-          {text:"Co z toho je hezká věc, kterou říct kamarádovi?", action:"choice", choices:[{text:"Ty jsi to zvládl/a skvěle! 🌟",value:"correct"},{text:"Jsi tak pomalý/á",value:"wrong1"},{text:"Nikdo tě nemá rád",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
+          {text:"Co z toho je hezká věc, kterou říct kamarádovi?", action:"choice", choices:[{text:"Ty jsi to zvládl/a skvěle! 🌟",value:"correct"},{text:"Jsi tak pomalý/á",value:"wrong1"},{text:"Nikdo tě nemá rád",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Jak se nazývá pocit, když se těšíš na něco vzrušujícího?", action:"choice", choices:[{text:"Nadšení 🎉",value:"correct"},{text:"Smutek 😢",value:"wrong1"},{text:"Vztek 😠",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Jak se cítíš, když uděláš něco odvážného?", action:"choice", choices:[{text:"Hrdě a silně 💪",value:"correct"},{text:"Hloupě 🤪",value:"wrong1"},{text:"Neviditelně",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Co je dobrý způsob, jak ukázat kamarádovi, že ti na něm záleží?", action:"choice", choices:[{text:"Naslouchat mu 👂",value:"correct"},{text:"Ignorovat ho",value:"wrong1"},{text:"Vzít mu hračky",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Kolik prstů ukážeš při gestu 'palec nahoru' (vše OK)?", action:"number", check:{type:"number",answer:1,tolerance:0}, mode:"outdoor_bonus"},
+          {text:"Který z těchto výrazů tváře ukazuje překvapení?", action:"choice", choices:[{text:"😮 Otevřená ústa",value:"correct"},{text:"😴 Zavřené oči",value:"wrong1"},{text:"😐 Bez výrazu",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
         ],
         "7-9": [
           {text:"Jak nejlépe pomoci kamarádovi, který je smutný?", action:"choice", choices:[{text:"Poslechnout ho a být s ním 🤝",value:"correct"},{text:"Odejít a ignorovat ho",value:"wrong1"},{text:"Říct mu, ať přestane být smutný",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -842,7 +1053,12 @@ export const T = {
           {text:"Co znamená být empatický?", action:"choice", choices:[{text:"Rozumět tomu, jak se cítí druzí",value:"correct"},{text:"Myslet jen na sebe",value:"wrong1"},{text:"Být velmi hlasitý",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"Který pocit je opakem klidu?", action:"choice", choices:[{text:"Úzkost 😰",value:"correct"},{text:"Mír 😌",value:"wrong1"},{text:"Spokojenost 😊",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"Kolik kamarádů máš, se kterými si můžeš promluvit o svých problémech?", hint:"Jakékoliv číslo je v pořádku!", action:"number", check:{type:"number",answer:null}, mode:"indoor_ok"},
-          {text:"Co z toho je dobrý způsob, jak se rozveselit, když jsi smutný/á?", action:"choice", choices:[{text:"Dělat, co tě baví 🎨",value:"correct"},{text:"Celý den být v temné místnosti",value:"wrong1"},{text:"Nic nejíst",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
+          {text:"Co z toho je dobrý způsob, jak se rozveselit, když jsi smutný/á?", action:"choice", choices:[{text:"Dělat, co tě baví 🎨",value:"correct"},{text:"Celý den být v temné místnosti",value:"wrong1"},{text:"Nic nejíst",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Co ti pomůže zklidnit se, když se cítíš zahlcený/á?", action:"choice", choices:[{text:"Pomalé hluboké dýchání 😮‍💨",value:"correct"},{text:"Sledovat hodně obrazovek",value:"wrong1"},{text:"Potlačit pocity v sobě",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Co buduje pevné přátelství?", action:"choice", choices:[{text:"Důvěra a upřímnost 🤝",value:"correct"},{text:"Vždy vyhrávat hádky",value:"wrong1"},{text:"Tajit před sebou věci",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Kolik minut pohybu denně doporučují odborníci pro děti?", hint:"Méně než 2 hodiny!", action:"number", check:{type:"number",answer:60,tolerance:15}, mode:"outdoor_bonus"},
+          {text:"Který z těchto projevů znamená, že někdo naslouchá?", action:"choice", choices:[{text:"Oční kontakt a přikývnutí",value:"correct"},{text:"Dívá se na telefon",value:"wrong1"},{text:"Stále skáče do řeči",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Jaký je rozdíl mezi plachostí a strachem?", action:"choice", choices:[{text:"Plachost je o sociálních situacích, strach o vnímání nebezpečí",value:"correct"},{text:"Jsou to totožné pocity",value:"wrong1"},{text:"Plachost je vždy silnější",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
         ],
         "10-15": [
           {text:"Co je empatie?", action:"choice", choices:[{text:"Rozumět tomu, jak se cítí druzí",value:"correct"},{text:"Zlobit se na ostatní",value:"wrong1"},{text:"Myslet jen na sebe",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -854,7 +1070,12 @@ export const T = {
           {text:"Jak se nazývá proces pojmenování a přijímání vlastních pocitů?", action:"choice", choices:[{text:"Emoční labeling",value:"correct"},{text:"Potlačení",value:"wrong1"},{text:"Projekce",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"Která část mozku nejvíce zpracovává emoce?", action:"choice", choices:[{text:"Amygdala",value:"correct"},{text:"Mozeček",value:"wrong1"},{text:"Prefrontální kůra",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"Na škále 1–10, jak dobře zvládáš vyjadřovat své emoce dnes?", action:"number", check:{type:"number",answer:null}, mode:"indoor_ok"},
-          {text:"Která z těchto vět je zdravý způsob nastavení hranic?", action:"choice", choices:[{text:"Cítím se nepříjemně, když to děláš",value:"correct"},{text:"Ty mě vždy rozčiluješ",value:"wrong1"},{text:"Je mi to jedno",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
+          {text:"Která z těchto vět je zdravý způsob nastavení hranic?", action:"choice", choices:[{text:"Cítím se nepříjemně, když to děláš",value:"correct"},{text:"Ty mě vždy rozčiluješ",value:"wrong1"},{text:"Je mi to jedno",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Jak se nazývá sklon hodnotit druhé skrze prizmu vlastní kultury?", action:"choice", choices:[{text:"Etnocentrismus",value:"correct"},{text:"Empatie",value:"wrong1"},{text:"Kulturní relativismus",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Kolik stádií morálního rozvoje identifikoval Kohlberg?", action:"number", check:{type:"number",answer:6,tolerance:1}, mode:"indoor_ok"},
+          {text:"Co je teorie sociálního srovnání?", action:"choice", choices:[{text:"Sami sebe hodnotíme srovnáváním s druhými",value:"correct"},{text:"Srovnáváme se jen s celebritami",value:"wrong1"},{text:"Porovnávání cen v obchodech",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Co je 'aktivní naslouchání'?", action:"choice", choices:[{text:"Plné soustředění a zapojení při poslechu druhého",value:"correct"},{text:"Poslouchat při jiné činnosti",value:"wrong1"},{text:"Čekat na svou příležitost promluvit",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Kolik potřeb obsahuje Maslowova pyramida potřeb?", action:"number", check:{type:"number",answer:5,tolerance:0}, mode:"indoor_ok"}
         ],
         "15+": [
           {text:"Jaký psychologický koncept popisuje nepohodlí z držení dvou protichůdných přesvědčení?", action:"choice", choices:[{text:"Kognitivní disonance",value:"correct"},{text:"Potvrzovací zkreslení",value:"wrong1"},{text:"Dunning-Krugerův efekt",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
@@ -866,7 +1087,12 @@ export const T = {
           {text:"Který obranný mechanismus spočívá v přisuzování vlastních pocitů druhým?", action:"choice", choices:[{text:"Projekce",value:"correct"},{text:"Potlačení",value:"wrong1"},{text:"Racionalizace",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"Co je 'negativity bias' (negativní zkreslení) v psychologii?", action:"choice", choices:[{text:"Sklon přikládat negativním zážitkům větší váhu",value:"correct"},{text:"Vždy čekat nejhorší výsledek",value:"wrong1"},{text:"Pamatovat si jen špatné události",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"Která fáze přichází PO fázi 'vyjednávání' dle Kübler-Rossové?", action:"choice", choices:[{text:"Deprese",value:"correct"},{text:"Hněv",value:"wrong1"},{text:"Přijetí",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
-          {text:"Jak se nazývá přesvědčení, že schopnosti lze rozvíjet úsilím a učením?", action:"choice", choices:[{text:"Růstové myšlení (growth mindset)",value:"correct"},{text:"Fixní myšlení",value:"wrong1"},{text:"Potvrzovací zkreslení",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
+          {text:"Jak se nazývá přesvědčení, že schopnosti lze rozvíjet úsilím a učením?", action:"choice", choices:[{text:"Růstové myšlení (growth mindset)",value:"correct"},{text:"Fixní myšlení",value:"wrong1"},{text:"Potvrzovací zkreslení",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Která teorie říká, že osobnost se vyvíjí řešením krizí v každé životní fázi?", action:"choice", choices:[{text:"Eriksonův psychosociální vývoj",value:"correct"},{text:"Maslowova hierarchie potřeb",value:"wrong1"},{text:"Piagetovy kognitivní fáze",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Co je 'emoční nákaza'?", action:"choice", choices:[{text:"Nevědomé přejímání emocí druhých",value:"correct"},{text:"Šíření nemocí emocemi",value:"wrong1"},{text:"Vnucování emocí ostatním",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Co je 'toxická pozitivita'?", action:"choice", choices:[{text:"Potlačování negativních pocitů vynuceným optimismem",value:"correct"},{text:"Přílišný optimismus ohledně výsledků",value:"wrong1"},{text:"Manipulace druhých pomocí radosti",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Jaká technika spočívá v nepřetržitém psaní myšlenek pro zpracování emocí?", action:"choice", choices:[{text:"Expresivní psaní / deník",value:"correct"},{text:"Kognitivně-behaviorální terapie",value:"wrong1"},{text:"Desenzibilizace",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Co je 'negativní zkreslení' (negativity bias) v psychologii?", action:"choice", choices:[{text:"Sklon přikládat negativním zážitkům větší váhu",value:"correct"},{text:"Vždy čekat nejhorší výsledek",value:"wrong1"},{text:"Pamatovat si jen špatné události",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
         ]
       },
       arts: {
@@ -880,7 +1106,13 @@ export const T = {
           {text:"Kolik základních barev existuje?", action:"number", check:{type:"number",answer:3,tolerance:0}, mode:"outdoor_bonus"},
           {text:"Které z těchto je hudební nástroj?", action:"choice", choices:[{text:"🥁 Buben",value:"buben"},{text:"🍕 Pizza",value:"pizza"},{text:"🪑 Židle",value:"židle"}], check:{type:"choice",correct:"buben"}, mode:"outdoor_bonus"},
           {text:"Jak se nazývá obrázek pořízený fotoaparátem?", action:"choice", choices:[{text:"Fotografie 📷",value:"correct"},{text:"Kresba ✏️",value:"wrong1"},{text:"Socha 🗿",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
-          {text:"Kolik strun mají housle?", action:"number", check:{type:"number",answer:4,tolerance:0}, mode:"outdoor_bonus"}
+          {text:"Kolik strun mají housle?", action:"number", check:{type:"number",answer:4,tolerance:0}, mode:"outdoor_bonus"},
+          {text:"Jak se jmenuje umění z hlíny tvarované rukou a vypálené v peci?", action:"choice", choices:[{text:"Hrnčířství / keramika 🏺",value:"correct"},{text:"Malování 🎨",value:"wrong1"},{text:"Koláž ✂️",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Jaká barva vznikne smícháním modré a červené?", action:"choice", choices:[{text:"🟣 Fialová",value:"fialová"},{text:"🟠 Oranžová",value:"oranžová"},{text:"🟢 Zelená",value:"zelená"}], check:{type:"choice",correct:"fialová"}, mode:"outdoor_bonus"},
+          {text:"Kolik černých kláves má jedna oktáva na klavíru?", action:"number", check:{type:"number",answer:5,tolerance:0}, mode:"indoor_ok"},
+          {text:"Který nástroj vydává zvuk foukáním přes rákos?", action:"choice", choices:[{text:"🎷 Saxofon",value:"correct"},{text:"🎸 Kytara",value:"wrong1"},{text:"🥁 Bicí",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Jakou barvu dostaneš smícháním všech základních barev malířských?", action:"choice", choices:[{text:"Černou (tmavě hnědou)",value:"correct"},{text:"Bílou",value:"wrong1"},{text:"Šedou",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Jak se nazývá příběh vyprávěný v baletu nebo opeře?", action:"choice", choices:[{text:"Libreto / děj",value:"correct"},{text:"Partitura",value:"wrong1"},{text:"Tempo",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
         ],
         "7-9": [
           {text:"Kdo namaloval Monu Lisu?", action:"choice", choices:[{text:"Leonardo da Vinci 🎨",value:"correct"},{text:"Pablo Picasso",value:"wrong1"},{text:"Vincent van Gogh",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -892,7 +1124,12 @@ export const T = {
           {text:"Který umělec je proslulý obrazy slunečnic?", action:"choice", choices:[{text:"Vincent van Gogh",value:"correct"},{text:"Leonardo da Vinci",value:"wrong1"},{text:"Michelangelo",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"Jaká barva vznikne smícháním červené a bílé?", action:"choice", choices:[{text:"Růžová 🌸",value:"correct"},{text:"Oranžová 🟠",value:"wrong1"},{text:"Fialová 🟣",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"Kolik kláves má klavír?", hint:"Více než 50!", action:"number", check:{type:"number",answer:88,tolerance:0}, mode:"indoor_ok"},
-          {text:"Do které skupiny nástrojů patří bubny?", action:"choice", choices:[{text:"Bicí",value:"correct"},{text:"Strunné",value:"wrong1"},{text:"Dechové",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
+          {text:"Do které skupiny nástrojů patří bubny?", action:"choice", choices:[{text:"Bicí",value:"correct"},{text:"Strunné",value:"wrong1"},{text:"Dechové",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Jak se nazývá světlost nebo tmavost barvy?", action:"choice", choices:[{text:"Hodnota / tón",value:"correct"},{text:"Odstín",value:"wrong1"},{text:"Sytost",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Jak se italsky řekne 'hraj velmi nahlas' v hudbě?", action:"choice", choices:[{text:"Fortissimo (ff)",value:"correct"},{text:"Pianissimo (pp)",value:"wrong1"},{text:"Mezzo forte (mf)",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Jak se jmenuje slavný obraz ukazující muže s rozpaženýma rukama v kruhu?", action:"choice", choices:[{text:"Vitruviánský muž — da Vinci",value:"correct"},{text:"Výkřik — Munch",value:"wrong1"},{text:"Dívka s perlou — Vermeer",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Jaký malířský styl využívá tečky nebo krátké tahy čisté barvy?", action:"choice", choices:[{text:"Impresionismus",value:"correct"},{text:"Realismus",value:"wrong1"},{text:"Abstraktní umění",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Který klíč se používá pro většinu houslistů a klavíristů?", action:"choice", choices:[{text:"Houslový klíč (G klíč)",value:"correct"},{text:"Basový klíč (F klíč)",value:"wrong1"},{text:"Altový klíč (C klíč)",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
         ],
         "10-15": [
           {text:"S jakým uměleckým směrem je spojen Salvador Dalí?", action:"choice", choices:[{text:"Surrealismus",value:"correct"},{text:"Impresionismus",value:"wrong1"},{text:"Kubismus",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -904,7 +1141,12 @@ export const T = {
           {text:"Který slavný sochař vytvořil Davida?", action:"choice", choices:[{text:"Michelangelo",value:"correct"},{text:"Donatello",value:"wrong1"},{text:"Rodin",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"Kolik dob je v taktu 4/4 v hudbě?", action:"number", check:{type:"number",answer:4,tolerance:0}, mode:"indoor_ok"},
           {text:"S jakým uměleckým směrem je spojen Claude Monet?", action:"choice", choices:[{text:"Impresionismus",value:"correct"},{text:"Kubismus",value:"wrong1"},{text:"Dadaismus",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
-          {text:"Jaké je přibližné zlaté číslo (zlatý řez)?", action:"choice", choices:[{text:"1,618",value:"correct"},{text:"3,14",value:"wrong1"},{text:"2,718",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
+          {text:"Jaké je přibližné zlaté číslo (zlatý řez)?", action:"choice", choices:[{text:"1,618",value:"correct"},{text:"3,14",value:"wrong1"},{text:"2,718",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Který skladatel romantismu je znám skvělými etudy pro klavír?", action:"choice", choices:[{text:"Frédéric Chopin",value:"correct"},{text:"Johann Sebastian Bach",value:"wrong1"},{text:"Antonio Vivaldi",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Co je 'leitmotiv' v hudbě?", action:"choice", choices:[{text:"Opakující se hudební motiv spojený s postavou nebo myšlenkou",value:"correct"},{text:"Druh hudebního klíče",value:"wrong1"},{text:"Tempo skladby",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Který umělec 20. století stál u zrodu kubismu?", action:"choice", choices:[{text:"Pablo Picasso",value:"correct"},{text:"Henri Matisse",value:"wrong1"},{text:"Georges Seurat",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Van Gogh pochází z které země?", action:"choice", choices:[{text:"Nizozemsko 🇳🇱",value:"correct"},{text:"Francie 🇫🇷",value:"wrong1"},{text:"Španělsko 🇪🇸",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Co znamená slovo 'tempo' v hudbě?", action:"choice", choices:[{text:"Rychlost hudby",value:"correct"},{text:"Hlasitost hudby",value:"wrong1"},{text:"Tónina hudby",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
         ],
         "15+": [
           {text:"Který umělecký směr odmítal tradici a přijímal náhodu a absurditu?", action:"choice", choices:[{text:"Dadaismus",value:"correct"},{text:"Romantismus",value:"wrong1"},{text:"Neoklasicismus",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
@@ -916,7 +1158,12 @@ export const T = {
           {text:"Jak se nazývá malířská technika pracující se světlem a stínem?", action:"choice", choices:[{text:"Chiaroscuro",value:"correct"},{text:"Impasto",value:"wrong1"},{text:"Pointilismus",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"Jak se jmenuje japonské umění skládání papíru?", action:"choice", choices:[{text:"Origami",value:"correct"},{text:"Ikebana",value:"wrong1"},{text:"Manga",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"Přibližně v jakém století začala renesance?", action:"number", check:{type:"number",answer:14,tolerance:1}, mode:"indoor_ok"},
-          {text:"Který umělecký směr prosazoval myšlenku, že každodenní předměty mohou být uměním?", action:"choice", choices:[{text:"Dadaismus / konceptuální umění",value:"correct"},{text:"Impresionismus",value:"wrong1"},{text:"Baroko",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
+          {text:"Který umělecký směr prosazoval myšlenku, že každodenní předměty mohou být uměním?", action:"choice", choices:[{text:"Dadaismus / konceptuální umění",value:"correct"},{text:"Impresionismus",value:"wrong1"},{text:"Baroko",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Jak se nazývá hudba, která vypráví příběh nebo zobrazuje scénu bez slov?", action:"choice", choices:[{text:"Programní hudba",value:"correct"},{text:"Absolutní hudba",value:"wrong1"},{text:"Komorní hudba",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Kdo namaloval 'Zrození Venuše'?", action:"choice", choices:[{text:"Sandro Botticelli",value:"correct"},{text:"Rafael",value:"wrong1"},{text:"Tizian",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Co je v hudbě 'kontrapunkt'?", action:"choice", choices:[{text:"Dvě nezávislé melodické linky hrané současně",value:"correct"},{text:"Náhlá změna hlasitosti",value:"wrong1"},{text:"Pauza v hudbě",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Přibližně kolik obrazů vytvořil Picasso za svůj život?", hint:"Jsou to tisíce!", action:"number", check:{type:"number",answer:20000,tolerance:10000}, mode:"indoor_ok"},
+          {text:"Co označuje 'tónina' ve skladbě?", action:"choice", choices:[{text:"Soubor tónů, ve kterých je dílo napsáno",value:"correct"},{text:"Tempo skladby",value:"wrong1"},{text:"Takty v taktovém označení",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
         ]
       },
       world: {
@@ -930,7 +1177,13 @@ export const T = {
           {text:"Jaké je největší zvíře na světě?", action:"choice", choices:[{text:"🐋 Modrá velryba",value:"correct"},{text:"🐘 Slon",value:"wrong1"},{text:"🦒 Žirafa",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"Kolik oceánů je na Zemi?", action:"number", check:{type:"number",answer:5,tolerance:0}, mode:"outdoor_bonus"},
           {text:"Ze které země pochází sushi?", action:"choice", choices:[{text:"🇯🇵 Japonsko",value:"japonsko"},{text:"🇨🇳 Čína",value:"čína"},{text:"🇧🇷 Brazílie",value:"brazílie"}], check:{type:"choice",correct:"japonsko"}, mode:"outdoor_bonus"},
-          {text:"Kolik barev má italská vlajka?", action:"number", check:{type:"number",answer:3,tolerance:0}, mode:"outdoor_bonus"}
+          {text:"Kolik barev má italská vlajka?", action:"number", check:{type:"number",answer:3,tolerance:0}, mode:"outdoor_bonus"},
+          {text:"Na čí vlajce je javorový list?", action:"choice", choices:[{text:"🇨🇦 Kanada",value:"kanada"},{text:"🇺🇸 USA",value:"usa"},{text:"🇦🇺 Austrálie",value:"austrálie"}], check:{type:"choice",correct:"kanada"}, mode:"outdoor_bonus"},
+          {text:"Které město je hlavním městem Velké Británie?", action:"choice", choices:[{text:"🇬🇧 Londýn",value:"londýn"},{text:"Edinburgh",value:"edinburgh"},{text:"Manchester",value:"manchester"}], check:{type:"choice",correct:"londýn"}, mode:"outdoor_bonus"},
+          {text:"Která země je na světě největší (rozlohou)?", action:"choice", choices:[{text:"🇷🇺 Rusko",value:"rusko"},{text:"🇨🇳 Čína",value:"čína"},{text:"🇺🇸 USA",value:"usa"}], check:{type:"choice",correct:"rusko"}, mode:"outdoor_bonus"},
+          {text:"Na jakém světadílu leží Brazílie?", action:"choice", choices:[{text:"🌎 Jižní Amerika",value:"correct"},{text:"🌍 Afrika",value:"wrong1"},{text:"🌏 Asie",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Kolik hvězd je na čínské vlajce?", action:"number", check:{type:"number",answer:5,tolerance:0}, mode:"outdoor_bonus"},
+          {text:"Které zvíře je národním symbolem Austrálie?", action:"choice", choices:[{text:"🦘 Klokan",value:"correct"},{text:"🐨 Koala",value:"wrong1"},{text:"🦜 Papoušek",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
         ],
         "7-9": [
           {text:"Jaké je hlavní město Francie?", action:"choice", choices:[{text:"🗼 Paříž",value:"correct"},{text:"🏰 Londýn",value:"wrong1"},{text:"🎭 Řím",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -942,7 +1195,13 @@ export const T = {
           {text:"Kolik zemí sousedí s Českou republikou?", action:"number", check:{type:"number",answer:4,tolerance:0}, mode:"outdoor_bonus"},
           {text:"Ve kterém světadílu leží Brazílie?", action:"choice", choices:[{text:"Jižní Amerika 🌎",value:"correct"},{text:"Afrika",value:"wrong1"},{text:"Asie",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"Jaké je hlavní město Austrálie?", action:"choice", choices:[{text:"Canberra",value:"correct"},{text:"Sydney",value:"wrong1"},{text:"Melbourne",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
-          {text:"Kolik hvězd je na vlajce USA?", action:"number", check:{type:"number",answer:50,tolerance:0}, mode:"outdoor_bonus"}
+          {text:"Kolik hvězd je na vlajce USA?", action:"number", check:{type:"number",answer:50,tolerance:0}, mode:"outdoor_bonus"},
+          {text:"Jaké je hlavní město Japonska?", action:"choice", choices:[{text:"🇯🇵 Tokio",value:"correct"},{text:"Ósaka",value:"wrong1"},{text:"Kjóto",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Která hora je nejvyšší na světě?", action:"choice", choices:[{text:"🏔️ Mount Everest",value:"correct"},{text:"K2",value:"wrong1"},{text:"Mont Blanc",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Kolik pruhů má vlajka USA?", action:"number", check:{type:"number",answer:13,tolerance:0}, mode:"outdoor_bonus"},
+          {text:"Jaké je hlavní město Německa?", action:"choice", choices:[{text:"🇩🇪 Berlín",value:"correct"},{text:"Mnichov",value:"wrong1"},{text:"Hamburg",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Která řeka je nejdelší na světě?", action:"choice", choices:[{text:"🌊 Nil",value:"correct"},{text:"Amazonka",value:"wrong1"},{text:"Mississippi",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Jaká měna se používá v Japonsku?", action:"choice", choices:[{text:"Jen ¥",value:"correct"},{text:"Juan ¥",value:"wrong1"},{text:"Won ₩",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
         ],
         "10-15": [
           {text:"Který oceán je největší na Zemi?", action:"choice", choices:[{text:"🌊 Tichý oceán",value:"correct"},{text:"Atlantický oceán",value:"wrong1"},{text:"Indický oceán",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -954,7 +1213,13 @@ export const T = {
           {text:"Která země má nejdelší pobřeží na světě?", action:"choice", choices:[{text:"Kanada",value:"correct"},{text:"Rusko",value:"wrong1"},{text:"Austrálie",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"Přibližně kolik procent světové sladké vody je uzavřeno v ledovcích?", action:"number", check:{type:"number",answer:69,tolerance:8}, mode:"indoor_ok"},
           {text:"Který ze sedmi divů světa stále existuje?", action:"choice", choices:[{text:"Velká pyramida v Gíze",value:"correct"},{text:"Kolos rhodský",value:"wrong1"},{text:"Maják na Faru",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
-          {text:"Který kontinent nemá stálé obyvatelstvo a řídí se mezinárodní smlouvou?", action:"choice", choices:[{text:"Antarktida",value:"correct"},{text:"Arktida",value:"wrong1"},{text:"Grónsko",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
+          {text:"Který kontinent nemá stálé obyvatelstvo a řídí se mezinárodní smlouvou?", action:"choice", choices:[{text:"Antarktida",value:"correct"},{text:"Arktida",value:"wrong1"},{text:"Grónsko",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Jak se nazývají sezónní větry přinášející vydatné deště do jižní Asie?", action:"choice", choices:[{text:"Monzun",value:"correct"},{text:"Tajfun",value:"wrong1"},{text:"Chinook",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Které náboženství má na světě nejvíce věřících?", action:"choice", choices:[{text:"Křesťanství",value:"correct"},{text:"Islám",value:"wrong1"},{text:"Hinduismus",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Kolik časových pásem překrývají USA?", action:"number", check:{type:"number",answer:6,tolerance:1}, mode:"indoor_ok"},
+          {text:"Jak se jmenovala historická obchodní cesta spojující Čínu se středomořím?", action:"choice", choices:[{text:"Hedvábná stezka",value:"correct"},{text:"Jantarová stezka",value:"wrong1"},{text:"Solná cesta",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Která země vyhrála největší počet mistrovství světa ve fotbale?", action:"choice", choices:[{text:"Brazílie 🇧🇷 (5×)",value:"correct"},{text:"Německo 🇩🇪",value:"wrong1"},{text:"Itálie 🇮🇹",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Kde se nachází historická hora Olymp, domov řeckých bohů?", action:"choice", choices:[{text:"Řecko 🇬🇷",value:"correct"},{text:"Turecko",value:"wrong1"},{text:"Itálie",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"}
         ],
         "15+": [
           {text:"Která mezinárodní dohoda stanovila cíl omezit globální oteplování na 1,5 °C?", action:"choice", choices:[{text:"Pařížská dohoda (2015)",value:"correct"},{text:"Kjótský protokol (1997)",value:"wrong1"},{text:"Montrealský protokol (1987)",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -966,7 +1231,12 @@ export const T = {
           {text:"Která mezinárodní organizace koordinuje zdravotní politiku na globální úrovni?", action:"choice", choices:[{text:"WHO (Světová zdravotnická organizace)",value:"correct"},{text:"UNESCO",value:"wrong1"},{text:"NATO",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"Který systém ekonomiky je v současnosti nejrozšířenější na světě?", action:"choice", choices:[{text:"Smíšená tržní ekonomika",value:"correct"},{text:"Čistý komunismus",value:"wrong1"},{text:"Feudalismus",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"Cíle udržitelného rozvoje (SDGs) OSN se zaměřují především na:", action:"choice", choices:[{text:"Chudobu, nerovnosti a klima",value:"correct"},{text:"Jen vojenskou bezpečnost",value:"wrong1"},{text:"Průzkum vesmíru",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
-          {text:"Přibližně kolik milionů uprchlíků bylo přesídleno na světě v roce 2023?", hint:"Rekordní číslo!", action:"number", check:{type:"number",answer:110,tolerance:20}, mode:"indoor_ok"}
+          {text:"Přibližně kolik milionů uprchlíků bylo přesídleno na světě v roce 2023?", hint:"Rekordní číslo!", action:"number", check:{type:"number",answer:110,tolerance:20}, mode:"indoor_ok"},
+          {text:"Jaký ekonomický pojem označuje hodnotu nejlepší obětované alternativy?", action:"choice", choices:[{text:"Náklady příležitosti",value:"correct"},{text:"Utopené náklady",value:"wrong1"},{text:"Mezní náklady",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Která země má nejvyšší nominální HDP na světě?", action:"choice", choices:[{text:"USA 🇺🇸",value:"correct"},{text:"Čína 🇨🇳",value:"wrong1"},{text:"Japonsko 🇯🇵",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Kolik členských států má Evropská unie přibližně?", action:"number", check:{type:"number",answer:27,tolerance:2}, mode:"indoor_ok"},
+          {text:"Jak se nazývá šíření kulturních prvků z jedné společnosti do druhé?", action:"choice", choices:[{text:"Kulturní difúze",value:"correct"},{text:"Asimilace",value:"wrong1"},{text:"Globalizace",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Která organizace koordinuje globální zdravotní politiku?", action:"choice", choices:[{text:"WHO (Světová zdravotnická organizace)",value:"correct"},{text:"UNESCO",value:"wrong1"},{text:"NATO",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"}
         ]
       }
     },
