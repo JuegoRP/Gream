@@ -53,6 +53,12 @@ body.show-tabs .screen {
 body.show-tabs #screen-map-view {
   padding-bottom: calc(var(--sab) + 58px) !important;
 }
+
+/* Garden screens are full-bleed — all content is absolute-positioned overlays */
+#screen-map, #screen-home {
+  padding: 0 !important;
+  overflow: hidden;
+}
 #screen-map-view {
   display: flex !important;
   flex-direction: column;

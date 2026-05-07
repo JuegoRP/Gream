@@ -659,12 +659,6 @@ export const Challenge = {
     // ─── Feed the Gream ───
     const greamResult = Gream.feedFromTask(p.id, this._world, this._wasOutdoor);
 
-    // ─── Show name prompt when Gream evolves to stage 2 (first time) ───
-    // Skip if archetypeResolved — _showArchetypeReveal overlay handles naming in that case
-    if (greamResult?.evolved && greamResult.toStage === 2 && !greamResult.gream.name && !greamResult.archetypeResolved) {
-      setTimeout(() => this._promptGreamName(greamResult.gream), 1500);
-    }
-
     // ─── Archetype reveal overlay at hatching ───
     if (greamResult?.archetypeResolved && greamResult.resolvedArchetype) {
       setTimeout(() => this._showArchetypeReveal(greamResult), 600);
@@ -877,33 +871,30 @@ export const Challenge = {
         <canvas data-sprite-sheet="img/greamici/${arch}_2.png" data-sprite-mood="happy"
           width="120" height="120"
           style="width:120px;height:120px;image-rendering:pixelated;display:block;margin:0 auto 12px;animation:greamIdle 2s ease-in-out infinite"></canvas>
-        <div style="font-size:16px;font-weight:700;color:rgba(135,194,109,0.9);margin-bottom:18px">${archTitle}</div>
-        <div style="font-size:13px;color:rgba(255,255,255,0.65);margin-bottom:16px;line-height:1.5">
-          ${lang === 'cs' ? 'Tvůj způsob hraní odhalil, kdo se v vajíčku skrýval.<br>Jak ho pojmenuješ?' : 'Your way of playing revealed who was hiding in the egg.<br>What will you name them?'}
-        </div>
-        <input id="archNameInput" type="text" maxlength="20" value="${defaultName}"
-          style="width:100%;max-width:200px;padding:11px 16px;border-radius:50px;border:2.5px solid rgba(135,194,109,0.6);background:rgba(255,255,255,0.1);color:white;font-family:inherit;font-weight:800;font-size:18px;text-align:center;margin-bottom:18px;outline:none;box-sizing:border-box;display:block;margin-left:auto;margin-right:auto">
+        <div style="font-size:20px;font-weight:900;color:white;margin-bottom:6px">${defaultName}</div>
+        <div style="font-size:14px;font-weight:700;color:rgba(135,194,109,0.9);margin-bottom:8px">${archTitle}</div>
         ${greamResult.isShiny ? `<div style="font-size:13px;font-weight:800;color:#f5d020;margin-bottom:14px">✨ ${lang === 'cs' ? 'A je VZÁCNÝ!' : "And it's SHINY!"}</div>` : ''}
+        <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:20px">
+          ${lang === 'cs' ? '(Klepni na jméno v zahradě pro přejmenování)' : '(Tap the name in garden to rename)'}
+        </div>
         <button id="archRevealBtn" style="padding:14px 32px;border-radius:50px;border:none;background:var(--green-mid,#4a8a2e);color:white;font-family:inherit;font-weight:800;font-size:16px;cursor:pointer;box-shadow:0 4px 20px rgba(74,138,46,0.4)">
           ${lang === 'cs' ? '🌱 Pojďme na to!' : '🌱 Let\u2019s go!'}
         </button>
       </div>
     `;
 
-    overlay.querySelector('#archRevealBtn').onclick = () => {
-      const chosenName = (overlay.querySelector('#archNameInput')?.value || '').trim() || defaultName;
-      const p = Profiles.active();
-      if (p) {
-        const allGreams = Gream.all(p.id);
-        const thisGream = allGreams.find(g => g.archetype === arch && (!g.name || g.name === arch));
-        if (thisGream) Gream.rename(p.id, thisGream.id, chosenName);
-      }
-      overlay.remove();
-    };
+    // Auto-assign generated name — user can rename by tapping the name in garden
+    const p = Profiles.active();
+    if (p) {
+      const allGreams = Gream.all(p.id);
+      const thisGream = allGreams.find(g => g.archetype === arch && !g.name);
+      if (thisGream) Gream.rename(p.id, thisGream.id, defaultName);
+    }
+
+    overlay.querySelector('#archRevealBtn').onclick = () => overlay.remove();
 
     if (window.App?._initSpriteCanvases) App._initSpriteCanvases(overlay);
     document.body.appendChild(overlay);
-    setTimeout(() => { const inp = overlay.querySelector('#archNameInput'); inp?.focus(); inp?.select(); }, 350);
     try { Feedback.celebrate(); } catch {}
   },
 

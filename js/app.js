@@ -414,6 +414,13 @@ window.App = {
       banner.style.display = 'none';
     }
 
+    // Subscribe section — show when not premium
+    const subSec = document.getElementById('hubSubscribeSection');
+    if (subSec) {
+      subSec.style.display = sub.isPremium ? 'none' : 'block';
+      this._setText('hubSubscribeLbl', cs ? 'Předplatit Premium ⭐' : 'Subscribe to Premium ⭐');
+    }
+
     // Labels (bilingual)
     this._setText('hubShopLbl',   cs ? 'Šatník'     : 'Shop');
     this._setText('hubShopSub',   cs ? 'Skiny & boosters' : 'Skins & boosters');
@@ -423,8 +430,6 @@ window.App = {
     this._setText('hubBadgesSub', cs ? 'Tvůj postup' : 'Your progress');
     this._setText('hubHistLbl',   cs ? 'Historie'   : 'History');
     this._setText('hubHistSub',   cs ? 'Splněné úkoly' : 'Completed tasks');
-    this._setText('hubStatsLbl',  cs ? 'Statistiky' : 'Stats');
-    this._setText('hubStatsSub',  cs ? 'Přehled aktivity' : 'Activity overview');
     this._setText('hubSetLbl',    cs ? 'Nastavení'  : 'Settings');
     this._setText('hubSetSub',    cs ? 'Jazyk, profil, info' : 'Language, profile, info');
 
@@ -1377,7 +1382,6 @@ window.App = {
       const msg  = lang === 'cs'
         ? `Koupit extra úkol za ${cost} 🌱?`
         : `Buy extra task for ${cost} 🌱?`;
-      // Show confirm overlay
       this._confirmSeedSpend(msg, cost, () => {
         if (!Skins.spendSeeds(p.id, cost)) {
           const lang2 = localStorage.getItem('gream_lang') || 'en';
@@ -1385,12 +1389,94 @@ window.App = {
           return;
         }
         this._setText('seedNum', Skins.getSeeds(p.id));
-        this._doStartIndoor(p);
+        this._showDifficultyPicker(() => this._doStartIndoor(p));
       });
       return;
     }
 
-    this._doStartIndoor(p);
+    this._showDifficultyPicker(() => this._doStartIndoor(p));
+  },
+
+  // ─── Difficulty picker overlay (shown before any challenge) ───
+  _showDifficultyPicker(onConfirm) {
+    const lang = getLang();
+    const p    = Profiles.active();
+    const cur  = p?.difficulty || 'medium';
+    const diffs = [
+      { id:'easy',    emoji:'🟢', cs:'Snadné',   en:'Easy' },
+      { id:'medium',  emoji:'🟡', cs:'Střední',  en:'Medium' },
+      { id:'hard',    emoji:'🔴', cs:'Těžké',    en:'Hard' },
+      { id:'extreme', emoji:'⚡', cs:'Extrémní', en:'Extreme' },
+    ];
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;z-index:999;padding:20px';
+    overlay.innerHTML = `
+      <div style="background:white;border-radius:24px;padding:24px;max-width:320px;width:100%;text-align:center">
+        <div style="font-size:22px;margin-bottom:8px">🎯</div>
+        <div style="font-size:18px;font-weight:900;color:var(--green-deep);margin-bottom:16px">
+          ${lang==='cs'?'Jak těžké to chceš?':'How hard?'}
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px">
+          ${diffs.map(d=>`<button data-d="${d.id}" onclick="window._dpSel('${d.id}')"
+            style="padding:14px 8px;border-radius:14px;border:2.5px solid ${d.id===cur?'var(--green-mid)':'rgba(0,0,0,0.08)'};background:${d.id===cur?'var(--green-pale)':'white'};font-family:inherit;font-weight:800;font-size:14px;cursor:pointer;transition:all 0.12s">
+            ${d.emoji} ${lang==='cs'?d.cs:d.en}
+          </button>`).join('')}
+        </div>
+        <button onclick="window._dpGo()" style="width:100%;padding:14px;border-radius:14px;border:none;background:var(--green-mid);color:white;font-family:inherit;font-weight:800;font-size:16px;cursor:pointer">
+          ${lang==='cs'?'Hrát! 🏃':'Play! 🏃'}
+        </button>
+      </div>`;
+    let selected = cur;
+    window._dpSel = (diff) => {
+      selected = diff;
+      overlay.querySelectorAll('[data-d]').forEach(b => {
+        const active = b.dataset.d === diff;
+        b.style.borderColor = active ? 'var(--green-mid)' : 'rgba(0,0,0,0.08)';
+        b.style.background  = active ? 'var(--green-pale)' : 'white';
+      });
+    };
+    window._dpGo = () => {
+      if (p) Profiles.update(p.id, { difficulty: selected });
+      overlay.remove();
+      window._dpSel = null; window._dpGo = null;
+      onConfirm();
+    };
+    document.body.appendChild(overlay);
+  },
+
+  // ─── Tap Greamík name → rename dialog ───
+  promptRenameGream() {
+    const lang = getLang();
+    const p    = Profiles.active();
+    if (!p) return;
+    import('./gream.js').then(({ Gream: G }) => {
+      const pet = G.active(p.id);
+      if (!pet || pet.stage < 2) return;
+      const overlay = document.createElement('div');
+      overlay.style.cssText = 'position:fixed;inset:0;background:rgba(15,42,7,0.7);display:flex;align-items:center;justify-content:center;z-index:1001;padding:20px';
+      const cur = pet.name || '';
+      overlay.innerHTML = `
+        <div style="background:white;border-radius:24px;padding:24px;max-width:320px;width:100%;text-align:center">
+          <div style="font-size:40px;margin-bottom:8px">✏️</div>
+          <div style="font-size:18px;font-weight:900;color:var(--green-deep);margin-bottom:14px">
+            ${lang==='cs'?'Přejmenovat Greamíka':'Rename Gream'}
+          </div>
+          <input id="_rnInput" type="text" maxlength="20" value="${cur}"
+            placeholder="${lang==='cs'?'Jméno...':'Name...'}"
+            style="width:100%;padding:12px 14px;border:2px solid rgba(74,138,46,0.3);border-radius:12px;font-family:'Nunito',sans-serif;font-size:16px;font-weight:700;color:var(--green-deep);text-align:center;margin-bottom:14px;outline:none;box-sizing:border-box">
+          <button id="_rnSave" class="btn-primary" style="width:100%;margin-bottom:8px">${lang==='cs'?'Uložit':'Save'}</button>
+          <button onclick="this.closest('[style*=fixed]').remove()" class="btn-ghost" style="width:100%">${lang==='cs'?'Zrušit':'Cancel'}</button>
+        </div>`;
+      const save = () => {
+        const name = overlay.querySelector('#_rnInput')?.value.trim();
+        if (name) { G.rename(p.id, pet.id, name); this.renderMap(); }
+        overlay.remove();
+      };
+      overlay.querySelector('#_rnSave').onclick = save;
+      overlay.querySelector('#_rnInput').addEventListener('keypress', e => { if (e.key==='Enter') save(); });
+      document.body.appendChild(overlay);
+      setTimeout(() => { overlay.querySelector('#_rnInput')?.focus(); }, 150);
+    });
   },
 
   _doStartIndoor(p) {
@@ -2224,24 +2310,24 @@ window.App = {
       }
     }
 
-    // World filter pills
+    // World filter pills — populate side panel
     const WORLDS = ['nature','language','logic','feelings','arts','world'];
     const WC = { nature:'#4a8a2e', language:'#5a4a8a', logic:'#2d7abf', feelings:'#d46d94', arts:'#c87030', world:'#a8743c' };
-    const pillsEl = document.getElementById('mapWorldPills');
+    const pillsEl = document.getElementById('mapSidePillsContainer');
     if (pillsEl) {
       pillsEl.innerHTML = '';
       const allPill = document.createElement('div');
       allPill.id = 'pill-all';
-      allPill.style.cssText = 'flex-shrink:0;padding:7px 14px;border-radius:50px;font-size:12px;font-weight:800;cursor:pointer;border:2px solid var(--green-mid);color:var(--green-deep);background:var(--green-pale)';
-      allPill.textContent = lang === 'cs' ? 'Vše' : 'All';
+      allPill.style.cssText = 'padding:10px 14px;border-radius:12px;font-size:13px;font-weight:800;cursor:pointer;border:2px solid var(--green-mid);color:var(--green-deep);background:var(--green-pale)';
+      allPill.textContent = (lang === 'cs' ? 'Vše' : 'All');
       allPill.onclick = () => this._filterMapWorld(null);
       pillsEl.appendChild(allPill);
       WORLDS.forEach(w => {
         const pill = document.createElement('div');
         pill.id = `pill-${w}`;
-        pill.style.cssText = 'flex-shrink:0;padding:7px 12px;border-radius:50px;font-size:12px;font-weight:800;cursor:pointer;border:2px solid rgba(0,0,0,0.08);color:#555;background:rgba(0,0,0,0.04)';
+        pill.style.cssText = 'padding:10px 14px;border-radius:12px;font-size:13px;font-weight:800;cursor:pointer;border:2px solid rgba(0,0,0,0.08);color:#555;background:rgba(0,0,0,0.04)';
         pill.textContent = `${WORLD_EMOJIS[w] || ''} ${t.worlds?.[w] || w}`;
-        pill.onclick = () => this._filterMapWorld(w);
+        pill.onclick = () => { this._filterMapWorld(w); this.toggleMapSidePanel(); };
         pillsEl.appendChild(pill);
       });
     }
@@ -2262,7 +2348,7 @@ window.App = {
               : `📍 You're ${info.dist} m away — get closer (max 60 m)`);
             return;
           }
-          this.openPoiSheet(poi);
+          this.openPoiModal(poi);
         },
         onPoisLoaded: pois => {
           const loading = document.getElementById('mapLoading');
@@ -2301,84 +2387,125 @@ window.App = {
     try { MapView.filterByWorld(world); } catch {}
   },
 
-  openPoiSheet(poi) {
+  // ─── POI modal (replaces bottom sheet) ───
+  openPoiModal(poi) {
     Feedback.click();
     this._currentPoi      = poi;
     this._currentPoiWorld = null;
     const t    = tr();
     const lang = getLang();
-    const sheet = document.getElementById('poiSheet');
-    if (!sheet) return;
-
     const WORLDS = ['nature','language','logic','feelings','arts','world'];
-    const WC  = { nature:'#4a8a2e', language:'#5a4a8a', logic:'#2d7abf', feelings:'#d46d94', arts:'#c87030', world:'#a8743c' };
-    const KE  = { park:'🌳', nature_reserve:'🌿', playground:'🛝', tree:'🌲', spring:'💧', peak:'⛰️', wood:'🌲', castle:'🏰', monument:'🗿', memorial:'🕊️', ruins:'🏚️', place_of_worship:'⛪', library:'📚', theatre:'🎭', arts_centre:'🎨', planetarium:'🔭', museum:'🏛️', artwork:'🖼️', gallery:'🖼️', viewpoint:'👁️', attraction:'✨', info:'ℹ️', bench:'🪑', social_centre:'🤝', community_centre:'🏘️', garden:'🌸', poi:'📍' };
+    const WC = { nature:'#4a8a2e', language:'#5a4a8a', logic:'#2d7abf', feelings:'#d46d94', arts:'#c87030', world:'#a8743c' };
+    const p = Profiles.active();
+    const cur = p?.difficulty || 'medium';
+    const diffs = [
+      { id:'easy', emoji:'🟢' }, { id:'medium', emoji:'🟡' },
+      { id:'hard', emoji:'🔴' }, { id:'extreme', emoji:'⚡' },
+    ];
 
-    const kindEl = document.getElementById('poiKindBadge');
-    if (kindEl) kindEl.textContent = `${KE[poi.kind] || '📍'} ${(poi.kind || 'place').replace(/_/g,' ')}`;
+    document.getElementById('poiModalOverlay')?.remove();
+    const overlay = document.createElement('div');
+    overlay.id = 'poiModalOverlay';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;z-index:999;padding:20px';
+    overlay.onclick = e => { if (e.target === overlay) this.closePoiModal(); };
 
-    const bonusRow = document.getElementById('poiBonusRow');
-    if (bonusRow) {
-      bonusRow.innerHTML = '';
-      if (poi.bonusWorld) {
-        const chip = document.createElement('div');
-        chip.style.cssText = `padding:5px 12px;border-radius:50px;background:${WC[poi.bonusWorld]};color:white;font-size:12px;font-weight:800`;
-        chip.textContent = `${WORLD_EMOJIS[poi.bonusWorld]} ${lang==='cs'?'+5 semínek za':'+5 seeds for'} ${t.worlds?.[poi.bonusWorld]||poi.bonusWorld}`;
-        bonusRow.appendChild(chip);
-      } else {
-        // Neutral place — no bonus, explain it
-        const chip = document.createElement('div');
-        chip.style.cssText = 'padding:5px 12px;border-radius:50px;background:rgba(0,0,0,0.06);color:#666;font-size:12px;font-weight:700';
-        chip.textContent = lang==='cs' ? '✨ Neutrální místo — všechny světy jsou stejné' : '✨ Neutral place — all worlds equal here';
-        bonusRow.appendChild(chip);
-      }
-    }
+    const kindIcon = this._poiIcon(poi.kind);
+    const bonusBadge = poi.bonusWorld
+      ? `<div style="display:inline-block;padding:3px 10px;border-radius:50px;background:${WC[poi.bonusWorld]};color:white;font-size:11px;font-weight:800;margin-bottom:12px">${WORLD_EMOJIS[poi.bonusWorld]} +5 🌱</div>`
+      : '';
 
-    const worldBtns = document.getElementById('poiWorldBtns');
-    const startBtn  = document.getElementById('poiStartBtn');
-    if (worldBtns) {
-      worldBtns.innerHTML = '';
-      WORLDS.forEach(w => {
-        const done = (poi.worldsDone || []).includes(w);
-        const btn = document.createElement('button');
-        btn.style.cssText = `padding:10px 6px;border-radius:12px;cursor:pointer;font-family:inherit;border:2px solid rgba(0,0,0,0.08);background:${done?WC[w]:'white'};color:${done?'white':'#333'};font-size:20px;font-weight:800;display:flex;flex-direction:column;align-items:center;gap:3px;transition:all 0.18s`;
-        btn.innerHTML = `<span>${WORLD_EMOJIS[w]||'?'}</span>${done?'<span style="font-size:9px">✓</span>':''}`;
-        btn.onclick = () => {
-          worldBtns.querySelectorAll('button').forEach(b => { b.style.borderColor='rgba(0,0,0,0.08)'; b.style.borderWidth='2px'; });
-          btn.style.borderColor = WC[w]; btn.style.borderWidth = '3px';
-          this._currentPoiWorld = w;
-          if (startBtn) {
-            startBtn.style.display = 'block';
-            startBtn.style.background = WC[w];
-            const bonus = poi.bonusWorld === w;
-            startBtn.textContent = bonus
-              ? (lang==='cs'?`🌟 Hrát ${t.worlds[w]} (+5 semínek)`:`🌟 Play ${t.worlds[w]} (+5 seeds)`)
-              : (lang==='cs'?`▶ Hrát ${t.worlds[w]}`:`▶ Play ${t.worlds[w]}`);
-          }
-        };
-        worldBtns.appendChild(btn);
+    overlay.innerHTML = `
+      <div style="background:white;border-radius:24px;padding:20px;max-width:340px;width:100%">
+        <div style="text-align:center;margin-bottom:14px">
+          <span style="font-size:28px">${kindIcon}</span>
+          <div style="font-size:13px;font-weight:700;color:#888;margin-top:4px">${(poi.kind||'').replace(/_/g,' ')}</div>
+          ${bonusBadge}
+        </div>
+        <div style="font-size:12px;font-weight:800;color:var(--green-mid);margin-bottom:8px">${lang==='cs'?'Vyber svět:':'Pick a world:'}</div>
+        <div id="poiModalWorlds" style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:14px"></div>
+        <div style="font-size:12px;font-weight:800;color:var(--green-mid);margin-bottom:8px">${lang==='cs'?'Obtížnost:':'Difficulty:'}</div>
+        <div style="display:flex;gap:6px;margin-bottom:16px">
+          ${diffs.map(d=>`<button data-d="${d.id}" onclick="window._poiDiff('${d.id}')"
+            style="flex:1;padding:10px 4px;border-radius:10px;border:2.5px solid ${d.id===cur?'var(--green-mid)':'rgba(0,0,0,0.08)'};background:${d.id===cur?'var(--green-pale)':'white'};font-family:inherit;font-weight:800;font-size:16px;cursor:pointer;transition:all 0.12s">
+            ${d.emoji}
+          </button>`).join('')}
+        </div>
+        <button id="poiModalStart" onclick="App.startPoiChallenge()"
+          style="display:none;width:100%;padding:14px;border-radius:14px;border:none;color:white;font-family:inherit;font-weight:900;font-size:15px;cursor:pointer;margin-bottom:8px"></button>
+        <button onclick="App.closePoiModal()" style="width:100%;background:none;border:none;color:var(--green-mid);font-weight:700;font-size:14px;cursor:pointer;padding:6px">
+          ${lang==='cs'?'Zavřít':'Close'}
+        </button>
+      </div>`;
+
+    // World buttons
+    const worldGrid = overlay.querySelector('#poiModalWorlds');
+    WORLDS.forEach(w => {
+      const done = (poi.worldsDone || []).includes(w);
+      const btn = document.createElement('button');
+      btn.dataset.w = w;
+      btn.style.cssText = `padding:10px 6px;border-radius:12px;cursor:pointer;font-family:inherit;border:2px solid rgba(0,0,0,0.08);background:${done?WC[w]:'white'};color:${done?'white':'#333'};font-size:22px;font-weight:800;display:flex;flex-direction:column;align-items:center;gap:2px;transition:all 0.15s`;
+      btn.innerHTML = `<span>${WORLD_EMOJIS[w]||'?'}</span>${done?'<span style="font-size:9px;opacity:0.8">✓</span>':''}`;
+      btn.onclick = () => {
+        worldGrid.querySelectorAll('button').forEach(b => { b.style.borderColor='rgba(0,0,0,0.08)'; b.style.borderWidth='2px'; });
+        btn.style.borderColor = WC[w]; btn.style.borderWidth = '3px';
+        this._currentPoiWorld = w;
+        const start = overlay.querySelector('#poiModalStart');
+        if (start) {
+          start.style.display = 'block';
+          start.style.background = WC[w];
+          const bonus = poi.bonusWorld === w;
+          start.textContent = bonus
+            ? (lang==='cs'?`🌟 Hrát ${t.worlds?.[w]||w} (+5 🌱)`:`🌟 Play ${t.worlds?.[w]||w} (+5 🌱)`)
+            : (lang==='cs'?`▶ Hrát ${t.worlds?.[w]||w}`:`▶ Play ${t.worlds?.[w]||w}`);
+        }
+      };
+      worldGrid.appendChild(btn);
+    });
+
+    let selectedDiff = cur;
+    window._poiDiff = (diff) => {
+      selectedDiff = diff;
+      overlay.querySelectorAll('[data-d]').forEach(b => {
+        const active = b.dataset.d === diff;
+        b.style.borderColor = active ? 'var(--green-mid)' : 'rgba(0,0,0,0.08)';
+        b.style.background  = active ? 'var(--green-pale)' : 'white';
       });
-    }
-    if (startBtn) startBtn.style.display = 'none';
-    const pickLabel = document.getElementById('poiPickLabel');
-    if (pickLabel) pickLabel.textContent = lang==='cs' ? 'Vyber svět pro toto místo:' : 'Pick a world to explore here:';
-    sheet.style.transform = 'translateY(0)';
+      if (p) Profiles.update(p.id, { difficulty: diff });
+    };
+
+    document.body.appendChild(overlay);
   },
 
-  closePoiSheet() {
-    const sheet = document.getElementById('poiSheet');
-    if (sheet) sheet.style.transform = 'translateY(100%)';
+  closePoiModal() {
+    document.getElementById('poiModalOverlay')?.remove();
+    window._poiDiff = null;
     this._currentPoi      = null;
     this._currentPoiWorld = null;
   },
+
+  // kept for legacy calls
+  closePoiSheet() { this.closePoiModal(); },
 
   startPoiChallenge() {
     const poi   = this._currentPoi;
     const world = this._currentPoiWorld;
     if (!poi || !world) return;
     Feedback.success();
-    this.closePoiSheet();
+    this.closePoiModal();
     Challenge.open(world, { poi: { ...poi, selectedWorld: world } });
+  },
+
+  // ─── World side panel toggle ───
+  toggleMapSidePanel() {
+    const panel = document.getElementById('mapSidePanel');
+    const back  = document.getElementById('mapSidePanelBack');
+    if (!panel) return;
+    const open = panel.style.transform === 'translateX(0px)' || panel.style.transform === 'translateX(0)';
+    panel.style.transform = open ? 'translateX(110%)' : 'translateX(0)';
+    if (back) back.style.display = open ? 'none' : 'block';
+    const lbl = getLang() === 'cs' ? 'Světy' : 'Worlds';
+    const title = document.getElementById('mapSidePanelTitle');
+    if (title) title.textContent = lbl;
   },
 
   mapRecenter() {

@@ -55,14 +55,6 @@
     </div>
   </button>
 
-  <button onclick="App.goTo('stats')" style="background:white;border-radius:16px;padding:16px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 12px rgba(0,0,0,0.08);border:none;cursor:pointer;transition:transform 0.15s;text-align:left">
-    <span style="font-size:26px">📊</span>
-    <div>
-      <div id="hubStatsLbl" style="font-size:14px;font-weight:900;color:var(--green-deep)">Statistiky</div>
-      <div id="hubStatsSub" style="font-size:10px;color:var(--green-mid);font-weight:700">Přehled aktivity</div>
-    </div>
-  </button>
-
   <button onclick="App.goTo('settings')" style="background:white;border-radius:16px;padding:16px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 12px rgba(0,0,0,0.08);border:none;cursor:pointer;transition:transform 0.15s;text-align:left">
     <span style="font-size:26px">⚙️</span>
     <div>
@@ -71,4 +63,12 @@
     </div>
   </button>
 
+</div>
+
+<!-- Subscribe section (shown when not premium) -->
+<div id="hubSubscribeSection" style="display:none;width:100%;max-width:420px;margin-top:10px">
+  <button onclick="App.openSubscription()" style="width:100%;padding:16px;border-radius:16px;border:2px solid rgba(245,166,35,0.5);background:linear-gradient(135deg,#fffbf0,#fff3d6);color:#8a5200;font-family:inherit;font-weight:800;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">
+    <span style="font-size:20px">⭐</span>
+    <span id="hubSubscribeLbl">Předplatit Premium</span>
+  </button>
 </div>

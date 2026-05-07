@@ -8,10 +8,8 @@
 // ═══════════════════════════════════
 
 const MUSIC_FILES = [
-  'audio/music_garden.mp3',   // drop a proper loop here when available
-  'audio/music_garden.ogg',   // Kenney pizzicato — works on Chrome/Android
+  'audio/music_garden.mp3',   // drop a proper ambient loop here when ready
   'audio/music_calm.mp3',
-  'audio/music_calm.ogg',
 ];
 
 let _ctx = null;

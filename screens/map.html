@@ -1,21 +1,9 @@
-<div class="home-bar">
-  <button class="home-av" id="mapAv" onclick="App.showTab('hub')"></button>
-  <div class="home-bar-info">
-    <div class="home-greeting" id="mapGreeting"></div>
-    <div class="home-name" id="mapName"></div>
-  </div>
-  <div class="home-pills">
-    <div class="streak-pill" onclick="App.goTo('badges')">🔥 <span id="streakNum">0</span></div>
-    <div class="seed-pill" onclick="App.showTab('hub')">🌱 <span id="seedNum">0</span></div>
-  </div>
-</div>
-
-<!-- THE STAGE: egg jar OR Gream depending on growth -->
-<div class="gream-stage" id="greamStage">
+<!-- Full-screen garden stage -->
+<div class="gream-stage" id="greamStage" style="position:absolute;inset:0;height:100%;max-width:100%;border-radius:0;box-shadow:none">
   <div class="gream-bg"></div>
   <div class="gream-floor"></div>
 
-  <!-- Egg jar mode (default for new users, until hatching) -->
+  <!-- Egg jar (pre-hatch) -->
   <div class="home-jar-wrap" id="homeJarWrap">
     <div class="home-jar-glow"></div>
     <div class="home-jar-glass">
@@ -27,51 +15,36 @@
     <div class="home-jar-base"></div>
   </div>
 
-  <!-- Gream sprite mode (after hatching) -->
+  <!-- Gream sprite (after hatch) -->
   <img id="greamSprite" class="gream-sprite" alt="" onclick="App.tapGream()" style="display:none">
   <div class="gream-shadow" id="greamShadow" style="display:none"></div>
-
   <div class="gream-speech" id="greamSpeech"></div>
 </div>
 
-<!-- Gream display name + stage info -->
-<div class="gream-info">
-  <div class="gream-display-name" id="greamDisplayName"></div>
-  <div class="gream-stage-info" id="greamStageInfo"></div>
+<!-- Floating top bar -->
+<div class="home-bar" style="position:absolute;top:calc(var(--sat,0px) + 8px);left:0;right:0;z-index:20;padding:0 16px;box-sizing:border-box">
+  <button class="home-av" id="mapAv" onclick="App.showTab('hub')"></button>
+  <div class="home-bar-info">
+    <div class="home-greeting" id="mapGreeting"></div>
+    <div class="home-name" id="mapName"></div>
+  </div>
+  <div class="home-pills">
+    <div class="streak-pill" onclick="App.goTo('badges')">🔥 <span id="streakNum">0</span></div>
+    <div class="seed-pill" onclick="App.showTab('hub')">🌱 <span id="seedNum">0</span></div>
+  </div>
 </div>
 
-<!-- Compact needs bar (only after hatching) -->
-<div class="needs-bar" id="needsBar" style="display:none"></div>
-
-<!-- Two main actions: Indoor / Outdoor -->
-<div class="home-choices">
-  <button class="home-choice home-choice-indoor" onclick="App.startIndoor()">
-    <span class="home-choice-icon">🏠</span>
-    <div class="home-choice-text">
-      <div class="home-choice-title" id="hcIndoorTitle">Doma klid</div>
-      <div class="home-choice-sub" id="hcIndoorSub">Krátký úkol z domova</div>
-    </div>
-  </button>
-  <button class="home-choice home-choice-outdoor" onclick="App.startOutdoor()">
-    <span class="home-choice-icon">🚶</span>
-    <div class="home-choice-text">
-      <div class="home-choice-title" id="hcOutdoorTitle">Pojďme ven</div>
-      <div class="home-choice-sub" id="hcOutdoorSub">Najdi místa kolem</div>
-    </div>
+<!-- Bottom overlay: Greamík name (tap to rename) + start button -->
+<div style="position:absolute;bottom:calc(var(--sab,0px) + 72px);left:0;right:0;z-index:20;padding:0 20px;box-sizing:border-box;display:flex;flex-direction:column;align-items:center;gap:10px">
+  <div id="greamDisplayName"
+    style="font-size:20px;font-weight:900;color:white;text-shadow:0 1px 6px rgba(0,0,0,0.6);cursor:pointer;text-align:center;padding:4px 12px"
+    onclick="App.promptRenameGream()"></div>
+  <button class="btn-primary" onclick="App.startIndoor()"
+    style="width:100%;max-width:320px;padding:14px 20px;font-size:16px">
+    🏠 <span id="hcIndoorTitle">Doma klid</span>
   </button>
 </div>
 
-<!-- Difficulty quick-picker -->
-<div id="diffQuick" style="display:flex;align-items:center;gap:6px;justify-content:center;margin-top:6px;max-width:420px;width:100%">
-  <span style="font-size:10px;font-weight:700;color:var(--green-mid);opacity:0.7" id="dqLabel">Obtížnost:</span>
-  <button class="dq-btn" data-diff="easy"    onclick="App.setDifficultyFromGarden('easy')"    style="padding:5px 10px;border-radius:50px;border:2px solid rgba(74,138,46,0.2);background:rgba(255,255,255,0.85);font-family:inherit;font-size:11px;font-weight:800;cursor:pointer;color:var(--green-mid);transition:all 0.15s">🟢</button>
-  <button class="dq-btn" data-diff="medium"  onclick="App.setDifficultyFromGarden('medium')"  style="padding:5px 10px;border-radius:50px;border:2px solid rgba(74,138,46,0.2);background:rgba(255,255,255,0.85);font-family:inherit;font-size:11px;font-weight:800;cursor:pointer;color:var(--green-mid);transition:all 0.15s">🟡</button>
-  <button class="dq-btn" data-diff="hard"    onclick="App.setDifficultyFromGarden('hard')"    style="padding:5px 10px;border-radius:50px;border:2px solid rgba(74,138,46,0.2);background:rgba(255,255,255,0.85);font-family:inherit;font-size:11px;font-weight:800;cursor:pointer;color:var(--green-mid);transition:all 0.15s">🔴</button>
-  <button class="dq-btn" data-diff="extreme" onclick="App.setDifficultyFromGarden('extreme')" style="padding:5px 10px;border-radius:50px;border:2px solid rgba(74,138,46,0.2);background:rgba(255,255,255,0.85);font-family:inherit;font-size:11px;font-weight:800;cursor:pointer;color:var(--green-mid);transition:all 0.15s">⚡</button>
-</div>
-
-<!-- Daily counter -->
-<div class="daily-counter" id="dailyCounter" style="display:none">
-  <span id="dailyCountText"></span>
-  <span id="dailyCountdown" style="opacity:0.7;font-size:11px"></span>
-</div>
+<!-- Hidden compat stubs -->
+<div id="dailyCounter" style="display:none"><span id="dailyCountText"></span><span id="dailyCountdown"></span></div>
+<div id="needsBar" style="display:none"></div>
