@@ -18,7 +18,17 @@ const KEY_HINT_CHARGES  = 'gream_hint_charges';     // map { profileId: number }
 // Each skin specifies what it takes to unlock.
 // type = 'avatar' (replaces emoji), 'frame' (border around avatar), 'bg' (background pattern)
 export const SKIN_CATALOG = {
-  // ─── AVATAR SKINS — milestone-only, free ───
+  // ─── GREAM AVATARS — unlocked by having that greamík at stage ≥ 2 ───
+  gream_avatars: [
+    { id: 'gream_lilek',  archetype: 'lilek',  name: { cs: 'Lilek',  en: 'Lilek'  } },
+    { id: 'gream_jiskra', archetype: 'jiskra', name: { cs: 'Jiskra', en: 'Jiskra' } },
+    { id: 'gream_kamen',  archetype: 'kamen',  name: { cs: 'Kámen',  en: 'Kámen'  } },
+    { id: 'gream_srodik', archetype: 'srodik', name: { cs: 'Srdík',  en: 'Srdík'  } },
+    { id: 'gream_vlnka',  archetype: 'vlnka',  name: { cs: 'Vlnka',  en: 'Vlnka'  } },
+    { id: 'gream_atlas',  archetype: 'atlas',  name: { cs: 'Atlas',  en: 'Atlas'  } },
+  ],
+
+  // ─── AVATAR SKINS — milestone-unlocked + purchasable emoji ───
   avatars: [
     { id: 'av_default', emoji: '🧒',  name: { cs: 'Začátečník', en: 'Beginner' }, unlock: { type: 'free' } },
     { id: 'av_egg',    emoji: '🌱',  name: { cs: 'Vajíčko',    en: 'Sprout' },   unlock: { type: 'totalTasks', count: 3 } },
@@ -32,6 +42,13 @@ export const SKIN_CATALOG = {
     { id: 'av_streak7', emoji: '⚡',  name: { cs: 'Týdenní hrdina', en: 'Week Hero' }, unlock: { type: 'streak', count: 7 } },
     { id: 'av_master',  emoji: '🌟',  name: { cs: 'Mistr',      en: 'Master' },   unlock: { type: 'totalTasks', count: 100 } },
     { id: 'av_legend',  emoji: '👑',  name: { cs: 'Legenda',    en: 'Legend' },   unlock: { type: 'totalTasks', count: 300 } },
+    // Purchasable emoji
+    { id: 'av_cat',    emoji: '😺', name: { cs: 'Kočička',       en: 'Cat'    }, cost: 10,  unlock: { type: 'buy' } },
+    { id: 'av_fox',    emoji: '🦊', name: { cs: 'Liška',         en: 'Fox'    }, cost: 10,  unlock: { type: 'buy' } },
+    { id: 'av_frog',   emoji: '🐸', name: { cs: 'Žabka',         en: 'Frog'   }, cost: 15,  unlock: { type: 'buy' } },
+    { id: 'av_alien',  emoji: '👾', name: { cs: 'Mimozemšťan',   en: 'Alien'  }, cost: 20,  unlock: { type: 'buy' } },
+    { id: 'av_robot',  emoji: '🤖', name: { cs: 'Robot',         en: 'Robot'  }, cost: 20,  unlock: { type: 'buy' } },
+    { id: 'av_ninja',  emoji: '🥷', name: { cs: 'Ninja',         en: 'Ninja'  }, cost: 25,  unlock: { type: 'buy' } },
   ],
 
   // ─── FRAMES — bought with eggs ───
@@ -204,6 +221,20 @@ export const Skins = {
     SKIN_CATALOG.frames.forEach(f => { if (f.cost === 0) owned.add(f.id); });
     SKIN_CATALOG.backgrounds.forEach(b => { if (b.cost === 0) owned.add(b.id); });
     return owned;
+  },
+
+  // ─── Buy avatar emoji ───
+  buyAvatar(profileId, id) {
+    const item = SKIN_CATALOG.avatars.find(a => a.id === id && a.unlock?.type === 'buy');
+    if (!item) return { ok: false, reason: 'not-found' };
+    const owned = this.getOwned(profileId);
+    if (owned.has(id)) return { ok: true, reason: 'already-owned' };
+    if (!this.spendSeeds(profileId, item.cost)) return { ok: false, reason: 'no-seeds' };
+    const m = loadMap(KEY_OWNED_COSMETIC);
+    if (!m[profileId]) m[profileId] = [];
+    m[profileId].push(id);
+    saveMap(KEY_OWNED_COSMETIC, m);
+    return { ok: true };
   },
 
   // ─── Buy cosmetic ───

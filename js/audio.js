@@ -137,16 +137,52 @@ function _tryHtmlAudioList(tracks, onSuccess, onFail) {
     if (i >= tracks.length) { onFail(); return; }
     const src = tracks[i++];
     const el = new window.Audio(src);
-    el.loop = true;
+    el.loop = false;  // we handle looping manually for seamless crossfade
     el.volume = 0;
     el.preload = 'auto';
     const p = el.play();
     if (!p) { attempt(); return; }
     p.then(() => {
-      onSuccess(el);
+      onSuccess(el, tracks);
     }).catch(() => attempt());
   };
   attempt();
+}
+
+// ─── Seamless loop: crossfade FADE_MS before track end into a fresh instance ───
+function _attachLoopCrossfade(el, tracks) {
+  let scheduled = false;
+  const handler = () => {
+    if (!el.duration || scheduled) return;
+    const remaining = el.duration - el.currentTime;
+    if (remaining > FADE_MS / 1000 + 0.6) return;
+    scheduled = true;
+    el.removeEventListener('timeupdate', handler);
+
+    // Fade out current
+    _fadeVolume(el, el.volume, 0, () => { try { el.pause(); } catch {} });
+
+    // Start fresh instance and fade in
+    _tryHtmlAudioList(tracks, (newEl) => {
+      if (_musicEl !== el && _musicEl !== null) {
+        // Scene changed during crossfade — don't hijack
+        try { newEl.pause(); } catch {}
+        return;
+      }
+      _musicEl = newEl;
+      _fadeVolume(newEl, 0, TARGET_VOL, null);
+      _attachLoopCrossfade(newEl, tracks);
+    }, () => {
+      // Fallback: restart same element
+      if (_musicEl === el) {
+        el.currentTime = 0;
+        el.play().catch(() => {});
+        scheduled = false;
+        _attachLoopCrossfade(el, tracks);
+      }
+    });
+  };
+  el.addEventListener('timeupdate', handler);
 }
 
 // ─── Stop current music element with optional fade ───
@@ -192,9 +228,10 @@ function _stopCurrent(fade, onDone) {
 
 // ─── HTML Audio (generic fallback list) ───
 function _tryHtmlAudio(onFail) {
-  _tryHtmlAudioList(MUSIC_FILES, (el) => {
+  _tryHtmlAudioList(MUSIC_FILES, (el, tracks) => {
     _musicEl = el;
     _fadeVolume(el, 0, TARGET_VOL, null);
+    _attachLoopCrossfade(el, tracks);
   }, onFail);
 }
 
@@ -210,7 +247,10 @@ export const Audio = {
   onUserGesture() {
     const c = _getCtx();
     if (c?.state === 'suspended') c.resume().catch(() => {});
-    if (_enabled && !_running) this.startMusic();
+    if (_enabled && !_running) {
+      // Use current scene if set, otherwise default to menu music
+      this.switchScene(_currentScene || 'menu');
+    }
   },
 
   startMusic() {
@@ -252,9 +292,10 @@ export const Audio = {
       if (!_enabled) return;
       if (_currentScene !== scene) return; // scene changed again during fade
 
-      _tryHtmlAudioList(tracks, (el) => {
+      _tryHtmlAudioList(tracks, (el, tlist) => {
         _musicEl = el;
         _fadeVolume(el, 0, TARGET_VOL, null);
+        _attachLoopCrossfade(el, tlist);
       }, () => {
         // All MP3s failed — use procedural
         _scheduleChunk();

@@ -382,14 +382,7 @@ window.App = {
 
     // Avatar
     const hubAv = document.getElementById('hubAv');
-    if (hubAv) {
-      if (p.hasPhoto) {
-        const photo = Profiles.getPhoto(p.id);
-        hubAv.innerHTML = photo
-          ? `<img src="${photo}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`
-          : (p.avatar || '🧒');
-      } else { hubAv.textContent = p.avatar || '🧒'; }
-    }
+    if (hubAv) this._applyAvatarToEl(hubAv, p);
     this._setText('hubName', p.name || '');
     this._setText('hubSeedsLbl', cs ? 'Semínka' : 'Seeds');
     this._setText('hubSeeds',    `🌱 ${Skins.getSeeds(p.id)}`);
@@ -746,13 +739,7 @@ window.App = {
 
     // Avatar
     const mapAvEl = document.getElementById('mapAv');
-    if (mapAvEl) {
-      if (fresh.hasPhoto) {
-        const photo = Profiles.getPhoto(fresh.id);
-        if (photo) mapAvEl.innerHTML = `<img src="${photo}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
-        else mapAvEl.textContent = fresh.avatar || '🧒';
-      } else { mapAvEl.textContent = fresh.avatar || '🧒'; }
-    }
+    if (mapAvEl) this._applyAvatarToEl(mapAvEl, fresh);
 
     // Greeting
     this._setText('mapGreeting', Gream.getGreeting(pet, lang));
@@ -1174,6 +1161,36 @@ window.App = {
       if (img.complete) draw();
       else { img.onload = draw; img.onerror = () => {}; }
     });
+  },
+
+  // ─── Render profile avatar: greamík canvas or emoji/photo ───
+  _applyAvatarToEl(el, p) {
+    if (!el || !p) return;
+    const avId = Skins.getEquipped(p.id).avatar;
+    if (avId?.startsWith('gream_')) {
+      const arch = avId.slice(6);
+      const pets = Gream.all(p.id).filter(g => !g.archived && g.archetype === arch && g.stage >= 2);
+      if (pets.length) {
+        const best = pets.reduce((a, b) => b.stage > a.stage ? b : a);
+        const stage = Math.min(best.stage, 4);
+        el.innerHTML = '';
+        el.style.overflow = 'hidden';
+        const size = el.offsetWidth || 44;
+        const cv = document.createElement('canvas');
+        cv.setAttribute('data-sprite-sheet', `img/greamici/${arch}_${stage}.png`);
+        cv.setAttribute('data-sprite-mood', 'happy');
+        cv.setAttribute('width', size); cv.setAttribute('height', size);
+        cv.style.cssText = `width:${size}px;height:${size}px`;
+        el.appendChild(cv);
+        this._initSpriteCanvases(el);
+        return;
+      }
+    }
+    if (p.hasPhoto) {
+      const photo = Profiles.getPhoto(p.id);
+      if (photo) { el.innerHTML = `<img src="${photo}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`; return; }
+    }
+    el.textContent = p.avatar || '🧒';
   },
 
   _applyGreamSprite(spriteEl, pet) {
@@ -3297,36 +3314,103 @@ window.App = {
     const owned    = Skins.getOwned(p.id);
 
     if (tab === 'avatars') {
-      SKIN_CATALOG.avatars.forEach(skin => {
-        const isUnlocked = skin.unlock.type === 'free' || unlocked.has(skin.id);
-        const isEquipped = equipped.avatar === skin.id;
-        const item = document.createElement('button');
-        item.style.cssText = `
-          display:flex; flex-direction:column; align-items:center; gap:6px;
-          padding:12px 6px 8px; border-radius:14px;
-          background:${isEquipped ? 'linear-gradient(135deg,#cbe3a0,#a8cd7c)' : (isUnlocked ? 'rgba(255,255,255,0.85)' : 'rgba(0,0,0,0.04)')};
-          cursor:${isUnlocked ? 'pointer' : 'default'};
-          opacity:${isUnlocked ? '1' : '0.55'};
-          font-family:inherit;
-          border:2px solid ${isEquipped ? 'var(--green-mid)' : 'transparent'};
-          min-height:120px; position:relative;
-        `;
-        const unlockTxt = !isUnlocked ? `<div style="font-size:9px;color:var(--green-mid);font-weight:700;line-height:1.2;margin-top:auto">${Skins.unlockText(skin, lang)}</div>` : '';
-        item.innerHTML = `
-          <span style="font-size:32px;line-height:1">${skin.emoji}</span>
-          <div style="font-size:10px;font-weight:800;color:var(--green-deep);text-align:center;line-height:1.15;flex-shrink:0">${skin.name?.[lang] || skin.id}</div>
-          ${unlockTxt}
-          ${isEquipped ? `<span style="position:absolute;top:4px;right:6px;font-size:12px">✓</span>` : ''}
-        `;
+      const cs = lang === 'cs';
+      const seeds = Skins.getSeeds(p.id);
+      const unlockedArchetypes = new Set(
+        Gream.all(p.id).filter(g => !g.archived && g.stage >= 2 && g.archetype).map(g => g.archetype)
+      );
+      const bestStage = {};
+      Gream.all(p.id).filter(g => !g.archived && g.stage >= 2 && g.archetype).forEach(g => {
+        if (!bestStage[g.archetype] || g.stage > bestStage[g.archetype]) bestStage[g.archetype] = g.stage;
+      });
+
+      grid.style.cssText = 'max-width:420px;margin:0 auto;display:flex;flex-direction:column;gap:0';
+
+      // Section 1: Greamík portraits
+      const hdr1 = document.createElement('div');
+      hdr1.style.cssText = 'font-size:11px;font-weight:800;color:#888;letter-spacing:.5px;padding:0 4px 8px;text-transform:uppercase';
+      hdr1.textContent = cs ? '🐾 Tvoji Greamíci' : '🐾 Your Greams';
+      grid.appendChild(hdr1);
+
+      const gGrid = document.createElement('div');
+      gGrid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(85px,1fr));gap:8px;margin-bottom:18px';
+      grid.appendChild(gGrid);
+
+      const AV = 56;
+      SKIN_CATALOG.gream_avatars.forEach(ga => {
+        const arch = ga.archetype;
+        const isUnlocked = unlockedArchetypes.has(arch);
+        const isEquipped = equipped.avatar === ga.id;
+        const stage = Math.min(bestStage[arch] || 2, 4);
+        const btn = document.createElement('button');
+        btn.style.cssText = `display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 6px 8px;border-radius:14px;font-family:inherit;background:${isEquipped?'linear-gradient(135deg,#cbe3a0,#a8cd7c)':(isUnlocked?'rgba(255,255,255,0.9)':'rgba(0,0,0,0.04)')};border:2px solid ${isEquipped?'var(--green-mid)':'transparent'};cursor:${isUnlocked?'pointer':'default'};opacity:${isUnlocked?'1':'0.4'};position:relative`;
         if (isUnlocked) {
-          item.onclick = () => {
-            Feedback.pop();
-            Skins.setEquipped(p.id, 'avatar', skin.id);
-            Profiles.update(p.id, { avatar: skin.emoji });
-            this._renderWardrobeGrid('avatars');
-          };
+          const cv = document.createElement('canvas');
+          cv.setAttribute('data-sprite-sheet', `img/greamici/${arch}_${stage}.png`);
+          cv.setAttribute('data-sprite-mood', 'happy');
+          cv.setAttribute('width', AV); cv.setAttribute('height', AV);
+          cv.style.cssText = `width:${AV}px;height:${AV}px;border-radius:50%`;
+          btn.appendChild(cv);
+        } else {
+          const ph = document.createElement('div');
+          ph.style.cssText = `width:${AV}px;height:${AV}px;border-radius:50%;background:rgba(0,0,0,0.08);display:flex;align-items:center;justify-content:center;font-size:22px`;
+          ph.textContent = '🔒';
+          btn.appendChild(ph);
         }
-        grid.appendChild(item);
+        const lbl = document.createElement('div');
+        lbl.style.cssText = 'font-size:10px;font-weight:800;color:var(--green-deep);text-align:center';
+        lbl.textContent = ga.name[lang] || ga.name.cs;
+        btn.appendChild(lbl);
+        if (isEquipped) { const c = document.createElement('span'); c.style.cssText='position:absolute;top:4px;right:6px;font-size:11px'; c.textContent='✓'; btn.appendChild(c); }
+        if (isUnlocked) btn.onclick = () => {
+          Feedback.pop();
+          Skins.setEquipped(p.id, 'avatar', ga.id);
+          Profiles.update(p.id, { avatar: '🐾' });
+          this._applyAvatarToEl(document.getElementById('hubAv'), Profiles.active());
+          this._applyAvatarToEl(document.getElementById('mapAv'), Profiles.active());
+          this._renderWardrobeGrid('avatars');
+        };
+        gGrid.appendChild(btn);
+      });
+      this._initSpriteCanvases(gGrid);
+
+      // Section 2: Emoji
+      const hdr2 = document.createElement('div');
+      hdr2.style.cssText = 'font-size:11px;font-weight:800;color:#888;letter-spacing:.5px;padding:0 4px 8px;text-transform:uppercase';
+      hdr2.textContent = '🎭 Emoji';
+      grid.appendChild(hdr2);
+
+      const eGrid = document.createElement('div');
+      eGrid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(85px,1fr));gap:8px';
+      grid.appendChild(eGrid);
+
+      SKIN_CATALOG.avatars.forEach(skin => {
+        const isBuy = skin.unlock?.type === 'buy';
+        const isUnlocked = isBuy ? owned.has(skin.id) : (skin.unlock.type === 'free' || unlocked.has(skin.id));
+        const isEquipped = equipped.avatar === skin.id;
+        const canAfford = seeds >= (skin.cost || 0);
+        const btn = document.createElement('button');
+        btn.style.cssText = `display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 6px 8px;border-radius:14px;font-family:inherit;background:${isEquipped?'linear-gradient(135deg,#cbe3a0,#a8cd7c)':(isUnlocked?'rgba(255,255,255,0.9)':'rgba(0,0,0,0.04)')};border:2px solid ${isEquipped?'var(--green-mid)':'transparent'};cursor:pointer;position:relative;opacity:${(isUnlocked||isBuy)?'1':'0.55'}`;
+        const costTxt = isBuy && !isUnlocked
+          ? `<div style="font-size:10px;font-weight:800;color:${canAfford?'var(--orange)':'#aaa'}">🌱 ${skin.cost}</div>`
+          : (!isUnlocked ? `<div style="font-size:9px;color:var(--green-mid);font-weight:700">${Skins.unlockText(skin, lang)}</div>` : '');
+        btn.innerHTML = `<span style="font-size:30px;line-height:1">${skin.emoji}</span><div style="font-size:10px;font-weight:800;color:var(--green-deep);text-align:center;line-height:1.2">${skin.name?.[lang]||skin.id}</div>${costTxt}${isEquipped?'<span style="position:absolute;top:4px;right:6px;font-size:11px">✓</span>':''}`;
+        btn.onclick = () => {
+          if (isEquipped) return;
+          if (isBuy && !isUnlocked) {
+            if (!canAfford) { Feedback.error(); return; }
+            if (!Skins.buyAvatar(p.id, skin.id).ok) { Feedback.error(); return; }
+            Feedback.coin();
+            this._setText('wardSeeds', Skins.getSeeds(p.id));
+          } else if (!isUnlocked) { Feedback.error(); return; }
+          Feedback.pop();
+          Skins.setEquipped(p.id, 'avatar', skin.id);
+          Profiles.update(p.id, { avatar: skin.emoji });
+          this._applyAvatarToEl(document.getElementById('hubAv'), Profiles.active());
+          this._applyAvatarToEl(document.getElementById('mapAv'), Profiles.active());
+          this._renderWardrobeGrid('avatars');
+        };
+        eGrid.appendChild(btn);
       });
     } else if (tab === 'frames' || tab === 'bg') {
       const items = tab === 'frames' ? SKIN_CATALOG.frames : SKIN_CATALOG.backgrounds;
