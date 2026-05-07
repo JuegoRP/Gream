@@ -2204,7 +2204,7 @@ window.App = {
   setLang(l) {
     setLang(l);
     this._syncLangBtns();
-    const currentScreen = document.querySelector('.screen.active')?.id;
+    const currentScreen = document.querySelector('.screen:not(.hidden)')?.id;
     if (currentScreen === 'screen-onboarding') {
       this.renderOnboarding();
     }

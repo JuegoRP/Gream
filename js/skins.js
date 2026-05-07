@@ -70,10 +70,10 @@ export const SKIN_CATALOG = {
 };
 
 // ─── Eggs earned per event ───
-const SEEDS_PER_TASK   = 5;
-const SEEDS_PER_BADGE  = 25;
-const SEEDS_PER_STREAK = 10;
-const SEEDS_FIRST_OUTDOOR = 15; // bonus first time going outside in a day
+const SEEDS_PER_TASK   = 2;
+const SEEDS_PER_BADGE  = 10;
+const SEEDS_PER_STREAK = 5;
+const SEEDS_FIRST_OUTDOOR = 8; // bonus first time going outside in a day
 
 function loadMap(key) {
   try { return JSON.parse(localStorage.getItem(key) || '{}'); }

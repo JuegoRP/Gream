@@ -514,46 +514,27 @@ export const Challenge = {
       return;
     }
 
-    // Choice wrong answer: show correct answer banner, require tap to continue
+    // Choice wrong answer: deduct seeds, kick back to home, try again
     if (!result.passed && check?.type === 'choice') {
       Feedback.error();
       const card = document.querySelector('.card');
       if (card) Feedback.flashError(card);
-      this._lastScore = 30;
+      this._validating = false;
 
-      const correctVals = check.correct
-        ? (Array.isArray(check.correct) ? check.correct.map(String) : [String(check.correct)])
-        : [];
-
-      // Highlight correct button green
-      document.querySelectorAll('#screen-challenge .btn-choice').forEach(btn => {
-        const t = btn.textContent.trim();
-        if (correctVals.some(cv => cv.toLowerCase() === t.toLowerCase())) {
-          btn.style.background = 'rgba(74,138,46,0.2)';
-          btn.style.borderColor = 'var(--green-mid)';
-          btn.style.color = 'var(--green-deep)';
-        }
-      });
-
-      if (card && correctVals.length) {
-        const banner = document.createElement('div');
-        banner.style.cssText = 'margin-top:12px;padding:10px 14px;background:rgba(74,138,46,0.1);border:2px solid rgba(74,138,46,0.3);border-radius:12px;text-align:center;font-size:13px;font-weight:700;color:var(--green-deep)';
-        banner.textContent = lang === 'cs' ? `✓ Správná odpověď: ${correctVals[0]}` : `✓ Correct answer: ${correctVals[0]}`;
-        const continueBtn = document.createElement('button');
-        continueBtn.className = 'btn-primary';
-        continueBtn.style.cssText = 'width:100%;margin-top:10px';
-        continueBtn.textContent = lang === 'cs' ? 'Rozumím →' : 'Got it →';
-        continueBtn.onclick = () => {
-          continueBtn.disabled = true;
-          this._validating = false;
-          this._completeStep();
-        };
-        card.appendChild(banner);
-        card.appendChild(continueBtn);
-      } else {
-        // No correct answer text available — auto-advance after short delay
-        setTimeout(() => { this._validating = false; this._completeStep(); }, 1200);
+      const WRONG_PENALTY = 3;
+      const p = (await import('./profiles.js').then(m => m.Profiles)).active();
+      if (p) {
+        const { Skins } = await import('./skins.js');
+        Skins.spendSeeds(p.id, WRONG_PENALTY);
       }
+      const msg = lang === 'cs'
+        ? `❌ Špatně! −${WRONG_PENALTY} semínka. Zkus jinou otázku.`
+        : `❌ Wrong! −${WRONG_PENALTY} seeds. Try a different question.`;
+
+      setTimeout(() => {
+        this._showToast(msg);
+        setTimeout(() => Router.show('home'), 1200);
+      }, 300);
       return;
     }
 
@@ -804,13 +785,14 @@ export const Challenge = {
   },
   _renderGreamGrowth(greamResult) {
     if (!greamResult || !greamResult.gream) return;
+    // Only show banner on actual evolution — not on every step
+    if (!greamResult.evolved) return;
+    // Archetype reveal overlay handles the hatching moment separately
+    if (greamResult.archetypeResolved) return;
+
     const lang = localStorage.getItem('gream_lang') || 'cs';
     const card = document.querySelector('.sd-card') || document.querySelector('.card');
     if (!card) return;
-
-    // Don't render normal growth banner if archetype was just revealed
-    // (the _showArchetypeReveal overlay handles that moment)
-    if (greamResult.archetypeResolved) return;
 
     const banner = document.createElement('div');
     banner.style.cssText = `

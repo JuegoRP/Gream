@@ -607,9 +607,9 @@ body.bg-starry { background:linear-gradient(180deg,#0d1b3d,#2c3e7a 50%,#4a5fa3);
   pointer-events:none; z-index:1;
 }
 .gream-sprite {
-  position:absolute; left:50%; bottom:30px;
+  position:absolute; left:50%; bottom:22px;
   transform:translateX(-50%);
-  width:160px; height:160px;
+  width:90px; height:90px;
   image-rendering: pixelated;
   cursor:pointer;
   animation: greamIdle 2.4s ease-in-out infinite;
@@ -618,9 +618,9 @@ body.bg-starry { background:linear-gradient(180deg,#0d1b3d,#2c3e7a 50%,#4a5fa3);
 }
 /* Canvas-based sprite (sprite sheet mode) */
 #greamSpriteCanvas {
-  position:absolute; left:50%; bottom:30px;
+  position:absolute; left:50%; bottom:22px;
   transform:translateX(-50%);
-  width:160px; height:160px;
+  width:90px; height:90px;
   image-rendering: pixelated;
   cursor:pointer;
   animation: greamIdle 2.4s ease-in-out infinite;
@@ -658,9 +658,9 @@ body.bg-starry { background:linear-gradient(180deg,#0d1b3d,#2c3e7a 50%,#4a5fa3);
 }
 
 .gream-shadow {
-  position:absolute; left:50%; bottom:24px;
+  position:absolute; left:50%; bottom:18px;
   transform:translateX(-50%);
-  width:100px; height:14px;
+  width:60px; height:10px;
   background:radial-gradient(ellipse, rgba(0,0,0,0.3), transparent);
   pointer-events:none;
   z-index: 2;
