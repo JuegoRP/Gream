@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "additionalDirectories": [
+      "/Users/roman.pavlorek/.claude/projects/-Users-roman-pavlorek-Documents-Hra-Mobil-gream/memory/"
+    ],
+    "deny": [
+      "Read(/Users/roman.pavlorek/Desktop/*)",
+      "Write(/Users/roman.pavlorek/Desktop/*)",
+      "Read(/Users/roman.pavlorek/Downloads/*)",
+      "Write(/Users/roman.pavlorek/Downloads/*)",
+      "Read(/Users/roman.pavlorek/Library/*)",
+      "Write(/Users/roman.pavlorek/Library/*)",
+      "Read(/Users/roman.pavlorek/Documents/Hra/Mobil/gream/../../*)",
+      "Write(/Users/roman.pavlorek/Documents/Hra/Mobil/gream/../../*)"
+    ]
+  }
+}

@@ -962,14 +962,12 @@ window.App = {
     const bar = document.getElementById('needsBar');
     if (!bar || !pet) return;
     const lang = getLang();
-    const mood = pet.mood || 'neutral';
+    const mood = pet.mood === 'sad' ? 'sad' : 'happy';
     const moodData = {
-      happy:   { emoji: '😊', color: 'var(--green-mid)', label: lang === 'cs' ? 'Šťastný' : 'Happy' },
-      neutral: { emoji: '😐', color: '#999', label: lang === 'cs' ? 'Klidný' : 'Calm' },
-      sad:     { emoji: '😢', color: '#6a9fe0', label: lang === 'cs' ? 'Smutný' : 'Sad' },
-      serious: { emoji: '😠', color: '#e07060', label: lang === 'cs' ? 'Nesvůj' : 'Off' },
+      happy: { emoji: '😊', color: 'var(--green-mid)', label: lang === 'cs' ? 'Šťastný' : 'Happy' },
+      sad:   { emoji: '😢', color: '#6a9fe0',          label: lang === 'cs' ? 'Smutný'  : 'Sad'   },
     };
-    const d = moodData[mood] || moodData.neutral;
+    const d = moodData[mood];
     bar.innerHTML = `
       <div style="display:flex;align-items:center;gap:6px;justify-content:center;padding:4px 12px;border-radius:50px;background:rgba(255,255,255,0.7);border:1.5px solid ${d.color}22;cursor:default" onclick="App.tapGream()">
         <span style="font-size:16px">${d.emoji}</span>
@@ -1031,11 +1029,11 @@ window.App = {
             data-sprite-mood="${isActive ? (g.mood || 'happy') : 'neutral'}"
             width="90" height="90"
             style="width:90px;height:90px;image-rendering:pixelated;display:block;
-              ${isActive ? 'animation:greamIdle 2.4s ease-in-out infinite;' : ''}
+              ${isActive ? 'animation:greamWalkBlock 1.1s ease-in-out infinite;' : ''}
               filter:drop-shadow(0 4px 8px rgba(0,0,0,${isActive ? '0.3' : '0.15'}));
               ${g.isShiny ? 'filter:drop-shadow(0 4px 8px rgba(255,215,0,0.5));' : ''}
             "></canvas>
-          <div style="position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,${isActive ? '0.22' : '0.1'});width:${isActive ? 60 : 44}px;height:${isActive ? 10 : 7}px;border-radius:50%"></div>
+          <div style="position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,${isActive ? '0.22' : '0.1'});width:${isActive ? 60 : 44}px;height:${isActive ? 10 : 7}px;border-radius:50%;${isActive ? 'animation:greamWalkShadow 1.1s ease-in-out infinite;' : ''}"></div>
         `;
       }
 

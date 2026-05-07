@@ -206,6 +206,10 @@ export const Gream = {
               || list.find(x => !x.archived);
     if (!g) return null;
 
+    // Migrate old data that may be missing these fields
+    if (!g.hp) g.hp = { water:50, sun:50, food:50, love:50, color:50, space:50 };
+    if (!g.taskByWorld) g.taskByWorld = {};
+
     // Map world to need
     const needMap = {
       nature: 'water', logic: 'sun', language: 'food',
@@ -283,6 +287,7 @@ export const Gream = {
     let changed = false;
     for (const g of list) {
       if (g.archived) continue;
+      if (!g.hp) g.hp = { water:50, sun:50, food:50, love:50, color:50, space:50 };
       const elapsed = Date.now() - (g.lastFedAt || g.createdAt);
       // Decay each need by 1 per 6 hours
       const decayPoints = Math.floor(elapsed / (6 * 60 * 60 * 1000));
@@ -297,9 +302,8 @@ export const Gream = {
       const totalHp = Object.values(g.hp).reduce((a,b) => a+b, 0);
       const avgHp   = totalHp / Object.keys(g.hp).length;
       const oldMood = g.mood;
-      if (elapsed > SAD_AFTER_MS && avgHp < 30) g.mood = 'sad';
-      else if (avgHp > 70)                       g.mood = 'happy';
-      else                                       g.mood = 'neutral';
+      if (avgHp < 40) g.mood = 'sad';
+      else            g.mood = 'happy';
       if (oldMood !== g.mood) changed = true;
     }
     if (changed) save(data);
@@ -405,26 +409,20 @@ export const Gream = {
 
     const lines = {
       cs: {
-        morning_happy:   ['Dobré ráno!', 'Ahoj! Pojďme něco zažít.', 'Jsi vzhůru! Já taky.'],
-        morning_neutral: ['Brzo ráno...', 'Dobré ráno. Pojďme dnes ven?'],
-        morning_sad:     ['Dlouho jsi nepřišel...', 'Chyběl jsi mi.'],
-        evening_happy:   ['Dnes byl super den!', 'Skvělý den! Děkuju.'],
-        evening_neutral: ['Dobrý večer.', 'Klidný večer.'],
-        evening_sad:     ['Jsem trochu smutný...', 'Můžeme něco udělat?'],
-        day_happy:       ['Ahoj!', 'Co kdybychom šli ven?', 'Jsem připravený!'],
-        day_neutral:     ['Co budeme dělat?', 'Ahoj, máš čas?'],
-        day_sad:         ['Připadám si osamělý...', 'Pojď si se mnou hrát.']
+        morning_happy: ['Dobré ráno!', 'Ahoj! Pojďme něco zažít.', 'Jsi vzhůru! Já taky.', 'Dobré ráno. Pojďme dnes ven?'],
+        morning_sad:   ['Dlouho jsi nepřišel...', 'Chyběl jsi mi.'],
+        evening_happy: ['Dnes byl super den!', 'Skvělý den! Děkuju.', 'Dobrý večer!'],
+        evening_sad:   ['Jsem trochu smutný...', 'Můžeme něco udělat?'],
+        day_happy:     ['Ahoj!', 'Co kdybychom šli ven?', 'Jsem připravený!', 'Co budeme dělat?'],
+        day_sad:       ['Připadám si osamělý...', 'Pojď si se mnou hrát.']
       },
       en: {
-        morning_happy:   ["Good morning!", "Hi! Let's do something.", "You're up!"],
-        morning_neutral: ["Early morning...", "Morning. Wanna go outside?"],
-        morning_sad:     ["You haven't been around...", "I missed you."],
-        evening_happy:   ["What a great day!", "Today was amazing. Thanks!"],
-        evening_neutral: ["Good evening.", "Quiet evening."],
-        evening_sad:     ["I'm a bit sad...", "Can we do something?"],
-        day_happy:       ["Hi!", "Should we go outside?", "I'm ready!"],
-        day_neutral:     ["What shall we do?", "Hey, got a moment?"],
-        day_sad:         ["Feeling lonely...", "Come play with me."]
+        morning_happy: ["Good morning!", "Hi! Let's do something.", "You're up!", "Morning. Wanna go outside?"],
+        morning_sad:   ["You haven't been around...", "I missed you."],
+        evening_happy: ["What a great day!", "Today was amazing. Thanks!", "Good evening!"],
+        evening_sad:   ["I'm a bit sad...", "Can we do something?"],
+        day_happy:     ["Hi!", "Should we go outside?", "I'm ready!", "What shall we do?"],
+        day_sad:       ["Feeling lonely...", "Come play with me."]
       }
     };
     const time = isMorning ? 'morning' : isEvening ? 'evening' : 'day';

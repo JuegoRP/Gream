@@ -537,13 +537,14 @@ export const Challenge = {
 
       const WRONG_PENALTY = 3;
       const p = (await import('./profiles.js').then(m => m.Profiles)).active();
+      let penaltyApplied = false;
       if (p) {
         const { Skins } = await import('./skins.js');
-        Skins.spendSeeds(p.id, WRONG_PENALTY);
+        penaltyApplied = Skins.spendSeeds(p.id, WRONG_PENALTY);
       }
       const msg = lang === 'cs'
-        ? `❌ Špatně! −${WRONG_PENALTY} semínka. Zkus jinou otázku.`
-        : `❌ Wrong! −${WRONG_PENALTY} seeds. Try a different question.`;
+        ? penaltyApplied ? `❌ Špatně! −${WRONG_PENALTY} semínka. Zkus jinou otázku.` : `❌ Špatně! Zkus jinou otázku.`
+        : penaltyApplied ? `❌ Wrong! −${WRONG_PENALTY} seeds. Try a different question.` : `❌ Wrong! Try a different question.`;
 
       setTimeout(() => {
         this._showToast(msg);
@@ -633,6 +634,7 @@ export const Challenge = {
       poiName: this._targetPOI?.name || null
     };
     const result    = Profiles.completeTask(p.id, this._world, this._currentStep, meta);
+    if (!result) return;
     const fresh     = Profiles.active();
     const newCount  = (fresh?.worldTasks?.[this._world] || 0);
     const evolved   = Badges.didEvolve(prevCount, newCount);
