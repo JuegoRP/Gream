@@ -88,11 +88,11 @@ export const Audio = {
     try { _enabled = localStorage.getItem('gream_sound') !== 'off'; } catch {}
   },
 
-  // Called on first user interaction — starts music if not already playing
+  // Called on every touch/click — starts or retries music until it's actually playing
   onUserGesture() {
-    if (_enabled && (!_running || !_musicEl)) {
-      this.switchScene(_currentScene || 'menu');
-    }
+    if (!_enabled) return;
+    if (_musicEl && !_musicEl.paused) return; // already playing, ignore
+    this.switchScene(_currentScene || 'menu');
   },
 
   switchScene(scene) {

@@ -42,6 +42,12 @@ function cleanupCallbacks(prevScreen, nextScreen) {
   if (prevScreen === 'map-view' && nextScreen !== 'map-view') {
     import('./mapview.js').then(m => m.MapView.destroy()).catch(() => {});
   }
+  // Clean up tutorial overlay/ring when leaving the garden (they live in body, not screenContainer)
+  if (prevScreen === 'home' || prevScreen === 'map') {
+    document.getElementById('tutOverlay')?.remove();
+    document.getElementById('tutRing')?.remove();
+    document.querySelector('.tut-card')?.remove();
+  }
   // Clear stale Challenge state when leaving challenge to non-challenge screen
   // (but keep state if going to step-done / badge-earned / parent-confirm — those are part of the flow)
   if (prevScreen === 'challenge') {

@@ -235,8 +235,9 @@ window.App = {
     console.log('[Gream] Init starting...');
     Audio.init();
     // Resume AudioContext and start music on first user gesture (required for iOS)
-    document.addEventListener('touchstart', () => Audio.onUserGesture(), { once: true, passive: true });
-    document.addEventListener('click',      () => Audio.onUserGesture(), { once: true, passive: true });
+    // Persistent listeners — retry on every touch until music is actually playing
+    document.addEventListener('touchstart', () => Audio.onUserGesture(), { passive: true });
+    document.addEventListener('click',      () => Audio.onUserGesture(), { passive: true });
     this._syncLangBtns();
     const profiles = Profiles.all();
     const active   = Profiles.active();
@@ -2330,6 +2331,7 @@ window.App = {
         }
         // Fixed-position ring that doesn't disturb target layout
         ringEl = document.createElement('div');
+        ringEl.id = 'tutRing';
         const PAD = 8;
         ringEl.style.cssText = `position:fixed;pointer-events:none;z-index:5001;border-radius:18px;border:3px solid var(--green-mid);box-shadow:0 0 0 9999px rgba(0,0,0,0.6),0 0 20px rgba(74,138,46,0.5);transition:all 0.25s;left:${r.left-PAD}px;top:${r.top-PAD}px;width:${r.width+PAD*2}px;height:${r.height+PAD*2}px`;
         document.body.appendChild(ringEl);
