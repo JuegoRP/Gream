@@ -1,16 +1,26 @@
 // ═══════════════════════════════════
-//  GREAM — audio.js  v1
+//  GREAM — audio.js  v2
 //  Background music: HTML Audio with MP3 files when available,
 //  procedural WebAudio ambient loop as fallback.
-//
-//  To add real music: drop MP3 files into /audio/ and list in MUSIC_FILES.
-//  Recommended free sources (CC): incompetech.com (CC BY), freemusicarchive.org
+//  Scene-based switching with crossfade (0.8s).
 // ═══════════════════════════════════
 
+// Scene → ordered list of tracks to try (first available wins)
+const SCENE_MUSIC = {
+  menu:      ['audio/music_menu.mp3',      'audio/music_garden.ogg'],
+  challenge: ['audio/music_challenge.mp3', 'audio/music_calm.ogg'],
+  outdoor:   ['audio/music_outdoor.mp3',   'audio/music_garden.ogg'],
+};
+
+// Fallback: keep old generic list for procedural fallback
 const MUSIC_FILES = [
   'audio/music_garden.ogg',
   'audio/music_calm.ogg',
 ];
+
+const FADE_MS      = 800;   // crossfade duration
+const FADE_TICK_MS = 40;    // interval for volume stepping
+const TARGET_VOL   = 0.25;  // normal playback volume
 
 let _ctx = null;
 let _gainNode = null;
@@ -19,6 +29,8 @@ let _procTimer = null;
 let _procStep = 0;
 let _running = false;
 let _enabled = true;
+let _currentScene = null;
+let _fadingOut = false;  // prevents double-fade
 
 try {
   const stored = localStorage.getItem('gream_sound');
@@ -46,12 +58,10 @@ function _masterGain() {
 }
 
 // ─── Procedural ambient garden loop ───
-// Gentle C-pentatonic arpeggio at 72 BPM.
-// Each call schedules 8 notes, then reschedules itself.
 const _SCALE   = [261.63, 293.66, 329.63, 392.00, 440.00, 523.25, 587.33, 659.25];
 const _PATTERN = [0, 2, 4, 5, 4, 2, 0, 2,  4, 5, 6, 5, 4, 2, 3, 0];
-const _PAD_FREQS = [[130.81, 164.81, 196.00], [146.83, 185.00, 220.00]]; // C3 and D3 chords
-const _STEP_DUR = 0.26; // seconds per note (~72 BPM sixteenth)
+const _PAD_FREQS = [[130.81, 164.81, 196.00], [146.83, 185.00, 220.00]];
+const _STEP_DUR = 0.26;
 
 function _scheduleChunk() {
   if (!_running || !_enabled) return;
@@ -62,7 +72,6 @@ function _scheduleChunk() {
   const now = c.currentTime;
   const chunkLen = 8;
 
-  // Melody notes
   for (let i = 0; i < chunkLen; i++) {
     const t = now + i * _STEP_DUR;
     const freq = _SCALE[_PATTERN[(_procStep + i) % _PATTERN.length]];
@@ -78,7 +87,6 @@ function _scheduleChunk() {
     osc.stop(t + _STEP_DUR);
   }
 
-  // Soft pad chord every 8 steps
   const padChord = _PAD_FREQS[Math.floor(_procStep / chunkLen) % _PAD_FREQS.length];
   padChord.forEach(freq => {
     const osc = c.createOscillator();
@@ -95,8 +103,6 @@ function _scheduleChunk() {
   });
 
   _procStep = (_procStep + chunkLen) % (_PATTERN.length * 2);
-
-  // Reschedule with slight overlap to avoid gaps
   const delay = Math.max(0, chunkLen * _STEP_DUR * 1000 - 80);
   _procTimer = setTimeout(_scheduleChunk, delay);
 }
@@ -106,22 +112,90 @@ function _stopProcedural() {
   _procTimer = null;
 }
 
-// ─── HTML Audio (MP3 files) ───
-function _tryHtmlAudio(onFail) {
-  let tried = 0;
-  const attempt = (i) => {
-    if (i >= MUSIC_FILES.length) { onFail(); return; }
-    const el = new window.Audio(MUSIC_FILES[i]);
+// ─── Fade helper: linearly interpolate element volume from current to target over FADE_MS ───
+function _fadeVolume(el, fromVol, toVol, onDone) {
+  if (!el) { onDone?.(); return; }
+  const steps = Math.ceil(FADE_MS / FADE_TICK_MS);
+  const delta = (toVol - fromVol) / steps;
+  let step = 0;
+  el.volume = Math.max(0, Math.min(1, fromVol));
+  const tick = setInterval(() => {
+    step++;
+    el.volume = Math.max(0, Math.min(1, fromVol + delta * step));
+    if (step >= steps) {
+      clearInterval(tick);
+      el.volume = Math.max(0, Math.min(1, toVol));
+      onDone?.();
+    }
+  }, FADE_TICK_MS);
+}
+
+// ─── Try to play tracks in order, call onFail if all fail ───
+function _tryHtmlAudioList(tracks, onSuccess, onFail) {
+  let i = 0;
+  const attempt = () => {
+    if (i >= tracks.length) { onFail(); return; }
+    const src = tracks[i++];
+    const el = new window.Audio(src);
     el.loop = true;
-    el.volume = 0.25;
+    el.volume = 0;
     el.preload = 'auto';
     const p = el.play();
-    if (!p) { onFail(); return; }
+    if (!p) { attempt(); return; }
     p.then(() => {
-      _musicEl = el;
-    }).catch(() => attempt(i + 1));
+      onSuccess(el);
+    }).catch(() => attempt());
   };
-  attempt(0);
+  attempt();
+}
+
+// ─── Stop current music element with optional fade ───
+function _stopCurrent(fade, onDone) {
+  const el = _musicEl;
+  _stopProcedural();
+
+  if (!el) {
+    // Stop procedural gain
+    if (_gainNode) {
+      const c = _getCtx();
+      if (c) {
+        _gainNode.gain.setValueAtTime(_gainNode.gain.value, c.currentTime);
+        _gainNode.gain.linearRampToValueAtTime(0, c.currentTime + (fade ? FADE_MS / 1000 : 0.1));
+        setTimeout(() => {
+          try { _gainNode.disconnect(); } catch {}
+          _gainNode = null;
+          onDone?.();
+        }, fade ? FADE_MS + 100 : 200);
+      } else {
+        onDone?.();
+      }
+    } else {
+      onDone?.();
+    }
+    return;
+  }
+
+  _musicEl = null;
+
+  if (fade) {
+    _fadeVolume(el, el.volume, 0, () => {
+      el.pause();
+      el.currentTime = 0;
+      onDone?.();
+    });
+  } else {
+    el.pause();
+    el.currentTime = 0;
+    onDone?.();
+  }
+}
+
+// ─── HTML Audio (generic fallback list) ───
+function _tryHtmlAudio(onFail) {
+  _tryHtmlAudioList(MUSIC_FILES, (el) => {
+    _musicEl = el;
+    _fadeVolume(el, 0, TARGET_VOL, null);
+  }, onFail);
 }
 
 // ─── Public API ───
@@ -145,39 +219,58 @@ export const Audio = {
     _running = true;
 
     _tryHtmlAudio(() => {
-      // No MP3 files found — use procedural loop
       _scheduleChunk();
     });
   },
 
   stopMusic() {
     _running = false;
-    if (_musicEl) {
-      // Fade out over 1.5s
-      const el = _musicEl;
-      const tick = setInterval(() => {
-        if (el.volume > 0.04) el.volume = Math.max(0, el.volume - 0.04);
-        else { el.pause(); el.currentTime = 0; clearInterval(tick); }
-      }, 80);
-    }
-    _stopProcedural();
-    if (_gainNode) {
-      const c = _getCtx();
-      if (c) {
-        _gainNode.gain.setValueAtTime(_gainNode.gain.value, c.currentTime);
-        _gainNode.gain.linearRampToValueAtTime(0, c.currentTime + 0.8);
-        setTimeout(() => {
-          try { _gainNode.disconnect(); } catch {}
-          _gainNode = null;
-        }, 900);
-      }
-    }
+    _currentScene = null;
+    _stopCurrent(true, null);
+  },
+
+  /**
+   * Switch to scene-specific music with crossfade.
+   * scene: 'menu' | 'challenge' | 'outdoor'
+   */
+  switchScene(scene) {
+    if (!_enabled) return;
+    if (scene === _currentScene && _running) return; // already playing this scene
+
+    const tracks = SCENE_MUSIC[scene];
+    if (!tracks) return;
+
+    _currentScene = scene;
+    _running = true;
+
+    // Fade out current, then fade in new
+    if (_fadingOut) return; // already mid-transition
+    _fadingOut = true;
+
+    _stopCurrent(true, () => {
+      _fadingOut = false;
+      if (!_enabled) return;
+      if (_currentScene !== scene) return; // scene changed again during fade
+
+      _tryHtmlAudioList(tracks, (el) => {
+        _musicEl = el;
+        _fadeVolume(el, 0, TARGET_VOL, null);
+      }, () => {
+        // All MP3s failed — use procedural
+        _scheduleChunk();
+      });
+    });
   },
 
   setEnabled(on) {
     _enabled = !!on;
-    if (on) { this.startMusic(); }
-    else    { this.stopMusic(); }
+    try { localStorage.setItem('gream_sound', on ? 'on' : 'off'); } catch {}
+    if (on) {
+      if (_currentScene) this.switchScene(_currentScene);
+      else this.startMusic();
+    } else {
+      this.stopMusic();
+    }
   },
 
   isRunning() { return _running; },

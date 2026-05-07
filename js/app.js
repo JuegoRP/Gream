@@ -349,17 +349,16 @@ window.App = {
   // ─── Tab bar switching ───
   showTab(tab) {
     const lang = getLang();
-    if (tab !== 'garden') {
-      clearInterval(this._greamIdleTimer);
-      Audio.stopMusic();
-    } else {
-      Audio.startMusic();
-    }
     if (tab === 'garden') {
+      Audio.switchScene('menu');
       Router.show('map');
     } else if (tab === 'map') {
+      clearInterval(this._greamIdleTimer);
+      Audio.switchScene('outdoor');
       this.openMapView('nature');
     } else if (tab === 'hub') {
+      clearInterval(this._greamIdleTimer);
+      Audio.switchScene('menu');
       Router.show('hub');
     }
     // Update tab labels with current lang
@@ -1378,6 +1377,30 @@ window.App = {
   _renderGreamScene(pet) {
     const bg = document.getElementById('greamStage');
     if (!bg) return;
+
+    // Apply purchased background image if equipped
+    const p = Profiles.active();
+    const equippedBg = p ? Skins.getEquippedBg(p.id) : null;
+    if (equippedBg?.file) {
+      bg.style.backgroundImage = `url('img/backgrounds/${equippedBg.file}')`;
+      bg.style.backgroundSize = 'cover';
+      bg.style.backgroundPosition = 'center bottom';
+      // Apply time-of-day tint overlay via a child div
+      let tintEl = bg.querySelector('.bg-tint');
+      if (!tintEl) { tintEl = document.createElement('div'); tintEl.className = 'bg-tint'; tintEl.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:1;transition:background 2s'; bg.prepend(tintEl); }
+      const hour2 = new Date().getHours();
+      let tint = 'transparent';
+      if (hour2 >= 21 || hour2 < 6) tint = 'rgba(10,20,60,0.45)';
+      else if (hour2 >= 19) tint = 'rgba(200,80,20,0.25)';
+      else if (hour2 >= 17) tint = 'rgba(180,120,0,0.15)';
+      tintEl.style.background = tint;
+      // Remove old SVG scene if present
+      bg.querySelector('svg')?.remove();
+      return; // skip procedural SVG generation
+    }
+    // No custom bg — clear any previously applied image
+    bg.style.backgroundImage = '';
+    bg.querySelector('.bg-tint')?.remove();
 
     const now    = new Date();
     const hour   = now.getHours();
@@ -2964,6 +2987,7 @@ window.App = {
     this._setText('wardTabAcc',     lang === 'cs' ? '🎩 Doplňky' : '🎩 Accessories');
     this._setText('wardTabAvatars', t.ward_avatars);
     this._setText('wardTabFrames',  t.ward_frames);
+    this._setText('wardTabBg',      lang === 'cs' ? '🌄 Pozadí' : '🌄 Backgrounds');
 
     this.wardSwitchTab(this._wardTab || 'greams');
   },
@@ -3036,12 +3060,20 @@ window.App = {
     document.querySelectorAll('.ward-tab').forEach(b => {
       b.classList.toggle('active', b.dataset.tab === tab);
     });
+    // Show/hide bgShopGrid vs wardGrid
+    const wardGrid = document.getElementById('wardGrid');
+    const bgGrid = document.getElementById('bgShopGrid');
+    if (wardGrid) wardGrid.style.display = tab === 'bg' ? 'none' : '';
+    if (bgGrid) bgGrid.style.display = tab === 'bg' ? 'grid' : 'none';
+
     if (tab === 'greams') {
       this._renderWardrobeGreams();
     } else if (tab === 'boosts') {
       this._renderWardrobeBoosts();
     } else if (tab === 'acc') {
       this._renderWardrobeAccessories();
+    } else if (tab === 'bg') {
+      this.renderBgShop();
     } else {
       this._renderWardrobeGrid(tab);
     }
@@ -3617,26 +3649,85 @@ window.App = {
     toast.textContent = message;
     document.body.appendChild(toast);
     setTimeout(() => toast.remove(), 3500);
-  }
+  },
+
+  // ─── Background shop ───
+  renderBgShop() {
+    const p = Profiles.active();
+    if (!p) return;
+    const lang = getLang();
+    const owned = Skins.getOwnedCosmetics(p.id);
+    const equipped = Skins.getEquippedBg(p.id);
+    const seeds = Skins.getSeeds(p.id);
+    const cs = lang === 'cs';
+
+    const container = document.getElementById('bgShopGrid');
+    if (!container) return;
+    container.innerHTML = '';
+
+    SKIN_CATALOG.backgrounds.forEach(bg => {
+      const isOwned = bg.cost === 0 || owned.includes(bg.id);
+      const isEquipped = equipped.id === bg.id;
+      const card = document.createElement('div');
+      card.style.cssText = `border-radius:12px;overflow:hidden;border:3px solid ${isEquipped ? 'var(--green-mid)' : 'rgba(0,0,0,0.1)'};cursor:pointer;position:relative;background:#f5f5f5`;
+      card.innerHTML = `
+        <div style="width:100%;height:80px;background:${bg.file ? `url('img/backgrounds/${bg.file}') center/cover` : 'linear-gradient(135deg,#5ba4d4,#5a9a3a)'};"></div>
+        <div style="padding:6px 8px">
+          <div style="font-size:12px;font-weight:800;color:var(--green-deep)">${bg.name[lang] || bg.name.cs}</div>
+          <div style="font-size:11px;color:#888;margin-top:2px">${isOwned ? (isEquipped ? (cs?'✓ Aktivní':'✓ Active') : (cs?'Vlastníš':'Owned')) : `🌱 ${bg.cost}`}</div>
+        </div>
+        ${isEquipped ? '<div style="position:absolute;top:4px;right:4px;background:var(--green-mid);color:white;border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px">✓</div>' : ''}
+      `;
+      card.onclick = () => {
+        const result = Skins.purchaseBg(p.id, bg.id);
+        if (!result.ok) {
+          this._showToast(cs ? `Nemáš dost semínek (${seeds} / ${bg.cost})` : `Not enough seeds (${seeds} / ${bg.cost})`);
+          return;
+        }
+        Feedback.tap();
+        this._setText('wardSeeds', Skins.getSeeds(p.id));
+        this.renderBgShop();
+      };
+      container.appendChild(card);
+    });
+  },
 };
 
 // ─── Screen lifecycle events ───
 document.addEventListener('screen:ready', ({ detail: { screenId } }) => {
   switch (screenId) {
-    case 'onboarding':  App.renderOnboarding(); break;
-    case 'profiles':    App.renderProfiles();   break;
-    case 'map':         App.renderMap();         break;
-    case 'home':        App.renderMap();         break;
-    case 'hub':         App.renderHub();         break;
-    case 'badges':      App.renderBadges();      break;
+    case 'onboarding':
+      App.renderOnboarding();
+      Audio.switchScene('menu');
+      break;
+    case 'profiles':
+      App.renderProfiles();
+      Audio.switchScene('menu');
+      break;
+    case 'map':
+    case 'home':
+      App.renderMap();
+      Audio.switchScene('menu');
+      break;
+    case 'hub':
+      App.renderHub();
+      Audio.switchScene('menu');
+      break;
+    case 'badges':
+      App.renderBadges();
+      Audio.switchScene('menu');
+      break;
     case 'ranking':     App.renderRanking();     break;
-    case 'settings':      App.renderSettings();      break;
-    case 'stats':         App.renderStats();         break;
-    case 'parent-confirm':App._initParentConfirm(); break;
-    case 'map-view':      App.renderMapView(App._mapViewWorld || 'nature'); break;
-    case 'wardrobe':      App.renderWardrobe();     break;
-    case 'geo-gate':      App.renderGeoGate();      break;
-    case 'history':       App.renderHistory();      break;
+    case 'settings':    App.renderSettings();    break;
+    case 'stats':       App.renderStats();       break;
+    case 'parent-confirm': App._initParentConfirm(); break;
+    case 'map-view':
+      App.renderMapView(App._mapViewWorld || 'nature');
+      Audio.switchScene('outdoor');
+      break;
+    case 'wardrobe':    App.renderWardrobe();    break;
+    case 'geo-gate':    App.renderGeoGate();     break;
+    case 'history':     App.renderHistory();     break;
     case 'challenge': {
       // If user lands here without an active challenge, redirect home
       // (e.g. after step-done / browser back without proper flow)
@@ -3644,20 +3735,23 @@ document.addEventListener('screen:ready', ({ detail: { screenId } }) => {
       if (!hasChallenge) {
         console.warn('[Gream] Challenge screen reached without active challenge — redirecting home');
         Router.show('home');
+      } else {
+        Audio.switchScene('challenge');
       }
       break;
     }
     case 'step-done': {
       const lang = getLang();
       const t = tr();
-      // Bind buttons for retry / continue (text might miss otherwise)
       App._setText('sdNextBtn',  t.next_step);
       App._setText('sdLaterBtn', t.come_back);
+      Audio.switchScene('menu');
       break;
     }
     case 'badge-earned': {
       const t = tr();
       App._setText('btn-continue-lbl', t.continue);
+      Audio.switchScene('menu');
       break;
     }
   }

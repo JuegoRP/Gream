@@ -46,9 +46,14 @@ export const SKIN_CATALOG = {
   // ─── FRAMES — bought with eggs (cheaper) ───
   // (overrides the ones above)
 
-  // ─── BACKGROUNDS (vestigial — dynamic SVG now handles this) ───
+  // ─── BACKGROUNDS — bought with seeds ───
   backgrounds: [
-    { id: 'bg_default', name: { cs: 'Výchozí', en: 'Default' }, cssClass: '', cost: 0 },
+    { id: 'bg_default',      name: { cs: 'Výchozí louka',     en: 'Default meadow' },   file: null,                    cost: 0   },
+    { id: 'bg_rain_jungle',  name: { cs: 'Deštný les',        en: 'Rain jungle' },      file: 'bg_rain_jungle.png',    cost: 80  },
+    { id: 'bg_cyberpunk',    name: { cs: 'Kybernetické město',en: 'Cyberpunk city' },   file: 'bg_cyberpunk.png',      cost: 120 },
+    { id: 'bg_cave',         name: { cs: 'Krystalová jeskyně',en: 'Crystal cave' },     file: 'bg_cave.png',           cost: 150 },
+    { id: 'bg_ruins',        name: { cs: 'Záhadné ruiny',     en: 'Ancient ruins' },    file: 'bg_ruins.png',          cost: 200 },
+    { id: 'bg_town',         name: { cs: 'Středověké město',  en: 'Medieval town' },    file: 'bg_town.png',           cost: 250 },
   ],
 
   // ─── BOOSTS — jednorázové efekty za vajíčka ───
@@ -350,5 +355,33 @@ export const Skins = {
     if (u.type === 'streak')
       return lang === 'cs' ? `Série ${u.count} dnů`         : `${u.count}-day streak`;
     return '';
-  }
+  },
+
+  // ─── Owned cosmetics (array-based, for backgrounds etc.) ───
+  getOwnedCosmetics(profileId) {
+    const m = loadMap(KEY_OWNED_COSMETIC);
+    return m[profileId] || [];
+  },
+  addOwnedCosmetic(profileId, id) {
+    const m = loadMap(KEY_OWNED_COSMETIC);
+    if (!m[profileId]) m[profileId] = [];
+    if (!m[profileId].includes(id)) m[profileId].push(id);
+    saveMap(KEY_OWNED_COSMETIC, m);
+  },
+
+  // ─── Background shop helpers ───
+  getEquippedBg(profileId) {
+    const eq = this.getEquipped(profileId);
+    return SKIN_CATALOG.backgrounds.find(b => b.id === eq.bg) || SKIN_CATALOG.backgrounds[0];
+  },
+  purchaseBg(profileId, bgId) {
+    const bg = SKIN_CATALOG.backgrounds.find(b => b.id === bgId);
+    if (!bg || bg.cost === 0) { this.setEquipped(profileId, 'bg', bgId); return { ok: true }; }
+    const owned = this.getOwnedCosmetics(profileId);
+    if (owned.includes(bgId)) { this.setEquipped(profileId, 'bg', bgId); return { ok: true }; }
+    if (!this.spendSeeds(profileId, bg.cost)) return { ok: false, reason: 'not-enough-seeds' };
+    this.addOwnedCosmetic(profileId, bgId);
+    this.setEquipped(profileId, 'bg', bgId);
+    return { ok: true };
+  },
 };
