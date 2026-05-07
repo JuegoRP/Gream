@@ -2266,7 +2266,6 @@ window.App = {
     ];
 
     let prevEl = null;
-    let prevElStyles = {};
 
     const overlay = document.createElement('div');
     overlay.id = 'tutOverlay';
@@ -2277,13 +2276,6 @@ window.App = {
       const s = document.createElement('style');
       s.id = 'tutCss';
       s.textContent = `
-        .tut-spotlight {
-          position:relative!important;
-          z-index:5001!important;
-          box-shadow:0 0 0 9999px rgba(0,0,0,0.68),0 0 0 4px var(--green-mid),0 0 20px rgba(74,138,46,0.6)!important;
-          border-radius:16px!important;
-          transition:box-shadow 0.3s!important;
-        }
         .tut-card {
           position:fixed;left:50%;transform:translateX(-50%);
           background:white;border-radius:22px;
@@ -2306,12 +2298,10 @@ window.App = {
     cardEl.className = 'tut-card';
     document.body.appendChild(cardEl);
 
+    let ringEl = null;
     const cleanup = () => {
-      if (prevEl) {
-        prevEl.classList.remove('tut-spotlight');
-        prevEl.style.zIndex = prevElStyles.zIndex || '';
-        prevEl = null;
-      }
+      ringEl?.remove(); ringEl = null;
+      prevEl = null;
     };
 
     const showStep = (i) => {
@@ -2344,8 +2334,11 @@ window.App = {
           cardBottom = window.innerHeight - r.top + 18;
           arrowClass = 'tut-arrow-down';
         }
-        prevElStyles.zIndex = target.style.zIndex;
-        target.classList.add('tut-spotlight');
+        // Fixed-position ring that doesn't disturb target layout
+        ringEl = document.createElement('div');
+        const PAD = 8;
+        ringEl.style.cssText = `position:fixed;pointer-events:none;z-index:5001;border-radius:18px;border:3px solid var(--green-mid);box-shadow:0 0 0 9999px rgba(0,0,0,0.6),0 0 20px rgba(74,138,46,0.5);transition:all 0.25s;left:${r.left-PAD}px;top:${r.top-PAD}px;width:${r.width+PAD*2}px;height:${r.height+PAD*2}px`;
+        document.body.appendChild(ringEl);
         prevEl = target;
       } else {
         cardBottom = 110;
@@ -3297,6 +3290,7 @@ window.App = {
       `;
       grid.appendChild(addCard);
     }
+    this._initSpriteCanvases(grid);
   },
 
   _renderWardrobeGrid(tab) {

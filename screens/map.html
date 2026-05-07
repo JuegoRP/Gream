@@ -40,7 +40,7 @@
   onclick="App.promptRenameGream()"></div>
 
 <!-- Start indoor challenge button -->
-<div style="width:100%;max-width:380px;padding:8px 0">
+<div style="width:100%;max-width:380px;padding:8px 0 68px">
   <button class="btn-primary" onclick="App.startIndoor()"
     style="padding:14px 20px;font-size:16px">
     🏠 <span id="hcIndoorTitle">Doma klid</span>
@@ -50,3 +50,11 @@
 <!-- Hidden compat stubs -->
 <div id="dailyCounter" style="display:none"><span id="dailyCountText"></span><span id="dailyCountdown"></span></div>
 <div id="needsBar" style="display:none"></div>
+
+<!-- Outdoor challenge button — above tab bar -->
+<div style="position:fixed;bottom:calc(58px + var(--sab) + 10px);left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:380px;z-index:100">
+  <button class="home-choice-outdoor btn-secondary" onclick="App.showTab('map')"
+    style="width:100%;padding:13px 18px;font-size:15px;font-weight:800;border-radius:50px;border:2px solid rgba(74,138,46,0.35);background:rgba(255,255,255,0.92);color:var(--green-deep);box-shadow:0 2px 12px rgba(0,0,0,0.12);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;font-family:inherit">
+    🗺️ <span id="hcOutdoorTitle">Pojďme ven</span>
+  </button>
+</div>
