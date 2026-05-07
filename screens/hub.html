@@ -11,25 +11,18 @@
   </div>
 </div>
 
-<!-- Trial/premium banner -->
-<div id="hubTrialBanner" style="display:none;width:100%;max-width:420px;background:linear-gradient(135deg,#f5a623,#e8850a);border-radius:14px;padding:12px 16px;margin-bottom:16px;align-items:center;gap:10px">
-  <span style="font-size:22px">⏳</span>
-  <div style="flex:1">
-    <div id="hubTrialText" style="font-size:13px;font-weight:800;color:white"></div>
-    <div id="hubTrialSub" style="font-size:11px;color:rgba(255,255,255,0.8);font-weight:700;margin-top:1px"></div>
+<!-- Greamíci card -->
+<button onclick="App.goTo('wardrobe')" style="width:100%;max-width:420px;background:linear-gradient(135deg,#edfbe0,#c8f0a8);border-radius:18px;padding:16px 18px;display:flex;align-items:center;gap:14px;margin-bottom:14px;border:2px solid rgba(74,138,46,0.22);box-shadow:0 3px 14px rgba(74,138,46,0.18);cursor:pointer;text-align:left">
+  <span style="font-size:36px;flex-shrink:0">🐣</span>
+  <div style="flex:1;min-width:0">
+    <div id="hubGreamiciLbl" style="font-size:17px;font-weight:900;color:var(--green-deep)">Greamíci</div>
+    <div id="hubGreamiciSub" style="font-size:12px;color:var(--green-mid);font-weight:700;margin-top:2px">Správa & vývoj mazlíčků</div>
   </div>
-</div>
+  <span style="font-size:20px;color:var(--green-mid)">›</span>
+</button>
 
 <!-- Main actions grid -->
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:420px">
-
-  <button onclick="App.goTo('wardrobe')" style="background:white;border-radius:16px;padding:16px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 12px rgba(0,0,0,0.08);border:none;cursor:pointer;transition:transform 0.15s;text-align:left">
-    <span style="font-size:26px">🥚</span>
-    <div>
-      <div id="hubShopLbl" style="font-size:14px;font-weight:900;color:var(--green-deep)">Shop</div>
-      <div id="hubShopSub" style="font-size:10px;color:var(--green-mid);font-weight:700">Skiny & boosters</div>
-    </div>
-  </button>
 
   <button onclick="App.goTo('ranking')" style="background:white;border-radius:16px;padding:16px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 12px rgba(0,0,0,0.08);border:none;cursor:pointer;transition:transform 0.15s;text-align:left">
     <span style="font-size:26px">🏆</span>

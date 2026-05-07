@@ -345,6 +345,7 @@ window.App = {
 
   // ─── Navigation ───
   async goTo(screen, data) { await Router.show(screen, data); },
+  back() { Router.back(); },
 
   // ─── Tab bar switching ───
   showTab(tab) {
@@ -393,32 +394,18 @@ window.App = {
       ? `🔥 ${streak} ${cs ? (streak === 1 ? 'den v řadě' : streak < 5 ? 'dny v řadě' : 'dní v řadě') : (streak === 1 ? 'day streak' : 'day streak')}`
       : (cs ? 'Začni svou sérii!' : 'Start your streak!'));
 
-    // Trial banner
+    // Subscribe section — hide when paid
     const sub = Subscription.get(p.id);
-    const banner = document.getElementById('hubTrialBanner');
-    if (banner && sub.inTrial) {
-      banner.style.display = 'flex';
-      this._setText('hubTrialText', cs
-        ? `Premium zkouška — zbývá ${sub.trialDaysLeft} ${sub.trialDaysLeft === 1 ? 'den' : sub.trialDaysLeft < 5 ? 'dny' : 'dní'}`
-        : `Premium trial — ${sub.trialDaysLeft} day${sub.trialDaysLeft !== 1 ? 's' : ''} left`);
-      this._setText('hubTrialSub', cs ? 'Plný přístup zdarma po dobu zkušební doby' : 'Full access free during trial');
-    } else if (banner) {
-      banner.style.display = 'none';
-    }
-
-    // Subscribe section — hide only when actually paid (trial users see it too)
     const subSec = document.getElementById('hubSubscribeSection');
     if (subSec) {
       const hasPaid = !!sub.premiumSince;
       subSec.style.display = hasPaid ? 'none' : 'block';
-      this._setText('hubSubscribeLbl', sub.inTrial
-        ? (cs ? `Předplatit — zkouška ještě ${sub.trialDaysLeft} dní ⭐` : `Subscribe — ${sub.trialDaysLeft} trial days left ⭐`)
-        : (cs ? 'Předplatit Premium ⭐' : 'Subscribe to Premium ⭐'));
+      this._setText('hubSubscribeLbl', cs ? 'Předplatit Premium ⭐' : 'Subscribe to Premium ⭐');
     }
 
     // Labels (bilingual)
-    this._setText('hubShopLbl',   cs ? 'Greamíci'     : 'My Greams');
-    this._setText('hubShopSub',   cs ? 'Spravuj mazlíčky' : 'Manage your pets');
+    this._setText('hubGreamiciLbl', cs ? 'Greamíci'            : 'My Greams');
+    this._setText('hubGreamiciSub', cs ? 'Správa & vývoj mazlíčků' : 'Manage & grow your pets');
     this._setText('hubRankLbl',   cs ? 'Žebříček'   : 'Ranking');
     this._setText('hubRankSub',   cs ? 'Porovnej se s ostatními' : 'Compare with others');
     this._setText('hubBadgesLbl', cs ? 'Odznaky'    : 'Badges');
@@ -899,6 +886,13 @@ window.App = {
         opill.style.background = outdoorDone >= FREE_DAILY_OUTDOOR ? 'rgba(200,70,50,0.75)' : 'rgba(0,0,0,0.15)';
       }
     }
+
+    // Toggle indoor/outdoor button: show outdoor when indoor is exhausted
+    const indoorExhausted = indoorDone >= INDOOR_MAX_TOTAL;
+    const gardenIndoorBtn  = document.getElementById('gardenIndoorBtn');
+    const gardenOutdoorBtn = document.getElementById('gardenOutdoorBtn');
+    if (gardenIndoorBtn)  gardenIndoorBtn.style.display  = indoorExhausted ? 'none' : '';
+    if (gardenOutdoorBtn) gardenOutdoorBtn.style.display = indoorExhausted ? '' : 'none';
 
     // Daily counter
     const todayCount = (fresh.completedToday || []).length;
