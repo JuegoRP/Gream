@@ -2135,76 +2135,177 @@ window.App = {
 
     const cs = lang === 'cs';
     const steps = [
-      { sel: '#greamStage',       icon: '🌱', text: cs ? 'Toto je tvoje zahrada! Tady žijí a rostou tvoji Greamíci.' : 'This is your garden! Your Greams live and grow here.' },
-      { sel: '.garden-gream-slot, #homeJarWrap', icon: '👆', text: cs ? 'Klepni na Greamíka nebo vajíčko — odpoví ti!' : 'Tap your Gream or egg — it will react!' },
-      { sel: '#hcIndoorTitle, .btn-primary', icon: '🏠', text: cs ? 'Splň domácí výzvu — Greamík poroste a ty dostaneš semínka.' : 'Complete a home challenge — your Gream grows and you earn seeds.' },
-      { sel: '#seedNum',           icon: '🌱', text: cs ? 'Semínka sbíráš splněním výzev. Nakrm jimi Greamíky tlačítkem 🍃.' : 'Earn seeds by completing challenges. Use 🍃 to feed your Greams.' },
-      { sel: '#tab-hub',           icon: '⭐', text: cs ? 'Záložka JÁ — odznaky, semínka, Greamíci a celý tvůj postup!' : 'The ME tab — badges, seeds, Greams and your full progress!' },
+      {
+        sel: '#greamStage',
+        icon: '🌱',
+        title: cs ? 'Tvoje zahrada' : 'Your garden',
+        text: cs
+          ? 'Tady bydlí tvoji Greamíci a vajíčka. Zahrada se mění podle denní doby — v noci svítí hvězdy, někdy prší. Čím víc výzev splníš, tím více Greamíků přibyde!'
+          : 'Your Greams live here. The garden changes with time of day — stars at night, sometimes rain. Complete more challenges to grow your flock!',
+      },
+      {
+        sel: '.garden-gream-slot, #homeJarWrap',
+        icon: '🥚',
+        title: cs ? 'Greamík' : 'Your Gream',
+        text: cs
+          ? 'Tohle je tvoje záhadné vajíčko! Splň 12 výzev a vejce se vylíhne — jeho charakter závisí na tom, která témata hraješ nejradši. Klepnutím na Greamíka ho potěšíš!'
+          : 'This is your mystery egg! Complete 12 challenges to hatch it — its personality depends on which topics you play most. Tap it to cheer it up!',
+      },
+      {
+        sel: '#hcIndoorTitle',
+        icon: '🏠',
+        title: cs ? 'Domácí výzva' : 'Home challenge',
+        text: cs
+          ? 'Klepni sem pro výzvu doma. Vyber téma — příroda, jazyk, logika, umění nebo svět. Každá správná odpověď přináší semínka 🌱 a pomáhá Greamíkovi růst. Špatná odpověď tě vyhodí a vezme semínka!'
+          : 'Tap here to play a home challenge. Choose a topic — nature, language, logic, arts or world. Correct answers earn seeds 🌱. Wrong answers kick you out and cost seeds!',
+      },
+      {
+        sel: '#seedNum',
+        icon: '🌱',
+        title: cs ? 'Semínka' : 'Seeds',
+        text: cs
+          ? 'Semínka jsou tvoje herní měna. Sbíráš je splněním výzev — čím těžší, tím víc! Utrácíš je za krmení Greamíků (tlačítko 🍃 v zahradě), skiny nebo boosters v záložce Greamíci.'
+          : 'Seeds are your currency. Earn them by completing challenges — harder ones give more! Spend them feeding Greams (🍃 in garden), or on skins and boosters in the Greams tab.',
+      },
+      {
+        sel: '#streakNum',
+        icon: '🔥',
+        title: cs ? 'Série dní' : 'Day streak',
+        text: cs
+          ? 'Hraj každý den a buduj sérii! Číslo vedle plamínku říká, kolik dní v řadě hraješ. Přerušení série tě vrátí na nulu — zkus ji co nejdéle udržet!'
+          : 'Play every day to build your streak! The number by the flame shows how many days in a row you\'ve played. Break it and you start over — keep it going!',
+      },
+      {
+        sel: '#tab-hub',
+        icon: '⭐',
+        title: cs ? 'Záložka JÁ' : 'ME tab',
+        text: cs
+          ? 'Záložka JÁ — tady vidíš celý svůj postup. Odznaky za splněné výzvy, žebříček hráčů, správu Greamíků, historii a nastavení. Předplatné Premium odemkne víc denních výzev!'
+          : 'The ME tab — see your full progress. Badges, ranking, Gream management, history and settings. Premium unlocks more daily challenges!',
+      },
+      {
+        sel: '#tab-map',
+        icon: '🗺️',
+        title: cs ? 'Záložka SVĚT' : 'WORLD tab',
+        text: cs
+          ? 'Záložka SVĚT — mapa s venkovními místy poblíž tebe. Navštiv je a hraj výzvy na místě pro bonusová semínka! Venkovní výzvy přidávají přírodní bonus k péči o Greamíka.'
+          : 'The WORLD tab — map with outdoor locations near you. Visit them and play on-site for bonus seeds! Outdoor challenges add a nature bonus to Gream care.',
+      },
     ];
 
-    let idx = 0;
     let prevEl = null;
+    let prevElStyles = {};
 
     const overlay = document.createElement('div');
     overlay.id = 'tutOverlay';
-    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:5000;display:flex;flex-direction:column;justify-content:flex-end;padding:0 20px 110px;pointer-events:all';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:5000;pointer-events:all';
 
-    const card = document.createElement('div');
-    card.style.cssText = 'background:white;border-radius:24px;padding:24px 22px 18px;box-shadow:0 8px 32px rgba(0,0,0,0.35);max-width:400px;margin:0 auto;width:100%';
+    // Inject tutorial CSS once
+    if (!document.getElementById('tutCss')) {
+      const s = document.createElement('style');
+      s.id = 'tutCss';
+      s.textContent = `
+        .tut-spotlight {
+          position:relative!important;
+          z-index:5001!important;
+          box-shadow:0 0 0 9999px rgba(0,0,0,0.68),0 0 0 4px var(--green-mid),0 0 20px rgba(74,138,46,0.6)!important;
+          border-radius:16px!important;
+          transition:box-shadow 0.3s!important;
+        }
+        .tut-card {
+          position:fixed;left:50%;transform:translateX(-50%);
+          background:white;border-radius:22px;
+          padding:20px 22px 16px;
+          box-shadow:0 8px 32px rgba(0,0,0,0.4);
+          max-width:390px;width:calc(100vw - 32px);
+          z-index:5002;pointer-events:all;
+          animation:tutCardIn 0.25s ease;
+        }
+        @keyframes tutCardIn{from{opacity:0;transform:translateX(-50%) translateY(12px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+        .tut-arrow-down::after{content:'';display:block;width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-top:12px solid white;margin:0 auto;margin-top:2px}
+        .tut-arrow-up::before{content:'';display:block;width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:12px solid white;margin:0 auto;margin-bottom:2px}
+      `;
+      document.head.appendChild(s);
+    }
 
-    const icon = document.createElement('div');
-    icon.style.cssText = 'font-size:40px;text-align:center;margin-bottom:10px';
-
-    const text = document.createElement('div');
-    text.style.cssText = 'font-size:15px;font-weight:800;color:var(--green-deep);text-align:center;line-height:1.5;margin-bottom:16px';
-
-    const dots = document.createElement('div');
-    dots.style.cssText = 'display:flex;gap:6px;justify-content:center;margin-bottom:16px';
-
-    const nextBtn = document.createElement('button');
-    nextBtn.className = 'btn-primary';
-    nextBtn.style.cssText = 'width:100%;padding:14px;font-size:16px';
-
-    const skipBtn = document.createElement('button');
-    skipBtn.style.cssText = 'width:100%;padding:8px;font-size:12px;color:#aaa;font-weight:700;background:none;border:none;cursor:pointer;margin-top:4px';
-    skipBtn.textContent = cs ? 'Přeskočit tutoriál' : 'Skip tutorial';
-    skipBtn.onclick = () => { cleanup(); overlay.remove(); };
-
-    card.appendChild(icon); card.appendChild(text); card.appendChild(dots);
-    card.appendChild(nextBtn); card.appendChild(skipBtn);
-    overlay.appendChild(card);
     document.body.appendChild(overlay);
 
+    const cardEl = document.createElement('div');
+    cardEl.className = 'tut-card';
+    document.body.appendChild(cardEl);
+
     const cleanup = () => {
-      if (prevEl) { prevEl.style.outline = ''; prevEl.style.boxShadow = ''; prevEl.style.position = ''; prevEl = null; }
+      if (prevEl) {
+        prevEl.classList.remove('tut-spotlight');
+        prevEl.style.zIndex = prevElStyles.zIndex || '';
+        prevEl = null;
+      }
     };
 
     const showStep = (i) => {
       cleanup();
-      if (i >= steps.length) { overlay.remove(); return; }
-      const step = steps[i];
-      icon.textContent = step.icon;
-      text.textContent = step.text;
-      dots.innerHTML = '';
-      steps.forEach((_, di) => {
-        const d = document.createElement('div');
-        d.style.cssText = `width:8px;height:8px;border-radius:50%;background:${di === i ? 'var(--green-mid)' : '#ddd'}`;
-        dots.appendChild(d);
-      });
-      nextBtn.textContent = i < steps.length - 1 ? (cs ? 'Další →' : 'Next →') : (cs ? 'Jdeme na to! 🌱' : "Let's go! 🌱");
-      nextBtn.onclick = () => showStep(i + 1);
+      if (i >= steps.length) {
+        overlay.remove(); cardEl.remove();
+        document.getElementById('tutCss')?.remove();
+        return;
+      }
 
+      const step = steps[i];
+      const isLast = i === steps.length - 1;
+
+      // Find target element
       const selectors = step.sel.split(',').map(s => s.trim());
       let target = null;
-      for (const s of selectors) {
-        target = document.querySelector(s);
-        if (target) break;
-      }
+      for (const s of selectors) { target = document.querySelector(s); if (target) break; }
+
+      // Position card above or below target
+      let cardTop = null, cardBottom = null, arrowClass = '';
       if (target) {
-        target.style.outline = '3px solid var(--green-mid)';
-        target.style.boxShadow = '0 0 0 6px rgba(74,138,46,0.3)';
+        const r = target.getBoundingClientRect();
+        const midY = r.top + r.height / 2;
+        if (midY < window.innerHeight * 0.55) {
+          // Element in top half → card below
+          cardTop = Math.min(r.bottom + 18, window.innerHeight - 240);
+          arrowClass = 'tut-arrow-up';
+        } else {
+          // Element in bottom half → card above
+          cardBottom = window.innerHeight - r.top + 18;
+          arrowClass = 'tut-arrow-down';
+        }
+        prevElStyles.zIndex = target.style.zIndex;
+        target.classList.add('tut-spotlight');
         prevEl = target;
+      } else {
+        cardBottom = 110;
       }
+
+      cardEl.className = `tut-card ${arrowClass}`;
+      cardEl.style.top = cardTop !== null ? `${cardTop}px` : '';
+      cardEl.style.bottom = cardBottom !== null ? `${cardBottom}px` : '';
+
+      // Progress dots
+      const dotsHtml = steps.map((_, di) =>
+        `<div style="width:8px;height:8px;border-radius:50%;background:${di === i ? 'var(--green-mid)' : '#e0e0e0'};transition:background 0.2s"></div>`
+      ).join('');
+
+      cardEl.innerHTML = `
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+          <span style="font-size:32px;flex-shrink:0">${step.icon}</span>
+          <div style="font-size:17px;font-weight:900;color:var(--green-deep)">${step.title}</div>
+          <div style="margin-left:auto;font-size:11px;font-weight:700;color:#bbb">${i+1}/${steps.length}</div>
+        </div>
+        <div style="font-size:14px;font-weight:700;color:#444;line-height:1.55;margin-bottom:16px">${step.text}</div>
+        <div style="display:flex;gap:5px;justify-content:center;margin-bottom:14px">${dotsHtml}</div>
+        <button id="tutNext" class="btn-primary" style="width:100%;padding:13px;font-size:15px">
+          ${isLast ? (cs ? 'Jdeme na to! 🌱' : "Let's go! 🌱") : (cs ? 'Rozumím, dál →' : 'Got it, next →')}
+        </button>
+        <button id="tutSkip" style="width:100%;padding:7px;font-size:12px;color:#bbb;font-weight:700;background:none;border:none;cursor:pointer;margin-top:4px">
+          ${cs ? 'Přeskočit' : 'Skip'}
+        </button>
+      `;
+
+      document.getElementById('tutNext').onclick = () => showStep(i + 1);
+      document.getElementById('tutSkip').onclick = () => { cleanup(); overlay.remove(); cardEl.remove(); };
     };
 
     showStep(0);
