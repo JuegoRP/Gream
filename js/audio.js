@@ -113,7 +113,7 @@ function _tryHtmlAudio(onFail) {
   let tried = 0;
   const attempt = (i) => {
     if (i >= MUSIC_FILES.length) { onFail(); return; }
-    const el = new Audio(MUSIC_FILES[i]);
+    const el = new window.Audio(MUSIC_FILES[i]);
     el.loop = true;
     el.volume = 0.25;
     el.preload = 'auto';
