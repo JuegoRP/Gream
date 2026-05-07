@@ -254,6 +254,11 @@ export const Gream = {
       }
     }
 
+    // Capture and clear transient flags BEFORE save — otherwise they persist
+    // in localStorage and re-trigger on every subsequent feedFromTask call
+    const archetypeResolved = !!g._archetypeJustResolved;
+    delete g._archetypeJustResolved;
+
     save(data);
 
     // Check if next Gream slot unlocks (fully grown + extra tasks)
@@ -263,9 +268,6 @@ export const Gream = {
       totalTasks >= UNLOCK_NEXT_GREAM_TASKS &&
       list.filter(x => !x.archived).length === 1
     );
-
-    const archetypeResolved = !!g._archetypeJustResolved;
-    if (g._archetypeJustResolved) delete g._archetypeJustResolved;
 
     return {
       evolved:            toStage > fromStage,
