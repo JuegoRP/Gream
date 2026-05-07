@@ -69,11 +69,16 @@ export const SKIN_CATALOG = {
   ],
 };
 
-// ─── Eggs earned per event ───
-const SEEDS_PER_TASK   = 2;
-const SEEDS_PER_BADGE  = 10;
+// ─── Seeds earned per event ───
+const SEEDS_PER_TASK   = 2;   // base × difficulty multiplier below
+const SEEDS_PER_BADGE  = 10;  // bonus for completing full 3-step badge
 const SEEDS_PER_STREAK = 5;
-const SEEDS_FIRST_OUTDOOR = 8; // bonus first time going outside in a day
+const SEEDS_OUTDOOR_BONUS = 3; // added on top of base when outdoor
+const SEEDS_DAILY_BONUS = 4;   // daily login bonus
+
+// easy=2, medium=3, hard=5, extreme=8 (base 2 × multiplier)
+const DIFF_MULT = { easy: 1.0, medium: 1.5, hard: 2.5, extreme: 4.0 };
+const DAILY_KEY = 'gream_daily_bonus';
 
 function loadMap(key) {
   try { return JSON.parse(localStorage.getItem(key) || '{}'); }
@@ -108,9 +113,21 @@ export const Skins = {
     return true;
   },
 
-  // ─── Award eggs for various events ───
+  // ─── Daily login bonus (+4 seeds, once per day) ───
+  claimDailyBonus(profileId) {
+    const today = new Date().toDateString();
+    const m = loadMap(DAILY_KEY);
+    if (m[profileId] === today) return { claimed: false, amount: 0 };
+    m[profileId] = today;
+    saveMap(DAILY_KEY, m);
+    this.addSeeds(profileId, SEEDS_DAILY_BONUS);
+    return { claimed: true, amount: SEEDS_DAILY_BONUS };
+  },
+
+  // ─── Award seeds for task completion ───
+  // multiplier = (score/100) × diffMultiplier — caller passes combined value
   awardForTask(profileId, isOutdoor = false, multiplier = 1) {
-    const base = SEEDS_PER_TASK + (isOutdoor ? 3 : 0);
+    const base = SEEDS_PER_TASK + (isOutdoor ? SEEDS_OUTDOOR_BONUS : 0);
     return this.addSeeds(profileId, Math.max(1, Math.round(base * multiplier)));
   },
   awardForBadge(profileId) {

@@ -14,6 +14,7 @@ import { Feedback } from './feedback.js';
 import { Geo } from './geo.js';
 import { Skins } from './skins.js';
 import { Gream, ARCHETYPES, spritePath } from './gream.js';
+import { Subscription } from './subscription.js';
 
 const WORLD_ICONS = { nature:'🌿', language:'📖', logic:'🧩', feelings:'💛', arts:'🎨', world:'🌍' };
 
@@ -92,6 +93,17 @@ export const Challenge = {
     }
     // POI launches imply outdoor
     if (this._targetPOI) this._wasOutdoor = true;
+
+    // Outdoor daily cap for free users
+    if (this._wasOutdoor || this._targetPOI) {
+      const outdoorCheck = Subscription.canStartOutdoor(p.id);
+      if (!outdoorCheck.allowed) {
+        this._showToast(outdoorCheck.reason);
+        Router.show('home');
+        return;
+      }
+      Subscription.recordOutdoor(p.id);
+    }
 
     await Router.show('challenge');
     this._fill(world, challenge, stepDefs, badge, p, t);
@@ -626,7 +638,8 @@ export const Challenge = {
     const evolved   = Badges.didEvolve(prevCount, newCount);
 
     // ─── Award seeds (score × difficulty × boost_2x) ───
-    const DIFF_MULT = { easy: 1.0, medium: 1.5, hard: 2.0, extreme: 3.0 };
+    // easy=2, medium=3, hard=5, extreme=8 per step at perfect score
+    const DIFF_MULT = { easy: 1.0, medium: 1.5, hard: 2.5, extreme: 4.0 };
     const scoreMultiplier = (this._lastScore || 100) / 100;
     const diffMultiplier  = DIFF_MULT[this._difficulty || p.difficulty || 'medium'] || 1.5;
     const activeBoost     = Skins.consumePendingBoost(p.id);

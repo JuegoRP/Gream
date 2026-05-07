@@ -15,7 +15,7 @@ import { Geo, WORLD_EMOJIS } from './geo.js';
 import { Skins, SKIN_CATALOG } from './skins.js';
 import { MapView } from './mapview.js';
 import { Gream, ARCHETYPES, spritePath, smartSpritePath } from './gream.js';
-import { Subscription, FREE_DAILY_INDOOR, PREMIUM_DAILY_INDOOR } from './subscription.js';
+import { Subscription, FREE_DAILY_INDOOR, PREMIUM_DAILY_INDOOR, INDOOR_MAX_TOTAL, FREE_DAILY_OUTDOOR, SEED_COST_EXTRA_TASK } from './subscription.js';
 import { Ranking } from './ranking.js';
 import { Audio } from './audio.js';
 
@@ -725,6 +725,15 @@ window.App = {
     if (!p) return Router.show('profiles');
     const streakResult = Profiles.checkStreak(p.id);
 
+    // Daily login bonus — once per day
+    const bonus = Skins.claimDailyBonus(p.id);
+    if (bonus.claimed) {
+      const l = getLang();
+      setTimeout(() => this._showToast(
+        l === 'cs' ? `🌱 +${bonus.amount} semínek za dnešní přihlášení!` : `🌱 +${bonus.amount} seeds for logging in today!`
+      ), 1200);
+    }
+
     Gream.tickMood(p.id);
 
     let pet = Gream.active(p.id);
@@ -861,23 +870,46 @@ window.App = {
     // Trial banner (first 7 days)
     this._renderTrialBanner(p.id, lang);
 
-    // Daily indoor counter pill
-    const indoorDone = Subscription.getIndoorToday(p.id);
-    const sub        = Subscription.get(p.id);
-    const indoorMax  = sub.isPremium ? PREMIUM_DAILY_INDOOR : 2;
-    const hcIndoor   = document.querySelector('.home-choice-indoor');
+    // Daily limit pills — indoor and outdoor
+    const sub         = Subscription.get(p.id);
+    const indoorDone  = Subscription.getIndoorToday(p.id);
+    const outdoorDone = Subscription.getOutdoorToday(p.id);
+    const freeIndoor  = sub.isPremium ? PREMIUM_DAILY_INDOOR : FREE_DAILY_INDOOR;
+
+    // Indoor pill on the start-challenge button
+    const hcIndoor = document.querySelector('.home-choice-indoor');
     if (hcIndoor) {
-      const pillId = 'indoorPill';
-      let pill = document.getElementById(pillId);
+      let pill = document.getElementById('indoorPill');
       if (!pill) {
         pill = document.createElement('div');
-        pill.id = pillId;
-        pill.style.cssText = 'position:absolute;top:8px;right:8px;font-size:10px;font-weight:800;padding:2px 8px;border-radius:50px;background:rgba(0,0,0,0.12);color:white';
+        pill.id = 'indoorPill';
+        pill.style.cssText = 'position:absolute;top:8px;right:8px;font-size:10px;font-weight:800;padding:2px 8px;border-radius:50px;color:white';
         hcIndoor.style.position = 'relative';
         hcIndoor.appendChild(pill);
       }
-      pill.textContent = `${indoorDone}/${indoorMax}`;
-      pill.style.background = indoorDone >= indoorMax ? 'rgba(200,70,50,0.7)' : 'rgba(0,0,0,0.15)';
+      const extraBought = Math.max(0, indoorDone - freeIndoor);
+      pill.textContent = `🏠 ${indoorDone}/${INDOOR_MAX_TOTAL}`;
+      pill.style.background = indoorDone >= INDOOR_MAX_TOTAL ? 'rgba(200,70,50,0.75)' : indoorDone >= freeIndoor ? 'rgba(245,166,35,0.85)' : 'rgba(0,0,0,0.15)';
+    }
+
+    // Outdoor pill — only show for free users with a limit
+    const hcOutdoor = document.querySelector('.home-choice-outdoor');
+    if (hcOutdoor) {
+      let opill = document.getElementById('outdoorPill');
+      if (!opill) {
+        opill = document.createElement('div');
+        opill.id = 'outdoorPill';
+        opill.style.cssText = 'position:absolute;top:8px;right:8px;font-size:10px;font-weight:800;padding:2px 8px;border-radius:50px;color:white';
+        hcOutdoor.style.position = 'relative';
+        hcOutdoor.appendChild(opill);
+      }
+      if (sub.isPremium) {
+        opill.textContent = '∞';
+        opill.style.background = 'rgba(74,138,46,0.6)';
+      } else {
+        opill.textContent = `🌳 ${outdoorDone}/${FREE_DAILY_OUTDOOR}`;
+        opill.style.background = outdoorDone >= FREE_DAILY_OUTDOOR ? 'rgba(200,70,50,0.75)' : 'rgba(0,0,0,0.15)';
+      }
     }
 
     // Daily counter

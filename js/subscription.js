@@ -1,134 +1,125 @@
 // ═══════════════════════════════════
 //  GREAM — subscription.js
-//  Free vs Premium model
-//  Free:    2 domácí/den, venku neomezeno, max 6/den celkem za semínka
-//  Premium: 6 domácí/den, venku neomezeno, kupovat extra za semínka (neomezeno)
-//  Trial:   14 dní Premium zdarma
+//  Free:    2 domácí zdarma, max 6 celkem (za semínka), venku max 6/den
+//  Premium: 4 domácí zdarma, max 6 celkem (za semínka), venku neomezeno
+//  Trial:   7 dní Premium zdarma
 // ═══════════════════════════════════
 
-const KEY_SUB   = 'gream_sub';
-const SEED_COST_EXTRA_TASK = 8; // semínek za 1 extra domácí úkol
+const KEY_SUB = 'gream_sub';
 
-export const FREE_DAILY_INDOOR   = 2;
-export const PREMIUM_DAILY_INDOOR = 6;
-export const FREE_MAX_WITH_SEEDS  = 6;  // free uživatel může koupit až 6/den celkem
-export const TRIAL_DAYS          = 7;
+export const FREE_DAILY_INDOOR    = 2;   // zdarma domácí
+export const PREMIUM_DAILY_INDOOR = 4;   // zdarma domácí pro premium
+export const INDOOR_MAX_TOTAL     = 6;   // absolutní strop (zdarma + koupené)
+export const FREE_DAILY_OUTDOOR   = 6;   // venkovní limit pro volný účet
+export const SEED_COST_EXTRA_TASK = 3;   // semínek za 1 extra domácí slot
+export const TRIAL_DAYS           = 7;
 
 function load() {
   try { return JSON.parse(localStorage.getItem(KEY_SUB) || '{}'); } catch { return {}; }
 }
 function save(d) { try { localStorage.setItem(KEY_SUB, JSON.stringify(d)); } catch {} }
 
+const today = () => new Date().toDateString();
+
 export const Subscription = {
 
-  // ─── Get subscription state for profile ───
   get(profileId) {
     const d = load();
     const s = d[profileId] || {};
-
     const now = Date.now();
-
-    // Trial setup
-    if (!s.trialStart) {
-      s.trialStart = now;
-      d[profileId] = s;
-      save(d);
-    }
-
-    const trialEnd     = s.trialStart + TRIAL_DAYS * 86400000;
-    const inTrial      = !s.premium && now < trialEnd;
-    const isPremium    = !!s.premium || inTrial;
+    if (!s.trialStart) { s.trialStart = now; d[profileId] = s; save(d); }
+    const trialEnd      = s.trialStart + TRIAL_DAYS * 86400000;
+    const inTrial       = !s.premium && now < trialEnd;
+    const isPremium     = !!s.premium || inTrial;
     const trialDaysLeft = inTrial ? Math.ceil((trialEnd - now) / 86400000) : 0;
-
-    return {
-      isPremium,
-      inTrial,
-      trialDaysLeft,
-      premiumSince: s.premium || null,
-    };
+    return { isPremium, inTrial, trialDaysLeft, premiumSince: s.premium || null };
   },
 
-  // ─── Activate premium (called after payment) ───
   activatePremium(profileId) {
-    const d = load();
-    if (!d[profileId]) d[profileId] = {};
-    d[profileId].premium = Date.now();
-    save(d);
+    const d = load(); if (!d[profileId]) d[profileId] = {};
+    d[profileId].premium = Date.now(); save(d);
   },
 
-  // ─── Cancel (for testing) ───
   cancelPremium(profileId) {
-    const d = load();
-    if (d[profileId]) d[profileId].premium = null;
-    save(d);
+    const d = load(); if (d[profileId]) d[profileId].premium = null; save(d);
   },
 
-  // ─── How many indoor tasks done today ───
+  // ─── Indoor tracking ───
   getIndoorToday(profileId) {
-    const d = load();
-    const s = d[profileId] || {};
-    const today = new Date().toDateString();
-    if (s.indoorDate !== today) return 0;
-    return s.indoorCount || 0;
+    const s = (load()[profileId] || {});
+    return s.indoorDate === today() ? (s.indoorCount || 0) : 0;
   },
 
-  // ─── Record an indoor task ───
   recordIndoor(profileId) {
-    const d = load();
-    if (!d[profileId]) d[profileId] = {};
+    const d = load(); if (!d[profileId]) d[profileId] = {};
     const s = d[profileId];
-    const today = new Date().toDateString();
-    if (s.indoorDate !== today) { s.indoorDate = today; s.indoorCount = 0; }
+    if (s.indoorDate !== today()) { s.indoorDate = today(); s.indoorCount = 0; }
     s.indoorCount = (s.indoorCount || 0) + 1;
     save(d);
   },
 
-  // ─── Can start another indoor task? ───
-  // Returns { allowed, reason, seedCost }
   canStartIndoor(profileId, seeds) {
-    const sub   = this.get(profileId);
-    const done  = this.getIndoorToday(profileId);
-    const limit = sub.isPremium ? PREMIUM_DAILY_INDOOR : FREE_DAILY_INDOOR;
-    const lang  = localStorage.getItem('gream_lang') || 'en';
-    const cs = lang === 'cs';
+    const sub  = this.get(profileId);
+    const done = this.getIndoorToday(profileId);
+    const free = sub.isPremium ? PREMIUM_DAILY_INDOOR : FREE_DAILY_INDOOR;
+    const lang = localStorage.getItem('gream_lang') || 'en';
+    const cs   = lang === 'cs';
 
-    if (done < limit) {
-      return { allowed: true, seedCost: 0 };
-    }
+    if (done < free) return { allowed: true, seedCost: 0 };
 
-    // Over base limit — can buy extra with seeds
-    const maxTotal = sub.isPremium ? Infinity : FREE_MAX_WITH_SEEDS;
-    if (done >= maxTotal) {
+    if (done >= INDOOR_MAX_TOTAL) {
       return {
         allowed: false,
         reason: cs
-          ? (sub.isPremium
-              ? `Splnil/a jsi ${PREMIUM_DAILY_INDOOR} domácích úkolů dnes. Jdi ven! 🌳`
-              : `Denní limit pro bezplatnou verzi. Upgraduj na Premium nebo jdi ven!`)
-          : (sub.isPremium
-              ? `You've done ${PREMIUM_DAILY_INDOOR} indoor tasks today. Go outside! 🌳`
-              : `Daily limit reached for free version. Upgrade to Premium or go outside!`),
+          ? `Denní limit ${INDOOR_MAX_TOTAL} domácích výzev vyčerpán. Jdi ven! 🌳`
+          : `Daily limit of ${INDOOR_MAX_TOTAL} home challenges reached. Go outside! 🌳`,
         seedCost: 0,
       };
     }
 
-    // Can buy an extra task
+    // Extra slot available — costs seeds
     const canAfford = seeds >= SEED_COST_EXTRA_TASK;
     return {
       allowed: canAfford,
       seedCost: SEED_COST_EXTRA_TASK,
-      reason: canAfford ? null : (cs
-        ? `Potřebuješ ${SEED_COST_EXTRA_TASK} semínek pro další domácí úkol.`
-        : `You need ${SEED_COST_EXTRA_TASK} seeds for another indoor task.`),
       isPurchase: true,
+      reason: canAfford ? null : (cs
+        ? `Potřebuješ ${SEED_COST_EXTRA_TASK} 🌱 pro další domácí výzvu (zbývá ${INDOOR_MAX_TOTAL - done} slotů).`
+        : `You need ${SEED_COST_EXTRA_TASK} 🌱 for another home challenge (${INDOOR_MAX_TOTAL - done} slots left).`),
     };
   },
 
-  // ─── Cost to buy extra task ───
-  extraTaskCost() { return SEED_COST_EXTRA_TASK; },
-
-  // ─── Days left in trial ───
-  trialDaysLeft(profileId) {
-    return this.get(profileId).trialDaysLeft;
+  // ─── Outdoor tracking ───
+  getOutdoorToday(profileId) {
+    const s = (load()[profileId] || {});
+    return s.outdoorDate === today() ? (s.outdoorCount || 0) : 0;
   },
+
+  recordOutdoor(profileId) {
+    const d = load(); if (!d[profileId]) d[profileId] = {};
+    const s = d[profileId];
+    if (s.outdoorDate !== today()) { s.outdoorDate = today(); s.outdoorCount = 0; }
+    s.outdoorCount = (s.outdoorCount || 0) + 1;
+    save(d);
+  },
+
+  canStartOutdoor(profileId) {
+    const sub  = this.get(profileId);
+    if (sub.isPremium) return { allowed: true };
+    const done = this.getOutdoorToday(profileId);
+    const lang = localStorage.getItem('gream_lang') || 'en';
+    const cs   = lang === 'cs';
+    if (done >= FREE_DAILY_OUTDOOR) {
+      return {
+        allowed: false,
+        reason: cs
+          ? `Denní limit ${FREE_DAILY_OUTDOOR} venkovních výzev pro bezplatnou verzi. Vrať se zítra nebo přejdi na Premium! 🌟`
+          : `Daily limit of ${FREE_DAILY_OUTDOOR} outdoor challenges for free users. Come back tomorrow or go Premium! 🌟`,
+      };
+    }
+    return { allowed: true };
+  },
+
+  extraTaskCost() { return SEED_COST_EXTRA_TASK; },
+  trialDaysLeft(profileId) { return this.get(profileId).trialDaysLeft; },
 };
