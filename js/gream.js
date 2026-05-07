@@ -121,6 +121,35 @@ export const Gream = {
     save(data);
   },
 
+  // Drop a new mystery egg — only if fewer than 4 greams exist
+  dropEgg(profileId) {
+    const data = load();
+    const list = data[profileId] || [];
+    const active = list.filter(x => !x.archived);
+    if (active.length >= 4) return null;
+    const egg = {
+      id: 'gream_' + Date.now(),
+      archetype: null,
+      stage: 1,
+      tasksFor: 0,
+      taskByWorld: {},
+      hp: { water:50, sun:50, food:50, love:50, color:50, space:50 },
+      mood: 'happy',
+      isShiny: false,
+      isStarter: false,
+      archived: false,
+      name: null,
+      createdAt: Date.now(),
+      lastFedAt: Date.now(),
+      bornAt: Date.now(),
+      evolutionsAt: []
+    };
+    data[profileId] = list;
+    data[profileId].push(egg);
+    save(data);
+    return egg;
+  },
+
   // ─── Create starter Gream for a new profile ───
   // Archetype starts null — resolved at hatching (stage 2) from play behaviour
   createStarter(profileId) {
@@ -158,7 +187,9 @@ export const Gream = {
   feedFromTask(profileId, world, isOutdoor = false) {
     const data = load();
     const list = data[profileId] || [];
-    const g = list.find(x => !x.archived);
+    const activeId = data[`${profileId}_activeId`];
+    const g = (activeId ? list.find(x => x.id === activeId && !x.archived) : null)
+              || list.find(x => !x.archived);
     if (!g) return null;
 
     // Map world to need

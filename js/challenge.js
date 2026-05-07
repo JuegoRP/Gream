@@ -47,6 +47,7 @@ export const Challenge = {
     this._targetPOI  = opts.poi || null;
     this._indoorMode = !!opts.indoor;
     this._validating = false; // reset double-click guard
+    this._wrongCount = 0;
 
     const t   = tr();
     const lang = localStorage.getItem('gream_lang') || 'en';
@@ -516,6 +517,7 @@ export const Challenge = {
 
     // Choice wrong answer: deduct seeds, kick back to home, try again
     if (!result.passed && check?.type === 'choice') {
+      this._wrongCount = (this._wrongCount || 0) + 1;
       Feedback.error();
       const card = document.querySelector('.card');
       if (card) Feedback.flashError(card);
@@ -608,7 +610,7 @@ export const Challenge = {
 
 
   // ─── Complete step ───
-  _completeStep() {
+  async _completeStep() {
     const p = Profiles.active();
     if (!p || !this._world) return;
 
@@ -663,6 +665,18 @@ export const Challenge = {
 
     // ─── Check skin unlocks ───
     const newlyUnlocked = Skins.checkUnlocks(p.id);
+
+    // 5% egg drop on perfect (no wrong answers) full badge completion
+    if (result.stepsComplete && (this._wrongCount || 0) === 0 && Math.random() < 0.05) {
+      const { Gream: G } = await import('./gream.js');
+      const newEgg = G.dropEgg(p.id);
+      if (newEgg) {
+        const lang = localStorage.getItem('gream_lang') || 'cs';
+        setTimeout(() => this._showToast(
+          lang === 'cs' ? '🥚 Záhadné vajíčko se přidalo do tvé zahrady!' : '🥚 A mystery egg appeared in your garden!'
+        ), 2500);
+      }
+    }
 
     if (result.stepsComplete) {
       Feedback.celebrate();

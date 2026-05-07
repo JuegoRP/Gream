@@ -425,8 +425,8 @@ window.App = {
     }
 
     // Labels (bilingual)
-    this._setText('hubShopLbl',   cs ? 'Šatník'     : 'Shop');
-    this._setText('hubShopSub',   cs ? 'Skiny & boosters' : 'Skins & boosters');
+    this._setText('hubShopLbl',   cs ? 'Greamíci'     : 'My Greams');
+    this._setText('hubShopSub',   cs ? 'Spravuj mazlíčky' : 'Manage your pets');
     this._setText('hubRankLbl',   cs ? 'Žebříček'   : 'Ranking');
     this._setText('hubRankSub',   cs ? 'Porovnej se s ostatními' : 'Compare with others');
     this._setText('hubBadgesLbl', cs ? 'Odznaky'    : 'Badges');
@@ -757,27 +757,10 @@ window.App = {
       setTimeout(() => this._showStreakMilestone(streakResult.streak, lang), 600);
     }
 
-    // ─── Determine display mode: seed-jar OR Gream sprite ───
-    // Until first task is completed → show egg jar
-    // Stage 1 OR archetype not yet resolved → show mystery egg/jar
+    // ─── Stage info for active pet (shown below display name) ───
     const tasksDone = pet.tasksFor || 0;
-    const showJar = pet.stage < 2 || !pet.archetype; // mystery until hatched AND archetype known
-
-    const jarWrap   = document.getElementById('homeJarWrap');
-    const sprite    = document.getElementById('greamSprite');
-    const shadow    = document.getElementById('greamShadow');
-    const needsBar  = document.getElementById('needsBar');
-
-    if (showJar) {
-      if (jarWrap) jarWrap.style.display = 'flex';
-      if (sprite) sprite.style.display = 'none';
-      if (shadow) shadow.style.display = 'none';
-      if (needsBar) needsBar.style.display = 'none';
-
-      // Hatching-soon: faster egg wobble + glow when ≥8 tasks done
-      if (jarWrap) jarWrap.classList.toggle('hatching-soon', tasksDone >= 8);
-
-      this._setText('greamDisplayName', lang === 'cs' ? '🌱 Záhadné vajíčko' : '🌱 Mystery egg');
+    const showJarActive = pet.stage < 2 || !pet.archetype;
+    if (showJarActive) {
       const remaining = Math.max(0, 12 - tasksDone);
       let stageInfo = '';
       if (remaining > 0) {
@@ -794,32 +777,6 @@ window.App = {
       }
       this._setText('greamStageInfo', stageInfo);
     } else {
-      if (jarWrap) jarWrap.style.display = 'none';
-      if (jarWrap) jarWrap.classList.remove('hatching-soon');
-      if (sprite) {
-        sprite.style.display = 'block';
-        this._applyGreamSprite(sprite, pet);
-        sprite.classList.toggle('shiny', !!pet.isShiny);
-        sprite.alt = Gream.getDisplayName(pet, lang);
-      }
-      if (shadow) shadow.style.display = 'block';
-      if (needsBar) needsBar.style.display = 'grid';
-
-      // ─── Accessory overlay (emoji above sprite) ───
-      const p2 = Profiles.active();
-      let accOverlay = document.getElementById('greamAccessoryOverlay');
-      const accId = p2 ? Skins.getEquippedAccessory(p2.id) : null;
-      const accDef = accId ? (SKIN_CATALOG.accessories.find(a => a.id === accId)) : null;
-      if (!accOverlay) {
-        accOverlay = document.createElement('div');
-        accOverlay.id = 'greamAccessoryOverlay';
-        accOverlay.style.cssText = 'position:absolute;top:0;left:50%;transform:translateX(-50%) translateY(-18px);font-size:28px;pointer-events:none;z-index:5;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.2))';
-        sprite?.parentElement?.style && (sprite.parentElement.style.position = 'relative');
-        sprite?.parentElement?.appendChild(accOverlay);
-      }
-      accOverlay.textContent = accDef ? accDef.emoji : '';
-
-      this._setText('greamDisplayName', Gream.getDisplayName(pet, lang));
       const stageNames = {
         cs: ['Mládě', 'Mladý', 'Dospívající', 'Dospělý'],
         en: ['Baby', 'Young', 'Teen', 'Adult']
@@ -827,12 +784,23 @@ window.App = {
       const stageName = (stageNames[lang] || stageNames.cs)[pet.stage - 2] || '';
       this._setText('greamStageInfo',
         lang === 'cs' ? `${stageName} · ${tasksDone} úkolů` : `${stageName} · ${tasksDone} tasks`);
-
       this._renderNeedsBar(pet);
     }
 
+    // ─── Multi-gream garden ───
+    const allGreams = Gream.all(p.id).filter(g => !g.archived);
+    this._renderGardenGreams(allGreams, pet, lang);
+
+    const legacyJar = document.getElementById('homeJarWrap');
+    const legacySprite = document.getElementById('greamSprite');
+    const legacyShadow = document.getElementById('greamShadow');
+    if (legacyJar) legacyJar.style.display = 'none';
+    if (legacySprite) legacySprite.style.display = 'none';
+    if (legacyShadow) legacyShadow.style.display = 'none';
+
     // ─── Dynamic background scene ───
     this._renderGreamScene(pet);
+    this._maybeAddRainOverlay();
 
     // ─── Speech bubble greeting ───
     const speech = document.getElementById('greamSpeech');
@@ -968,6 +936,124 @@ window.App = {
       </div>
     `;
     bar.style.justifyContent = 'center';
+  },
+
+  _renderGardenGreams(allGreams, activeGream, lang) {
+    const stage = document.getElementById('greamStage');
+    if (!stage) return;
+
+    stage.querySelectorAll('.garden-gream-slot').forEach(el => el.remove());
+
+    const POSITIONS = {
+      1: [50],
+      2: [30, 70],
+      3: [22, 50, 78],
+      4: [18, 38, 62, 82]
+    };
+    const xPositions = POSITIONS[allGreams.length] || POSITIONS[1];
+
+    allGreams.forEach((g, i) => {
+      const isActive = g.id === activeGream?.id;
+      const xPct = xPositions[i] || 50;
+      const showJar = g.stage < 2 || !g.archetype;
+
+      const slot = document.createElement('div');
+      slot.className = 'garden-gream-slot';
+      slot.style.cssText = `
+        position:absolute;
+        left:${xPct}%;
+        bottom:18px;
+        transform:translateX(-50%) scale(${isActive ? 1.0 : 0.78});
+        transform-origin: bottom center;
+        opacity:${isActive ? 1 : 0.7};
+        z-index:${isActive ? 4 : 3};
+        transition:transform 0.3s,opacity 0.3s;
+        cursor:pointer;
+        display:flex;flex-direction:column;align-items:center;
+      `;
+
+      if (showJar) {
+        slot.innerHTML = `
+          <div style="width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,0.25);border:2px solid rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;
+            ${g.tasksFor >= 8 ? 'animation:greamIdle 1s ease-in-out infinite;' : ''}
+          ">
+            <img src="img/greamici/seed_1.png" style="width:38px;height:38px;image-rendering:pixelated" onerror="this.style.display='none';this.nextSibling.style.display='block'">
+            <span style="font-size:28px;display:none">🥚</span>
+          </div>
+          ${isActive ? '<div style="position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.18);width:40px;height:8px;border-radius:50%"></div>' : ''}
+        `;
+      } else {
+        const arch = g.archetype;
+        const stageN = Math.min(g.stage, 4);
+        slot.innerHTML = `
+          <canvas data-sprite-sheet="img/greamici/${arch}_${stageN}.png"
+            data-sprite-mood="${isActive ? (g.mood || 'happy') : 'neutral'}"
+            width="90" height="90"
+            style="width:90px;height:90px;image-rendering:pixelated;display:block;
+              ${isActive ? 'animation:greamIdle 2.4s ease-in-out infinite;' : ''}
+              filter:drop-shadow(0 4px 8px rgba(0,0,0,${isActive ? '0.3' : '0.15'}));
+              ${g.isShiny ? 'filter:drop-shadow(0 4px 8px rgba(255,215,0,0.5));' : ''}
+            "></canvas>
+          <div style="position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,${isActive ? '0.22' : '0.1'});width:${isActive ? 60 : 44}px;height:${isActive ? 10 : 7}px;border-radius:50%"></div>
+        `;
+      }
+
+      slot.addEventListener('click', () => {
+        if (!isActive) {
+          Gream.setActive(Profiles.active()?.id, g.id);
+          this.renderMap();
+          Feedback.tap();
+        } else {
+          this.tapGream();
+        }
+      });
+
+      stage.appendChild(slot);
+    });
+
+    this._initSpriteCanvases(stage);
+
+    const activePet = activeGream;
+    if (activePet) {
+      const showJar = activePet.stage < 2 || !activePet.archetype;
+      if (showJar) {
+        this._setText('greamDisplayName', lang === 'cs' ? '🌱 Záhadné vajíčko' : '🌱 Mystery egg');
+      } else {
+        this._setText('greamDisplayName', Gream.getDisplayName(activePet, lang));
+      }
+    }
+  },
+
+  _maybeAddRainOverlay() {
+    const stage = document.getElementById('greamStage');
+    if (!stage) return;
+    stage.querySelectorAll('.garden-rain').forEach(e => e.remove());
+
+    const dateKey = new Date().toDateString();
+    let hash = 0;
+    for (const c of dateKey) hash = (hash * 31 + c.charCodeAt(0)) & 0xffffffff;
+    const shouldRain = (Math.abs(hash) % 100) < 15;
+    if (!shouldRain) return;
+
+    const rainEl = document.createElement('div');
+    rainEl.className = 'garden-rain';
+    rainEl.style.cssText = 'position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:6';
+    const drops = [];
+    for (let i = 0; i < 18; i++) {
+      const x = Math.random() * 100;
+      const delay = Math.random() * 2;
+      const dur = 0.7 + Math.random() * 0.5;
+      drops.push(`<div style="position:absolute;left:${x}%;top:-10px;width:1.5px;height:${8+Math.random()*8}px;background:rgba(180,220,255,0.55);border-radius:2px;animation:rainFall ${dur}s linear ${delay}s infinite"></div>`);
+    }
+    rainEl.innerHTML = drops.join('');
+    stage.appendChild(rainEl);
+
+    if (!document.getElementById('rainKeyframe')) {
+      const style = document.createElement('style');
+      style.id = 'rainKeyframe';
+      style.textContent = '@keyframes rainFall { from{top:-10px;opacity:0.7} to{top:110%;opacity:0.1} }';
+      document.head.appendChild(style);
+    }
   },
 
   // ─── User taps the Gream — playful reaction ───
@@ -1275,6 +1361,17 @@ window.App = {
     };
     const sky = skies[tod];
 
+    let skyTint = '';
+    if (hour >= 21 || hour < 6) {
+      skyTint = 'rgba(10,20,60,0.55)';
+    } else if (hour >= 19) {
+      skyTint = 'rgba(200,80,20,0.3)';
+    } else if (hour >= 17) {
+      skyTint = 'rgba(180,120,0,0.2)';
+    } else if (hour >= 6 && hour < 9) {
+      skyTint = 'rgba(255,200,100,0.15)';
+    }
+
     // Ground/flora by world + season
     const scenes = {
       nature:   { ground: '#5a9a3a', mid: '#4a8a2e', flora: _floraForest(season, tod) },
@@ -1353,6 +1450,15 @@ window.App = {
 
   <!-- Ground shine -->
   <rect x="0" y="${groundY}" width="380" height="4" fill="rgba(255,255,255,0.12)"/>
+  ${skyTint ? `<rect width="380" height="${svgH}" fill="${skyTint}" pointer-events="none"/>` : ''}
+  ${(hour >= 21 || hour < 6) ? `
+    <circle cx="320" cy="30" r="16" fill="rgba(255,255,200,0.9)" filter="url(#moonGlow)"/>
+    <defs><filter id="moonGlow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+    <circle cx="50" cy="40" r="1.5" fill="white" opacity="0.8"/>
+    <circle cx="120" cy="20" r="1" fill="white" opacity="0.6"/>
+    <circle cx="200" cy="15" r="1.5" fill="white" opacity="0.7"/>
+    <circle cx="270" cy="35" r="1" fill="white" opacity="0.5"/>
+  ` : ''}
 </svg>`;
 
     // Remove old SVG, inject new one
@@ -2541,7 +2647,7 @@ window.App = {
     const t    = tr();
     const lang = getLang();
 
-    this._setText('wardTitle',      lang === 'cs' ? '🛒 Obchod' : '🛒 Shop');
+    this._setText('wardTitle',      lang === 'cs' ? '🥚 Moji Greamíci' : '🥚 My Greams');
     this._setText('wardSeeds',      Skins.getSeeds(p.id));
     this._setText('wardTabGreams',  lang === 'cs' ? '🥚 Greamíci' : '🥚 Greams');
     this._setText('wardTabBoosts',  lang === 'cs' ? '✨ Boosty' : '✨ Boosts');
