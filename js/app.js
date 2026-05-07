@@ -17,6 +17,7 @@ import { MapView } from './mapview.js';
 import { Gream, ARCHETYPES, spritePath, smartSpritePath } from './gream.js';
 import { Subscription, FREE_DAILY_INDOOR, PREMIUM_DAILY_INDOOR } from './subscription.js';
 import { Ranking } from './ranking.js';
+import { Audio } from './audio.js';
 
 // ─── Global error boundary ───
 // Catches uncaught errors and shows a friendly recovery UI instead of white screen
@@ -232,6 +233,10 @@ window.App = {
 
   async init() {
     console.log('[Gream] Init starting...');
+    Audio.init();
+    // Resume AudioContext and start music on first user gesture (required for iOS)
+    document.addEventListener('touchstart', () => Audio.onUserGesture(), { once: true, passive: true });
+    document.addEventListener('click',      () => Audio.onUserGesture(), { once: true, passive: true });
     this._syncLangBtns();
     const profiles = Profiles.all();
     const active   = Profiles.active();
@@ -344,7 +349,12 @@ window.App = {
   // ─── Tab bar switching ───
   showTab(tab) {
     const lang = getLang();
-    if (tab !== 'garden') clearInterval(this._greamIdleTimer);
+    if (tab !== 'garden') {
+      clearInterval(this._greamIdleTimer);
+      Audio.stopMusic();
+    } else {
+      Audio.startMusic();
+    }
     if (tab === 'garden') {
       Router.show('map');
     } else if (tab === 'map') {
@@ -2838,6 +2848,7 @@ window.App = {
   // ─── Toggle sound (settings) ───
   toggleSound(on) {
     Feedback.setSoundEnabled(on);
+    Audio.setEnabled(on);
     if (on) Feedback.tap();
   },
 
