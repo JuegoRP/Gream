@@ -121,6 +121,20 @@ export const Gream = {
     save(data);
   },
 
+  // ─── Manual feed (garden 🍃 button) — mood boost, no task credit ───
+  manualFeed(profileId) {
+    const data = load();
+    const list = data[profileId] || [];
+    const activeId = data[`${profileId}_activeId`];
+    const g = (activeId ? list.find(x => x.id === activeId && !x.archived) : null)
+              || list.find(x => !x.archived);
+    if (!g) return;
+    g.mood = 'happy';
+    g.lastFedAt = Date.now();
+    Object.keys(g.hp).forEach(k => { g.hp[k] = Math.min(100, (g.hp[k] || 50) + 5); });
+    save(data);
+  },
+
   // Drop a new mystery egg — only if fewer than 4 greams exist
   dropEgg(profileId) {
     const data = load();

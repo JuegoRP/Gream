@@ -801,6 +801,12 @@ window.App = {
     // ─── Dynamic background scene ───
     this._renderGreamScene(pet);
     this._maybeAddRainOverlay();
+    this._renderFeedButton(p, pet, lang);
+
+    // ─── Chat bubbles when 2+ greams are hatched ───
+    clearTimeout(this._chatTimer);
+    const hatchedGreams = allGreams.filter(g => g.stage >= 2 && g.archetype);
+    if (hatchedGreams.length >= 2) this._startGardenChat(hatchedGreams, lang);
 
     // ─── Speech bubble greeting ───
     const speech = document.getElementById('greamSpeech');
@@ -842,11 +848,14 @@ window.App = {
 
     this.applyCosmetics();
 
-    // First-run tutorial — show pulsing hint on Doma klid for new users
+    // First-run tutorial
     if ((pet.tasksFor || 0) === 0) {
       this._showFirstRunHint(lang);
     } else {
       document.getElementById('frHint')?.remove();
+    }
+    if (!localStorage.getItem('gream_tutorial_v1')) {
+      setTimeout(() => this._showTutorial(lang), 800);
     }
 
     // Trial banner (first 7 days)
@@ -2031,6 +2040,174 @@ window.App = {
     const lang = getLang();
     this._showToast(lang === 'cs' ? '⭐ Premium aktivováno!' : '⭐ Premium activated!');
     this.renderMap();
+  },
+
+  // ─── Feed button overlay on garden stage ───
+  _renderFeedButton(p, pet, lang) {
+    const stage = document.getElementById('greamStage');
+    if (!stage) return;
+    stage.querySelector('.garden-feed-btn')?.remove();
+    if (!pet || pet.stage < 2) return;
+
+    const btn = document.createElement('button');
+    btn.className = 'garden-feed-btn';
+    btn.id = 'gardenFeedBtn';
+    btn.style.cssText = `
+      position:absolute;bottom:12px;right:12px;z-index:10;
+      width:38px;height:38px;border-radius:50%;
+      background:rgba(255,255,255,0.88);border:2px solid rgba(74,138,46,0.3);
+      font-size:18px;display:flex;align-items:center;justify-content:center;
+      box-shadow:0 2px 8px rgba(0,0,0,0.15);cursor:pointer;
+      transition:transform 0.15s;
+    `;
+    btn.textContent = '🍃';
+    btn.addEventListener('click', e => { e.stopPropagation(); this._feedActiveGream(); });
+    stage.appendChild(btn);
+  },
+
+  _feedActiveGream() {
+    const p = Profiles.active();
+    if (!p) return;
+    const lang = getLang();
+    if (Skins.getSeeds(p.id) < 1) {
+      this._showToast(lang === 'cs' ? '🌱 Nemáš semínka!' : '🌱 No seeds!');
+      return;
+    }
+    Skins.spendSeeds(p.id, 1);
+    Gream.manualFeed(p.id);
+    Feedback.pop();
+    this._setText('seedNum', Skins.getSeeds(p.id));
+
+    const stage = document.getElementById('greamStage');
+    if (stage) {
+      if (!document.getElementById('heartFloatKf')) {
+        const s = document.createElement('style');
+        s.id = 'heartFloatKf';
+        s.textContent = '@keyframes heartFloat{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-55px)}}';
+        document.head.appendChild(s);
+      }
+      const hearts = ['❤️','💚','💛','🌱'];
+      for (let i = 0; i < 5; i++) {
+        const h = document.createElement('div');
+        h.style.cssText = `position:absolute;left:${25+Math.random()*50}%;bottom:30%;font-size:${14+Math.random()*10}px;pointer-events:none;z-index:20;animation:heartFloat 1.2s ease forwards`;
+        h.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+        stage.appendChild(h);
+        setTimeout(() => h.remove(), 1300);
+      }
+    }
+    this._showToast(lang === 'cs' ? '🍃 Greamík nakrmen! 💚' : '🍃 Gream fed! 💚');
+  },
+
+  // ─── Chat bubbles when 2+ greams are present ───
+  _startGardenChat(hatchedGreams, lang) {
+    const chatLines = {
+      cs: [['Ahoj!','Čau!'],['Jak se máš?','Super!'],['Pojď si hrát!','Jdu!'],['Dnes bylo hezky','Hmm!'],['✨','🌱']],
+      en: [['Hello!','Hi there!'],['How are you?','Great!'],['Let\'s play!','Coming!'],['Nice day','Hmm!'],['✨','🌱']]
+    };
+    const delay = 6000 + Math.random() * 8000;
+    this._chatTimer = setTimeout(() => {
+      const slots = document.querySelectorAll('.garden-gream-slot');
+      if (slots.length < 2) return;
+      const lines = chatLines[lang] || chatLines.en;
+      const pair = lines[Math.floor(Math.random() * lines.length)];
+      [0, 1].forEach(idx => {
+        const slot = slots[idx];
+        if (!slot) return;
+        let bubble = slot.querySelector('.gream-chat-bubble');
+        if (!bubble) {
+          bubble = document.createElement('div');
+          bubble.className = 'gream-chat-bubble';
+          bubble.style.cssText = `position:absolute;bottom:calc(100% + 4px);left:50%;transform:translateX(-50%);background:white;padding:5px 10px;border-radius:12px;font-size:12px;font-weight:800;color:var(--green-deep);box-shadow:0 2px 8px rgba(0,0,0,0.15);white-space:nowrap;opacity:0;transition:opacity 0.3s;pointer-events:none;z-index:15`;
+          slot.appendChild(bubble);
+        }
+        bubble.textContent = pair[idx] || '...';
+        bubble.style.opacity = '1';
+        setTimeout(() => { bubble.style.opacity = '0'; }, 2800);
+      });
+      this._chatTimer = setTimeout(() => this._startGardenChat(hatchedGreams, lang), 14000 + Math.random() * 10000);
+    }, delay);
+  },
+
+  // ─── In-garden tutorial (shown once on first launch) ───
+  _showTutorial(lang) {
+    if (localStorage.getItem('gream_tutorial_v1')) return;
+    localStorage.setItem('gream_tutorial_v1', '1');
+
+    const cs = lang === 'cs';
+    const steps = [
+      { sel: '#greamStage',       icon: '🌱', text: cs ? 'Toto je tvoje zahrada! Tady žijí a rostou tvoji Greamíci.' : 'This is your garden! Your Greams live and grow here.' },
+      { sel: '.garden-gream-slot, #homeJarWrap', icon: '👆', text: cs ? 'Klepni na Greamíka nebo vajíčko — odpoví ti!' : 'Tap your Gream or egg — it will react!' },
+      { sel: '#hcIndoorTitle, .btn-primary', icon: '🏠', text: cs ? 'Splň domácí výzvu — Greamík poroste a ty dostaneš semínka.' : 'Complete a home challenge — your Gream grows and you earn seeds.' },
+      { sel: '#seedNum',           icon: '🌱', text: cs ? 'Semínka sbíráš splněním výzev. Nakrm jimi Greamíky tlačítkem 🍃.' : 'Earn seeds by completing challenges. Use 🍃 to feed your Greams.' },
+      { sel: '#tab-hub',           icon: '⭐', text: cs ? 'Záložka JÁ — odznaky, semínka, Greamíci a celý tvůj postup!' : 'The ME tab — badges, seeds, Greams and your full progress!' },
+    ];
+
+    let idx = 0;
+    let prevEl = null;
+
+    const overlay = document.createElement('div');
+    overlay.id = 'tutOverlay';
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:5000;display:flex;flex-direction:column;justify-content:flex-end;padding:0 20px 110px;pointer-events:all';
+
+    const card = document.createElement('div');
+    card.style.cssText = 'background:white;border-radius:24px;padding:24px 22px 18px;box-shadow:0 8px 32px rgba(0,0,0,0.35);max-width:400px;margin:0 auto;width:100%';
+
+    const icon = document.createElement('div');
+    icon.style.cssText = 'font-size:40px;text-align:center;margin-bottom:10px';
+
+    const text = document.createElement('div');
+    text.style.cssText = 'font-size:15px;font-weight:800;color:var(--green-deep);text-align:center;line-height:1.5;margin-bottom:16px';
+
+    const dots = document.createElement('div');
+    dots.style.cssText = 'display:flex;gap:6px;justify-content:center;margin-bottom:16px';
+
+    const nextBtn = document.createElement('button');
+    nextBtn.className = 'btn-primary';
+    nextBtn.style.cssText = 'width:100%;padding:14px;font-size:16px';
+
+    const skipBtn = document.createElement('button');
+    skipBtn.style.cssText = 'width:100%;padding:8px;font-size:12px;color:#aaa;font-weight:700;background:none;border:none;cursor:pointer;margin-top:4px';
+    skipBtn.textContent = cs ? 'Přeskočit tutoriál' : 'Skip tutorial';
+    skipBtn.onclick = () => { cleanup(); overlay.remove(); };
+
+    card.appendChild(icon); card.appendChild(text); card.appendChild(dots);
+    card.appendChild(nextBtn); card.appendChild(skipBtn);
+    overlay.appendChild(card);
+    document.body.appendChild(overlay);
+
+    const cleanup = () => {
+      if (prevEl) { prevEl.style.outline = ''; prevEl.style.boxShadow = ''; prevEl.style.position = ''; prevEl = null; }
+    };
+
+    const showStep = (i) => {
+      cleanup();
+      if (i >= steps.length) { overlay.remove(); return; }
+      const step = steps[i];
+      icon.textContent = step.icon;
+      text.textContent = step.text;
+      dots.innerHTML = '';
+      steps.forEach((_, di) => {
+        const d = document.createElement('div');
+        d.style.cssText = `width:8px;height:8px;border-radius:50%;background:${di === i ? 'var(--green-mid)' : '#ddd'}`;
+        dots.appendChild(d);
+      });
+      nextBtn.textContent = i < steps.length - 1 ? (cs ? 'Další →' : 'Next →') : (cs ? 'Jdeme na to! 🌱' : "Let's go! 🌱");
+      nextBtn.onclick = () => showStep(i + 1);
+
+      const selectors = step.sel.split(',').map(s => s.trim());
+      let target = null;
+      for (const s of selectors) {
+        target = document.querySelector(s);
+        if (target) break;
+      }
+      if (target) {
+        target.style.outline = '3px solid var(--green-mid)';
+        target.style.boxShadow = '0 0 0 6px rgba(74,138,46,0.3)';
+        prevEl = target;
+      }
+    };
+
+    showStep(0);
   },
 
   _showFirstRunHint(lang) {
