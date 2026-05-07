@@ -344,6 +344,7 @@ window.App = {
   // ─── Tab bar switching ───
   showTab(tab) {
     const lang = getLang();
+    if (tab !== 'garden') clearInterval(this._greamIdleTimer);
     if (tab === 'garden') {
       Router.show('map');
     } else if (tab === 'map') {
@@ -823,6 +824,23 @@ window.App = {
       setTimeout(() => speech.classList.remove('show'), 4000);
     }
 
+    // ─── Ambient idle speech ───
+    clearInterval(this._greamIdleTimer);
+    if (pet?.archetype) {
+      const idleLines = {
+        cs: ['Dneska je krásně!', 'Pojď si hrát!', '🌱', 'Hmm...', 'Co děláš?', 'Jsem tady!', '✨'],
+        en: ['Nice day!', 'Let\'s play!', '🌱', 'Hmm...', 'What\'s up?', 'I\'m here!', '✨']
+      };
+      this._greamIdleTimer = setInterval(() => {
+        const el = document.getElementById('greamSpeech');
+        if (!el) { clearInterval(this._greamIdleTimer); return; }
+        const arr = idleLines[getLang()] || idleLines.en;
+        el.textContent = arr[Math.floor(Math.random() * arr.length)];
+        el.classList.add('show');
+        setTimeout(() => el.classList.remove('show'), 2500);
+      }, 18000 + Math.random() * 14000);
+    }
+
     // ─── Indoor / Outdoor button labels ───
     this._setText('hcIndoorTitle',  lang === 'cs' ? 'Doma klid' : 'Stay home');
     this._setText('hcIndoorSub',    lang === 'cs' ? 'Krátký úkol z domova' : 'A quick task from home');
@@ -1077,6 +1095,28 @@ window.App = {
     target.classList.add('tapped');
     setTimeout(() => target.classList.remove('tapped'), 400);
 
+    // Sparkle particle burst
+    const stage = document.getElementById('greamStage');
+    if (stage) {
+      const colors = ['#87c26d','#ffd54f','#ff88aa','#88ccff','#ffffff','#ffaa44'];
+      const count = 8;
+      for (let i = 0; i < count; i++) {
+        const p = document.createElement('div');
+        const angle = (i / count) * Math.PI * 2;
+        const dist  = 38 + Math.random() * 32;
+        p.style.cssText = `
+          position:absolute;width:7px;height:7px;border-radius:50%;
+          background:${colors[i % colors.length]};
+          left:50%;top:42%;pointer-events:none;z-index:20;
+          --sx:${(Math.cos(angle) * dist).toFixed(1)}px;
+          --sy:${(Math.sin(angle) * dist).toFixed(1)}px;
+          animation:sparkleOut 0.55s ease forwards;
+        `;
+        stage.appendChild(p);
+        setTimeout(() => p.remove(), 620);
+      }
+    }
+
     // Show a contextual line
     const p = Profiles.active();
     if (!p) return;
@@ -1238,8 +1278,34 @@ window.App = {
       ${[0,45,90,135,180,225,270,315].map(a => `<line x1="${310+22*Math.cos(a*Math.PI/180)}" y1="${42+22*Math.sin(a*Math.PI/180)}" x2="${310+32*Math.cos(a*Math.PI/180)}" y2="${42+32*Math.sin(a*Math.PI/180)}" stroke="#ffd54f" stroke-width="2" opacity="0.6"/>`).join('')}` : '';
     const sunriseGlow = (tod === 'dawn' || tod === 'dusk') ? `<circle cx="${tod==='dawn'?40:340}" cy="90" r="55" fill="${tod==='dawn'?'#ff8a50':'#ff6b35'}" opacity="0.35"/>` : '';
 
-    const svgH = 240;
-    const groundY = 170;
+    const svgH = 300;
+    const groundY = 218;
+
+    // Animated clouds for day/dawn
+    const clouds = (tod === 'day' || tod === 'dawn') ? `
+      <style>
+        @keyframes cDrift1{from{transform:translateX(-120px)}to{transform:translateX(480px)}}
+        @keyframes cDrift2{from{transform:translateX(-160px)}to{transform:translateX(500px)}}
+        @keyframes cDrift3{from{transform:translateX(-80px)}to{transform:translateX(450px)}}
+        .sc1{animation:cDrift1 22s linear infinite}
+        .sc2{animation:cDrift2 35s linear infinite -14s}
+        .sc3{animation:cDrift3 28s linear infinite -8s}
+      </style>
+      <g class="sc1" opacity="0.72">
+        <ellipse cx="60" cy="52" rx="36" ry="13" fill="white"/>
+        <ellipse cx="44" cy="56" rx="22" ry="10" fill="white"/>
+        <ellipse cx="78" cy="55" rx="24" ry="10" fill="white"/>
+      </g>
+      <g class="sc2" opacity="0.55">
+        <ellipse cx="240" cy="32" rx="48" ry="15" fill="white"/>
+        <ellipse cx="220" cy="37" rx="28" ry="11" fill="white"/>
+        <ellipse cx="264" cy="36" rx="30" ry="12" fill="white"/>
+      </g>
+      <g class="sc3" opacity="0.45">
+        <ellipse cx="150" cy="68" rx="28" ry="9" fill="white"/>
+        <ellipse cx="136" cy="71" rx="16" ry="7" fill="white"/>
+        <ellipse cx="164" cy="70" rx="18" ry="8" fill="white"/>
+      </g>` : '';
 
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 ${svgH}" style="position:absolute;inset:0;width:100%;height:100%">
   <defs>
@@ -1255,16 +1321,17 @@ window.App = {
 
   <!-- Sky -->
   <rect width="380" height="${svgH}" fill="url(#skyG)"/>
-  ${stars}${moon}${sun}${sunriseGlow}
+  ${stars}${moon}${sun}${sunriseGlow}${clouds}
 
   <!-- Horizon mist -->
-  <ellipse cx="190" cy="${groundY}" rx="220" ry="24" fill="${scene.mid}" opacity="0.35"/>
+  <ellipse cx="190" cy="${groundY}" rx="220" ry="28" fill="${scene.mid}" opacity="0.35"/>
 
   <!-- Ground -->
   <rect x="0" y="${groundY}" width="380" height="${svgH - groundY}" fill="url(#groundG)"/>
 
   <!-- Flora / scene elements -->
-  ${scene.flora}
+  <!-- Flora shifted to match new groundY (old coords assume groundY=170, delta=+48) -->
+  <g transform="translate(0,48)">${scene.flora}</g>
 
   <!-- Ground shine -->
   <rect x="0" y="${groundY}" width="380" height="4" fill="rgba(255,255,255,0.12)"/>
