@@ -13,7 +13,7 @@
 - [ ] Onboarding přepis
 
 ### Obsah
-- [ ] Vlastní artworky — náhrada Kenney placeholderů (greamici sprity jsou vlastní, zbytek ne)
+- [~] Vlastní artworky — greamíci + vejce + pozadí + ikony hotové (2026-07-01), zbývá: Kenney placeholdery na mapě, barevnější vlnka, stage-varianty gramíků
 
 ### Build a distribuce
 - [ ] Capacitor build iOS + Android (postup: CAPACITOR.md)
@@ -21,6 +21,14 @@
 - [ ] Store assety: screenshoty, popisky (EN texty hotové v i18n.js — využít)
 
 ---
+
+## Hotovo (2026-07-01)
+
+- [x] Oprava přepínání hudby (audio.js v6 — single source of truth, idempotentní switchScene, konec překryvu 2 stop); model 3 songy (challenge/outdoor/menu)
+- [x] Malovaná pozadí (zahrada + 6 světů, flat-vektor) přes image-gen workflow, optimalizováno na JPEG (944 KB celkem); živá vrstva zahrady (pyl/světlušky, denní/noční tint)
+- [x] Gramíci + vejce + app ikony přegenerovány do flat-vektoru (chroma-key → průhledné sprity ve stávajícím 2×2 formátu)
+- [x] +288 nových výzev (144 en + 144 cs) napříč obtížnostmi; víc match/sort
+- [x] Dokončen difficulty-refactor: i18n klíče přejmenovány 4-6/7-9/10-15/15+ → easy/medium/hard/extreme; opravena rozbitá challenge.js z commitu 49745a2 (chyběly render metody)
 
 ## Hotovo (stav k 2026-06-10)
 

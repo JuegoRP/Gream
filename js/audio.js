@@ -1,6 +1,9 @@
 // ═══════════════════════════════════
-//  GREAM — audio.js  v5
+//  GREAM — audio.js  v6
 //  Scene-based music, clean fade out → gap → fade in.
+//  Single source of truth (_desiredScene) + idempotent switching:
+//  repeated calls for the same scene (showTab + screen:ready fire
+//  switchScene twice) no longer overlap two tracks.
 //  Native loop (el.loop=true) — no new elements on repeat,
 //  no mobile autoplay block after 2 cycles.
 // ═══════════════════════════════════
@@ -17,11 +20,12 @@ const SWITCH_GAP   = 200;
 const FADE_TICK_MS = 40;
 const TARGET_VOL   = 0.25;
 
-let _musicEl      = null;
-let _currentScene = null;
-let _enabled      = true;
-let _running      = false;
-let _generation   = 0;
+let _musicEl       = null;   // element currently playing / fading in
+let _currentScene  = null;   // scene of _musicEl (set at switch start)
+let _desiredScene  = null;   // scene we WANT to hear (survives mute)
+let _enabled       = true;
+let _transitioning = false;  // a fade-out → fade-in is in flight
+let _generation    = 0;
 
 try {
   if (localStorage.getItem('gream_sound') === 'off') _enabled = false;
@@ -61,22 +65,28 @@ export const Audio = {
     try { _enabled = localStorage.getItem('gream_sound') !== 'off'; } catch {}
   },
 
-  // Called on every touch/click — starts or retries until actually playing
+  // Called on every touch/click — resume desired scene if nothing is playing.
+  // Never interferes while a transition is already underway, and never falls
+  // back to 'menu' when we actually want a different scene.
   onUserGesture() {
     if (!_enabled) return;
+    if (_transitioning) return;
     if (_musicEl && !_musicEl.paused) return;
-    this.switchScene(_currentScene || 'menu');
+    const scene = _desiredScene || 'menu';
+    _currentScene = null;          // force (re)start even if scene unchanged
+    this.switchScene(scene);
   },
 
   switchScene(scene) {
+    if (!SCENE_MUSIC[scene]) return;
+    _desiredScene = scene;
     if (!_enabled) return;
-    if (scene === _currentScene && _running && _musicEl) return;
+    // Already playing or already switching to this scene → no-op.
+    // This kills the double-trigger overlap (showTab + screen:ready).
+    if (scene === _currentScene) return;
 
-    const src = SCENE_MUSIC[scene];
-    if (!src) return;
-
-    _currentScene = scene;
-    _running = true;
+    _currentScene  = scene;
+    _transitioning = true;
     const gen = ++_generation;
 
     const old = _musicEl;
@@ -84,12 +94,13 @@ export const Audio = {
 
     const startNew = () => {
       if (_generation !== gen) return;
-      _startAudio(src).then(el => {
+      _startAudio(SCENE_MUSIC[scene]).then(el => {
         if (_generation !== gen) { try { el.pause(); } catch {} return; }
         _musicEl = el;
+        _transitioning = false;
         _fadeVolume(el, 0, TARGET_VOL, FADE_IN_MS, null);
       }).catch(() => {
-        if (_generation === gen) _running = false;
+        if (_generation === gen) _transitioning = false;
       });
     };
 
@@ -104,8 +115,9 @@ export const Audio = {
   },
 
   stopMusic() {
-    _running = false;
-    _currentScene = null;
+    // Keep _desiredScene so unmute resumes the right track.
+    _currentScene  = null;
+    _transitioning = false;
     _generation++;
     const old = _musicEl;
     _musicEl = null;
@@ -116,11 +128,13 @@ export const Audio = {
     _enabled = !!on;
     try { localStorage.setItem('gream_sound', on ? 'on' : 'off'); } catch {}
     if (on) {
-      if (_currentScene) { _running = false; this.switchScene(_currentScene); }
+      const scene = _desiredScene || 'menu';
+      _currentScene = null;        // force restart of the desired scene
+      this.switchScene(scene);
     } else {
       this.stopMusic();
     }
   },
 
-  isRunning() { return _running; },
+  isRunning() { return !!(_musicEl && !_musicEl.paused) || _transitioning; },
 };

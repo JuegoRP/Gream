@@ -1126,7 +1126,8 @@ window.App = {
     const dy = Math.round(canvasH - dh);         // bottom-align so sprite "stands"
 
     ctx.clearRect(0, 0, canvasW, canvasH);
-    ctx.imageSmoothingEnabled = false;
+    ctx.imageSmoothingEnabled = true;        // smooth flat-vector sprites (no longer pixel art)
+    ctx.imageSmoothingQuality = 'high';
     // Draw the cropped content region centered on the destination canvas
     ctx.drawImage(img,
       sx + minX - PAD, sy + minY - PAD, cw, ch,  // source: content bbox + padding
@@ -1397,23 +1398,23 @@ window.App = {
       bg.style.backgroundImage = `url('img/backgrounds/${equippedBg.file}')`;
       bg.style.backgroundSize = 'cover';
       bg.style.backgroundPosition = 'center bottom';
-      // Apply time-of-day tint overlay via a child div
-      let tintEl = bg.querySelector('.bg-tint');
-      if (!tintEl) { tintEl = document.createElement('div'); tintEl.className = 'bg-tint'; tintEl.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:1;transition:background 2s'; bg.prepend(tintEl); }
-      const hour2 = new Date().getHours();
-      let tint = 'transparent';
-      if (hour2 >= 21 || hour2 < 6) tint = 'rgba(10,20,60,0.45)';
-      else if (hour2 >= 19) tint = 'rgba(200,80,20,0.25)';
-      else if (hour2 >= 17) tint = 'rgba(180,120,0,0.15)';
-      tintEl.style.background = tint;
-      // Remove old SVG scene if present
-      bg.querySelector('svg')?.remove();
+      this._applyTodTint(bg);
+      bg.querySelector('svg.scene-svg')?.remove();
+      this._applyLivingOverlay(bg);
       return; // skip procedural SVG generation
     }
-    // No custom bg — clear any previously applied image
-    bg.style.backgroundImage = '';
-    bg.querySelector('.bg-tint')?.remove();
 
+    // No custom shop bg — use the painted default garden + living overlay
+    bg.style.backgroundImage = "url('img/bg/garden_bg.jpg')";
+    bg.style.backgroundSize = 'cover';
+    bg.style.backgroundPosition = 'center bottom';
+    this._applyTodTint(bg);
+    bg.querySelector('svg.scene-svg')?.remove();
+    this._applyLivingOverlay(bg);
+    return;
+
+    /* eslint-disable no-unreachable */
+    // ── Legacy procedural SVG scene — kept as fallback reference, no longer reached ──
     const now    = new Date();
     const hour   = now.getHours();
     const month  = now.getMonth(); // 0-11
@@ -1547,6 +1548,50 @@ window.App = {
     svgEl.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0';
     bg.insertBefore(svgEl, bg.firstChild);
   },
+  // ─── Time-of-day tint overlay (shared by painted + shop backgrounds) ───
+  _applyTodTint(bg) {
+    let tintEl = bg.querySelector('.bg-tint');
+    if (!tintEl) {
+      tintEl = document.createElement('div');
+      tintEl.className = 'bg-tint';
+      tintEl.style.cssText = 'position:absolute;inset:0;pointer-events:none;z-index:1;transition:background 2s';
+      bg.prepend(tintEl);
+    }
+    const h = new Date().getHours();
+    let tint = 'transparent';
+    if (h >= 21 || h < 6)      tint = 'rgba(10,20,60,0.45)';   // night
+    else if (h >= 19)          tint = 'rgba(200,80,20,0.22)';  // dusk
+    else if (h >= 17)          tint = 'rgba(180,120,0,0.13)';  // late afternoon
+    else if (h >= 6 && h < 8)  tint = 'rgba(255,200,100,0.13)'; // dawn
+    tintEl.style.background = tint;
+  },
+
+  // ─── Living overlay: floating pollen by day, fireflies by night ───
+  _applyLivingOverlay(bg) {
+    let live = bg.querySelector('.garden-live');
+    if (!live) {
+      live = document.createElement('div');
+      live.className = 'garden-live';
+      bg.appendChild(live);
+    }
+    const h = new Date().getHours();
+    live.classList.toggle('night', h >= 21 || h < 6);
+    if (live.childElementCount) return; // populate particles only once
+    const N = 9;
+    for (let i = 0; i < N; i++) {
+      const s = document.createElement('span');
+      s.className = 'garden-particle';
+      const dur = 7 + Math.random() * 7;
+      const sc  = 0.6 + Math.random() * 0.9;
+      s.style.left = (5 + Math.random() * 90) + '%';
+      s.style.setProperty('--drift', (Math.random() * 40 - 20) + 'px');
+      s.style.width = s.style.height = (5 * sc).toFixed(1) + 'px';
+      s.style.animationDuration = dur.toFixed(1) + 's';
+      s.style.animationDelay = (-Math.random() * dur).toFixed(1) + 's';
+      live.appendChild(s);
+    }
+  },
+
   startIndoor() {
     Feedback.click();
     const p = Profiles.active();
@@ -3786,17 +3831,17 @@ document.addEventListener('screen:ready', ({ detail: { screenId } }) => {
       App.renderBadges();
       Audio.switchScene('menu');
       break;
-    case 'ranking':     App.renderRanking();     break;
-    case 'settings':    App.renderSettings();    break;
-    case 'stats':       App.renderStats();       break;
-    case 'parent-confirm': App._initParentConfirm(); break;
+    case 'ranking':     App.renderRanking();     Audio.switchScene('menu'); break;
+    case 'settings':    App.renderSettings();    Audio.switchScene('menu'); break;
+    case 'stats':       App.renderStats();       Audio.switchScene('menu'); break;
+    case 'parent-confirm': App._initParentConfirm(); Audio.switchScene('menu'); break;
     case 'map-view':
       App.renderMapView(App._mapViewWorld || 'nature');
       Audio.switchScene('outdoor');
       break;
-    case 'wardrobe':    App.renderWardrobe();    break;
-    case 'geo-gate':    App.renderGeoGate();     break;
-    case 'history':     App.renderHistory();     break;
+    case 'wardrobe':    App.renderWardrobe();    Audio.switchScene('menu'); break;
+    case 'geo-gate':    App.renderGeoGate();     Audio.switchScene('menu'); break;
+    case 'history':     App.renderHistory();     Audio.switchScene('menu'); break;
     case 'challenge': {
       // If user lands here without an active challenge, redirect home
       // (e.g. after step-done / browser back without proper flow)

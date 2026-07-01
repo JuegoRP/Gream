@@ -6,7 +6,7 @@ Outdoorová dobrodružná hra pro děti 7–15 let. Jedna výzva denně — venk
 
 ## Co hra umí
 
-- **Denní výzvy** — 144 výzev v kategoriích, EN + CZ
+- **Denní výzvy** — přes 1000 výzev v 6 kategoriích × 4 obtížnosti (easy/medium/hard/extreme), EN + CZ
 - **Skutečná mapa** — Leaflet + OpenStreetMap, POI ze skutečného okolí (Overpass API)
 - **Geocaching mechanika** — „warmth" indikátor vzdálenosti (🥶 zima → 🔥 jsi na místě), výzva u POI se odemkne do 30 m od místa
 - **Gream (mazlíček)** — líhne se z vejce, evoluce podle splněných výzev, šatník, odznaky, streaky
@@ -14,20 +14,22 @@ Outdoorová dobrodružná hra pro děti 7–15 let. Jedna výzva denně — venk
 - **Historie** — posledních 50 splněných úkolů s místem a časem
 - **Parent gate** — potvrzení rodiče, žádná data neopouští zařízení
 
-## Stav projektu (k 2026-06-10)
+## Stav projektu (k 2026-07-01)
 
 **Hotovo:**
 - Kompletní gameplay loop: výzvy, pet systém, odznaky, streaky, šatník
-- **Lokalizace EN + CZ kompletní** (`js/i18n.js` — všechny texty včetně výzev)
+- **Lokalizace EN + CZ kompletní** (`js/i18n.js`) — přes 1000 výzev, klíčované obtížností (easy/medium/hard/extreme)
+- **Vlastní vizuál (flat-vektor):** malovaná pozadí zahrady + 6 světů, gramíci, vejce, app ikony; živá zahrada (pyl/světlušky, denní/noční tint)
+- Hudba: opravené scénové přepínání (menu/challenge/outdoor)
 - Reálná OSM mapa, geocaching warmth, historie aktivit
 - 30+ obrazovek, onboarding, parent-confirm, service worker (offline cache vč. map tiles a Leafletu)
-- Audio sada, `capacitor.config.json` připraven
+- `capacitor.config.json` připraven
 
 **Zbývá před vydáním:**
 - Safari CSS opravy
 - GPS fallback (odmítnutá poloha)
 - Onboarding přepis
-- Vlastní artworky (místo Kenney placeholderů)
+- Zbytek artworků (Kenney placeholdery na mapě, barevnější vlnka, stage-varianty gramíků)
 - Capacitor build + Google Play testing track
 
 Živý stav úkolů: `projects.json` v admin systému (admin.romanpavlorek.eu).
