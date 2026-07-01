@@ -783,7 +783,7 @@ export const Challenge = {
       ${gream.archetype
         ? `<canvas data-sprite-sheet="img/greamici/${gream.archetype}_${gream.stage}.png" data-sprite-mood="happy"
              width="96" height="96"
-             style="width:96px;height:96px;image-rendering:pixelated;display:block;margin:0 auto 12px"></canvas>`
+             style="width:96px;height:96px;image-rendering:auto;display:block;margin:0 auto 12px"></canvas>`
         : `<div style="font-size:64px;text-align:center;margin:0 auto 12px">🥚</div>`
       }
       <h3 style="font-size:18px;font-weight:900;color:var(--green-deep);margin:0 0 6px">${title}</h3>
@@ -847,7 +847,7 @@ export const Challenge = {
     const spriteSrc = spritePath(arch, greamResult.gream.stage);
     const sprite = document.createElement('img');
     sprite.src = spriteSrc;
-    sprite.style.cssText = 'width:48px;height:48px;image-rendering:pixelated';
+    sprite.style.cssText = 'width:48px;height:48px;image-rendering:auto';
     sprite.onerror = () => { sprite.style.fontSize = '36px'; sprite.textContent = '🥚'; };
     if (greamResult.isShiny) sprite.style.filter = 'drop-shadow(0 0 6px gold)';
     banner.appendChild(sprite);
@@ -891,7 +891,7 @@ export const Challenge = {
         </div>
         <canvas data-sprite-sheet="img/greamici/${arch}_2.png" data-sprite-mood="happy"
           width="120" height="120"
-          style="width:120px;height:120px;image-rendering:pixelated;display:block;margin:0 auto 12px;animation:scaleIn 0.5s cubic-bezier(0.2,0.8,0.3,1.2) 0.3s both,greamIdle 2s ease-in-out 0.8s infinite"></canvas>
+          style="width:120px;height:120px;image-rendering:auto;display:block;margin:0 auto 12px;animation:scaleIn 0.5s cubic-bezier(0.2,0.8,0.3,1.2) 0.3s both,greamIdle 2s ease-in-out 0.8s infinite"></canvas>
         <div style="font-size:20px;font-weight:900;color:white;margin-bottom:6px;animation:slideUp 0.4s ease 0.5s both">${defaultName}</div>
         <div style="font-size:14px;font-weight:700;color:rgba(135,194,109,0.9);margin-bottom:8px;animation:fadeIn 0.3s ease 0.65s both">${archTitle}</div>
         ${greamResult.isShiny ? `<div style="font-size:13px;font-weight:800;color:#f5d020;margin-bottom:14px">✨ ${lang === 'cs' ? 'A je VZÁCNÝ!' : "And it's SHINY!"}</div>` : ''}
