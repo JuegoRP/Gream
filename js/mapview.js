@@ -70,7 +70,7 @@ function makeUserMarker(L, gream) {
       html: `<div style="position:relative;width:48px;height:48px">
         <div style="position:absolute;inset:-10px;background:${ring}1a;border-radius:50%;animation:greamPulse 2.2s ease-in-out infinite"></div>
         <div style="position:absolute;inset:0;border-radius:50%;border:2.5px solid ${ring};background:white;box-shadow:0 2px 12px rgba(0,0,0,0.22);overflow:hidden;display:flex;align-items:center;justify-content:center">
-          <img src="${src}" style="width:42px;height:42px;object-fit:contain;image-rendering:auto"
+          <img src="${src}" style="width:42px;height:42px;object-fit:contain;image-rendering:pixelated"
                onerror="this.replaceWith(Object.assign(document.createElement('span'),{textContent:'🌱',style:'font-size:22px'}))">
         </div>
       </div>`,

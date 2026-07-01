@@ -62,8 +62,9 @@ export function smartSpritePath(gream) {
   if (!gream) return 'img/greamici/seed_1.png';
   if (!gream.archetype || gream.stage < 2) return 'img/greamici/seed_1.png';
   const s = Math.min(gream.stage, 4);
-  // Stage 1–4 sprite sheets all exist now (img/greamici/<archetype>_<stage>.png)
-  return `img/greamici/${gream.archetype}_${s}.png`;
+  // Stage 3 and 4 assets may not exist yet — fall back to stage 2
+  if (s >= 3) return `img/greamici/${gream.archetype}_${s}.png`;
+  return `img/greamici/${gream.archetype}_2.png`;
 }
 
 // Evolution thresholds (total tasks completed for this Gream)

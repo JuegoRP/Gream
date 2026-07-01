@@ -999,7 +999,7 @@ window.App = {
           <div style="width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,0.25);border:2px solid rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;
             ${g.tasksFor >= 8 ? 'animation:greamIdle 1s ease-in-out infinite;' : ''}
           ">
-            <img src="img/greamici/seed_1.png" style="width:38px;height:38px;image-rendering:auto" onerror="this.style.display='none';this.nextSibling.style.display='block'">
+            <img src="img/greamici/seed_1.png" style="width:38px;height:38px;image-rendering:pixelated" onerror="this.style.display='none';this.nextSibling.style.display='block'">
             <span style="font-size:28px;display:none">🥚</span>
           </div>
           ${isActive ? '<div style="position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.18);width:40px;height:8px;border-radius:50%"></div>' : ''}
@@ -1011,7 +1011,7 @@ window.App = {
           <canvas data-sprite-sheet="img/greamici/${arch}_${stageN}.png"
             data-sprite-mood="${isActive ? (g.mood || 'happy') : 'neutral'}"
             width="90" height="90"
-            style="width:90px;height:90px;image-rendering:auto;display:block;
+            style="width:90px;height:90px;image-rendering:pixelated;display:block;
               ${isActive ? 'animation:greamWalkBlock 1.1s ease-in-out infinite;' : ''}
               filter:drop-shadow(0 4px 8px rgba(0,0,0,${isActive ? '0.3' : '0.15'}));
               ${g.isShiny ? 'filter:drop-shadow(0 4px 8px rgba(255,215,0,0.5));' : ''}
@@ -1126,8 +1126,7 @@ window.App = {
     const dy = Math.round(canvasH - dh);         // bottom-align so sprite "stands"
 
     ctx.clearRect(0, 0, canvasW, canvasH);
-    ctx.imageSmoothingEnabled = true;        // smooth flat-vector sprites (no longer pixel art)
-    ctx.imageSmoothingQuality = 'high';
+    ctx.imageSmoothingEnabled = false;
     // Draw the cropped content region centered on the destination canvas
     ctx.drawImage(img,
       sx + minX - PAD, sy + minY - PAD, cw, ch,  // source: content bbox + padding
@@ -1200,7 +1199,7 @@ window.App = {
       spriteEl.style.width  = '160px';
       spriteEl.style.height = '160px';
       spriteEl.style.objectFit = 'contain';
-      spriteEl.style.imageRendering = 'auto';   // egg is now smooth flat-vector art
+      spriteEl.style.imageRendering = 'pixelated';
       return;
     }
 
@@ -3076,7 +3075,7 @@ window.App = {
           ">
             <canvas data-sprite-sheet="img/greamici/${a.id}_2.png" data-sprite-mood="happy"
               width="52" height="52"
-              style="width:52px;height:52px;image-rendering:auto;display:block;margin:0 auto"></canvas>
+              style="width:52px;height:52px;image-rendering:pixelated;display:block;margin:0 auto"></canvas>
             <span>${a.name[lang] || a.name.cs}</span>
             <span style="font-size:10px;color:#888;font-weight:600">${WORLD_EMOJIS[a.primaryWorld]}</span>
           </button>
@@ -3269,8 +3268,8 @@ window.App = {
           ${g.archetype && g.stage >= 2
             ? `<canvas data-sprite-sheet="img/greamici/${g.archetype}_${g.stage}.png" data-sprite-mood="${g.mood||'happy'}"
                  width="64" height="64"
-                 style="width:64px;height:64px;image-rendering:auto;display:block"></canvas>`
-            : `<img src="img/greamici/seed_1.png" style="width:48px;height:48px;object-fit:contain;image-rendering:auto" onerror="this.style.fontSize='32px';this.textContent='🥚'">`
+                 style="width:64px;height:64px;image-rendering:pixelated;display:block"></canvas>`
+            : `<img src="img/greamici/seed_1.png" style="width:48px;height:48px;object-fit:contain;image-rendering:pixelated" onerror="this.style.fontSize='32px';this.textContent='🥚'">`
           }
           ${isActive
             ? `<div style="position:absolute;top:-4px;right:-4px;background:${color};color:white;border-radius:50%;width:18px;height:18px;font-size:9px;font-weight:900;display:flex;align-items:center;justify-content:center">✓</div>`
@@ -3318,7 +3317,7 @@ window.App = {
             <button onclick="App._addNewGream('${a.id}')" style="padding:10px 4px;border-radius:12px;border:2px solid rgba(0,0,0,0.08);background:white;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:12px;font-weight:700;color:#333">
               <canvas data-sprite-sheet="img/greamici/${a.id}_2.png" data-sprite-mood="happy"
                 width="40" height="40"
-                style="width:40px;height:40px;image-rendering:auto;display:block;margin:0 auto"></canvas>
+                style="width:40px;height:40px;image-rendering:pixelated;display:block;margin:0 auto"></canvas>
               <span>${a.name[lang]||a.name.cs}</span>
             </button>
           `).join('')}
