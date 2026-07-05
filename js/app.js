@@ -2444,8 +2444,12 @@ window.App = {
     if (!p) return;
     Feedback.click();
     this._mapPreviewMode = !!opts.preview;
+    // Set the target world BEFORE navigating so the 'map-view' screen:ready
+    // handler renders the correct world. We must NOT also call renderMapView()
+    // directly here — that would open the Leaflet map twice (double POI fetch,
+    // stutter, duplicated user marker).
+    this._mapViewWorld = world;
     await Router.show('map-view');
-    this.renderMapView(world);
   },
 
   // ─── Open map in preview mode (browse without playing) ───
