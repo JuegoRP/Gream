@@ -22,6 +22,15 @@
 
 ---
 
+## Hotovo (2026-07-05)
+
+- [x] Oprava audio duplikace na mobilu (audio.js v7 — jeden recyklovaný element)
+- [x] Bug „dva greamíci" na mapě + zasekávání — mapa se otvírala 2× (dvojí POI fetch), opraveno
+- [x] Puzzle území v1 — splněné POI se slévají do jedné rozrůstající se plochy
+- [x] Mapa: barevný Voyager basemap + SW cachuje CartoDB dlaždice (dřív network-first = trhané), víc POI (radius 2000, až 70), barevné/hezčí POI body
+- [x] Odznaky: lesk/gloss + shine na nejvyšší úrovně
+- [x] +96 výzev (celkem ~1134)
+
 ## Hotovo (2026-07-01)
 
 - [x] Oprava přepínání hudby (audio.js v6 — single source of truth, idempotentní switchScene, konec překryvu 2 stop); model 3 songy (challenge/outdoor/menu)
