@@ -93,11 +93,17 @@ function makeUserMarker(L, gream) {
 
 // ─── Organic blob area around a visited POI ───
 // Uses seeded randomness so shape is stable across re-renders.
-function makePoiArea(L, poi, color) {
+// Unified "explored territory" colour. All completed-POI blobs share it and have
+// no stroke, so neighbouring ones visually merge into one growing area (puzzle /
+// conquered-territory feel) instead of separate islands. Per-world identity stays
+// on the coloured POI dot.
+const TERRITORY_COLOR = '#5aa02c';
+
+function makePoiArea(L, poi /* , color (unused: territory is unified) */) {
   const { lat, lon } = poi;
-  const POINTS = 16;
-  const BASE_R = 0.00048; // ~55m base radius
-  const JITTER = 0.6;
+  const POINTS = 18;
+  const BASE_R = 0.00085; // ~95m — bigger so adjacent completed POIs overlap & merge
+  const JITTER = 0.5;
 
   let rng = ((lat * 73856 + lon * 49812) * 1000) | 0;
   const rand = () => {
@@ -114,13 +120,12 @@ function makePoiArea(L, poi, color) {
   }
 
   return L.polygon(pts, {
-    color,
-    fillColor: color,
-    fillOpacity: 0.20,
-    weight: 1.5,
-    opacity: 0.40,
+    color:       TERRITORY_COLOR,
+    fillColor:   TERRITORY_COLOR,
+    fillOpacity: 0.15,   // low enough that even overlaps stay soft (no hard seams)
+    weight:      0,      // no stroke → merged blobs read as one territory
     interactive: false,
-    smoothFactor: 1.5,
+    smoothFactor: 2,
   });
 }
 
