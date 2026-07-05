@@ -44,29 +44,17 @@ export const Badges = {
   },
 
   // ─── Render world badge element ───
-  renderWorldBadge(world, taskCount, size = 80) {
+  renderWorldBadge(world, taskCount, size = 60) {
     const badge = this.getBadge(world, taskCount);
     const level = this.getLevelIndex(taskCount);
+    const next  = this.nextThreshold(taskCount);
+    const base  = THRESHOLDS[level];
+    const progress = next ? Math.max(0, Math.min(100, Math.round((taskCount - base) / (next - base) * 100))) : 100;
     const el = document.createElement('div');
-    el.className = `world-badge badge-lvl-${level}`;
-    el.style.width = el.style.height = size + 'px';
-    const extra = taskCount >= 100 ? `<div class="wb-count">+${taskCount - 100}</div>` : '';
-    const next = this.nextThreshold(taskCount);
-    const progress = next ? Math.round((taskCount - THRESHOLDS[level]) / (next - THRESHOLDS[level]) * 100) : 100;
-    el.innerHTML = `
-      <div class="wb-glow" style="background:white"></div>
-      <span class="wb-emoji">${badge.e}</span>
-      <span class="wb-level">${badge.n}</span>
-      ${extra}
-    `;
-    // Progress arc overlay
-    if (next && progress > 0) {
-      const arc = document.createElement('div');
-      arc.style.cssText = `position:absolute;inset:0;border-radius:50%;
-        background:conic-gradient(rgba(255,255,255,0.35) ${progress}%,transparent ${progress}%);
-        pointer-events:none;`;
-      el.appendChild(arc);
-    }
+    el.className = 'world-badge' + (next ? '' : ' maxed');
+    el.style.setProperty('--wb-size', size + 'px');
+    el.style.setProperty('--wb-progress', progress);
+    el.innerHTML = `<div class="wb-disc badge-lvl-${level}"><span class="wb-emoji">${badge.e}</span></div>`;
     return el;
   },
 

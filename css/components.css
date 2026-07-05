@@ -263,42 +263,33 @@
 }
 
 /* ─── EVOLVING WORLD BADGE ─── */
+/* World badge = progress ring + clean disc with a single emoji.
+   Level name / count live BELOW the disc (set in renderBadges), not crammed inside. */
 .world-badge {
-  width:100%; aspect-ratio:1; border-radius:50%;
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  box-shadow:0 4px 18px rgba(0,0,0,0.14); position:relative; overflow:hidden;
-  transition:all 0.4s ease; cursor:pointer;
+  width:var(--wb-size,60px); aspect-ratio:1; border-radius:50%;
+  padding:4px; position:relative; cursor:pointer; flex-shrink:0;
+  background:conic-gradient(var(--green-mid) calc(var(--wb-progress,0)*1%), rgba(0,0,0,0.08) 0);
+  transition:transform 0.15s ease;
 }
-.world-badge .wb-emoji { font-size:clamp(32px,8vw,48px); }
-.world-badge .wb-level { font-size:var(--fs-xs); font-weight:900; color:rgba(255,255,255,0.9); margin-top:4px; }
-.world-badge .wb-count { font-size:var(--fs-xs); font-weight:700; color:rgba(255,255,255,0.8); }
-.world-badge .wb-glow  { position:absolute; top:-4px; right:-4px; bottom:-4px; left:-4px; border-radius:50%; opacity:0.25; animation:pulse 2s ease-in-out infinite; pointer-events:none; }
+.world-badge:active { transform:scale(0.93); }
+.world-badge .wb-disc {
+  width:100%; height:100%; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  box-shadow:0 3px 9px rgba(0,0,0,0.16),
+             inset 0 2px 5px rgba(255,255,255,0.45),
+             inset 0 -3px 6px rgba(0,0,0,0.12);
+}
+.world-badge .wb-emoji { font-size:26px; line-height:1; filter:drop-shadow(0 1px 1px rgba(0,0,0,0.18)); }
+.world-badge.maxed { background:conic-gradient(#ffcf33 100%, #ffcf33 0); }
 
-/* Badge level backgrounds */
+/* Badge level backgrounds (applied to .wb-disc and to the legend chips) */
 .badge-lvl-0 { background:linear-gradient(135deg,#b0c8a0,#7a9a68); }
 .badge-lvl-1 { background:linear-gradient(135deg,#7bc44a,#4a8a2e); }
 .badge-lvl-2 { background:linear-gradient(135deg,#f5a623,#c47d0a); }
 .badge-lvl-3 { background:linear-gradient(135deg,#ff8fab,#d4537e); }
 .badge-lvl-4 { background:linear-gradient(135deg,#87ceeb,#4a9bc4); }
 .badge-lvl-5 { background:linear-gradient(135deg,#8a4abc,#5a1a8a); }
-.badge-lvl-6 { background:linear-gradient(135deg,#ffe066,#f5a623); box-shadow:0 0 0 4px rgba(255,224,102,0.4),0 6px 24px rgba(245,166,35,0.5); }
-
-/* Glossy 3D polish (additive — keeps tier gradients/glow intact) */
-.world-badge::before {
-  content:''; position:absolute; top:0; left:0; right:0; height:54%; z-index:1;
-  background:linear-gradient(180deg, rgba(255,255,255,0.5), rgba(255,255,255,0));
-  border-radius:50% 50% 45% 45% / 65% 65% 35% 35%; pointer-events:none;
-}
-.world-badge .wb-emoji, .world-badge .wb-level, .world-badge .wb-count { position:relative; z-index:2; }
-.world-badge:active { transform:scale(0.94); }
-/* Elite tiers get a slow shine sweep */
-.badge-lvl-5::after, .badge-lvl-6::after {
-  content:''; position:absolute; inset:0; border-radius:50%; pointer-events:none; z-index:1;
-  background:linear-gradient(60deg, transparent 42%, rgba(255,255,255,0.55) 50%, transparent 58%);
-  background-size:250% 250%; animation:badgeShine 3.6s ease-in-out infinite;
-}
-@keyframes badgeShine { 0%{background-position:160% 160%} 60%,100%{background-position:-60% -60%} }
-@media (prefers-reduced-motion: reduce) { .badge-lvl-5::after, .badge-lvl-6::after { animation:none; } }
+.badge-lvl-6 { background:linear-gradient(135deg,#ffe066,#f5a623); }
 
 /* ─── STREAK BADGES ─── */
 .streak-section { width:100%; max-width:420px; }

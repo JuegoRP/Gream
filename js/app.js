@@ -2582,17 +2582,17 @@ window.App = {
         const badge = Badges.getBadge(w, tasks);
         const next  = Badges.nextThreshold(tasks);
         const cell  = document.createElement('div');
-        cell.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:6px;';
-        const badgeEl = Badges.renderWorldBadge(w, tasks, 72);
+        cell.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:4px;';
+        const badgeEl = Badges.renderWorldBadge(w, tasks, 62);
         const worldLbl = document.createElement('div');
-        worldLbl.style.cssText = 'font-size:10px;font-weight:800;color:var(--green-mid);text-align:center';
+        worldLbl.style.cssText = 'font-size:11px;font-weight:900;color:var(--green-dark);text-align:center;margin-top:2px';
         worldLbl.textContent = t.worlds[w];
-        const countLbl = document.createElement('div');
-        countLbl.style.cssText = 'font-size:9px;font-weight:700;color:var(--green-mid);text-align:center';
-        countLbl.textContent = next ? `${tasks}/${next}` : `${tasks} ★`;
+        const subLbl = document.createElement('div');
+        subLbl.style.cssText = 'font-size:9.5px;font-weight:700;color:var(--green-mid);text-align:center;line-height:1.3';
+        subLbl.innerHTML = `${badge.n}<br>${next ? `${tasks}/${next}` : `${tasks} ★`}`;
         cell.appendChild(badgeEl);
         cell.appendChild(worldLbl);
-        cell.appendChild(countLbl);
+        cell.appendChild(subLbl);
         grid.appendChild(cell);
       });
     }
