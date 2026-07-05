@@ -283,6 +283,23 @@
 .badge-lvl-5 { background:linear-gradient(135deg,#8a4abc,#5a1a8a); }
 .badge-lvl-6 { background:linear-gradient(135deg,#ffe066,#f5a623); box-shadow:0 0 0 4px rgba(255,224,102,0.4),0 6px 24px rgba(245,166,35,0.5); }
 
+/* Glossy 3D polish (additive — keeps tier gradients/glow intact) */
+.world-badge::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:54%; z-index:1;
+  background:linear-gradient(180deg, rgba(255,255,255,0.5), rgba(255,255,255,0));
+  border-radius:50% 50% 45% 45% / 65% 65% 35% 35%; pointer-events:none;
+}
+.world-badge .wb-emoji, .world-badge .wb-level, .world-badge .wb-count { position:relative; z-index:2; }
+.world-badge:active { transform:scale(0.94); }
+/* Elite tiers get a slow shine sweep */
+.badge-lvl-5::after, .badge-lvl-6::after {
+  content:''; position:absolute; inset:0; border-radius:50%; pointer-events:none; z-index:1;
+  background:linear-gradient(60deg, transparent 42%, rgba(255,255,255,0.55) 50%, transparent 58%);
+  background-size:250% 250%; animation:badgeShine 3.6s ease-in-out infinite;
+}
+@keyframes badgeShine { 0%{background-position:160% 160%} 60%,100%{background-position:-60% -60%} }
+@media (prefers-reduced-motion: reduce) { .badge-lvl-5::after, .badge-lvl-6::after { animation:none; } }
+
 /* ─── STREAK BADGES ─── */
 .streak-section { width:100%; max-width:420px; }
 .streak-title   { font-size:var(--fs-xs); font-weight:800; color:var(--amber-dark); margin-bottom:9px; text-transform:uppercase; letter-spacing:0.6px; }

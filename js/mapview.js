@@ -8,7 +8,8 @@
 
 import { Geo, WORLD_COLORS, WORLD_EMOJIS, WORLD_BONUS } from './geo.js';
 
-const TILE_URL    = 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png';
+// Voyager: colourful, kid-friendly basemap (green parks, blue water, street labels)
+const TILE_URL    = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
 const TILE_ATTR   = '© OpenStreetMap contributors © CARTO';
 const LEAFLET_CSS = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';
 const LEAFLET_JS  = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
@@ -135,31 +136,36 @@ function makePoiDot(L, poi, userPos, onTap) {
   const litUp      = worldsDone.length > 0;
   const nearby     = userPos ? distM(userPos, { lat: poi.lat, lon: poi.lon }) <= PROXIMITY_M : false;
 
+  const worldColor = WORLD_COLORS[poi.bonusWorld] || '#4a8a2e';
+
   let fill, fillOp, stroke, sw, r;
   if (litUp) {
+    // Completed → solid world colour with a white halo so it pops (sticker look)
     const lastWorld = worldsDone[worldsDone.length - 1];
-    fill   = WORLD_COLORS[lastWorld] || WORLD_COLORS[poi.bonusWorld] || '#4a8a2e';
-    fillOp = 0.85;
-    stroke = fill;
-    sw     = 2;
+    fill   = WORLD_COLORS[lastWorld] || worldColor;
+    fillOp = 0.95;
+    stroke = '#ffffff';
+    sw     = 2.5;
     r      = 9;
   } else if (nearby) {
-    fill   = '#5a9a3e';
-    fillOp = 0.85;
-    stroke = '#2a6a1e';
-    sw     = 2;
-    r      = 16;
+    // In reach → big, bright, pulsing
+    fill   = worldColor;
+    fillOp = 0.95;
+    stroke = '#ffffff';
+    sw     = 3;
+    r      = 15;
   } else {
-    fill   = '#bbb';
-    fillOp = 0.45;
-    stroke = '#999';
-    sw     = 1;
-    r      = 6;
+    // Not yet done → coloured by its world (faint), white ring — colourful & readable
+    fill   = worldColor;
+    fillOp = 0.55;
+    stroke = '#ffffff';
+    sw     = 2;
+    r      = 7;
   }
 
   const dot = L.circleMarker([poi.lat, poi.lon], {
     radius: r, fillColor: fill, fillOpacity: fillOp,
-    color: stroke, weight: sw,
+    color: stroke, weight: sw, opacity: 0.95,
     interactive: true, bubblingMouseEvents: false
   });
 

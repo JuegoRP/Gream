@@ -110,7 +110,7 @@ export const Geo = {
   getHome() { try { return JSON.parse(localStorage.getItem(KEY_HOME) || 'null'); } catch { return null; } },
   clearHome() { try { localStorage.removeItem(KEY_HOME); } catch {} },
 
-  async fetchAllPOI(center, radiusMeters = 1500) {
+  async fetchAllPOI(center, radiusMeters = 2000) {
     if (!center) return [];
 
     const cacheKey = `${center.lat.toFixed(3)}_${center.lon.toFixed(3)}_${radiusMeters}`;
@@ -138,7 +138,7 @@ export const Geo = {
       return `node["${k}"="${v}"](around:${radiusMeters},${center.lat},${center.lon});\n  way["${k}"="${v}"](around:${radiusMeters},${center.lat},${center.lon});`;
     }).join('\n  ');
 
-    const query = `[out:json][timeout:30];\n(\n  ${parts}\n);\nout center 40;`;
+    const query = `[out:json][timeout:30];\n(\n  ${parts}\n);\nout center 80;`;
 
     for (const url of OVERPASS_URLS) {
       try {
@@ -161,7 +161,7 @@ export const Geo = {
 
         items.forEach(p => p._dist = this.distance(center, p));
         items.sort((a, b) => a._dist - b._dist);
-        const top = this._deduplicatePOI(items, 25).slice(0, 40);
+        const top = this._deduplicatePOI(items, 25).slice(0, 70);
 
         try {
           localStorage.setItem(KEY_POI_CACHE, JSON.stringify({ key: cacheKey, t: Date.now(), data: top }));

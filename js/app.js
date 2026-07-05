@@ -2834,7 +2834,7 @@ window.App = {
     try {
       const activeGream = Profiles.active() ? Gream.active(Profiles.active().id) : null;
       await MapView.open('leafletMap', pos, {
-        radius: 1500,
+        radius: 2000,
         gream: activeGream,
         onPoiTap: (poi, info = {}) => {
           if (info.tooFar) {

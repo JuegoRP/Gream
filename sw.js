@@ -4,7 +4,7 @@
 //            cache-first for media (audio, images, leaflet, OSM tiles)
 // ═══════════════════════════════════
 
-const VERSION = 'gream-v11';
+const VERSION = 'gream-v12';
 const STATIC_CACHE = `${VERSION}-static`;
 const TILES_CACHE  = `gream-tiles-v1`;
 const LEAFLET_CACHE = `gream-leaflet-v1`;
@@ -58,8 +58,8 @@ self.addEventListener('fetch', e => {
     return;
   }
 
-  // External: OSM map tiles — cache-first
-  if (url.hostname.includes('tile.openstreetmap.org')) {
+  // External: map tiles (OSM + CartoDB basemaps) — cache-first for fast, judder-free map
+  if (url.hostname.includes('tile.openstreetmap.org') || url.hostname.includes('basemaps.cartocdn.com')) {
     e.respondWith(cacheFirst(e.request, TILES_CACHE));
     return;
   }
