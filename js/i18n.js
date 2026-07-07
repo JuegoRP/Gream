@@ -311,6 +311,8 @@ export const T = {
       language: {
         "easy": [
           {text:"Which one is a greeting?", hint:"What do you say when you meet someone?", action:"choice", choices:[{text:"Hello! 👋",value:"hello"},{text:"Goodbye! 👋",value:"bye"},{text:"Apple 🍎",value:"apple"}], check:{type:"choice",correct:"hello"}, mode:"outdoor_bonus"},
+          {text:"Match each word to its opposite:", action:"match", pairs:[{a:"Big",b:"Small"},{a:"Hot",b:"Cold"},{a:"Fast",b:"Slow"},{a:"Day",b:"Night"}], check:{type:"match"}, mode:"indoor_ok"},
+          {text:"Put these words in alphabetical order:", action:"sort", items:["🍎 Apple","🐻 Bear","🐱 Cat","🐶 Dog"], check:{type:"sort",correct:["🍎 Apple","🐻 Bear","🐱 Cat","🐶 Dog"]}, mode:"indoor_ok"},
           {text:"How many letters are in the word CAT?", hint:"C-A-T", action:"number", check:{type:"number",answer:3,tolerance:0}, mode:"indoor_ok"},
           {text:"How many letters are in your first name? Count them!", action:"number", check:{type:"number",answer:null}, mode:"indoor_ok"},
           {text:"Which of these is a colour?", action:"choice", choices:[{text:"🔵 Blue",value:"blue"},{text:"🍰 Cake",value:"cake"},{text:"🐕 Dog",value:"dog"}], check:{type:"choice",correct:"blue"}, mode:"outdoor_bonus"},
@@ -342,6 +344,8 @@ export const T = {
         ],
         "medium": [
           {text:"What is an antonym of the word HAPPY?", action:"choice", choices:[{text:"Sad 😢",value:"sad"},{text:"Joyful 😄",value:"joyful"},{text:"Big 🐘",value:"big"}], check:{type:"choice",correct:"sad"}, mode:"outdoor_bonus"},
+          {text:"The opposite of the word 'day' is ____.", action:"fill_blank", blank:{before:"The opposite of the word 'day' is",after:".",correct:"night"}, check:{type:"fill_blank",correct:"night"}, mode:"indoor_ok"},
+          {text:"Go outside and find a sign or poster. Count how many words are on it, then enter the number.", hint:"Any number is fine — just count!", action:"number", check:{type:"number"}, mode:"outdoor_bonus"},
           {text:"How many vowels are in the English alphabet?", hint:"A, E, ...", action:"number", check:{type:"number",answer:5,tolerance:0}, mode:"indoor_ok"},
           {text:"Which of these words is a noun?", action:"choice", choices:[{text:"🏠 House",value:"house"},{text:"Run 🏃",value:"run"},{text:"Happy 😄",value:"happy"}], check:{type:"choice",correct:"house"}, mode:"outdoor_bonus"},
           {text:"Put words in order to make a sentence:", action:"sort", items:["cats","all","I","love"], check:{type:"sort",correct:["I","love","all","cats"]}, mode:"outdoor_bonus"},
@@ -373,6 +377,8 @@ export const T = {
         ],
         "hard": [
           {text:"Which literary device is used in: 'The wind whispered secrets'?", action:"choice", choices:[{text:"Personification",value:"correct"},{text:"Rhyme",value:"wrong1"},{text:"Alliteration",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Match each word to its type:", action:"match", pairs:[{a:"Run",b:"Verb"},{a:"Dog",b:"Noun"},{a:"Quickly",b:"Adverb"},{a:"Happy",b:"Adjective"}], check:{type:"match"}, mode:"indoor_ok"},
+          {text:"Words that sound the same but mean different things (like 'sea' and 'see') are called ____.", action:"fill_blank", blank:{before:"Words that sound the same but mean different things are called",after:".",correct:"homophones"}, check:{type:"fill_blank",correct:"homophones"}, mode:"indoor_ok"},
           {text:"How many languages are estimated to exist in the world?", hint:"Thousands!", action:"number", check:{type:"number",answer:7000,tolerance:1000}, mode:"indoor_ok"},
           {text:"Which sentence contains a metaphor?", action:"choice", choices:[{text:"Life is a journey",value:"correct"},{text:"She runs very fast",value:"wrong1"},{text:"The dog barked loudly",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"Which of these is an example of alliteration?", action:"choice", choices:[{text:"Peter Piper picked peppers",value:"correct"},{text:"The moon is a lantern",value:"wrong1"},{text:"It was as cold as ice",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -403,6 +409,8 @@ export const T = {
         ],
         "extreme": [
           {text:"What literary device gives human qualities to non-human things?", action:"choice", choices:[{text:"Personification",value:"correct"},{text:"Alliteration",value:"wrong1"},{text:"Onomatopoeia",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Order these from the smallest unit of language to the largest:", action:"sort", items:["Letter","Word","Sentence","Paragraph"], check:{type:"sort",correct:["Letter","Word","Sentence","Paragraph"]}, mode:"indoor_ok"},
+          {text:"A comparison using 'like' or 'as' (e.g. 'brave as a lion') is called a ____.", action:"fill_blank", blank:{before:"A comparison using 'like' or 'as' is called a",after:".",correct:"simile"}, check:{type:"fill_blank",correct:"simile"}, mode:"indoor_ok"},
           {text:"Approximately how many languages are spoken in Africa?", hint:"It's over a thousand!", action:"number", check:{type:"number",answer:2000,tolerance:500}, mode:"indoor_ok"},
           {text:"Which grammatical mood expresses hypothetical or wishful situations?", action:"choice", choices:[{text:"Subjunctive",value:"correct"},{text:"Indicative",value:"wrong1"},{text:"Imperative",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"How many letters are in the English alphabet?", action:"number", check:{type:"number",answer:26,tolerance:0}, mode:"indoor_ok"},
@@ -425,6 +433,8 @@ export const T = {
       logic: {
         "easy": [
           {text:"What comes next? 🔴 🔵 🔴 🔵 🔴 __", action:"choice", choices:[{text:"🔵 Blue",value:"blue"},{text:"🟡 Yellow",value:"yellow"},{text:"🟢 Green",value:"green"}], check:{type:"choice",correct:"blue"}, mode:"outdoor_bonus"},
+          {text:"Match each shape to its number of sides:", action:"match", pairs:[{a:"Triangle",b:"3"},{a:"Square",b:"4"},{a:"Pentagon",b:"5"},{a:"Hexagon",b:"6"}], check:{type:"match"}, mode:"indoor_ok"},
+          {text:"Go outside and look at the nearest building. Count how many windows you can see, then enter the number.", hint:"Any number is fine — just count!", action:"number", check:{type:"number"}, mode:"outdoor_bonus"},
           {text:"If you have 3 apples and eat 1, how many are left?", action:"number", check:{type:"number",answer:2,tolerance:0}, mode:"indoor_ok"},
           {text:"Which of these shapes has the most sides?", action:"choice", choices:[{text:"⬡ Hexagon (6)",value:"hexagon"},{text:"🔺 Triangle (3)",value:"triangle"},{text:"⬛ Square (4)",value:"square"}], check:{type:"choice",correct:"hexagon"}, mode:"outdoor_bonus"},
           {text:"Which shape has 3 sides?", action:"choice", choices:[{text:"🔺 Triangle",value:"triangle"},{text:"⬛ Square",value:"square"},{text:"⭕ Circle",value:"circle"}], check:{type:"choice",correct:"triangle"}, mode:"outdoor_bonus"},
@@ -456,6 +466,8 @@ export const T = {
         ],
         "medium": [
           {text:"Which shape has 4 equal sides and 4 right angles?", action:"choice", choices:[{text:"Square ⬛",value:"square"},{text:"Triangle 🔺",value:"triangle"},{text:"Circle ⭕",value:"circle"}], check:{type:"choice",correct:"square"}, mode:"outdoor_bonus"},
+          {text:"A shape with three sides is called a ____.", action:"fill_blank", blank:{before:"A shape with three sides is called a",after:".",correct:"triangle"}, check:{type:"fill_blank",correct:"triangle"}, mode:"indoor_ok"},
+          {text:"Order these from lightest to heaviest:", action:"sort", items:["🪶 Feather","🍎 Apple","📚 Book","🪨 Rock"], check:{type:"sort",correct:["🪶 Feather","🍎 Apple","📚 Book","🪨 Rock"]}, mode:"indoor_ok"},
           {text:"A baker makes 24 rolls. She puts them into bags of 6. How many bags does she fill?", action:"number", check:{type:"number",answer:4,tolerance:0}, mode:"indoor_ok"},
           {text:"15 cookies shared equally among 3 friends — how many does each get?", action:"number", check:{type:"number",answer:5,tolerance:0}, mode:"indoor_ok"},
           {text:"7 × 8 = ____", action:"fill_blank", blank:{before:"7 × 8 =",after:"",correct:"56"}, check:{type:"fill_blank",correct:"56"}, mode:"outdoor_bonus"},
@@ -487,6 +499,8 @@ export const T = {
         ],
         "hard": [
           {text:"What is the next prime number after 7?", action:"choice", choices:[{text:"11",value:"correct"},{text:"9",value:"wrong1"},{text:"12",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Match each sum to its answer:", action:"match", pairs:[{a:"2 + 2",b:"4"},{a:"3 × 3",b:"9"},{a:"10 − 4",b:"6"},{a:"15 ÷ 3",b:"5"}], check:{type:"match"}, mode:"indoor_ok"},
+          {text:"In the sequence 5, 10, 15, 20, the next number is ____.", action:"fill_blank", blank:{before:"In the sequence 5, 10, 15, 20, the next number is",after:".",correct:"25"}, check:{type:"fill_blank",correct:"25"}, mode:"indoor_ok"},
           {text:"A train travels 60 km/h for 2.5 hours. How many km does it travel?", action:"number", check:{type:"number",answer:150,tolerance:0}, mode:"indoor_ok"},
           {text:"Which problem-solving strategy involves breaking a problem into smaller parts?", action:"choice", choices:[{text:"Decomposition",value:"correct"},{text:"Memorisation",value:"wrong1"},{text:"Repetition",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"Which type of reasoning goes from specific cases to a general conclusion?", action:"choice", choices:[{text:"Inductive",value:"correct"},{text:"Deductive",value:"wrong1"},{text:"Abductive",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -518,6 +532,8 @@ export const T = {
         ],
         "extreme": [
           {text:"If all bloops are razzles and all razzles are lazzles, are all bloops definitely lazzles?", action:"choice", choices:[{text:"Yes — transitive logic",value:"correct"},{text:"No — can't tell",value:"wrong1"},{text:"Only sometimes",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Order these numbers from smallest to largest:", action:"sort", items:["7","19","23","31"], check:{type:"sort",correct:["7","19","23","31"]}, mode:"indoor_ok"},
+          {text:"A number that can be divided only by 1 and itself is a ____ number.", action:"fill_blank", blank:{before:"A number that can be divided only by 1 and itself is a",after:"number.",correct:"prime"}, check:{type:"fill_blank",correct:"prime"}, mode:"indoor_ok"},
           {text:"A prime number has exactly how many factors?", action:"number", check:{type:"number",answer:2,tolerance:0}, mode:"indoor_ok"},
           {text:"Which approach tries all possibilities systematically until a solution is found?", action:"choice", choices:[{text:"Brute force",value:"correct"},{text:"Heuristic",value:"wrong1"},{text:"Greedy algorithm",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"In binary, what is 1011 in decimal?", hint:"8+2+1", action:"number", check:{type:"number",answer:11,tolerance:0}, mode:"indoor_ok"},
@@ -540,6 +556,8 @@ export const T = {
       feelings: {
         "easy": [
           {text:"How do you feel when you hug someone you love?", action:"choice", choices:[{text:"Happy & warm 🥰",value:"happy"},{text:"Scared 😨",value:"scared"},{text:"Bored 😴",value:"bored"}], check:{type:"choice",correct:"happy"}, mode:"outdoor_bonus"},
+          {text:"Match each face to the feeling:", action:"match", pairs:[{a:"😀",b:"Happy"},{a:"😢",b:"Sad"},{a:"😠",b:"Angry"},{a:"😨",b:"Scared"}], check:{type:"match"}, mode:"indoor_ok"},
+          {text:"When something makes you smile and feel good, you feel ____.", action:"fill_blank", blank:{before:"When something makes you smile and feel good, you feel",after:".",correct:"happy"}, check:{type:"fill_blank",correct:"happy"}, mode:"indoor_ok"},
           {text:"How many people do you love most in the world? Write the number!", hint:"There's no wrong answer here!", action:"number", check:{type:"number",answer:null}, mode:"outdoor_bonus"},
           {text:"Which of these usually makes people feel happy?", action:"choice", choices:[{text:"Getting a hug 🤗",value:"hug"},{text:"Being alone and bored 😴",value:"bored"},{text:"Losing something 😢",value:"lost"}], check:{type:"choice",correct:"hug"}, mode:"outdoor_bonus"},
           {text:"Which face shows that someone is surprised?", action:"choice", choices:[{text:"😲 This one!",value:"correct"},{text:"😴 This one",value:"wrong1"},{text:"😠 This one",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -570,6 +588,8 @@ export const T = {
         ],
         "medium": [
           {text:"What's the best way to help a friend who is sad?", action:"choice", choices:[{text:"Listen and be with them 🤝",value:"correct"},{text:"Ignore them and walk away",value:"wrong1"},{text:"Tell them to stop being sad",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Match each situation to the feeling it might cause:", action:"match", pairs:[{a:"Getting a gift",b:"Joy"},{a:"Losing a toy",b:"Sadness"},{a:"A loud bang",b:"Fear"},{a:"Someone cuts in line",b:"Anger"}], check:{type:"match"}, mode:"indoor_ok"},
+          {text:"Order these feelings from calm to very excited:", action:"sort", items:["😌 Calm","🙂 Content","😃 Excited","🤩 Thrilled"], check:{type:"sort",correct:["😌 Calm","🙂 Content","😃 Excited","🤩 Thrilled"]}, mode:"indoor_ok"},
           {text:"On a scale of 1-10, how happy do you feel today?", hint:"Just your honest number!", action:"number", check:{type:"number",answer:null}, mode:"outdoor_bonus"},
           {text:"Which of these situations would most likely make you feel proud?", action:"choice", choices:[{text:"Finishing something difficult 🏆",value:"correct"},{text:"Forgetting your homework 📚",value:"wrong1"},{text:"Sleeping through an alarm ⏰",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"Which of these is NOT a way to deal with anger in a healthy way?", action:"choice", choices:[{text:"Yelling at someone",value:"correct"},{text:"Taking deep breaths",value:"wrong1"},{text:"Drawing how you feel",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -600,6 +620,8 @@ export const T = {
         ],
         "hard": [
           {text:"What is empathy?", action:"choice", choices:[{text:"Understanding how others feel",value:"correct"},{text:"Feeling angry at others",value:"wrong1"},{text:"Only thinking about yourself",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Match each coping skill to when it helps:", action:"match", pairs:[{a:"Deep breaths",b:"When angry"},{a:"Talk to someone",b:"When worried"},{a:"Take a break",b:"When tired"},{a:"Count to ten",b:"When frustrated"}], check:{type:"match"}, mode:"indoor_ok"},
+          {text:"Understanding and sharing how someone else feels is called ____.", action:"fill_blank", blank:{before:"Understanding and sharing how someone else feels is called",after:".",correct:"empathy"}, check:{type:"fill_blank",correct:"empathy"}, mode:"indoor_ok"},
           {text:"How many basic emotions do psychologists commonly identify? (Ekman's model)", hint:"Think primary emotions — fear, anger...", action:"number", check:{type:"number",answer:6,tolerance:1}, mode:"outdoor_bonus"},
           {text:"What term describes feeling two opposing emotions at the same time?", action:"choice", choices:[{text:"Ambivalence",value:"correct"},{text:"Empathy",value:"wrong1"},{text:"Apathy",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"Which term describes the ability to understand and manage your own emotions?", action:"choice", choices:[{text:"Emotional intelligence",value:"correct"},{text:"Impulsiveness",value:"wrong1"},{text:"Extroversion",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -630,6 +652,8 @@ export const T = {
         ],
         "extreme": [
           {text:"What psychological concept describes the discomfort of holding two conflicting beliefs?", action:"choice", choices:[{text:"Cognitive dissonance",value:"correct"},{text:"Confirmation bias",value:"wrong1"},{text:"Dunning-Kruger effect",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Order the steps for calming down when upset:", action:"sort", items:["Notice the feeling","Take deep breaths","Name the feeling","Choose what to do"], check:{type:"sort",correct:["Notice the feeling","Take deep breaths","Name the feeling","Choose what to do"]}, mode:"indoor_ok"},
+          {text:"The ability to understand and manage your own emotions is called emotional ____.", action:"fill_blank", blank:{before:"The ability to understand and manage your own emotions is called emotional",after:".",correct:"intelligence"}, check:{type:"fill_blank",correct:"intelligence"}, mode:"indoor_ok"},
           {text:"Roughly how many distinct emotions can humans recognise on a face? (approximately)", action:"number", check:{type:"number",answer:21,tolerance:5}, mode:"indoor_ok"},
           {text:"What is the term for feeling pleasure at another's misfortune (borrowed from German)?", action:"choice", choices:[{text:"Schadenfreude",value:"correct"},{text:"Weltanschauung",value:"wrong1"},{text:"Angst",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"On a scale 1–10, how well do you think you handle uncertainty today?", action:"number", check:{type:"number",answer:null}, mode:"indoor_ok"},
@@ -652,6 +676,8 @@ export const T = {
       arts: {
         "easy": [
           {text:"What do you mix to make green?", action:"choice", choices:[{text:"🔵 Blue + 🟡 Yellow",value:"correct"},{text:"🔴 Red + 🔵 Blue",value:"wrong1"},{text:"🔴 Red + 🟡 Yellow",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Match the two colours to what they make when mixed:", action:"match", pairs:[{a:"Blue + Yellow",b:"Green"},{a:"Red + Blue",b:"Purple"},{a:"Red + Yellow",b:"Orange"},{a:"Black + White",b:"Grey"}], check:{type:"match"}, mode:"indoor_ok"},
+          {text:"Put the colours of the rainbow in order, from the top:", action:"sort", items:["🔴 Red","🟠 Orange","🟡 Yellow","🟢 Green"], check:{type:"sort",correct:["🔴 Red","🟠 Orange","🟡 Yellow","🟢 Green"]}, mode:"indoor_ok"},
           {text:"How many strings does a guitar have?", action:"number", check:{type:"number",answer:6,tolerance:0}, mode:"outdoor_bonus"},
           {text:"Which of these is NOT a musical instrument?", action:"choice", choices:[{text:"🪑 Chair",value:"chair"},{text:"🎹 Piano",value:"piano"},{text:"🥁 Drums",value:"drums"}], check:{type:"choice",correct:"chair"}, mode:"outdoor_bonus"},
           {text:"Which of these is a musical instrument?", action:"choice", choices:[{text:"🥁 Drum",value:"drum"},{text:"🍕 Pizza",value:"pizza"},{text:"🪑 Chair",value:"chair"}], check:{type:"choice",correct:"drum"}, mode:"outdoor_bonus"},
@@ -683,6 +709,8 @@ export const T = {
         ],
         "medium": [
           {text:"Which famous artist painted the Mona Lisa?", action:"choice", choices:[{text:"Leonardo da Vinci 🎨",value:"correct"},{text:"Pablo Picasso",value:"wrong1"},{text:"Vincent van Gogh",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Red, yellow and blue are called the three ____ colours.", action:"fill_blank", blank:{before:"Red, yellow and blue are called the three",after:"colours.",correct:"primary"}, check:{type:"fill_blank",correct:"primary"}, mode:"indoor_ok"},
+          {text:"Go outside and look around. Count how many different colours you can see in nature, then enter the number.", hint:"Any number is fine — just look!", action:"number", check:{type:"number"}, mode:"outdoor_bonus"},
           {text:"How many notes are in a standard Western musical scale?", hint:"Do Re Mi Fa Sol La Ti...", action:"number", check:{type:"number",answer:7,tolerance:0}, mode:"outdoor_bonus"},
           {text:"Which painting technique uses small dots of colour to create an image?", action:"choice", choices:[{text:"Pointillism",value:"correct"},{text:"Fresco",value:"wrong1"},{text:"Watercolour",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"What colour do you get by mixing red and white?", action:"choice", choices:[{text:"🌸 Pink",value:"pink"},{text:"🟠 Orange",value:"orange"},{text:"🟣 Purple",value:"purple"}], check:{type:"choice",correct:"pink"}, mode:"outdoor_bonus"},
@@ -713,6 +741,8 @@ export const T = {
         ],
         "hard": [
           {text:"What art movement was Salvador Dalí associated with?", action:"choice", choices:[{text:"Surrealism",value:"correct"},{text:"Impressionism",value:"wrong1"},{text:"Cubism",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Match each artist to their famous work:", action:"match", pairs:[{a:"Leonardo da Vinci",b:"Mona Lisa"},{a:"Vincent van Gogh",b:"Starry Night"},{a:"Edvard Munch",b:"The Scream"},{a:"Claude Monet",b:"Water Lilies"}], check:{type:"match"}, mode:"indoor_ok"},
+          {text:"Colours opposite each other on the colour wheel, like blue and orange, are called ____ colours.", action:"fill_blank", blank:{before:"Colours opposite each other on the colour wheel are called",after:"colours.",correct:"complementary"}, check:{type:"fill_blank",correct:"complementary"}, mode:"indoor_ok"},
           {text:"Beethoven wrote 9 symphonies. How many did Mozart write? (approximately)", hint:"A lot more!", action:"number", check:{type:"number",answer:41,tolerance:5}, mode:"outdoor_bonus"},
           {text:"Which colour is most commonly associated with calm and trust in colour psychology?", action:"choice", choices:[{text:"Blue",value:"correct"},{text:"Red",value:"wrong1"},{text:"Yellow",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"What is the golden ratio approximately equal to?", action:"choice", choices:[{text:"1.618",value:"correct"},{text:"3.14",value:"wrong1"},{text:"2.718",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -743,6 +773,8 @@ export const T = {
         ],
         "extreme": [
           {text:"Which art movement rejected tradition and embraced chance and absurdity?", action:"choice", choices:[{text:"Dadaism",value:"correct"},{text:"Romanticism",value:"wrong1"},{text:"Neoclassicism",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Order these art periods from earliest to most recent:", action:"sort", items:["Renaissance","Baroque","Impressionism","Surrealism"], check:{type:"sort",correct:["Renaissance","Baroque","Impressionism","Surrealism"]}, mode:"indoor_ok"},
+          {text:"The art movement led by Salvador Dalí, full of dreamlike images, is called ____.", action:"fill_blank", blank:{before:"The art movement led by Salvador Dalí is called",after:".",correct:"surrealism"}, check:{type:"fill_blank",correct:"surrealism"}, mode:"indoor_ok"},
           {text:"How many keys does a standard piano have?", action:"number", check:{type:"number",answer:88,tolerance:0}, mode:"indoor_ok"},
           {text:"Which technique involves applying thick paint to create texture and dimension?", action:"choice", choices:[{text:"Impasto",value:"correct"},{text:"Sfumato",value:"wrong1"},{text:"Chiaroscuro",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"In music theory, how many semitones are in an octave?", action:"number", check:{type:"number",answer:12,tolerance:0}, mode:"indoor_ok"},
@@ -765,6 +797,8 @@ export const T = {
       world: {
         "easy": [
           {text:"Which continent is the largest?", action:"choice", choices:[{text:"🌏 Asia",value:"correct"},{text:"🌍 Africa",value:"wrong1"},{text:"🌎 America",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Match each country to its capital city:", action:"match", pairs:[{a:"France",b:"Paris"},{a:"Japan",b:"Tokyo"},{a:"Egypt",b:"Cairo"},{a:"Italy",b:"Rome"}], check:{type:"match"}, mode:"indoor_ok"},
+          {text:"Order these from smallest to largest:", action:"sort", items:["🏠 House","🏙️ City","🗺️ Country","🌍 Continent"], check:{type:"sort",correct:["🏠 House","🏙️ City","🗺️ Country","🌍 Continent"]}, mode:"indoor_ok"},
           {text:"How many continents are there on Earth?", action:"number", check:{type:"number",answer:7,tolerance:0}, mode:"outdoor_bonus"},
           {text:"Which country has the Eiffel Tower?", action:"choice", choices:[{text:"🇫🇷 France",value:"france"},{text:"🇬🇧 England",value:"england"},{text:"🇩🇪 Germany",value:"germany"}], check:{type:"choice",correct:"france"}, mode:"outdoor_bonus"},
           {text:"Which flag has a red circle on a white background?", hint:"It's in Asia!", action:"choice", choices:[{text:"🇯🇵 Japan",value:"japan"},{text:"🇨🇳 China",value:"china"},{text:"🇰🇷 South Korea",value:"korea"}], check:{type:"choice",correct:"japan"}, mode:"outdoor_bonus"},
@@ -796,6 +830,8 @@ export const T = {
         ],
         "medium": [
           {text:"What is the capital city of France?", action:"choice", choices:[{text:"🗼 Paris",value:"correct"},{text:"🏰 London",value:"wrong1"},{text:"🎭 Rome",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"The largest hot desert in the world is the ____.", action:"fill_blank", blank:{before:"The largest hot desert in the world is the",after:".",correct:"Sahara"}, check:{type:"fill_blank",correct:"Sahara"}, mode:"indoor_ok"},
+          {text:"Go outside and count how many different street or place signs you can read, then enter the number.", hint:"Any number is fine — just count!", action:"number", check:{type:"number"}, mode:"outdoor_bonus"},
           {text:"Approximately how many countries are there in the world?", hint:"It's around 190-200.", action:"number", check:{type:"number",answer:195,tolerance:10}, mode:"outdoor_bonus"},
           {text:"Which of these is a traditional Japanese celebration?", action:"choice", choices:[{text:"Hanami (cherry blossom viewing)",value:"correct"},{text:"Carnival in Brazil",value:"wrong1"},{text:"Mardi Gras in New Orleans",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"The capital of France is ____.", action:"fill_blank", blank:{before:"The capital of France is",after:".",correct:"Paris"}, check:{type:"fill_blank",correct:"Paris"}, mode:"outdoor_bonus"},
@@ -827,6 +863,8 @@ export const T = {
         ],
         "hard": [
           {text:"Which ocean is the largest on Earth?", action:"choice", choices:[{text:"🌊 Pacific Ocean",value:"correct"},{text:"Atlantic Ocean",value:"wrong1"},{text:"Indian Ocean",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Match each landmark to its country:", action:"match", pairs:[{a:"Eiffel Tower",b:"France"},{a:"Great Wall",b:"China"},{a:"Pyramids",b:"Egypt"},{a:"Colosseum",b:"Italy"}], check:{type:"match"}, mode:"indoor_ok"},
+          {text:"Order these oceans from smallest to largest:", action:"sort", items:["Arctic","Indian","Atlantic","Pacific"], check:{type:"sort",correct:["Arctic","Indian","Atlantic","Pacific"]}, mode:"indoor_ok"},
           {text:"Roughly how many people live on Earth? (in billions)", action:"number", check:{type:"number",answer:8,tolerance:1}, mode:"outdoor_bonus"},
           {text:"Which greenhouse gas is the largest contributor to climate change from human activities?", action:"choice", choices:[{text:"CO₂ (carbon dioxide)",value:"correct"},{text:"Helium",value:"wrong1"},{text:"Nitrogen",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"Which international body has 193 member states and promotes world peace?", action:"choice", choices:[{text:"United Nations (UN)",value:"correct"},{text:"World Trade Organization",value:"wrong1"},{text:"NATO",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -858,6 +896,8 @@ export const T = {
         ],
         "extreme": [
           {text:"Which international agreement set binding targets to reduce greenhouse gas emissions?", action:"choice", choices:[{text:"Paris Agreement (2015)",value:"correct"},{text:"Kyoto Protocol (1997)",value:"wrong1"},{text:"Montreal Protocol (1987)",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"The imaginary line around the middle of the Earth is called the ____.", action:"fill_blank", blank:{before:"The imaginary line around the middle of the Earth is called the",after:".",correct:"equator"}, check:{type:"fill_blank",correct:"equator"}, mode:"indoor_ok"},
+          {text:"Match each continent to a country on it:", action:"match", pairs:[{a:"Africa",b:"Kenya"},{a:"Asia",b:"India"},{a:"Europe",b:"Spain"},{a:"South America",b:"Brazil"}], check:{type:"match"}, mode:"indoor_ok"},
           {text:"Approximately how many countries are members of the United Nations?", action:"number", check:{type:"number",answer:193,tolerance:5}, mode:"indoor_ok"},
           {text:"Which economic term describes the total value of goods/services produced in a country?", action:"choice", choices:[{text:"GDP (Gross Domestic Product)",value:"correct"},{text:"GNI (Gross National Income)",value:"wrong1"},{text:"HDI (Human Development Index)",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"How many permanent members does the UN Security Council have?", action:"number", check:{type:"number",answer:5,tolerance:0}, mode:"indoor_ok"},
@@ -1200,6 +1240,8 @@ export const T = {
       language: {
         "easy": [
           {text:"Které slovo je pozdrav?", hint:"Co říkáš, když někoho potkáš?", action:"choice", choices:[{text:"Ahoj! 👋",value:"ahoj"},{text:"Nashle! 👋",value:"nashle"},{text:"Jablko 🍎",value:"jablko"}], check:{type:"choice",correct:"ahoj"}, mode:"outdoor_bonus"},
+          {text:"Přiřaď ke každému slovu jeho opak:", action:"match", pairs:[{a:"Velký",b:"Malý"},{a:"Horký",b:"Studený"},{a:"Rychlý",b:"Pomalý"},{a:"Den",b:"Noc"}], check:{type:"match"}, mode:"indoor_ok"},
+          {text:"Seřaď slova podle abecedy:", action:"sort", items:["🚗 Auto","🥔 Brambora","🍋 Citrón","🏠 Dům"], check:{type:"sort",correct:["🚗 Auto","🥔 Brambora","🍋 Citrón","🏠 Dům"]}, mode:"indoor_ok"},
           {text:"Kolik písmen má slovo KŮŇ?", hint:"K-Ů-Ň", action:"number", check:{type:"number",answer:3,tolerance:0}, mode:"indoor_ok"},
           {text:"Kolik písmen má tvoje jméno? Spočítej je!", action:"number", check:{type:"number",answer:null}, mode:"indoor_ok"},
           {text:"Které slovo je barva?", action:"choice", choices:[{text:"🔵 Modrá",value:"modrá"},{text:"🍰 Dort",value:"dort"},{text:"🐕 Pes",value:"pes"}], check:{type:"choice",correct:"modrá"}, mode:"outdoor_bonus"},
@@ -1231,6 +1273,8 @@ export const T = {
         ],
         "medium": [
           {text:"Co je opak slova VESELÝ?", action:"choice", choices:[{text:"Smutný 😢",value:"smutný"},{text:"Radostný 😄",value:"radostný"},{text:"Velký 🐘",value:"velký"}], check:{type:"choice",correct:"smutný"}, mode:"outdoor_bonus"},
+          {text:"Opak slova 'den' je ____.", action:"fill_blank", blank:{before:"Opak slova 'den' je",after:".",correct:"noc"}, check:{type:"fill_blank",correct:"noc"}, mode:"indoor_ok"},
+          {text:"Jdi ven a najdi ceduli nebo plakát. Spočítej, kolik je na něm slov, a napiš číslo.", hint:"Jakékoliv číslo je správně — jen počítej!", action:"number", check:{type:"number"}, mode:"outdoor_bonus"},
           {text:"Kolik samohlásek je v češtině? (krátké i dlouhé)", hint:"a, á, e, é, i, í...", action:"number", check:{type:"number",answer:10,tolerance:2}, mode:"indoor_ok"},
           {text:"Které z těchto slov je podstatné jméno?", action:"choice", choices:[{text:"🏠 Dům",value:"dům"},{text:"Běžet 🏃",value:"běžet"},{text:"Šťastný 😄",value:"šťastný"}], check:{type:"choice",correct:"dům"}, mode:"outdoor_bonus"},
           {text:"Seřaď slova do správné věty:", action:"sort", items:["kočky","všechny","miluji","já"], check:{type:"sort",correct:["já","miluji","všechny","kočky"]}, mode:"outdoor_bonus"},
@@ -1262,6 +1306,8 @@ export const T = {
         ],
         "hard": [
           {text:"Jaký jazykový prostředek je v: 'Vítr šeptal tajemství'?", action:"choice", choices:[{text:"Personifikace",value:"correct"},{text:"Rým",value:"wrong1"},{text:"Metafora",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Přiřaď ke každému slovu jeho slovní druh:", action:"match", pairs:[{a:"Běžet",b:"Sloveso"},{a:"Pes",b:"Podstatné jméno"},{a:"Rychle",b:"Příslovce"},{a:"Veselý",b:"Přídavné jméno"}], check:{type:"match"}, mode:"indoor_ok"},
+          {text:"Slova, která se píší stejně, ale mají různý význam (jako 'zámek' na dveřích a 'zámek' jako hrad), jsou ____.", action:"fill_blank", blank:{before:"Slova, která se píší stejně, ale mají různý význam, jsou",after:".",correct:"homonyma"}, check:{type:"fill_blank",correct:"homonyma"}, mode:"indoor_ok"},
           {text:"Kolik jazyků se přibližně mluví na světě?", hint:"Tisíce!", action:"number", check:{type:"number",answer:7000,tolerance:1000}, mode:"indoor_ok"},
           {text:"Která věta obsahuje metaforu?", action:"choice", choices:[{text:"Život je cesta",value:"correct"},{text:"Ona běží velmi rychle",value:"wrong1"},{text:"Pes hlasitě štěkal",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"Která z těchto možností je příkladem aliterace?", action:"choice", choices:[{text:"Petr Plán plnil plány pilně",value:"correct"},{text:"Měsíc je lucerna na nebi",value:"wrong1"},{text:"Bylo to chladné jako led",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -1292,6 +1338,8 @@ export const T = {
         ],
         "extreme": [
           {text:"Jaký literární prostředek přiřazuje lidské vlastnosti nelidským věcem?", action:"choice", choices:[{text:"Personifikace",value:"correct"},{text:"Aliterace",value:"wrong1"},{text:"Onomatopoeia",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Seřaď od nejmenší jednotky jazyka po největší:", action:"sort", items:["Písmeno","Slovo","Věta","Odstavec"], check:{type:"sort",correct:["Písmeno","Slovo","Věta","Odstavec"]}, mode:"indoor_ok"},
+          {text:"Přirovnání pomocí slova 'jako' (např. 'statečný jako lev') se nazývá ____.", action:"fill_blank", blank:{before:"Přirovnání pomocí slova 'jako' se nazývá",after:".",correct:"přirovnání"}, check:{type:"fill_blank",correct:"přirovnání"}, mode:"indoor_ok"},
           {text:"Přibližně kolik jazyků se mluví v Africe?", hint:"Více než tisíc!", action:"number", check:{type:"number",answer:2000,tolerance:500}, mode:"indoor_ok"},
           {text:"Který gramatický způsob vyjadřuje hypotetické situace?", action:"choice", choices:[{text:"Kondicionál",value:"correct"},{text:"Indikativ",value:"wrong1"},{text:"Imperativ",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"Kolik písmen má česká abeceda?", action:"number", check:{type:"number",answer:42,tolerance:1}, mode:"indoor_ok"},
@@ -1314,6 +1362,8 @@ export const T = {
       logic: {
         "easy": [
           {text:"Co přijde dál? 🔴 🔵 🔴 🔵 🔴 __", action:"choice", choices:[{text:"🔵 Modrá",value:"modrá"},{text:"🟡 Žlutá",value:"žlutá"},{text:"🟢 Zelená",value:"zelená"}], check:{type:"choice",correct:"modrá"}, mode:"outdoor_bonus"},
+          {text:"Přiřaď tvar k počtu jeho stran:", action:"match", pairs:[{a:"Trojúhelník",b:"3"},{a:"Čtverec",b:"4"},{a:"Pětiúhelník",b:"5"},{a:"Šestiúhelník",b:"6"}], check:{type:"match"}, mode:"indoor_ok"},
+          {text:"Jdi ven a podívej se na nejbližší budovu. Spočítej, kolik vidíš oken, a napiš číslo.", hint:"Jakékoliv číslo je správně — jen počítej!", action:"number", check:{type:"number"}, mode:"outdoor_bonus"},
           {text:"Máš 3 jablka a jedno sníš. Kolik ti zbyde?", action:"number", check:{type:"number",answer:2,tolerance:0}, mode:"indoor_ok"},
           {text:"Který z těchto tvarů má nejvíce stran?", action:"choice", choices:[{text:"⬡ Šestiúhelník (6)",value:"šestiúhelník"},{text:"🔺 Trojúhelník (3)",value:"trojúhelník"},{text:"⬛ Čtverec (4)",value:"čtverec"}], check:{type:"choice",correct:"šestiúhelník"}, mode:"outdoor_bonus"},
           {text:"Který tvar má 3 strany?", action:"choice", choices:[{text:"🔺 Trojúhelník",value:"trojúhelník"},{text:"⬛ Čtverec",value:"čtverec"},{text:"⭕ Kruh",value:"kruh"}], check:{type:"choice",correct:"trojúhelník"}, mode:"outdoor_bonus"},
@@ -1345,6 +1395,8 @@ export const T = {
         ],
         "medium": [
           {text:"Který tvar má 4 stejné strany a 4 pravé úhly?", action:"choice", choices:[{text:"Čtverec ⬛",value:"čtverec"},{text:"Trojúhelník 🔺",value:"trojúhelník"},{text:"Kruh ⭕",value:"kruh"}], check:{type:"choice",correct:"čtverec"}, mode:"outdoor_bonus"},
+          {text:"Tvar se třemi stranami se nazývá ____.", action:"fill_blank", blank:{before:"Tvar se třemi stranami se nazývá",after:".",correct:"trojúhelník"}, check:{type:"fill_blank",correct:"trojúhelník"}, mode:"indoor_ok"},
+          {text:"Seřaď od nejlehčího po nejtěžší:", action:"sort", items:["🪶 Peříčko","🍎 Jablko","📚 Kniha","🪨 Kámen"], check:{type:"sort",correct:["🪶 Peříčko","🍎 Jablko","📚 Kniha","🪨 Kámen"]}, mode:"indoor_ok"},
           {text:"Pekař upeče 24 rohlíků a dá je do sáčků po 6. Kolik sáčků naplní?", action:"number", check:{type:"number",answer:4,tolerance:0}, mode:"indoor_ok"},
           {text:"15 sušenek rozdělíš rovnoměrně mezi 3 kamarády. Kolik dostane každý?", action:"number", check:{type:"number",answer:5,tolerance:0}, mode:"indoor_ok"},
           {text:"7 × 8 = ____", action:"fill_blank", blank:{before:"7 × 8 =",after:"",correct:"56"}, check:{type:"fill_blank",correct:"56"}, mode:"outdoor_bonus"},
@@ -1376,6 +1428,8 @@ export const T = {
         ],
         "hard": [
           {text:"Jaké je nejmenší prvočíslo větší než 7?", action:"choice", choices:[{text:"11",value:"11"},{text:"9",value:"9"},{text:"12",value:"12"}], check:{type:"choice",correct:"11"}, mode:"outdoor_bonus"},
+          {text:"Přiřaď příklad k výsledku:", action:"match", pairs:[{a:"2 + 2",b:"4"},{a:"3 × 3",b:"9"},{a:"10 − 4",b:"6"},{a:"15 ÷ 3",b:"5"}], check:{type:"match"}, mode:"indoor_ok"},
+          {text:"V řadě 5, 10, 15, 20 je další číslo ____.", action:"fill_blank", blank:{before:"V řadě 5, 10, 15, 20 je další číslo",after:".",correct:"25"}, check:{type:"fill_blank",correct:"25"}, mode:"indoor_ok"},
           {text:"Vlak jede 60 km/h po dobu 2,5 hodiny. Kolik km ujede?", action:"number", check:{type:"number",answer:150,tolerance:0}, mode:"indoor_ok"},
           {text:"Která strategie řešení problémů spočívá v jeho rozdělení na menší části?", action:"choice", choices:[{text:"Dekompozice",value:"correct"},{text:"Memorování",value:"wrong1"},{text:"Opakování",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"Který typ uvažování přechází od konkrétních příkladů k obecnému závěru?", action:"choice", choices:[{text:"Induktivní",value:"correct"},{text:"Deduktivní",value:"wrong1"},{text:"Abdukce",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -1407,6 +1461,8 @@ export const T = {
         ],
         "extreme": [
           {text:"Pokud jsou všechny blůpy hrůzy a všechny hrůzy jsou lůzy — jsou všechny blůpy lůzy?", action:"choice", choices:[{text:"Ano — tranzitivní logika",value:"correct"},{text:"Ne — nedá se říct",value:"wrong1"},{text:"Jen někdy",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Seřaď čísla od nejmenšího po největší:", action:"sort", items:["7","19","23","31"], check:{type:"sort",correct:["7","19","23","31"]}, mode:"indoor_ok"},
+          {text:"Číslo, které je dělitelné jen 1 a samo sebou, se nazývá ____.", action:"fill_blank", blank:{before:"Číslo dělitelné jen 1 a samo sebou se nazývá",after:".",correct:"prvočíslo"}, check:{type:"fill_blank",correct:"prvočíslo"}, mode:"indoor_ok"},
           {text:"Prvočíslo má přesně kolik dělitelů?", action:"number", check:{type:"number",answer:2,tolerance:0}, mode:"indoor_ok"},
           {text:"Jak se nazývá přístup systematicky zkoušející všechny možnosti?", action:"choice", choices:[{text:"Brute force (hrubá síla)",value:"correct"},{text:"Heuristika",value:"wrong1"},{text:"Hladový algoritmus",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"Kolik je binární číslo 1011 v desítkové soustavě?", hint:"8+2+1", action:"number", check:{type:"number",answer:11,tolerance:0}, mode:"indoor_ok"},
@@ -1429,6 +1485,8 @@ export const T = {
       feelings: {
         "easy": [
           {text:"Jak se cítíš, když obejmeš někoho, koho miluješ?", action:"choice", choices:[{text:"Šťastně a teple 🥰",value:"šťastně"},{text:"Strašidelně 😨",value:"strach"},{text:"Nudím se 😴",value:"nuda"}], check:{type:"choice",correct:"šťastně"}, mode:"outdoor_bonus"},
+          {text:"Přiřaď obličej k pocitu:", action:"match", pairs:[{a:"😀",b:"Radost"},{a:"😢",b:"Smutek"},{a:"😠",b:"Vztek"},{a:"😨",b:"Strach"}], check:{type:"match"}, mode:"indoor_ok"},
+          {text:"Když se usmíváš a je ti dobře, cítíš ____.", action:"fill_blank", blank:{before:"Když se usmíváš a je ti dobře, cítíš",after:".",correct:"radost"}, check:{type:"fill_blank",correct:"radost"}, mode:"indoor_ok"},
           {text:"Kolik lidí máš nejraději na světě? Napiš číslo!", hint:"Neexistuje špatná odpověď!", action:"number", check:{type:"number",answer:null}, mode:"outdoor_bonus"},
           {text:"Co lidi obvykle dělá šťastnými?", action:"choice", choices:[{text:"Objetí od milovaného člověka 🤗",value:"objetí"},{text:"Nuda a samota 😴",value:"nuda"},{text:"Ztratit věc 😢",value:"ztratit"}], check:{type:"choice",correct:"objetí"}, mode:"outdoor_bonus"},
           {text:"Který obličej ukazuje překvapení?", action:"choice", choices:[{text:"😲 Tenhle!",value:"correct"},{text:"😴 Tenhle",value:"wrong1"},{text:"😠 Tenhle",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -1459,6 +1517,8 @@ export const T = {
         ],
         "medium": [
           {text:"Jak nejlépe pomoci kamarádovi, který je smutný?", action:"choice", choices:[{text:"Poslechnout ho a být s ním 🤝",value:"correct"},{text:"Odejít a ignorovat ho",value:"wrong1"},{text:"Říct mu, ať přestane být smutný",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Přiřaď situaci k pocitu, který může vyvolat:", action:"match", pairs:[{a:"Dostaneš dárek",b:"Radost"},{a:"Ztratíš hračku",b:"Smutek"},{a:"Hlasitá rána",b:"Strach"},{a:"Někdo tě předběhne",b:"Vztek"}], check:{type:"match"}, mode:"indoor_ok"},
+          {text:"Seřaď pocity od klidu po velké vzrušení:", action:"sort", items:["😌 Klid","🙂 Spokojenost","😃 Nadšení","🤩 Extáze"], check:{type:"sort",correct:["😌 Klid","🙂 Spokojenost","😃 Nadšení","🤩 Extáze"]}, mode:"indoor_ok"},
           {text:"Na škále 1–10, jak dobře se dnes cítíš?", hint:"Jen tvoje upřímné číslo!", action:"number", check:{type:"number",answer:null}, mode:"outdoor_bonus"},
           {text:"Která situace by tě nejspíš naplnila pýchou?", action:"choice", choices:[{text:"Dokončit těžký úkol 🏆",value:"correct"},{text:"Zapomenout domácí úkol 📚",value:"wrong1"},{text:"Prošvihnout alarm ⏰",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"Které z těchto NENÍ zdravý způsob zvládání vzteku?", action:"choice", choices:[{text:"Křičet na druhého",value:"correct"},{text:"Zhluboka dýchat",value:"wrong1"},{text:"Nakreslit, jak se cítíš",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -1489,6 +1549,8 @@ export const T = {
         ],
         "hard": [
           {text:"Co je empatie?", action:"choice", choices:[{text:"Rozumět tomu, jak se cítí druzí",value:"correct"},{text:"Zlobit se na ostatní",value:"wrong1"},{text:"Myslet jen na sebe",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Přiřaď uklidňující dovednost k situaci:", action:"match", pairs:[{a:"Hluboké dýchání",b:"Když se zlobíš"},{a:"Promluvit si s někým",b:"Když máš starost"},{a:"Dát si pauzu",b:"Když jsi unavený"},{a:"Počítat do deseti",b:"Když jsi naštvaný"}], check:{type:"match"}, mode:"indoor_ok"},
+          {text:"Schopnost vcítit se do pocitů druhého se nazývá ____.", action:"fill_blank", blank:{before:"Schopnost vcítit se do pocitů druhého se nazývá",after:".",correct:"empatie"}, check:{type:"fill_blank",correct:"empatie"}, mode:"indoor_ok"},
           {text:"Kolik základních emocí psychologové běžně rozlišují? (Ekmanův model)", hint:"Strach, zlost...", action:"number", check:{type:"number",answer:6,tolerance:1}, mode:"outdoor_bonus"},
           {text:"Jaký výraz popisuje pocit dvou protichůdných emocí zároveň?", action:"choice", choices:[{text:"Ambivalence",value:"correct"},{text:"Empatie",value:"wrong1"},{text:"Apatie",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"Jak se nazývá schopnost rozumět vlastním emocím a řídit je?", action:"choice", choices:[{text:"Emoční inteligence",value:"correct"},{text:"Impulzivita",value:"wrong1"},{text:"Extroverze",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -1519,6 +1581,8 @@ export const T = {
         ],
         "extreme": [
           {text:"Jaký psychologický koncept popisuje nepohodlí z držení dvou protichůdných přesvědčení?", action:"choice", choices:[{text:"Kognitivní disonance",value:"correct"},{text:"Potvrzovací zkreslení",value:"wrong1"},{text:"Dunning-Krugerův efekt",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Seřaď kroky, jak se uklidnit, když tě něco rozčílí:", action:"sort", items:["Všimni si pocitu","Zhluboka dýchej","Pojmenuj pocit","Vyber, co uděláš"], check:{type:"sort",correct:["Všimni si pocitu","Zhluboka dýchej","Pojmenuj pocit","Vyber, co uděláš"]}, mode:"indoor_ok"},
+          {text:"Schopnost rozumět svým emocím a zvládat je se nazývá emoční ____.", action:"fill_blank", blank:{before:"Schopnost rozumět svým emocím a zvládat je se nazývá emoční",after:".",correct:"inteligence"}, check:{type:"fill_blank",correct:"inteligence"}, mode:"indoor_ok"},
           {text:"Přibližně kolik různých emocí dokáže člověk rozpoznat v obličeji?", action:"number", check:{type:"number",answer:21,tolerance:5}, mode:"indoor_ok"},
           {text:"Jak se nazývá pocit radosti z neštěstí druhého (z němčiny)?", action:"choice", choices:[{text:"Schadenfreude",value:"correct"},{text:"Weltanschauung",value:"wrong1"},{text:"Angst",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"Na škále 1–10, jak dobře si myslíš, že zvládáš nejistotu?", action:"number", check:{type:"number",answer:null}, mode:"indoor_ok"},
@@ -1541,6 +1605,8 @@ export const T = {
       arts: {
         "easy": [
           {text:"Co smícháš, abys dostal/a zelenou barvu?", action:"choice", choices:[{text:"🔵 Modrá + 🟡 Žlutá",value:"correct"},{text:"🔴 Červená + 🔵 Modrá",value:"wrong1"},{text:"🔴 Červená + 🟡 Žlutá",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Přiřaď dvě barvy k tomu, co vznikne smícháním:", action:"match", pairs:[{a:"Modrá + žlutá",b:"Zelená"},{a:"Červená + modrá",b:"Fialová"},{a:"Červená + žlutá",b:"Oranžová"},{a:"Černá + bílá",b:"Šedá"}], check:{type:"match"}, mode:"indoor_ok"},
+          {text:"Seřaď barvy duhy odshora:", action:"sort", items:["🔴 Červená","🟠 Oranžová","🟡 Žlutá","🟢 Zelená"], check:{type:"sort",correct:["🔴 Červená","🟠 Oranžová","🟡 Žlutá","🟢 Zelená"]}, mode:"indoor_ok"},
           {text:"Kolik strun má kytara?", action:"number", check:{type:"number",answer:6,tolerance:0}, mode:"outdoor_bonus"},
           {text:"Které z těchto NENÍ hudební nástroj?", action:"choice", choices:[{text:"🪑 Židle",value:"židle"},{text:"🎹 Klavír",value:"klavír"},{text:"🥁 Bubny",value:"bubny"}], check:{type:"choice",correct:"židle"}, mode:"outdoor_bonus"},
           {text:"Jaká barva vznikne smícháním červené a žluté?", action:"choice", choices:[{text:"Oranžová 🟠",value:"correct"},{text:"Fialová",value:"wrong1"},{text:"Zelená",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -1572,6 +1638,8 @@ export const T = {
         ],
         "medium": [
           {text:"Kdo namaloval Monu Lisu?", action:"choice", choices:[{text:"Leonardo da Vinci 🎨",value:"correct"},{text:"Pablo Picasso",value:"wrong1"},{text:"Vincent van Gogh",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Červená, žlutá a modrá se nazývají tři ____ barvy.", action:"fill_blank", blank:{before:"Červená, žlutá a modrá se nazývají tři",after:"barvy.",correct:"základní"}, check:{type:"fill_blank",correct:"základní"}, mode:"indoor_ok"},
+          {text:"Jdi ven a rozhlédni se. Spočítej, kolik různých barev vidíš v přírodě, a napiš číslo.", hint:"Jakékoliv číslo je správně — jen se dívej!", action:"number", check:{type:"number"}, mode:"outdoor_bonus"},
           {text:"Kolik not má standardní hudební stupnice?", hint:"Do Re Mi Fa Sol La Ti...", action:"number", check:{type:"number",answer:7,tolerance:0}, mode:"outdoor_bonus"},
           {text:"Kolik strun má standardní housle?", action:"number", check:{type:"number",answer:4,tolerance:0}, mode:"outdoor_bonus"},
           {text:"Kolik čar má nota celá (celá nota)?", action:"choice", choices:[{text:"Žádné — je to prázdná hlavička",value:"correct"},{text:"Jednu svislou",value:"wrong1"},{text:"Dvě vodorovné",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
@@ -1602,6 +1670,8 @@ export const T = {
         ],
         "hard": [
           {text:"S jakým uměleckým směrem je spojen Salvador Dalí?", action:"choice", choices:[{text:"Surrealismus",value:"correct"},{text:"Impresionismus",value:"wrong1"},{text:"Kubismus",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Přiřaď umělce k jeho slavnému dílu:", action:"match", pairs:[{a:"Leonardo da Vinci",b:"Mona Lisa"},{a:"Vincent van Gogh",b:"Hvězdná noc"},{a:"Edvard Munch",b:"Výkřik"},{a:"Claude Monet",b:"Lekníny"}], check:{type:"match"}, mode:"indoor_ok"},
+          {text:"Barvy naproti sobě na barevném kruhu, jako modrá a oranžová, se nazývají ____ barvy.", action:"fill_blank", blank:{before:"Barvy naproti sobě na barevném kruhu se nazývají",after:"barvy.",correct:"doplňkové"}, check:{type:"fill_blank",correct:"doplňkové"}, mode:"indoor_ok"},
           {text:"Beethoven napsal 9 symfonií. Kolik jich napsal Mozart? (přibližně)", hint:"Mnohem více!", action:"number", check:{type:"number",answer:41,tolerance:5}, mode:"outdoor_bonus"},
           {text:"Která barva je v psychologii barev nejčastěji spojována s klidem a důvěrou?", action:"choice", choices:[{text:"Modrá",value:"correct"},{text:"Červená",value:"wrong1"},{text:"Žlutá",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"Který umělecký styl se vyznačuje zkreslením reality a snovými motivy?", action:"choice", choices:[{text:"Surrealismus",value:"correct"},{text:"Impresionismus",value:"wrong1"},{text:"Kubismus",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
@@ -1632,6 +1702,8 @@ export const T = {
         ],
         "extreme": [
           {text:"Který umělecký směr odmítal tradici a přijímal náhodu a absurditu?", action:"choice", choices:[{text:"Dadaismus",value:"correct"},{text:"Romantismus",value:"wrong1"},{text:"Neoklasicismus",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
+          {text:"Seřaď umělecké směry od nejstaršího po nejnovější:", action:"sort", items:["Renesance","Baroko","Impresionismus","Surrealismus"], check:{type:"sort",correct:["Renesance","Baroko","Impresionismus","Surrealismus"]}, mode:"indoor_ok"},
+          {text:"Umělecký směr Salvadora Dalího plný snových výjevů se nazývá ____.", action:"fill_blank", blank:{before:"Umělecký směr Salvadora Dalího se nazývá",after:".",correct:"surrealismus"}, check:{type:"fill_blank",correct:"surrealismus"}, mode:"indoor_ok"},
           {text:"Kolik kláves má standardní klavír?", action:"number", check:{type:"number",answer:88,tolerance:0}, mode:"indoor_ok"},
           {text:"Která technika spočívá v nanášení husté barvy pro vytvoření textury a dimenze?", action:"choice", choices:[{text:"Impasto",value:"correct"},{text:"Sfumato",value:"wrong1"},{text:"Chiaroscuro",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"Který malíř namaloval Hvězdnou noc?", action:"choice", choices:[{text:"Vincent van Gogh 🌙",value:"correct"},{text:"Pablo Picasso",value:"wrong1"},{text:"Salvador Dalí",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
@@ -1654,6 +1726,8 @@ export const T = {
       world: {
         "easy": [
           {text:"Který kontinent je největší?", action:"choice", choices:[{text:"🌏 Asie",value:"correct"},{text:"🌍 Afrika",value:"wrong1"},{text:"🌎 Amerika",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Přiřaď zemi k jejímu hlavnímu městu:", action:"match", pairs:[{a:"Francie",b:"Paříž"},{a:"Japonsko",b:"Tokio"},{a:"Egypt",b:"Káhira"},{a:"Itálie",b:"Řím"}], check:{type:"match"}, mode:"indoor_ok"},
+          {text:"Seřaď od nejmenšího po největší:", action:"sort", items:["🏠 Dům","🏙️ Město","🗺️ Země","🌍 Kontinent"], check:{type:"sort",correct:["🏠 Dům","🏙️ Město","🗺️ Země","🌍 Kontinent"]}, mode:"indoor_ok"},
           {text:"Kolik kontinentů je na Zemi?", action:"number", check:{type:"number",answer:7,tolerance:0}, mode:"outdoor_bonus"},
           {text:"Ve které zemi stojí Eiffelova věž?", action:"choice", choices:[{text:"🇫🇷 Francie",value:"francie"},{text:"🇬🇧 Anglie",value:"anglie"},{text:"🇩🇪 Německo",value:"německo"}], check:{type:"choice",correct:"francie"}, mode:"outdoor_bonus"},
           {text:"Na jakém kontinentu leží Egypt?", action:"choice", choices:[{text:"Afrika 🌍",value:"correct"},{text:"Asie",value:"wrong1"},{text:"Evropa",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -1685,6 +1759,8 @@ export const T = {
         ],
         "medium": [
           {text:"Jaké je hlavní město Francie?", action:"choice", choices:[{text:"🗼 Paříž",value:"correct"},{text:"🏰 Londýn",value:"wrong1"},{text:"🎭 Řím",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Největší horká poušť na světě je ____.", action:"fill_blank", blank:{before:"Největší horká poušť na světě je",after:".",correct:"Sahara"}, check:{type:"fill_blank",correct:"Sahara"}, mode:"indoor_ok"},
+          {text:"Jdi ven a spočítej, kolik různých názvů ulic nebo míst dokážeš přečíst, a napiš číslo.", hint:"Jakékoliv číslo je správně — jen počítej!", action:"number", check:{type:"number"}, mode:"outdoor_bonus"},
           {text:"Přibližně kolik zemí existuje na světě?", hint:"Kolem 190–200.", action:"number", check:{type:"number",answer:195,tolerance:10}, mode:"outdoor_bonus"},
           {text:"Ze které země pochází japonská tradice Hanami (obdivování třešní)?", action:"choice", choices:[{text:"Japonsko",value:"correct"},{text:"Čína",value:"wrong1"},{text:"Korea",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"Hlavní město Francie je ____.", action:"fill_blank", blank:{before:"Hlavní město Francie je",after:".",correct:"Paříž"}, check:{type:"fill_blank",correct:"Paříž"}, mode:"outdoor_bonus"},
@@ -1716,6 +1792,8 @@ export const T = {
         ],
         "hard": [
           {text:"Který oceán je největší na Zemi?", action:"choice", choices:[{text:"🌊 Tichý oceán",value:"correct"},{text:"Atlantický oceán",value:"wrong1"},{text:"Indický oceán",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Přiřaď památku k zemi:", action:"match", pairs:[{a:"Eiffelova věž",b:"Francie"},{a:"Velká čínská zeď",b:"Čína"},{a:"Pyramidy",b:"Egypt"},{a:"Koloseum",b:"Itálie"}], check:{type:"match"}, mode:"indoor_ok"},
+          {text:"Seřaď oceány od nejmenšího po největší:", action:"sort", items:["Severní ledový","Indický","Atlantský","Tichý"], check:{type:"sort",correct:["Severní ledový","Indický","Atlantský","Tichý"]}, mode:"indoor_ok"},
           {text:"Přibližně kolik lidí žije na Zemi? (v miliardách)", action:"number", check:{type:"number",answer:8,tolerance:1}, mode:"outdoor_bonus"},
           {text:"Který skleníkový plyn je největším přispěvatelem ke klimatické změně z lidské činnosti?", action:"choice", choices:[{text:"CO₂ (oxid uhličitý)",value:"correct"},{text:"Helium",value:"wrong1"},{text:"Dusík",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"Která mezinárodní organizace má 193 členských států a podporuje světový mír?", action:"choice", choices:[{text:"OSN (Organizace spojených národů)",value:"correct"},{text:"Světová obchodní organizace",value:"wrong1"},{text:"NATO",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -1747,6 +1825,8 @@ export const T = {
         ],
         "extreme": [
           {text:"Která mezinárodní dohoda stanovila cíl omezit globální oteplování na 1,5 °C?", action:"choice", choices:[{text:"Pařížská dohoda (2015)",value:"correct"},{text:"Kjótský protokol (1997)",value:"wrong1"},{text:"Montrealský protokol (1987)",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Pomyslná čára kolem středu Země se nazývá ____.", action:"fill_blank", blank:{before:"Pomyslná čára kolem středu Země se nazývá",after:".",correct:"rovník"}, check:{type:"fill_blank",correct:"rovník"}, mode:"indoor_ok"},
+          {text:"Přiřaď kontinent k zemi na něm:", action:"match", pairs:[{a:"Afrika",b:"Keňa"},{a:"Asie",b:"Indie"},{a:"Evropa",b:"Španělsko"},{a:"Jižní Amerika",b:"Brazílie"}], check:{type:"match"}, mode:"indoor_ok"},
           {text:"Přibližně kolik zemí je členy OSN?", action:"number", check:{type:"number",answer:193,tolerance:5}, mode:"indoor_ok"},
           {text:"Který ekonomický ukazatel popisuje celkovou hodnotu zboží a služeb vyrobených v zemi?", action:"choice", choices:[{text:"HDP (hrubý domácí produkt)",value:"correct"},{text:"HNP (hrubý národní produkt)",value:"wrong1"},{text:"HDI (index lidského rozvoje)",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"Kolik stálých členů má Rada bezpečnosti OSN?", action:"number", check:{type:"number",answer:5,tolerance:0}, mode:"indoor_ok"},
