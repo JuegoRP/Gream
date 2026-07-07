@@ -184,6 +184,8 @@ export const T = {
       nature: {
         "easy": [
           {text:"Which of these lives in a forest?", hint:"Think about animals you know!", action:"choice", choices:[{text:"🦊 Fox",value:"fox"},{text:"🐠 Clownfish",value:"fish"},{text:"🦈 Shark",value:"shark"}], check:{type:"choice",correct:"fox"}, mode:"outdoor_bonus"},
+          {text:"Sort these animals from smallest to biggest:", action:"sort", items:["🐜 Ant","🐝 Bee","🐦 Bird","🦅 Eagle"], check:{type:"sort",correct:["🐜 Ant","🐝 Bee","🐦 Bird","🦅 Eagle"]}, mode:"indoor_ok"},
+          {text:"Match each tree to what grows on it:", action:"match", pairs:[{a:"Apple tree",b:"Apple"},{a:"Oak",b:"Acorn"},{a:"Pine",b:"Cone"},{a:"Chestnut",b:"Chestnut"}], check:{type:"match"}, mode:"outdoor_bonus"},
           {text:"How many legs does a spider have?", hint:"More than a dog, less than a hundred!", action:"number", check:{type:"number",answer:8,tolerance:0}, mode:"outdoor_bonus"},
           {text:"Where do most fish live?", action:"choice", choices:[{text:"🌊 In water",value:"water"},{text:"🌳 In trees",value:"trees"},{text:"🏔️ On mountains",value:"mountains"}], check:{type:"choice",correct:"water"}, mode:"outdoor_bonus"},
           {text:"Which animal makes honey?", hint:"It buzzes and has black stripes!", action:"choice", choices:[{text:"🐝 Bee",value:"bee"},{text:"🦋 Butterfly",value:"butterfly"},{text:"🐞 Ladybug",value:"ladybug"}], check:{type:"choice",correct:"bee"}, mode:"outdoor_bonus"},
@@ -216,6 +218,8 @@ export const T = {
         ],
         "medium": [
           {text:"What do plants need to grow?", hint:"Think about what you'd give a plant every day.", action:"choice", choices:[{text:"🌊 Water & sun",value:"water_sun"},{text:"🍫 Chocolate",value:"choco"},{text:"🧊 Ice only",value:"ice"}], check:{type:"choice",correct:"water_sun"}, mode:"outdoor_bonus"},
+          {text:"Bees turn flower nectar into ____.", action:"fill_blank", blank:{before:"Bees turn flower nectar into",after:".",correct:"honey"}, check:{type:"fill_blank",correct:"honey"}, mode:"indoor_ok"},
+          {text:"Go outside and find a tree. Count how many birds you can see or hear, then enter the number.", hint:"Any number is fine — just look and listen!", action:"number", check:{type:"number"}, mode:"outdoor_bonus"},
           {text:"How many teeth does an adult human have?", hint:"Not counting wisdom teeth!", action:"number", check:{type:"number",answer:28,tolerance:4}, mode:"outdoor_bonus"},
           {text:"Which of these animals is nocturnal (active at night)?", action:"choice", choices:[{text:"🦉 Owl",value:"owl"},{text:"🐿️ Squirrel",value:"squirrel"},{text:"🦋 Butterfly",value:"butterfly"}], check:{type:"choice",correct:"owl"}, mode:"outdoor_bonus"},
           {text:"The process where plants make food from sunlight is called ____.", action:"fill_blank", blank:{before:"The process where plants make food from sunlight is called",after:".",correct:"photosynthesis"}, check:{type:"fill_blank",correct:"photosynthesis"}, mode:"outdoor_bonus"},
@@ -248,6 +252,8 @@ export const T = {
         ],
         "hard": [
           {text:"What is photosynthesis?", hint:"What do plants make from sunlight?", action:"choice", choices:[{text:"🌞 Converting sunlight into food",value:"correct"},{text:"🌙 Sleeping during daytime",value:"wrong1"},{text:"💧 Drinking rainwater only",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Match each animal to its home:", action:"match", pairs:[{a:"Bee",b:"Hive"},{a:"Bird",b:"Nest"},{a:"Fox",b:"Den"},{a:"Beaver",b:"Lodge"}], check:{type:"match"}, mode:"indoor_ok"},
+          {text:"The green pigment that lets plants make food from sunlight is called ____.", action:"fill_blank", blank:{before:"The green pigment that lets plants make food from sunlight is called",after:".",correct:"chlorophyll"}, check:{type:"fill_blank",correct:"chlorophyll"}, mode:"indoor_ok"},
           {text:"How many bones does a human adult have?", hint:"It's more than 200!", action:"number", check:{type:"number",answer:206,tolerance:10}, mode:"outdoor_bonus"},
           {text:"Which organism is a primary producer in most food chains?", action:"choice", choices:[{text:"🌿 Plant",value:"plant"},{text:"🦁 Lion",value:"lion"},{text:"🦅 Eagle",value:"eagle"}], check:{type:"choice",correct:"plant"}, mode:"outdoor_bonus"},
           {text:"What is the largest organ in the human body?", action:"choice", choices:[{text:"🫀 Heart",value:"heart"},{text:"🧠 Brain",value:"brain"},{text:"🩺 Skin",value:"skin"}], check:{type:"choice",correct:"skin"}, mode:"outdoor_bonus"},
@@ -280,6 +286,8 @@ export const T = {
         ],
         "extreme": [
           {text:"Which process converts nitrogen gas into forms usable by plants?", action:"choice", choices:[{text:"Nitrogen fixation",value:"correct"},{text:"Photosynthesis",value:"wrong1"},{text:"Transpiration",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Order these levels of a food chain, from first to last:", action:"sort", items:["☀️ Sun","🌱 Grass","🐇 Rabbit","🦊 Fox"], check:{type:"sort",correct:["☀️ Sun","🌱 Grass","🐇 Rabbit","🦊 Fox"]}, mode:"indoor_ok"},
+          {text:"Animals that are active at night are called ____.", action:"fill_blank", blank:{before:"Animals that are active at night are called",after:".",correct:"nocturnal"}, check:{type:"fill_blank",correct:"nocturnal"}, mode:"indoor_ok"},
           {text:"Approximately what percentage of Earth's atmosphere is oxygen?", hint:"It's about a fifth!", action:"number", check:{type:"number",answer:21,tolerance:2}, mode:"outdoor_bonus"},
           {text:"Which term describes an organism that breaks down dead material into nutrients?", action:"choice", choices:[{text:"Decomposer",value:"correct"},{text:"Producer",value:"wrong1"},{text:"Apex predator",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"Roughly how many years ago did the dinosaurs go extinct? (in millions)", action:"number", check:{type:"number",answer:66,tolerance:5}, mode:"outdoor_bonus"},
@@ -1066,6 +1074,8 @@ export const T = {
       nature: {
         "easy": [
           {text:"Co z toho žije v lese?", hint:"Vzpomeň si na zvířata, která znáš!", action:"choice", choices:[{text:"🦊 Liška",value:"liška"},{text:"🐠 Klaun",value:"ryba"},{text:"🦈 Žralok",value:"žralok"}], check:{type:"choice",correct:"liška"}, mode:"outdoor_bonus"},
+          {text:"Seřaď zvířata od nejmenšího po největší:", action:"sort", items:["🐜 Mravenec","🐝 Včela","🐦 Pták","🦅 Orel"], check:{type:"sort",correct:["🐜 Mravenec","🐝 Včela","🐦 Pták","🦅 Orel"]}, mode:"indoor_ok"},
+          {text:"Přiřaď strom k tomu, co na něm roste:", action:"match", pairs:[{a:"Jabloň",b:"Jablko"},{a:"Dub",b:"Žalud"},{a:"Borovice",b:"Šiška"},{a:"Kaštan",b:"Kaštan"}], check:{type:"match"}, mode:"outdoor_bonus"},
           {text:"Kolik noh má pavouk?", hint:"Více než pes, méně než sto!", action:"number", check:{type:"number",answer:8,tolerance:0}, mode:"outdoor_bonus"},
           {text:"Kde žije většina ryb?", action:"choice", choices:[{text:"🌊 Ve vodě",value:"voda"},{text:"🌳 Na stromech",value:"stromy"},{text:"🏔️ V horách",value:"hory"}], check:{type:"choice",correct:"voda"}, mode:"outdoor_bonus"},
           {text:"Které zvíře vyrábí med?", hint:"Bzučí a má černé pruhy!", action:"choice", choices:[{text:"🐝 Včela",value:"včela"},{text:"🦋 Motýl",value:"motýl"},{text:"🐞 Beruška",value:"beruška"}], check:{type:"choice",correct:"včela"}, mode:"outdoor_bonus"},
@@ -1098,6 +1108,8 @@ export const T = {
         ],
         "medium": [
           {text:"Co rostliny potřebují k růstu?", hint:"Co dáváš rostlině každý den?", action:"choice", choices:[{text:"🌊 Vodu a slunce",value:"voda_slunce"},{text:"🍫 Čokoládu",value:"cokolada"},{text:"🧊 Jen led",value:"led"}], check:{type:"choice",correct:"voda_slunce"}, mode:"outdoor_bonus"},
+          {text:"Včely mění květový nektar na ____.", action:"fill_blank", blank:{before:"Včely mění květový nektar na",after:".",correct:"med"}, check:{type:"fill_blank",correct:"med"}, mode:"indoor_ok"},
+          {text:"Jdi ven a najdi strom. Spočítej, kolik ptáků vidíš nebo slyšíš, a napiš číslo.", hint:"Jakékoliv číslo je správně — jen se dívej a poslouchej!", action:"number", check:{type:"number"}, mode:"outdoor_bonus"},
           {text:"Kolik zubů má dospělý člověk? (bez moudrákú)", hint:"Kolem 28", action:"number", check:{type:"number",answer:28,tolerance:4}, mode:"outdoor_bonus"},
           {text:"Které z těchto zvířat je noční (aktivní v noci)?", action:"choice", choices:[{text:"🦉 Sova",value:"sova"},{text:"🐿️ Veverka",value:"veverka"},{text:"🦋 Motýl",value:"motýl"}], check:{type:"choice",correct:"sova"}, mode:"outdoor_bonus"},
           {text:"Proces, při kterém rostliny vyrábějí potravu ze slunečního světla, se jmenuje ____.", action:"fill_blank", blank:{before:"Tento proces se jmenuje",after:".",correct:"fotosyntéza"}, check:{type:"fill_blank",correct:"fotosyntéza"}, mode:"outdoor_bonus"},
@@ -1129,6 +1141,8 @@ export const T = {
         ],
         "hard": [
           {text:"Co je fotosyntéza?", hint:"Co rostliny vyrábí ze slunečního světla?", action:"choice", choices:[{text:"🌞 Přeměna světla v potravu",value:"correct"},{text:"🌙 Spánek během dne",value:"wrong1"},{text:"💧 Pití dešťové vody",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Přiřaď zvíře k jeho domovu:", action:"match", pairs:[{a:"Včela",b:"Úl"},{a:"Pták",b:"Hnízdo"},{a:"Liška",b:"Nora"},{a:"Bobr",b:"Hrad"}], check:{type:"match"}, mode:"indoor_ok"},
+          {text:"Zelené barvivo, které umožňuje rostlinám vyrábět potravu ze slunce, se jmenuje ____.", action:"fill_blank", blank:{before:"Zelené barvivo, které umožňuje rostlinám vyrábět potravu ze slunce, se jmenuje",after:".",correct:"chlorofyl"}, check:{type:"fill_blank",correct:"chlorofyl"}, mode:"indoor_ok"},
           {text:"Kolik kostí má dospělý člověk?", hint:"Více než 200!", action:"number", check:{type:"number",answer:206,tolerance:10}, mode:"outdoor_bonus"},
           {text:"Který organismus je primárním producentem ve většině potravních řetězců?", action:"choice", choices:[{text:"🌿 Rostlina",value:"rostlina"},{text:"🦁 Lev",value:"lev"},{text:"🦅 Orel",value:"orel"}], check:{type:"choice",correct:"rostlina"}, mode:"outdoor_bonus"},
           {text:"Který orgán je největší v lidském těle?", action:"choice", choices:[{text:"🩺 Kůže",value:"kůže"},{text:"🫀 Srdce",value:"srdce"},{text:"🧠 Mozek",value:"mozek"}], check:{type:"choice",correct:"kůže"}, mode:"outdoor_bonus"},
@@ -1161,6 +1175,8 @@ export const T = {
         ],
         "extreme": [
           {text:"Který proces přeměňuje dusík na formy využitelné rostlinami?", action:"choice", choices:[{text:"Fixace dusíku",value:"correct"},{text:"Fotosyntéza",value:"wrong1"},{text:"Transpirace",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Seřaď články potravního řetězce od prvního po poslední:", action:"sort", items:["☀️ Slunce","🌱 Tráva","🐇 Králík","🦊 Liška"], check:{type:"sort",correct:["☀️ Slunce","🌱 Tráva","🐇 Králík","🦊 Liška"]}, mode:"indoor_ok"},
+          {text:"Zvířata aktivní v noci se nazývají ____.", action:"fill_blank", blank:{before:"Zvířata aktivní v noci se nazývají",after:".",correct:"noční"}, check:{type:"fill_blank",correct:"noční"}, mode:"indoor_ok"},
           {text:"Přibližně kolik procent zemské atmosféry tvoří kyslík?", hint:"Asi pětina!", action:"number", check:{type:"number",answer:21,tolerance:2}, mode:"outdoor_bonus"},
           {text:"Jak se nazývá organismus rozkládající mrtvou hmotu na živiny?", action:"choice", choices:[{text:"Rozkladač (dekompozitor)",value:"correct"},{text:"Producent",value:"wrong1"},{text:"Vrcholový predátor",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"Přibližně před kolika miliony let vyhynuli dinosauři?", action:"number", check:{type:"number",answer:66,tolerance:5}, mode:"outdoor_bonus"},
