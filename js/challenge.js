@@ -73,8 +73,12 @@ export const Challenge = {
       ? challenges
       : (challenges?.[diffKey] || challenges?.['medium'] || challenges?.['easy'] || []);
 
+    // Cycle through the WHOLE pool: window advances with total tasks done in this
+    // world, so all challenges get used (badge progress alone resets every 3 steps
+    // and would loop indexes 0-2 forever).
     const stepsDone   = Profiles.getBadgeProgress(p.id, world);
-    this._currentStep = Math.min(stepsDone, steps.length - 1);
+    const totalDone   = p.worldTasks?.[world] || 0;
+    this._currentStep = steps.length ? (totalDone % steps.length) : 0;
     const challenge   = steps[this._currentStep];
     if (!challenge) return;
     this._currentChallenge = challenge;
@@ -152,7 +156,7 @@ export const Challenge = {
     this._set('ch-label',     t.ch_label);
     this._set('chText',       challenge.text);
     this._set('chHint',       challenge.hint);
-    this._set('chStepBadge',  `${badge.e} ${t.step_lbl(this._currentStep + 1)} / 3`);
+    this._set('chStepBadge',  `${badge.e} ${t.step_lbl(Math.min(stepsDone, 2) + 1)} / 3`);
     this._set('bp-title',     t.bp_title);
 
     // Reset hint button state for new step
@@ -192,7 +196,7 @@ export const Challenge = {
       bpSteps.innerHTML = '';
       stepDefs.forEach((sd, i) => {
         const done   = i < stepsDone;
-        const active = i === this._currentStep && !done;
+        const active = i === stepsDone && !done;
         const div    = document.createElement('div');
         div.className = `bp-step${done ? ' done' : active ? ' active' : ''}`;
         div.innerHTML = `
@@ -205,7 +209,7 @@ export const Challenge = {
       });
     }
 
-    const actionType = challenge.action || stepDefs[this._currentStep]?.type || 'choice';
+    const actionType = challenge.action || stepDefs[Math.min(stepsDone, 2)]?.type || 'choice';
     this._renderActionButtons(actionType, difficulty, t);
 
     // ─── Boost_skip button: appears if boost is active ───
@@ -641,7 +645,8 @@ export const Challenge = {
     const meta = {
       outdoor: this._wasOutdoor,
       geo:     this._proofGeo || null,
-      poiName: this._targetPOI?.name || null
+      poiName: this._targetPOI?.name || null,
+      text:    this._currentChallenge?.text || null
     };
     const result    = Profiles.completeTask(p.id, this._world, this._currentStep, meta);
     if (!result) return;

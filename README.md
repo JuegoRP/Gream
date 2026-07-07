@@ -14,12 +14,15 @@ Outdoorová dobrodružná hra pro děti 7–15 let. Jedna výzva denně — venk
 - **Historie** — posledních 50 splněných úkolů s místem a časem
 - **Parent gate** — potvrzení rodiče, žádná data neopouští zařízení
 
-## Stav projektu (k 2026-07-01)
+## Stav projektu (k 2026-07-07)
 
 **Hotovo:**
 - Kompletní gameplay loop: výzvy, pet systém, odznaky, streaky, šatník
-- **Lokalizace EN + CZ kompletní** (`js/i18n.js`) — přes 1000 výzev, klíčované obtížností (easy/medium/hard/extreme)
+- **Lokalizace EN + CZ kompletní** (`js/i18n.js`) — ~568 unikátních výzev v každém jazyce, klíčované obtížností (easy/medium/hard/extreme); pooly EN=CZ sladěné
+- **Výběr výzev procykluje celý pool** — dřív se kvůli resetu badge-progressu dokola opakovaly jen první 3 výzvy z každého poolu; teď se okno posouvá podle počtu splněných úkolů ve světě, takže se dostane na všechny
+- **v1 vydání ZDARMA** — paywall vypnutý přepínačem `PAYWALL_ENABLED` (subscription.js); reálné IAP až v pozdějším updatu (za parent gate)
 - **Vlastní vizuál (flat-vektor):** malovaná pozadí zahrady + 6 světů, gramíci, vejce, app ikony; živá zahrada (pyl/světlušky, denní/noční tint)
+- Perzistence dat (`navigator.storage.persist()`), GPS fallback při odmítnuté poloze
 - Hudba: opravené scénové přepínání (menu/challenge/outdoor)
 - Reálná OSM mapa, geocaching warmth, historie aktivit
 - 30+ obrazovek, onboarding, parent-confirm, service worker (offline cache vč. map tiles a Leafletu)
@@ -27,9 +30,9 @@ Outdoorová dobrodružná hra pro děti 7–15 let. Jedna výzva denně — venk
 
 **Zbývá před vydáním:**
 - Safari CSS opravy
-- GPS fallback (odmítnutá poloha)
 - Onboarding přepis
-- Zbytek artworků (Kenney placeholdery na mapě, barevnější vlnka, stage-varianty gramíků)
+- Zbytek artworků (barevnější vlnka, stage-varianty gramíků; ověřit Kenney placeholdery na mapě)
+- **Privacy policy URL** (povinná pro dětské aplikace na obou storech)
 - Capacitor build + Google Play testing track
 
 Živý stav úkolů: `projects.json` v admin systému (admin.romanpavlorek.eu).

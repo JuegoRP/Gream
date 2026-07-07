@@ -9,7 +9,7 @@
 
 ### Platformní opravy
 - [ ] Safari CSS opravy (iOS rendering)
-- [ ] GPS fallback — funkční flow když uživatel odmítne polohu
+- [x] GPS fallback — funkční flow když uživatel odmítne polohu (2026-07-07) — mapa už netiše nepadne do Prahy: hláška „Poloha je vypnutá" + tlačítko na domácí výzvy
 - [ ] Onboarding přepis
 
 ### Obsah
@@ -19,8 +19,18 @@
 - [ ] Capacitor build iOS + Android (postup: CAPACITOR.md)
 - [ ] Google Play testing track (interní testování)
 - [ ] Store assety: screenshoty, popisky (EN texty hotové v i18n.js — využít)
+- [ ] **Privacy policy URL** — Google Play i App Store ji u dětských aplikací vyžadují povinně; obsah je vlastně hotový v onboarding v4 textech, stačí publikovat stránku (např. 3rstudio.eu/gream-privacy)
+- [ ] Ověřit „Kenney placeholdery na mapě" — v kódu (js/mapview.js) žádná reference na Kenney není; buď už vyřešeno a položka je zastaralá, nebo se assety jmenují jinak
 
 ---
+
+## Hotovo (2026-07-07) — pre-release polish
+
+- [x] **Oprava výběru výzev** — hráč dřív viděl jen indexy 0–2 (badge progress se resetuje po 3 krocích), takže z ~568 výzev bylo reálně dostupných jen ~72 (18 na obtížnost). Teď se okno posouvá podle `worldTasks[world] % pool.length` → procyklují se VŠECHNY výzvy. (challenge.js) — příčina pocitu „málo výzev"
+- [x] **Sladění EN/CZ poolů** — doplněny 2 chybějící CZ výzvy (nature medium „býložravci", nature extreme „genom"); všechny pooly EN=CZ, jinak by index-výběr v CZ tiše šlápl mimo pole
+- [x] **Vypnutý paywall pro v1** — `PAYWALL_ENABLED=false` v subscription.js: všichni premium, žádný trial banner, skrytá subscribe UI, fake „Aktivovat Premium" nedosažitelný. Store by falešný IAP zamítl; reálné IAP (RevenueCat/Capacitor) až po vydání a za parent gate
+- [x] **Perzistence dat** — `navigator.storage.persist()` při startu (app.js init), aby iOS/Android nevymazaly profily a mazlíčka pod tlakem na místo
+- [x] Historie aktivit teď ukládá i text výzvy (dřív jen obecný „Krok 1")
 
 ## Hotovo (2026-07-05)
 

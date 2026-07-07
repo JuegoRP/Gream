@@ -152,7 +152,8 @@ export const Profiles = {
       t: Date.now(),
       outdoor: !!meta.outdoor,
       geo: meta.geo || null,
-      poiName: meta.poiName || null
+      poiName: meta.poiName || null,
+      text: meta.text || null
     });
     p.history = p.history.slice(0, 50);
 

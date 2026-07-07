@@ -7,6 +7,14 @@
 
 const KEY_SUB = 'gream_sub';
 
+// ─── Paywall master switch ───
+// v1 ships FREE (no real in-app purchase wired up yet). While false:
+//   • everyone is treated as premium (4 free indoor/day, unlimited outdoor)
+//   • no trial countdown, no "Subscribe" UI, no fake purchase button
+// Flip to true only once a real IAP (RevenueCat / Capacitor plugin) is wired up
+// AND the purchase flow sits behind the parent gate.
+export const PAYWALL_ENABLED = false;
+
 export const FREE_DAILY_INDOOR    = 2;   // zdarma domácí
 export const PREMIUM_DAILY_INDOOR = 4;   // zdarma domácí pro premium
 export const INDOOR_MAX_TOTAL     = 6;   // absolutní strop (zdarma + koupené)
@@ -23,7 +31,13 @@ const today = () => new Date().toDateString();
 
 export const Subscription = {
 
+  paywallEnabled() { return PAYWALL_ENABLED; },
+
   get(profileId) {
+    // Paywall off → everyone premium, no trial countdown.
+    if (!PAYWALL_ENABLED) {
+      return { isPremium: true, inTrial: false, trialDaysLeft: 0, premiumSince: null };
+    }
     const d = load();
     const s = d[profileId] || {};
     const now = Date.now();

@@ -233,6 +233,14 @@ window.App = {
 
   async init() {
     console.log('[Gream] Init starting...');
+    // Ask the OS not to evict our data (profiles, pet, progress live in
+    // localStorage). iOS/Safari can clear WebView storage under space pressure;
+    // losing a child's Gream is the worst possible bug. Best-effort, non-blocking.
+    if (navigator.storage?.persist) {
+      navigator.storage.persist()
+        .then(granted => console.log('[Gream] Storage persisted:', granted))
+        .catch(() => {});
+    }
     Audio.init();
     // Resume AudioContext and start music on first user gesture (required for iOS)
     // Persistent listeners — retry on every touch until music is actually playing
@@ -395,12 +403,12 @@ window.App = {
       ? `🔥 ${streak} ${cs ? (streak === 1 ? 'den v řadě' : streak < 5 ? 'dny v řadě' : 'dní v řadě') : (streak === 1 ? 'day streak' : 'day streak')}`
       : (cs ? 'Začni svou sérii!' : 'Start your streak!'));
 
-    // Subscribe section — hide when paid
+    // Subscribe section — hide when paywall off (v1) or already paid
     const sub = Subscription.get(p.id);
     const subSec = document.getElementById('hubSubscribeSection');
     if (subSec) {
-      const hasPaid = !!sub.premiumSince;
-      subSec.style.display = hasPaid ? 'none' : 'block';
+      const hide = !Subscription.paywallEnabled() || !!sub.premiumSince;
+      subSec.style.display = hide ? 'none' : 'block';
       this._setText('hubSubscribeLbl', cs ? 'Předplatit Premium ⭐' : 'Subscribe to Premium ⭐');
     }
 
@@ -1369,11 +1377,11 @@ window.App = {
         background:rgba(255,255,255,0.85);
         box-shadow:0 2px 6px rgba(0,0,0,0.06);
       `;
-      const stepNames = t.steps[item.world]?.[item.step]?.label || `Step ${item.step+1}`;
+      const stepNames = item.text || t.steps[item.world]?.[item.step]?.label || t.step_lbl(item.step + 1);
       row.innerHTML = `
         <div style="font-size:30px;width:44px;height:44px;background:var(--green-pale);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">${WORLD_ICONS[item.world]}</div>
         <div style="flex:1;min-width:0">
-          <div style="font-weight:800;color:var(--green-deep);font-size:14px">${t.worlds[item.world]} · ${stepNames}</div>
+          <div style="font-weight:800;color:var(--green-deep);font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.worlds[item.world]} · ${stepNames}</div>
           <div style="font-size:11px;color:var(--green-mid);font-weight:700">
             ${dateLabel} · ${time}
             ${item.outdoor ? ' · 🌳' : ''}
@@ -2109,6 +2117,7 @@ window.App = {
   },
 
   openSubscription() {
+    if (!Subscription.paywallEnabled()) return; // v1 ships free — no paywall
     const lang = getLang();
     const p    = Profiles.active();
     const sub  = p ? Subscription.get(p.id) : null;
@@ -2291,8 +2300,8 @@ window.App = {
         icon: '⭐',
         title: cs ? 'Záložka JÁ' : 'ME tab',
         text: cs
-          ? 'Záložka JÁ — tady vidíš celý svůj postup. Odznaky za splněné výzvy, žebříček hráčů, správu Greamíků, historii a nastavení. Předplatné Premium odemkne víc denních výzev!'
-          : 'The ME tab — see your full progress. Badges, ranking, Gream management, history and settings. Premium unlocks more daily challenges!',
+          ? 'Záložka JÁ — tady vidíš celý svůj postup. Odznaky za splněné výzvy, žebříček hráčů, správu Greamíků, historii a nastavení.'
+          : 'The ME tab — see your full progress. Badges, ranking, Gream management, history and settings.',
       },
       {
         sel: '#tab-map',
@@ -2806,6 +2815,11 @@ window.App = {
       }
     }
 
+    // Location unavailable/denied → don't silently drop the user in Prague.
+    // Show a clear notice + a route back to home challenges.
+    const locationOff = !!pos.fallback;
+    this._renderMapLocationNotice(locationOff, lang);
+
     // World filter pills — populate side panel
     const WORLDS = ['nature','language','logic','feelings','arts','world'];
     const WC = { nature:'#4a8a2e', language:'#5a4a8a', logic:'#2d7abf', feelings:'#d46d94', arts:'#c87030', world:'#a8743c' };
@@ -2860,6 +2874,28 @@ window.App = {
       const loading = document.getElementById('mapLoading');
       if (loading) loading.querySelector('#mapLoadingMsg').textContent = lang === 'cs' ? 'Chyba načítání.' : 'Load error.';
     }
+  },
+
+  // ─── Location-off notice on the map ───
+  // Shown when GPS is denied/unavailable so the user isn't silently dropped at a
+  // fallback location with no explanation. Offers a jump to home challenges.
+  _renderMapLocationNotice(locationOff, lang) {
+    const mapEl = document.getElementById('leafletMap');
+    document.getElementById('mapLocNotice')?.remove();
+    if (!locationOff || !mapEl) return;
+    const t = tr();
+    const notice = document.createElement('div');
+    notice.id = 'mapLocNotice';
+    notice.style.cssText = 'position:absolute;left:12px;right:12px;top:12px;z-index:520;background:rgba(255,255,255,0.97);border:2px solid rgba(245,166,35,0.5);border-radius:14px;padding:12px 14px;box-shadow:0 4px 16px rgba(0,0,0,0.14);display:flex;align-items:center;gap:10px';
+    notice.innerHTML = `
+      <div style="font-size:24px;flex-shrink:0">📍</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:800;color:#8a5200">${t.geo_off_title}</div>
+        <div style="font-size:11px;color:#a05000;font-weight:600;line-height:1.3">${t.geo_off_sub}</div>
+      </div>
+      <button id="mapLocHomeBtn" style="flex-shrink:0;padding:8px 12px;border-radius:50px;border:none;background:var(--green-mid);color:white;font-family:inherit;font-weight:800;font-size:11px;cursor:pointer;white-space:nowrap">${t.geo_off_home_btn}</button>`;
+    mapEl.appendChild(notice);
+    notice.querySelector('#mapLocHomeBtn').onclick = () => { notice.remove(); Router.show('home'); };
   },
 
   _filterMapWorld(world) {
