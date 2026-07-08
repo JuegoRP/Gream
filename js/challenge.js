@@ -589,7 +589,12 @@ export const Challenge = {
     // ─── POI proximity check (only if challenge was started from a POI pin) ───
     if (this._targetPOI) {
       try {
-        const r = await Geo.checkAtPOI(this._targetPOI, 50); // 50m tolerance
+        // Never block the answer flow on GPS — cap the wait so a stalled
+        // geolocation prompt can't freeze the whole challenge.
+        const r = await Promise.race([
+          Geo.checkAtPOI(this._targetPOI, 50), // 50m tolerance
+          new Promise(res => setTimeout(() => res({ atPOI: true, timeout: true }), 2500))
+        ]);
         if (!r.atPOI) {
           Feedback.error();
           const t = tr();
@@ -602,11 +607,15 @@ export const Challenge = {
       }
     }
 
-    // Outdoor bonus check (post-proof)
+    // Outdoor bonus check (post-proof) — MUST NOT block the answer flow.
+    // A stalled geolocation prompt on getCurrentPosition would otherwise freeze
+    // the challenge (buttons stay disabled). Cap the wait; no bonus on timeout.
     if (this._currentChallenge?.mode === 'outdoor_bonus' && !this._wasOutdoor) {
       try {
-        const p = Profiles.active();
-        const r = await Geo.checkOutdoor();
+        const r = await Promise.race([
+          Geo.checkOutdoor(),
+          new Promise(res => setTimeout(() => res({ outside: false, timeout: true }), 1500))
+        ]);
         if (r.outside) this._wasOutdoor = true;
       } catch {}
     }
