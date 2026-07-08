@@ -997,16 +997,20 @@ window.App = {
       } else {
         const arch = g.archetype;
         const stageN = Math.min(g.stage, 4);
+        // Bigger evolution → visibly bigger. stage2 = base, +20% at 3, +30% again at 4.
+        const STAGE_SCALE = { 1: 0.85, 2: 1.0, 3: 1.2, 4: 1.56 };
+        const gSize = Math.round(80 * (STAGE_SCALE[stageN] || 1));
+        const shW = Math.round(gSize * (isActive ? 0.62 : 0.5));
         slot.innerHTML = `
           <canvas data-sprite-sheet="img/greamici/${arch}_${stageN}.png"
-            data-sprite-mood="${isActive ? (g.mood || 'happy') : 'neutral'}"
-            width="90" height="90"
-            style="width:90px;height:90px;image-rendering:pixelated;display:block;
+            data-sprite-mood="${g.mood || 'happy'}"
+            width="${gSize}" height="${gSize}"
+            style="width:${gSize}px;height:${gSize}px;image-rendering:pixelated;display:block;
               ${isActive ? 'animation:greamWalkBlock 1.1s ease-in-out infinite;' : ''}
               filter:drop-shadow(0 4px 8px rgba(0,0,0,${isActive ? '0.3' : '0.15'}));
               ${g.isShiny ? 'filter:drop-shadow(0 4px 8px rgba(255,215,0,0.5));' : ''}
             "></canvas>
-          <div style="position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,${isActive ? '0.22' : '0.1'});width:${isActive ? 60 : 44}px;height:${isActive ? 10 : 7}px;border-radius:50%;${isActive ? 'animation:greamWalkShadow 1.1s ease-in-out infinite;' : ''}"></div>
+          <div style="position:absolute;bottom:2px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,${isActive ? '0.22' : '0.1'});width:${shW}px;height:${Math.round(shW*0.16)}px;border-radius:50%;${isActive ? 'animation:greamWalkShadow 1.1s ease-in-out infinite;' : ''}"></div>
         `;
       }
 
@@ -1074,7 +1078,10 @@ window.App = {
   //   TL (0,0)=neutral  TR (128,0)=sad  BL (0,128)=serious  BR (128,128)=happy
   // Drawing: detect content bounding box → draw only that region → centered in canvas
   _moodToQuad(mood) {
-    return { happy:[128,128], sad:[128,0], serious:[0,128], neutral:[0,0] }[mood] || [0,0];
+    // Sprite sheets only have art in the RIGHT column (sad = top-right, happy =
+    // bottom-right). The left column is empty, so neutral/serious must map to a
+    // filled cell — otherwise the canvas renders blank (only the shadow shows).
+    return { happy:[128,128], sad:[128,0], serious:[128,0], neutral:[128,128] }[mood] || [128,128];
   },
 
   // Draw sprite sheet cell onto canvas, cropped to content and centered
@@ -3323,8 +3330,67 @@ window.App = {
         });
       }
 
+      // Sleep (archive) button — only if more than one is awake
+      if (allGreams.length > 1) {
+        const sleepBtn = document.createElement('button');
+        sleepBtn.textContent = '😴';
+        sleepBtn.title = lang === 'cs' ? 'Uspat' : 'Sleep';
+        sleepBtn.style.cssText = 'flex-shrink:0;width:38px;height:38px;border-radius:50%;border:2px solid rgba(0,0,0,0.08);background:white;font-size:18px;cursor:pointer;align-self:center';
+        sleepBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const r = Gream.archive(p.id, g.id);
+          if (r.ok) {
+            Feedback.tap();
+            this._showToast(lang === 'cs' ? '😴 Greamík spí. Můžeš přidat dalšího.' : '😴 Gream is sleeping. You can add another.');
+            this._renderWardrobeGreams();
+          } else {
+            this._showToast(lang === 'cs' ? 'Nemůžeš uspat svého jediného Greamíka.' : "Can't sleep your only awake Gream.");
+          }
+        });
+        card.appendChild(sleepBtn);
+      }
+
       grid.appendChild(card);
     });
+
+    // ─── Sleeping (archived) Greams ───
+    const sleeping = Gream.allWithArchived(p.id).filter(g => g.archived);
+    if (sleeping.length) {
+      const hdr = document.createElement('div');
+      hdr.style.cssText = 'font-size:12px;font-weight:800;color:#999;text-transform:uppercase;letter-spacing:.5px;margin:14px 4px 2px';
+      hdr.textContent = lang === 'cs' ? `😴 Spící (${sleeping.length})` : `😴 Sleeping (${sleeping.length})`;
+      grid.appendChild(hdr);
+
+      const full = allGreams.length >= 4;
+      sleeping.forEach(g => {
+        const arch  = ARCHETYPES[g.archetype] || {};
+        const color = WC[arch.primaryWorld] || '#4a8a2e';
+        const sName = (stageNames[lang] || stageNames.cs)[g.stage] || '';
+        const row = document.createElement('div');
+        row.style.cssText = 'background:rgba(255,255,255,0.6);border-radius:14px;padding:10px 14px;display:flex;align-items:center;gap:12px;opacity:0.85';
+        row.innerHTML = `
+          <div style="flex-shrink:0;width:44px;height:44px;border-radius:10px;background:${color}14;overflow:hidden;display:flex;align-items:center;justify-content:center;filter:grayscale(0.5)">
+            ${g.archetype && g.stage >= 2
+              ? `<canvas data-sprite-sheet="img/greamici/${g.archetype}_${g.stage}.png" data-sprite-mood="${g.mood||'happy'}" width="44" height="44" style="width:44px;height:44px;image-rendering:pixelated;display:block"></canvas>`
+              : `<img src="img/greamici/seed_1.png" style="width:34px;height:34px;object-fit:contain;image-rendering:pixelated">`}
+          </div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:14px;font-weight:800;color:#666">${g.name || (arch.name?.[lang] || arch.name?.cs || 'Gream')}</div>
+            <div style="font-size:11px;font-weight:700;color:#aaa">${sName} · ${g.tasksFor} ${lang==='cs'?'úkolů':'tasks'}</div>
+          </div>`;
+        const wakeBtn = document.createElement('button');
+        wakeBtn.textContent = full ? '🔒' : '☀️';
+        wakeBtn.title = lang === 'cs' ? (full ? 'Plno (max 4)' : 'Probudit') : (full ? 'Full (max 4)' : 'Wake');
+        wakeBtn.style.cssText = `flex-shrink:0;padding:8px 12px;border-radius:50px;border:none;background:${full ? '#ddd' : 'var(--green-mid)'};color:white;font-size:14px;font-weight:800;cursor:${full ? 'default' : 'pointer'}`;
+        wakeBtn.addEventListener('click', () => {
+          const r = Gream.unarchive(p.id, g.id);
+          if (r.ok) { Feedback.tap(); this._showToast(lang === 'cs' ? '☀️ Greamík se probudil!' : '☀️ Gream woke up!'); this._renderWardrobeGreams(); }
+          else this._showToast(lang === 'cs' ? 'Nejdřív uspi jiného (max 4 vzhůru).' : 'Sleep another first (max 4 awake).');
+        });
+        row.appendChild(wakeBtn);
+        grid.appendChild(row);
+      });
+    }
 
     // Add new gream button if eligible
     if (Gream.canAddMore(p.id)) {

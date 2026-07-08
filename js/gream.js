@@ -342,6 +342,41 @@ export const Gream = {
   },
   rename(profileId, greamId, name) { return this.setName(profileId, greamId, name); },
 
+  // ─── Sleep (archive) a Gream — frees a garden slot without deleting it ───
+  // Reassigns the active pet if the sleeping one was active. Refuses to sleep the
+  // last awake Gream (garden can't be empty).
+  archive(profileId, greamId) {
+    const data = load();
+    const list = data[profileId] || [];
+    const g = list.find(x => x.id === greamId);
+    if (!g) return { ok: false, reason: 'not-found' };
+    const awake = list.filter(x => !x.archived);
+    if (awake.length <= 1) return { ok: false, reason: 'last-one' };
+    g.archived = true;
+    if (data[`${profileId}_activeId`] === greamId) {
+      const next = list.find(x => !x.archived && x.id !== greamId);
+      data[`${profileId}_activeId`] = next ? next.id : null;
+    }
+    save(data);
+    return { ok: true };
+  },
+
+  // ─── Wake (unarchive) a sleeping Gream — needs a free slot (max 4 awake) ───
+  unarchive(profileId, greamId) {
+    const data = load();
+    const list = data[profileId] || [];
+    const awake = list.filter(x => !x.archived);
+    if (awake.length >= 4) return { ok: false, reason: 'full' };
+    const g = list.find(x => x.id === greamId);
+    if (!g) return { ok: false, reason: 'not-found' };
+    g.archived = false;
+    save(data);
+    return { ok: true };
+  },
+
+  // ─── All Greams including sleeping ones ───
+  allWithArchived(profileId) { return load()[profileId] || []; },
+
   // ─── Add a new companion Gream (unlocked after 300 tasks) ───
   addNewGream(profileId, archetype) {
     const data = load();
