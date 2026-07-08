@@ -217,6 +217,8 @@ export const T = {
         ],
         "medium": [
           {text:"What do plants need to grow?", hint:"Think about what you'd give a plant every day.", action:"choice", choices:[{text:"🌊 Water & sun",value:"water_sun"},{text:"🍫 Chocolate",value:"choco"},{text:"🧊 Ice only",value:"ice"}], check:{type:"choice",correct:"water_sun"}, mode:"outdoor_bonus"},
+          {text:"Order these levels of a food chain, from first to last:", action:"sort", items:["☀️ Sun","🌱 Grass","🐇 Rabbit","🦊 Fox"], check:{type:"sort",correct:["☀️ Sun","🌱 Grass","🐇 Rabbit","🦊 Fox"]}, mode:"indoor_ok"},
+          {text:"Animals that are active at night are called ____.", action:"fill_blank", blank:{before:"Animals that are active at night are called",after:".",correct:"nocturnal"}, check:{type:"fill_blank",correct:"nocturnal"}, mode:"indoor_ok"},
           {text:"Match each season to what happens in nature:", action:"match", pairs:[{a:"Spring",b:"Blossom"},{a:"Summer",b:"Sunshine"},{a:"Autumn",b:"Falling leaves"},{a:"Winter",b:"Snow"}], check:{type:"match"}, mode:"outdoor_bonus"},
           {text:"Go outside and count how many different insects you can spot in two minutes, then enter the number.", hint:"Any number is fine — just look closely!", action:"number", check:{type:"number"}, mode:"outdoor_bonus"},
           {text:"Bees turn flower nectar into ____.", action:"fill_blank", blank:{before:"Bees turn flower nectar into",after:".",correct:"honey"}, check:{type:"fill_blank",correct:"honey"}, mode:"indoor_ok"},
@@ -285,8 +287,6 @@ export const T = {
           {text:"Which process converts nitrogen gas into forms usable by plants?", action:"choice", choices:[{text:"Nitrogen fixation",value:"correct"},{text:"Photosynthesis",value:"wrong1"},{text:"Transpiration",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"Plants release water vapour through their leaves in a process called ____.", action:"fill_blank", blank:{before:"Plants release water vapour through their leaves in a process called",after:".",correct:"transpiration"}, check:{type:"fill_blank",correct:"transpiration"}, mode:"indoor_ok"},
           {text:"Order these classification levels from broadest to most specific:", action:"sort", items:["Kingdom","Class","Genus","Species"], check:{type:"sort",correct:["Kingdom","Class","Genus","Species"]}, mode:"indoor_ok"},
-          {text:"Order these levels of a food chain, from first to last:", action:"sort", items:["☀️ Sun","🌱 Grass","🐇 Rabbit","🦊 Fox"], check:{type:"sort",correct:["☀️ Sun","🌱 Grass","🐇 Rabbit","🦊 Fox"]}, mode:"indoor_ok"},
-          {text:"Animals that are active at night are called ____.", action:"fill_blank", blank:{before:"Animals that are active at night are called",after:".",correct:"nocturnal"}, check:{type:"fill_blank",correct:"nocturnal"}, mode:"indoor_ok"},
           {text:"Approximately what percentage of Earth's atmosphere is oxygen?", hint:"It's about a fifth!", action:"number", check:{type:"number",answer:21,tolerance:2}, mode:"outdoor_bonus"},
           {text:"Which term describes an organism that breaks down dead material into nutrients?", action:"choice", choices:[{text:"Decomposer",value:"correct"},{text:"Producer",value:"wrong1"},{text:"Apex predator",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"Roughly how many years ago did the dinosaurs go extinct? (in millions)", action:"number", check:{type:"number",answer:66,tolerance:5}, mode:"outdoor_bonus"},
@@ -340,6 +340,7 @@ export const T = {
         ],
         "medium": [
           {text:"What is an antonym of the word HAPPY?", action:"choice", choices:[{text:"Sad 😢",value:"sad"},{text:"Joyful 😄",value:"joyful"},{text:"Big 🐘",value:"big"}], check:{type:"choice",correct:"sad"}, mode:"outdoor_bonus"},
+          {text:"Match each punctuation mark to its name:", action:"match", pairs:[{a:"?",b:"Question mark"},{a:"!",b:"Exclamation mark"},{a:".",b:"Full stop"},{a:",",b:"Comma"}], check:{type:"match"}, mode:"indoor_ok"},
           {text:"Match each animal to the word for the sound it makes:", action:"match", pairs:[{a:"Dog",b:"Bark"},{a:"Cat",b:"Purr"},{a:"Snake",b:"Hiss"},{a:"Bee",b:"Buzz"}], check:{type:"match"}, mode:"indoor_ok"},
           {text:"A person who writes books is called an ____.", action:"fill_blank", blank:{before:"A person who writes books is called an",after:".",correct:"author"}, check:{type:"fill_blank",correct:"author"}, mode:"indoor_ok"},
           {text:"The opposite of the word 'day' is ____.", action:"fill_blank", blank:{before:"The opposite of the word 'day' is",after:".",correct:"night"}, check:{type:"fill_blank",correct:"night"}, mode:"indoor_ok"},
@@ -403,7 +404,6 @@ export const T = {
         ],
         "extreme": [
           {text:"What literary device gives human qualities to non-human things?", action:"choice", choices:[{text:"Personification",value:"correct"},{text:"Alliteration",value:"wrong1"},{text:"Onomatopoeia",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
-          {text:"Match each punctuation mark to its name:", action:"match", pairs:[{a:"?",b:"Question mark"},{a:"!",b:"Exclamation mark"},{a:".",b:"Full stop"},{a:",",b:"Comma"}], check:{type:"match"}, mode:"indoor_ok"},
           {text:"A word that imitates a sound, like 'buzz' or 'bang', is called ____.", action:"fill_blank", blank:{before:"A word that imitates a sound is called",after:".",correct:"onomatopoeia"}, check:{type:"fill_blank",correct:"onomatopoeia"}, mode:"indoor_ok"},
           {text:"Order these from the smallest unit of language to the largest:", action:"sort", items:["Letter","Word","Sentence","Paragraph"], check:{type:"sort",correct:["Letter","Word","Sentence","Paragraph"]}, mode:"indoor_ok"},
           {text:"A comparison using 'like' or 'as' (e.g. 'brave as a lion') is called a ____.", action:"fill_blank", blank:{before:"A comparison using 'like' or 'as' is called a",after:".",correct:"simile"}, check:{type:"fill_blank",correct:"simile"}, mode:"indoor_ok"},
@@ -456,6 +456,7 @@ export const T = {
         ],
         "medium": [
           {text:"Which shape has 4 equal sides and 4 right angles?", action:"choice", choices:[{text:"Square ⬛",value:"square"},{text:"Triangle 🔺",value:"triangle"},{text:"Circle ⭕",value:"circle"}], check:{type:"choice",correct:"square"}, mode:"outdoor_bonus"},
+          {text:"Order these units of time from shortest to longest:", action:"sort", items:["Second","Minute","Hour","Day"], check:{type:"sort",correct:["Second","Minute","Hour","Day"]}, mode:"indoor_ok"},
           {text:"A shape with five sides is called a ____.", action:"fill_blank", blank:{before:"A shape with five sides is called a",after:".",correct:"pentagon"}, check:{type:"fill_blank",correct:"pentagon"}, mode:"indoor_ok"},
           {text:"Match each sequence to the number that comes next:", action:"match", pairs:[{a:"10, 20, 30…",b:"40"},{a:"3, 6, 9…",b:"12"},{a:"1, 3, 5…",b:"7"},{a:"2, 4, 8…",b:"16"}], check:{type:"match"}, mode:"indoor_ok"},
           {text:"A shape with three sides is called a ____.", action:"fill_blank", blank:{before:"A shape with three sides is called a",after:".",correct:"triangle"}, check:{type:"fill_blank",correct:"triangle"}, mode:"indoor_ok"},
@@ -487,6 +488,7 @@ export const T = {
         ],
         "hard": [
           {text:"What is the next prime number after 7?", action:"choice", choices:[{text:"11",value:"correct"},{text:"9",value:"wrong1"},{text:"12",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"A whole number that divides another exactly, with no remainder, is called a ____.", action:"fill_blank", blank:{before:"A whole number that divides another exactly is called a",after:".",correct:"factor"}, check:{type:"fill_blank",correct:"factor"}, mode:"indoor_ok"},
           {text:"Order these fractions from smallest to largest:", action:"sort", items:["1/4","1/2","3/4","1"], check:{type:"sort",correct:["1/4","1/2","3/4","1"]}, mode:"indoor_ok"},
           {text:"The result of multiplying two numbers is called the ____.", action:"fill_blank", blank:{before:"The result of multiplying two numbers is called the",after:".",correct:"product"}, check:{type:"fill_blank",correct:"product"}, mode:"indoor_ok"},
           {text:"Match each sum to its answer:", action:"match", pairs:[{a:"2 + 2",b:"4"},{a:"3 × 3",b:"9"},{a:"10 − 4",b:"6"},{a:"15 ÷ 3",b:"5"}], check:{type:"match"}, mode:"indoor_ok"},
@@ -518,8 +520,6 @@ export const T = {
         ],
         "extreme": [
           {text:"If all bloops are razzles and all razzles are lazzles, are all bloops definitely lazzles?", action:"choice", choices:[{text:"Yes — transitive logic",value:"correct"},{text:"No — can't tell",value:"wrong1"},{text:"Only sometimes",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
-          {text:"A whole number that divides another exactly, with no remainder, is called a ____.", action:"fill_blank", blank:{before:"A whole number that divides another exactly is called a",after:".",correct:"factor"}, check:{type:"fill_blank",correct:"factor"}, mode:"indoor_ok"},
-          {text:"Order these units of time from shortest to longest:", action:"sort", items:["Second","Minute","Hour","Day"], check:{type:"sort",correct:["Second","Minute","Hour","Day"]}, mode:"indoor_ok"},
           {text:"Order these numbers from smallest to largest:", action:"sort", items:["7","19","23","31"], check:{type:"sort",correct:["7","19","23","31"]}, mode:"indoor_ok"},
           {text:"A number that can be divided only by 1 and itself is a ____ number.", action:"fill_blank", blank:{before:"A number that can be divided only by 1 and itself is a",after:"number.",correct:"prime"}, check:{type:"fill_blank",correct:"prime"}, mode:"indoor_ok"},
           {text:"A prime number has exactly how many factors?", action:"number", check:{type:"number",answer:2,tolerance:0}, mode:"indoor_ok"},
@@ -809,6 +809,7 @@ export const T = {
         ],
         "medium": [
           {text:"What is the capital city of France?", action:"choice", choices:[{text:"🗼 Paris",value:"correct"},{text:"🏰 London",value:"wrong1"},{text:"🎭 Rome",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Match each continent to a country on it:", action:"match", pairs:[{a:"Africa",b:"Kenya"},{a:"Asia",b:"India"},{a:"Europe",b:"Spain"},{a:"South America",b:"Brazil"}], check:{type:"match"}, mode:"indoor_ok"},
           {text:"Order these places from smallest to largest:", action:"sort", items:["🏘️ Village","🏙️ Town","🌆 City","🗺️ Country"], check:{type:"sort",correct:["🏘️ Village","🏙️ Town","🌆 City","🗺️ Country"]}, mode:"indoor_ok"},
           {text:"Go outside and count how many different types of vehicles you can see in five minutes, then enter the number.", hint:"Any number is fine — just count!", action:"number", check:{type:"number"}, mode:"outdoor_bonus"},
           {text:"The largest hot desert in the world is the ____.", action:"fill_blank", blank:{before:"The largest hot desert in the world is the",after:".",correct:"Sahara"}, check:{type:"fill_blank",correct:"Sahara"}, mode:"indoor_ok"},
@@ -840,6 +841,8 @@ export const T = {
         ],
         "hard": [
           {text:"Which ocean is the largest on Earth?", action:"choice", choices:[{text:"🌊 Pacific Ocean",value:"correct"},{text:"Atlantic Ocean",value:"wrong1"},{text:"Indian Ocean",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Match each river to its continent:", action:"match", pairs:[{a:"Nile",b:"Africa"},{a:"Amazon",b:"South America"},{a:"Danube",b:"Europe"},{a:"Ganges",b:"Asia"}], check:{type:"match"}, mode:"indoor_ok"},
+          {text:"Order these planets by distance from the Sun, closest first:", action:"sort", items:["Mercury","Venus","Earth","Mars"], check:{type:"sort",correct:["Mercury","Venus","Earth","Mars"]}, mode:"indoor_ok"},
           {text:"Match each country to its language:", action:"match", pairs:[{a:"France",b:"French"},{a:"Germany",b:"German"},{a:"Spain",b:"Spanish"},{a:"Japan",b:"Japanese"}], check:{type:"match"}, mode:"indoor_ok"},
           {text:"The largest planet in our solar system is ____.", action:"fill_blank", blank:{before:"The largest planet in our solar system is",after:".",correct:"Jupiter"}, check:{type:"fill_blank",correct:"Jupiter"}, mode:"indoor_ok"},
           {text:"Match each landmark to its country:", action:"match", pairs:[{a:"Eiffel Tower",b:"France"},{a:"Great Wall",b:"China"},{a:"Pyramids",b:"Egypt"},{a:"Colosseum",b:"Italy"}], check:{type:"match"}, mode:"indoor_ok"},
@@ -872,10 +875,6 @@ export const T = {
         ],
         "extreme": [
           {text:"Which international agreement set binding targets to reduce greenhouse gas emissions?", action:"choice", choices:[{text:"Paris Agreement (2015)",value:"correct"},{text:"Kyoto Protocol (1997)",value:"wrong1"},{text:"Montreal Protocol (1987)",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
-          {text:"Order these planets by distance from the Sun, closest first:", action:"sort", items:["Mercury","Venus","Earth","Mars"], check:{type:"sort",correct:["Mercury","Venus","Earth","Mars"]}, mode:"indoor_ok"},
-          {text:"Match each river to its continent:", action:"match", pairs:[{a:"Nile",b:"Africa"},{a:"Amazon",b:"South America"},{a:"Danube",b:"Europe"},{a:"Ganges",b:"Asia"}], check:{type:"match"}, mode:"indoor_ok"},
-          {text:"The imaginary line around the middle of the Earth is called the ____.", action:"fill_blank", blank:{before:"The imaginary line around the middle of the Earth is called the",after:".",correct:"equator"}, check:{type:"fill_blank",correct:"equator"}, mode:"indoor_ok"},
-          {text:"Match each continent to a country on it:", action:"match", pairs:[{a:"Africa",b:"Kenya"},{a:"Asia",b:"India"},{a:"Europe",b:"Spain"},{a:"South America",b:"Brazil"}], check:{type:"match"}, mode:"indoor_ok"},
           {text:"Approximately how many countries are members of the United Nations?", action:"number", check:{type:"number",answer:193,tolerance:5}, mode:"indoor_ok"},
           {text:"Which economic term describes the total value of goods/services produced in a country?", action:"choice", choices:[{text:"GDP (Gross Domestic Product)",value:"correct"},{text:"GNI (Gross National Income)",value:"wrong1"},{text:"HDI (Human Development Index)",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"How many permanent members does the UN Security Council have?", action:"number", check:{type:"number",answer:5,tolerance:0}, mode:"indoor_ok"},
@@ -1124,6 +1123,8 @@ export const T = {
         ],
         "medium": [
           {text:"Co rostliny potřebují k růstu?", hint:"Co dáváš rostlině každý den?", action:"choice", choices:[{text:"🌊 Vodu a slunce",value:"voda_slunce"},{text:"🍫 Čokoládu",value:"cokolada"},{text:"🧊 Jen led",value:"led"}], check:{type:"choice",correct:"voda_slunce"}, mode:"outdoor_bonus"},
+          {text:"Seřaď články potravního řetězce od prvního po poslední:", action:"sort", items:["☀️ Slunce","🌱 Tráva","🐇 Králík","🦊 Liška"], check:{type:"sort",correct:["☀️ Slunce","🌱 Tráva","🐇 Králík","🦊 Liška"]}, mode:"indoor_ok"},
+          {text:"Zvířata aktivní v noci se nazývají ____.", action:"fill_blank", blank:{before:"Zvířata aktivní v noci se nazývají",after:".",correct:"noční"}, check:{type:"fill_blank",correct:"noční"}, mode:"indoor_ok"},
           {text:"Přiřaď roční období k tomu, co se děje v přírodě:", action:"match", pairs:[{a:"Jaro",b:"Rozkvět"},{a:"Léto",b:"Sluníčko"},{a:"Podzim",b:"Padající listí"},{a:"Zima",b:"Sníh"}], check:{type:"match"}, mode:"outdoor_bonus"},
           {text:"Jdi ven a spočítej, kolik různých druhů hmyzu najdeš za dvě minuty, a napiš číslo.", hint:"Jakékoliv číslo je správně — jen se dobře dívej!", action:"number", check:{type:"number"}, mode:"outdoor_bonus"},
           {text:"Včely mění květový nektar na ____.", action:"fill_blank", blank:{before:"Včely mění květový nektar na",after:".",correct:"med"}, check:{type:"fill_blank",correct:"med"}, mode:"indoor_ok"},
@@ -1192,8 +1193,6 @@ export const T = {
           {text:"Který proces přeměňuje dusík na formy využitelné rostlinami?", action:"choice", choices:[{text:"Fixace dusíku",value:"correct"},{text:"Fotosyntéza",value:"wrong1"},{text:"Transpirace",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"Rostliny vypařují vodu svými listy v procesu zvaném ____.", action:"fill_blank", blank:{before:"Rostliny vypařují vodu svými listy v procesu zvaném",after:".",correct:"transpirace"}, check:{type:"fill_blank",correct:"transpirace"}, mode:"indoor_ok"},
           {text:"Seřaď úrovně třídění od nejširší po nejkonkrétnější:", action:"sort", items:["Říše","Třída","Rod","Druh"], check:{type:"sort",correct:["Říše","Třída","Rod","Druh"]}, mode:"indoor_ok"},
-          {text:"Seřaď články potravního řetězce od prvního po poslední:", action:"sort", items:["☀️ Slunce","🌱 Tráva","🐇 Králík","🦊 Liška"], check:{type:"sort",correct:["☀️ Slunce","🌱 Tráva","🐇 Králík","🦊 Liška"]}, mode:"indoor_ok"},
-          {text:"Zvířata aktivní v noci se nazývají ____.", action:"fill_blank", blank:{before:"Zvířata aktivní v noci se nazývají",after:".",correct:"noční"}, check:{type:"fill_blank",correct:"noční"}, mode:"indoor_ok"},
           {text:"Přibližně kolik procent zemské atmosféry tvoří kyslík?", hint:"Asi pětina!", action:"number", check:{type:"number",answer:21,tolerance:2}, mode:"outdoor_bonus"},
           {text:"Jak se nazývá organismus rozkládající mrtvou hmotu na živiny?", action:"choice", choices:[{text:"Rozkladač (dekompozitor)",value:"correct"},{text:"Producent",value:"wrong1"},{text:"Vrcholový predátor",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
           {text:"Přibližně před kolika miliony let vyhynuli dinosauři?", action:"number", check:{type:"number",answer:66,tolerance:5}, mode:"outdoor_bonus"},
@@ -1247,6 +1246,7 @@ export const T = {
         ],
         "medium": [
           {text:"Co je opak slova VESELÝ?", action:"choice", choices:[{text:"Smutný 😢",value:"smutný"},{text:"Radostný 😄",value:"radostný"},{text:"Velký 🐘",value:"velký"}], check:{type:"choice",correct:"smutný"}, mode:"outdoor_bonus"},
+          {text:"Přiřaď interpunkční znaménko k jeho názvu:", action:"match", pairs:[{a:"?",b:"Otazník"},{a:"!",b:"Vykřičník"},{a:".",b:"Tečka"},{a:",",b:"Čárka"}], check:{type:"match"}, mode:"indoor_ok"},
           {text:"Přiřaď zvíře ke slovu pro jeho zvuk:", action:"match", pairs:[{a:"Pes",b:"Haf"},{a:"Kočka",b:"Mňau"},{a:"Had",b:"Sss"},{a:"Včela",b:"Bzz"}], check:{type:"match"}, mode:"indoor_ok"},
           {text:"Člověk, který píše knihy, je ____.", action:"fill_blank", blank:{before:"Člověk, který píše knihy, je",after:".",correct:"spisovatel"}, check:{type:"fill_blank",correct:"spisovatel"}, mode:"indoor_ok"},
           {text:"Opak slova 'den' je ____.", action:"fill_blank", blank:{before:"Opak slova 'den' je",after:".",correct:"noc"}, check:{type:"fill_blank",correct:"noc"}, mode:"indoor_ok"},
@@ -1310,7 +1310,6 @@ export const T = {
         ],
         "extreme": [
           {text:"Jaký literární prostředek přiřazuje lidské vlastnosti nelidským věcem?", action:"choice", choices:[{text:"Personifikace",value:"correct"},{text:"Aliterace",value:"wrong1"},{text:"Onomatopoeia",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
-          {text:"Přiřaď interpunkční znaménko k jeho názvu:", action:"match", pairs:[{a:"?",b:"Otazník"},{a:"!",b:"Vykřičník"},{a:".",b:"Tečka"},{a:",",b:"Čárka"}], check:{type:"match"}, mode:"indoor_ok"},
           {text:"Slovo napodobující zvuk, jako 'bum' nebo 'bzz', se nazývá ____.", action:"fill_blank", blank:{before:"Slovo napodobující zvuk se nazývá",after:".",correct:"citoslovce"}, check:{type:"fill_blank",correct:"citoslovce"}, mode:"indoor_ok"},
           {text:"Seřaď od nejmenší jednotky jazyka po největší:", action:"sort", items:["Písmeno","Slovo","Věta","Odstavec"], check:{type:"sort",correct:["Písmeno","Slovo","Věta","Odstavec"]}, mode:"indoor_ok"},
           {text:"Přirovnání pomocí slova 'jako' (např. 'statečný jako lev') se nazývá ____.", action:"fill_blank", blank:{before:"Přirovnání pomocí slova 'jako' se nazývá",after:".",correct:"přirovnání"}, check:{type:"fill_blank",correct:"přirovnání"}, mode:"indoor_ok"},
@@ -1363,6 +1362,7 @@ export const T = {
         ],
         "medium": [
           {text:"Který tvar má 4 stejné strany a 4 pravé úhly?", action:"choice", choices:[{text:"Čtverec ⬛",value:"čtverec"},{text:"Trojúhelník 🔺",value:"trojúhelník"},{text:"Kruh ⭕",value:"kruh"}], check:{type:"choice",correct:"čtverec"}, mode:"outdoor_bonus"},
+          {text:"Seřaď jednotky času od nejkratší po nejdelší:", action:"sort", items:["Sekunda","Minuta","Hodina","Den"], check:{type:"sort",correct:["Sekunda","Minuta","Hodina","Den"]}, mode:"indoor_ok"},
           {text:"Tvar s pěti stranami se nazývá ____.", action:"fill_blank", blank:{before:"Tvar s pěti stranami se nazývá",after:".",correct:"pětiúhelník"}, check:{type:"fill_blank",correct:"pětiúhelník"}, mode:"indoor_ok"},
           {text:"Přiřaď řadu k číslu, které přijde další:", action:"match", pairs:[{a:"10, 20, 30…",b:"40"},{a:"3, 6, 9…",b:"12"},{a:"1, 3, 5…",b:"7"},{a:"2, 4, 8…",b:"16"}], check:{type:"match"}, mode:"indoor_ok"},
           {text:"Tvar se třemi stranami se nazývá ____.", action:"fill_blank", blank:{before:"Tvar se třemi stranami se nazývá",after:".",correct:"trojúhelník"}, check:{type:"fill_blank",correct:"trojúhelník"}, mode:"indoor_ok"},
@@ -1394,6 +1394,7 @@ export const T = {
         ],
         "hard": [
           {text:"Jaké je nejmenší prvočíslo větší než 7?", action:"choice", choices:[{text:"11",value:"11"},{text:"9",value:"9"},{text:"12",value:"12"}], check:{type:"choice",correct:"11"}, mode:"outdoor_bonus"},
+          {text:"Celé číslo, které dělí jiné beze zbytku, se nazývá jeho ____.", action:"fill_blank", blank:{before:"Celé číslo, které dělí jiné beze zbytku, se nazývá jeho",after:".",correct:"dělitel"}, check:{type:"fill_blank",correct:"dělitel"}, mode:"indoor_ok"},
           {text:"Seřaď zlomky od nejmenšího po největší:", action:"sort", items:["1/4","1/2","3/4","1"], check:{type:"sort",correct:["1/4","1/2","3/4","1"]}, mode:"indoor_ok"},
           {text:"Výsledek násobení dvou čísel se nazývá ____.", action:"fill_blank", blank:{before:"Výsledek násobení dvou čísel se nazývá",after:".",correct:"součin"}, check:{type:"fill_blank",correct:"součin"}, mode:"indoor_ok"},
           {text:"Přiřaď příklad k výsledku:", action:"match", pairs:[{a:"2 + 2",b:"4"},{a:"3 × 3",b:"9"},{a:"10 − 4",b:"6"},{a:"15 ÷ 3",b:"5"}], check:{type:"match"}, mode:"indoor_ok"},
@@ -1425,8 +1426,6 @@ export const T = {
         ],
         "extreme": [
           {text:"Pokud jsou všechny blůpy hrůzy a všechny hrůzy jsou lůzy — jsou všechny blůpy lůzy?", action:"choice", choices:[{text:"Ano — tranzitivní logika",value:"correct"},{text:"Ne — nedá se říct",value:"wrong1"},{text:"Jen někdy",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
-          {text:"Celé číslo, které dělí jiné beze zbytku, se nazývá jeho ____.", action:"fill_blank", blank:{before:"Celé číslo, které dělí jiné beze zbytku, se nazývá jeho",after:".",correct:"dělitel"}, check:{type:"fill_blank",correct:"dělitel"}, mode:"indoor_ok"},
-          {text:"Seřaď jednotky času od nejkratší po nejdelší:", action:"sort", items:["Sekunda","Minuta","Hodina","Den"], check:{type:"sort",correct:["Sekunda","Minuta","Hodina","Den"]}, mode:"indoor_ok"},
           {text:"Seřaď čísla od nejmenšího po největší:", action:"sort", items:["7","19","23","31"], check:{type:"sort",correct:["7","19","23","31"]}, mode:"indoor_ok"},
           {text:"Číslo, které je dělitelné jen 1 a samo sebou, se nazývá ____.", action:"fill_blank", blank:{before:"Číslo dělitelné jen 1 a samo sebou se nazývá",after:".",correct:"prvočíslo"}, check:{type:"fill_blank",correct:"prvočíslo"}, mode:"indoor_ok"},
           {text:"Prvočíslo má přesně kolik dělitelů?", action:"number", check:{type:"number",answer:2,tolerance:0}, mode:"indoor_ok"},
@@ -1716,6 +1715,7 @@ export const T = {
         ],
         "medium": [
           {text:"Jaké je hlavní město Francie?", action:"choice", choices:[{text:"🗼 Paříž",value:"correct"},{text:"🏰 Londýn",value:"wrong1"},{text:"🎭 Řím",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Přiřaď kontinent k zemi na něm:", action:"match", pairs:[{a:"Afrika",b:"Keňa"},{a:"Asie",b:"Indie"},{a:"Evropa",b:"Španělsko"},{a:"Jižní Amerika",b:"Brazílie"}], check:{type:"match"}, mode:"indoor_ok"},
           {text:"Seřaď tato místa od nejmenšího po největší:", action:"sort", items:["🏘️ Vesnice","🏙️ Městečko","🌆 Město","🗺️ Země"], check:{type:"sort",correct:["🏘️ Vesnice","🏙️ Městečko","🌆 Město","🗺️ Země"]}, mode:"indoor_ok"},
           {text:"Jdi ven a spočítej, kolik různých druhů dopravních prostředků uvidíš za pět minut, a napiš číslo.", hint:"Jakékoliv číslo je správně — jen počítej!", action:"number", check:{type:"number"}, mode:"outdoor_bonus"},
           {text:"Největší horká poušť na světě je ____.", action:"fill_blank", blank:{before:"Největší horká poušť na světě je",after:".",correct:"Sahara"}, check:{type:"fill_blank",correct:"Sahara"}, mode:"indoor_ok"},
@@ -1747,6 +1747,8 @@ export const T = {
         ],
         "hard": [
           {text:"Který oceán je největší na Zemi?", action:"choice", choices:[{text:"🌊 Tichý oceán",value:"correct"},{text:"Atlantický oceán",value:"wrong1"},{text:"Indický oceán",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
+          {text:"Přiřaď řeku ke kontinentu:", action:"match", pairs:[{a:"Nil",b:"Afrika"},{a:"Amazonka",b:"Jižní Amerika"},{a:"Dunaj",b:"Evropa"},{a:"Ganga",b:"Asie"}], check:{type:"match"}, mode:"indoor_ok"},
+          {text:"Seřaď planety podle vzdálenosti od Slunce (nejbližší první):", action:"sort", items:["Merkur","Venuše","Země","Mars"], check:{type:"sort",correct:["Merkur","Venuše","Země","Mars"]}, mode:"indoor_ok"},
           {text:"Přiřaď zemi k jejímu jazyku:", action:"match", pairs:[{a:"Francie",b:"Francouzština"},{a:"Německo",b:"Němčina"},{a:"Španělsko",b:"Španělština"},{a:"Japonsko",b:"Japonština"}], check:{type:"match"}, mode:"indoor_ok"},
           {text:"Největší planeta sluneční soustavy je ____.", action:"fill_blank", blank:{before:"Největší planeta sluneční soustavy je",after:".",correct:"Jupiter"}, check:{type:"fill_blank",correct:"Jupiter"}, mode:"indoor_ok"},
           {text:"Přiřaď památku k zemi:", action:"match", pairs:[{a:"Eiffelova věž",b:"Francie"},{a:"Velká čínská zeď",b:"Čína"},{a:"Pyramidy",b:"Egypt"},{a:"Koloseum",b:"Itálie"}], check:{type:"match"}, mode:"indoor_ok"},
@@ -1779,10 +1781,6 @@ export const T = {
         ],
         "extreme": [
           {text:"Která mezinárodní dohoda stanovila cíl omezit globální oteplování na 1,5 °C?", action:"choice", choices:[{text:"Pařížská dohoda (2015)",value:"correct"},{text:"Kjótský protokol (1997)",value:"wrong1"},{text:"Montrealský protokol (1987)",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
-          {text:"Seřaď planety podle vzdálenosti od Slunce (nejbližší první):", action:"sort", items:["Merkur","Venuše","Země","Mars"], check:{type:"sort",correct:["Merkur","Venuše","Země","Mars"]}, mode:"indoor_ok"},
-          {text:"Přiřaď řeku ke kontinentu:", action:"match", pairs:[{a:"Nil",b:"Afrika"},{a:"Amazonka",b:"Jižní Amerika"},{a:"Dunaj",b:"Evropa"},{a:"Ganga",b:"Asie"}], check:{type:"match"}, mode:"indoor_ok"},
-          {text:"Pomyslná čára kolem středu Země se nazývá ____.", action:"fill_blank", blank:{before:"Pomyslná čára kolem středu Země se nazývá",after:".",correct:"rovník"}, check:{type:"fill_blank",correct:"rovník"}, mode:"indoor_ok"},
-          {text:"Přiřaď kontinent k zemi na něm:", action:"match", pairs:[{a:"Afrika",b:"Keňa"},{a:"Asie",b:"Indie"},{a:"Evropa",b:"Španělsko"},{a:"Jižní Amerika",b:"Brazílie"}], check:{type:"match"}, mode:"indoor_ok"},
           {text:"Přibližně kolik zemí je členy OSN?", action:"number", check:{type:"number",answer:193,tolerance:5}, mode:"indoor_ok"},
           {text:"Který ekonomický ukazatel popisuje celkovou hodnotu zboží a služeb vyrobených v zemi?", action:"choice", choices:[{text:"HDP (hrubý domácí produkt)",value:"correct"},{text:"HNP (hrubý národní produkt)",value:"wrong1"},{text:"HDI (index lidského rozvoje)",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
           {text:"Kolik stálých členů má Rada bezpečnosti OSN?", action:"number", check:{type:"number",answer:5,tolerance:0}, mode:"indoor_ok"},
