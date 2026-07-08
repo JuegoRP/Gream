@@ -281,6 +281,25 @@ export const Gream = {
     };
   },
 
+  // ─── DEV ONLY: jump active Gream to its next evolution stage instantly ───
+  // Feeds `world` so the archetype (resolved at hatching) reflects the chosen world.
+  devAdvanceStage(profileId, world = 'nature') {
+    const data = load();
+    const list = data[profileId] || [];
+    const activeId = data[`${profileId}_activeId`];
+    const g = (activeId ? list.find(x => x.id === activeId && !x.archived) : null)
+              || list.find(x => !x.archived);
+    if (!g) return null;
+    if (g.stage >= 4) return { maxed: true };
+    const next = g.stage + 1;
+    // set one below the next threshold, then run the real feed → clean evolve
+    g.tasksFor = (EVOLUTION_TASKS[next] || 999) - 1;
+    if (!g.taskByWorld) g.taskByWorld = {};
+    g.taskByWorld[world] = (g.taskByWorld[world] || 0) + 1;
+    save(data);
+    return this.feedFromTask(profileId, world);
+  },
+
   // ─── Decay HP over time, set mood ───
   // Should be called on app open
   tickMood(profileId) {

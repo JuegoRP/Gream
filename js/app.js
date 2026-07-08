@@ -14,6 +14,7 @@ import { Feedback } from './feedback.js';
 import { Geo, WORLD_EMOJIS } from './geo.js';
 import { Skins, SKIN_CATALOG } from './skins.js';
 import { MapView } from './mapview.js';
+import { Dev } from './dev.js';
 import { Gream, ARCHETYPES, spritePath, smartSpritePath } from './gream.js';
 import { Subscription, FREE_DAILY_INDOOR, PREMIUM_DAILY_INDOOR, INDOOR_MAX_TOTAL, FREE_DAILY_OUTDOOR, SEED_COST_EXTRA_TASK } from './subscription.js';
 import { Ranking } from './ranking.js';
@@ -270,6 +271,7 @@ window.App = {
     // Prefetch frequently-used screens into cache so navigation is instant
     Router.prefetch(['challenge', 'step-done', 'badge-earned', 'home', 'map', 'hub']);
     console.log('[Gream] Init complete.');
+    try { window.Dev = Dev; Dev.init(); } catch (e) { console.warn('[Gream] Dev init skipped:', e); }
   },
 
   // ─── Parallax clouds on scroll ───
