@@ -65,6 +65,15 @@ export const Challenge = {
       if (picked) { Skins.consumePendingBoost(p.id); difficulty = picked; }
     }
 
+    // Extreme is a Premium-only difficulty. Free users fall back to Hard.
+    // (When PAYWALL_ENABLED is off, isPremium is always true → extreme stays open.)
+    if (difficulty === 'extreme' && !Subscription.get(p.id).isPremium) {
+      difficulty = 'hard';
+      this._showToast(lang === 'cs'
+        ? '⚡ Extrémní obtížnost je součást Premium — hraješ Těžké'
+        : '⚡ Extreme is a Premium difficulty — playing Hard');
+    }
+
     this._difficulty = difficulty;
     const diffKey = DIFF_KEY[difficulty] || 'medium';
 

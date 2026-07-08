@@ -224,7 +224,7 @@ function _floraWorld(season, tod) {
   return globe + compass + mountains;
 }
 const AVATAR_POOL = ['🧒','👧','👦','🧑','🌟','🦊','🐻','🐸'];
-let _obAge = '4-6', _obAv = AVATAR_POOL[Math.floor(Math.random() * AVATAR_POOL.length)];
+let _obAv = AVATAR_POOL[Math.floor(Math.random() * AVATAR_POOL.length)];
 
 // ═══════════════════════════════════
 //  App — global namespace (window.App)
@@ -292,7 +292,7 @@ window.App = {
   // ─── Ripple effect on tappable elements ───
   _initRipple() {
     document.addEventListener('click', e => {
-      const btn = e.target.closest('.btn-primary, .btn-action, .qa-btn, .age-btn, .av-opt, .lang-btn, .ward-tab');
+      const btn = e.target.closest('.btn-primary, .btn-action, .qa-btn, .av-opt, .lang-btn, .ward-tab');
       if (!btn) return;
       const rect = btn.getBoundingClientRect();
       const ripple = document.createElement('span');
@@ -619,7 +619,6 @@ window.App = {
     const p = Profiles.create({
       name,
       avatar: _obAv === '__photo__' ? '🧒' : _obAv,
-      age: _obAge || '7-9',
       lang: getLang()
     });
     if (_obAv === '__photo__' && window._pendingPhoto) {
@@ -636,28 +635,9 @@ window.App = {
     Feedback.celebrate();
   },
 
-  pickAge(btn, age) {
-    _obAge = age;
-    document.querySelectorAll('.age-btn').forEach(b => {
-      b.style.background = 'white';
-      b.style.color = 'var(--green-deep)';
-      b.classList.remove('active');
-    });
-    btn.style.background = 'var(--green-mid)';
-    btn.style.color = 'white';
-    btn.classList.add('active');
-  },
-
   async obFinish() {
     Feedback.tap();
     await Router.show('home');
-  },
-
-  // ─── Legacy stub (kept for backward compatibility) ───
-  setObAge(age, btn) {
-    _obAge = age;
-    document.querySelectorAll('.age-btn').forEach(b => b.classList.remove('active'));
-    btn?.classList.add('active');
   },
 
   // ─── PROFILES ───
@@ -1639,11 +1619,12 @@ window.App = {
     const lang = getLang();
     const p    = Profiles.active();
     const cur  = p?.difficulty || 'medium';
+    const extremeLocked = !(p && Subscription.get(p.id).isPremium);
     const diffs = [
       { id:'easy',    emoji:'🟢', cs:'Snadné',   en:'Easy' },
       { id:'medium',  emoji:'🟡', cs:'Střední',  en:'Medium' },
       { id:'hard',    emoji:'🔴', cs:'Těžké',    en:'Hard' },
-      { id:'extreme', emoji:'⚡', cs:'Extrémní', en:'Extreme' },
+      { id:'extreme', emoji: extremeLocked ? '🔒' : '⚡', cs:'Extrémní', en:'Extreme', locked: extremeLocked },
     ];
     const overlay = document.createElement('div');
     overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;z-index:999;padding:20px';
@@ -1665,6 +1646,7 @@ window.App = {
       </div>`;
     let selected = cur;
     window._dpSel = (diff) => {
+      if (diff === 'extreme' && extremeLocked) { this.openSubscription(); return; }
       selected = diff;
       overlay.querySelectorAll('[data-d]').forEach(b => {
         const active = b.dataset.d === diff;

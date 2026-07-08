@@ -29,11 +29,11 @@ export const Profiles = {
   setActive(id) { save(KEY_ACTIVE, id); },
 
   // ─── Create new profile ───
-  create({ name, avatar, age, lang }) {
+  create({ name, avatar, lang }) {
     const profiles = this.all();
     const id = 'p' + Date.now();
     const profile = {
-      id, name, avatar, age, lang,
+      id, name, avatar, lang,
       difficulty: 'medium',
       streak: 0,
       bestStreak: 0,
