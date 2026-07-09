@@ -4,7 +4,7 @@
 //            cache-first for media (audio, images, leaflet, OSM tiles)
 // ═══════════════════════════════════
 
-const VERSION = 'gream-v14';
+const VERSION = 'gream-v15';
 const STATIC_CACHE = `${VERSION}-static`;
 const TILES_CACHE  = `gream-tiles-v1`;
 const LEAFLET_CACHE = `gream-leaflet-v1`;

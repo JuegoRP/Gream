@@ -15,6 +15,7 @@ import { Geo } from './geo.js';
 import { Skins } from './skins.js';
 import { Gream, ARCHETYPES, spritePath } from './gream.js';
 import { Subscription } from './subscription.js';
+import { Audio } from './audio.js';
 
 const WORLD_ICONS = { nature:'🌿', language:'📖', logic:'🧩', feelings:'💛', arts:'🎨', world:'🌍' };
 
@@ -693,6 +694,13 @@ export const Challenge = {
     // ─── Archetype reveal overlay at hatching ───
     if (greamResult?.archetypeResolved && greamResult.resolvedArchetype) {
       setTimeout(() => this._showArchetypeReveal(greamResult), 600);
+    }
+
+    // ─── Creature cry on hatch / evolve (deeper the bigger it grows) ───
+    if (greamResult?.archetypeResolved && greamResult.resolvedArchetype) {
+      setTimeout(() => Audio.playCry(greamResult.resolvedArchetype, 2), 650);
+    } else if (greamResult?.evolved) {
+      setTimeout(() => Audio.playCry(greamResult.gream?.archetype, greamResult.toStage), 300);
     }
 
     // ─── Mark POI done for this world + bonus eggs if matching world ───

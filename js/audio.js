@@ -30,6 +30,7 @@ const FADE_TICK_MS = 40;
 const TARGET_VOL   = 0.25;
 
 let _el           = null;   // the ONE audio element (created on first play)
+let _cryEl        = null;   // separate element for creature "cries" (voice SFX)
 let _currentScene = null;   // scene whose src is loaded in _el
 let _desiredScene = null;   // scene we want to hear (survives mute)
 let _enabled      = true;
@@ -142,6 +143,24 @@ export const Audio = {
   },
 
   isRunning() { return !!(_el && !_el.paused); },
+
+  // ─── Creature "cry" — a cute per-archetype voice, played on tap/hatch/evolve.
+  // Same sound for all evolutions of an archetype, just deeper the bigger it is. ───
+  playCry(archetype, stage = 2) {
+    if (!archetype) return;
+    try { if (localStorage.getItem('gream_sound') === 'off') return; } catch {}
+    // Bigger evolution → lower pitch (deeper voice).
+    const rate = stage >= 4 ? 0.80 : stage === 3 ? 0.92 : 1.12;
+    try {
+      const el = _cryEl || (_cryEl = new window.Audio());
+      el.src = `audio/cry_${archetype}.mp3`;
+      el.playbackRate = rate;
+      el.volume = 0.75;
+      el.currentTime = 0;
+      const p = el.play();
+      if (p) p.catch(() => {});
+    } catch {}
+  },
 
   // ─── Menu music selection (default vs bought alternative) ───
   getMenuTrack() { try { return localStorage.getItem('gream_menu_track') === 'alt' ? 'alt' : 'default'; } catch { return 'default'; } },

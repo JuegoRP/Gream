@@ -1240,6 +1240,10 @@ window.App = {
 
   tapGream() {
     Feedback.pop();
+    // Cute per-archetype cry (deeper the bigger the Gream)
+    const _tp = Profiles.active();
+    const _pet = _tp ? Gream.active(_tp.id) : null;
+    if (_pet?.archetype && _pet.stage >= 2) Audio.playCry(_pet.archetype, _pet.stage);
     // Works with both canvas (sprite sheet) and original img element
     const target = document.getElementById('greamSpriteCanvas') || document.getElementById('greamSprite');
     if (!target) return;
