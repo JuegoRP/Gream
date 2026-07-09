@@ -12,6 +12,17 @@ const SCENE_MUSIC = {
   outdoor:   'audio/music_outdoor.mp3',
 };
 
+// Alternative menu track — bought with seeds, switchable in settings.
+const MENU_ALT_SRC = 'audio/music_menu_alt.mp3';
+function _menuSrc() {
+  try {
+    if (localStorage.getItem('gream_menu_track') === 'alt' &&
+        localStorage.getItem('gream_menu_alt_owned') === '1') return MENU_ALT_SRC;
+  } catch {}
+  return SCENE_MUSIC.menu;
+}
+function _srcFor(scene) { return scene === 'menu' ? _menuSrc() : SCENE_MUSIC[scene]; }
+
 const FADE_OUT_MS  = 800;
 const FADE_IN_MS   = 700;
 const SWITCH_GAP   = 150;
@@ -93,7 +104,7 @@ export const Audio = {
     const swap = () => {
       if (gen !== _generation) return;
       try {
-        el.src = SCENE_MUSIC[scene];
+        el.src = _srcFor(scene);
         el.volume = 0;
         const p = el.play();
         if (p) p.then(() => { if (gen === _generation) _fadeTo(TARGET_VOL, FADE_IN_MS); })
@@ -131,4 +142,15 @@ export const Audio = {
   },
 
   isRunning() { return !!(_el && !_el.paused); },
+
+  // ─── Menu music selection (default vs bought alternative) ───
+  getMenuTrack() { try { return localStorage.getItem('gream_menu_track') === 'alt' ? 'alt' : 'default'; } catch { return 'default'; } },
+  menuAltOwned() { try { return localStorage.getItem('gream_menu_alt_owned') === '1'; } catch { return false; } },
+  setMenuAltOwned(v) { try { localStorage.setItem('gream_menu_alt_owned', v ? '1' : '0'); } catch {} },
+  setMenuTrack(which) {
+    const val = which === 'alt' ? 'alt' : 'default';
+    try { localStorage.setItem('gream_menu_track', val); } catch {}
+    // If the menu is currently playing, reload so the change is heard immediately.
+    if (_currentScene === 'menu') { _currentScene = null; this.switchScene('menu'); }
+  },
 };

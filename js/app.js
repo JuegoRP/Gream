@@ -2638,6 +2638,8 @@ window.App = {
     const soundEl = document.getElementById('ssSoundToggle');
     if (soundEl) soundEl.checked = Feedback.soundEnabled();
 
+    this._renderMenuMusicSetting();
+
     // Show clear home button if home is set
     const homeSet = !!Geo.getHome();
     const clearBtn = document.getElementById('ssClearHomeBtn');
@@ -2703,6 +2705,50 @@ window.App = {
     }
     const p = Profiles.active();
     if (p) Profiles.update(p.id, { lang: l });
+  },
+
+  // ─── Menu music: buy an alternative track with seeds, then switch between them ───
+  _renderMenuMusicSetting() {
+    const box = document.getElementById('ssMenuMusic');
+    if (!box) return;
+    const cs = getLang() === 'cs';
+    const p  = Profiles.active();
+    const COST = 30;
+    box.innerHTML = '';
+    const title = document.createElement('div');
+    title.style.cssText = 'font-size:12px;font-weight:800;color:var(--green-mid);margin-bottom:6px';
+    title.textContent = cs ? '🎵 Hudba v menu' : '🎵 Menu music';
+    box.appendChild(title);
+
+    if (!Audio.menuAltOwned()) {
+      const buy = document.createElement('button');
+      buy.style.cssText = 'width:100%;padding:10px 12px;text-align:left;font-weight:700;border-radius:10px;border:2px solid rgba(245,166,35,0.4);background:#fffbf0;color:#8a5200;font-family:inherit;cursor:pointer';
+      buy.textContent = cs ? `🔓 Odemknout novou skladbu (${COST} 🌱)` : `🔓 Unlock new track (${COST} 🌱)`;
+      buy.onclick = () => {
+        if (!p) return;
+        if (Skins.getSeeds(p.id) < COST) { this._showToast(cs ? `Potřebuješ ${COST} 🌱` : `You need ${COST} 🌱`); return; }
+        Skins.spendSeeds(p.id, COST);
+        Audio.setMenuAltOwned(true);
+        Audio.setMenuTrack('alt');
+        Feedback.celebrate();
+        this._showToast(cs ? '🎵 Nová menu hudba odemčena!' : '🎵 New menu music unlocked!');
+        this._renderMenuMusicSetting();
+      };
+      box.appendChild(buy);
+    } else {
+      const cur = Audio.getMenuTrack();
+      const row = document.createElement('div');
+      row.style.cssText = 'display:flex;gap:6px';
+      [['default', cs ? 'Původní' : 'Original'], ['alt', cs ? 'Nová' : 'New']].forEach(([val, label]) => {
+        const active = cur === val;
+        const b = document.createElement('button');
+        b.style.cssText = `flex:1;padding:9px;border-radius:10px;border:2px solid ${active ? 'var(--green-mid)' : 'rgba(0,0,0,0.1)'};background:${active ? 'var(--green-pale)' : 'white'};font-family:inherit;font-weight:800;font-size:13px;cursor:pointer;color:var(--green-deep)`;
+        b.textContent = label;
+        b.onclick = () => { Audio.setMenuTrack(val); Feedback.tap(); this._renderMenuMusicSetting(); };
+        row.appendChild(b);
+      });
+      box.appendChild(row);
+    }
   },
 
   setDifficulty(diff) {
