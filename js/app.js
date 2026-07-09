@@ -1077,11 +1077,11 @@ window.App = {
   // Files: 256×256px, 2×2 grid, each cell 128×128px
   //   TL (0,0)=neutral  TR (128,0)=sad  BL (0,128)=serious  BR (128,128)=happy
   // Drawing: detect content bounding box → draw only that region → centered in canvas
-  _moodToQuad(mood) {
-    // Sprite sheets only have art in the RIGHT column (sad = top-right, happy =
-    // bottom-right). The left column is empty, so neutral/serious must map to a
-    // filled cell — otherwise the canvas renders blank (only the shadow shows).
-    return { happy:[128,128], sad:[128,0], serious:[128,0], neutral:[128,128] }[mood] || [128,128];
+  _moodToQuad(/* mood */) {
+    // Always use the "happy" cell (bottom-right). The other cells are either empty
+    // (left column) or hold the "sad" art whose baked-in checkerboard background
+    // can't be cleanly removed — so we show the clean happy sprite for every mood.
+    return [128, 128];
   },
 
   // Draw sprite sheet cell onto canvas, cropped to content and centered
