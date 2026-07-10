@@ -37,12 +37,22 @@
   style="font-size:20px;font-weight:900;color:var(--green-deep);cursor:pointer;text-align:center;padding:8px 12px 0;width:100%;max-width:480px"
   onclick="App.promptRenameGream()"></div>
 
-<!-- Start indoor challenge button -->
-<div style="width:100%;max-width:380px;padding:8px 0">
+<!-- Garden action buttons -->
+<div style="width:100%;max-width:380px;padding:8px 0;display:flex;flex-direction:column;gap:8px">
   <button class="btn-primary" onclick="App.startIndoor()"
     style="padding:14px 20px;font-size:16px">
-    🏠 <span id="hcIndoorTitle">Doma klid</span>
+    🏠 <span id="hcIndoorTitle">Domácí výzva</span>
   </button>
+  <div style="display:flex;gap:8px">
+    <button class="btn-ghost" onclick="App.showTab('map')"
+      style="flex:1;padding:12px 14px;font-size:15px;font-weight:800">
+      🗺️ <span id="hcGoOutTitle">Pojď ven</span>
+    </button>
+    <button class="btn-ghost" onclick="App.openBattleIntro()"
+      style="flex:1;padding:12px 14px;font-size:15px;font-weight:800;border-color:rgba(210,90,60,0.4);color:#c0503a">
+      ⚔️ <span id="hcBattleTitle">Souboj</span>
+    </button>
+  </div>
 </div>
 
 <div id="dailyCounter" style="display:none"><span id="dailyCountText"></span><span id="dailyCountdown"></span></div>

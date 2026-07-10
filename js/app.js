@@ -15,6 +15,7 @@ import { Geo, WORLD_EMOJIS } from './geo.js';
 import { Skins, SKIN_CATALOG } from './skins.js';
 import { MapView } from './mapview.js';
 import { Dev } from './dev.js';
+import { Battle } from './battle.js';
 import { Gream, ARCHETYPES, spritePath, smartSpritePath } from './gream.js';
 import { Subscription, FREE_DAILY_INDOOR, PREMIUM_DAILY_INDOOR, INDOOR_MAX_TOTAL, FREE_DAILY_OUTDOOR, SEED_COST_EXTRA_TASK } from './subscription.js';
 import { Ranking } from './ranking.js';
@@ -807,7 +808,9 @@ window.App = {
     }
 
     // ─── Indoor / Outdoor button labels ───
-    this._setText('hcIndoorTitle',  lang === 'cs' ? 'Doma klid' : 'Stay home');
+    this._setText('hcIndoorTitle',  lang === 'cs' ? 'Domácí výzva' : 'Home challenge');
+    this._setText('hcGoOutTitle',   lang === 'cs' ? 'Pojď ven'     : 'Go outside');
+    this._setText('hcBattleTitle',  lang === 'cs' ? 'Souboj'       : 'Battle');
     this._setText('hcIndoorSub',    lang === 'cs' ? 'Krátký úkol z domova' : 'A quick task from home');
     this._setText('hcOutdoorTitle', lang === 'cs' ? 'Venkovní výzva' : 'Outdoor Quest');
     this._setText('hcOutdoorSub',   lang === 'cs' ? 'Nejbližší místo v okolí' : 'Nearest place near you');
@@ -920,6 +923,8 @@ window.App = {
       btn.style.borderColor = active ? 'var(--green-mid)' : 'rgba(74,138,46,0.2)';
     });
   },
+
+  openBattleIntro(opts) { Battle.intro(opts || {}); },
 
   setDifficultyFromGarden(diff) {
     const p = Profiles.active();
