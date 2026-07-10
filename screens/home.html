@@ -1,6 +1,6 @@
 <!-- Top bar -->
 <div class="home-bar" style="width:100%;max-width:480px">
-  <button class="home-av" id="mapAv" onclick="App.goTo('profiles')"></button>
+  <button class="home-av" id="mapAv" onclick="App.showTab('hub')"></button>
   <div class="home-bar-info">
     <div class="home-greeting" id="mapGreeting"></div>
     <div class="home-name" id="mapName"></div>
@@ -16,17 +16,19 @@
   <div class="gream-bg"></div>
   <div class="gream-floor"></div>
 
+  <!-- Egg jar (pre-hatch) -->
   <div class="home-jar-wrap" id="homeJarWrap">
     <div class="home-jar-glow"></div>
     <div class="home-jar-glass">
       <img src="img/greamici/seed_1.png" id="homeJarStage"
-        style="width:72px;height:72px;image-rendering:auto;display:block;margin:auto"
+        style="width:72px;height:72px;image-rendering:pixelated;display:block;margin:auto"
         onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
       <div style="font-size:56px;display:none">🥚</div>
     </div>
     <div class="home-jar-base"></div>
   </div>
 
+  <!-- Gream sprite (after hatch) -->
   <img id="greamSprite" class="gream-sprite" alt="" onclick="App.tapGream()" style="display:none">
   <div class="gream-shadow" id="greamShadow" style="display:none"></div>
   <div class="gream-speech" id="greamSpeech"></div>
@@ -38,8 +40,8 @@
   onclick="App.promptRenameGream()"></div>
 
 <!-- Garden action buttons -->
-<div style="width:100%;max-width:380px;padding:8px 0;display:flex;flex-direction:column;gap:8px">
-  <button class="btn-primary" onclick="App.startIndoor()"
+<div style="width:100%;max-width:380px;padding:8px 0 68px;display:flex;flex-direction:column;gap:8px">
+  <button class="btn-primary home-choice-indoor" onclick="App.startIndoor()"
     style="padding:14px 20px;font-size:16px">
     🏠 <span id="hcIndoorTitle">Domácí výzva</span>
   </button>
@@ -55,5 +57,6 @@
   </div>
 </div>
 
+<!-- Hidden compat stubs -->
 <div id="dailyCounter" style="display:none"><span id="dailyCountText"></span><span id="dailyCountdown"></span></div>
 <div id="needsBar" style="display:none"></div>
