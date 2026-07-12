@@ -16,6 +16,8 @@ import { Skins } from './skins.js';
 import { Gream, ARCHETYPES, spritePath } from './gream.js';
 import { Subscription } from './subscription.js';
 import { Audio } from './audio.js';
+import { T } from './i18n.js';
+import { challengeId } from './net.js';
 
 const WORLD_ICONS = { nature:'🌿', language:'📖', logic:'🧩', feelings:'💛', arts:'🎨', world:'🌍' };
 
@@ -166,6 +168,7 @@ export const Challenge = {
     this._set('ch-label',     t.ch_label);
     this._set('chText',       challenge.text);
     this._set('chHint',       challenge.hint);
+    this._set('chReportLbl',  lang === 'cs' ? 'Nahlásit otázku' : 'Report question');
     this._set('chStepBadge',  `${badge.e} ${t.step_lbl(Math.min(stepsDone, 2) + 1)} / 3`);
     this._set('bp-title',     t.bp_title);
 
@@ -633,6 +636,16 @@ export const Challenge = {
     setTimeout(() => {
       this._completeStep();
     }, 0);
+  },
+
+  // ─── Info about the current challenge for a bug report ───
+  reportInfo() {
+    const world = this._world;
+    const diff  = this._difficulty || 'medium';
+    const idx   = this._currentStep || 0;
+    const ch    = this._currentChallenge || {};
+    const enText = T.en?.challenges?.[world]?.[diff]?.[idx]?.text || ch.text || '';
+    return { world, difficulty: diff, text: ch.text || '', enText, id: challengeId(world, diff, enText) };
   },
 
   _showToast(message) {

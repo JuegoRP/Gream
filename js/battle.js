@@ -12,6 +12,7 @@ import { Skins } from './skins.js';
 import { Subscription } from './subscription.js';
 import { Feedback } from './feedback.js';
 import { Audio } from './audio.js';
+import { Net } from './net.js';
 
 const WORLD_TO_ARCH = { nature:'lilek', language:'jiskra', logic:'kamen', feelings:'srodik', arts:'vlnka', world:'atlas' };
 const WORLDS = ['nature','language','logic','feelings','arts','world'];
@@ -174,10 +175,21 @@ export const Battle = {
     }
     this._diff = diff; this._outdoor = outdoor; this._entry = entry; this._reward = reward;
     this._q = pickQuestions(diff);
-    this._i = 0; this._pScore = 0; this._bScore = 0;
+    this._i = 0; this._pScore = 0;
     document.getElementById('battleOverlay')?.remove();
     Audio.switchScene?.('challenge');
+    // Instant local rival so the game never waits on the network; the real server
+    // opponent swaps in when it arrives (well before the ~30s of 10 rounds finish).
+    this._rival = this._localRival(diff);
+    const myRating = loadStats(p.id).rating || 1000;
+    Net.battleOpponent(diff, myRating).then(o => { if (o) this._rival = o; });
     this._renderRound();
+  },
+
+  _localRival(diff) {
+    const acc = BOT_ACC[diff] || 0.65;
+    let score = 0; for (let i = 0; i < ROUNDS; i++) if (Math.random() < acc) score++;
+    return { name: 'Gream Bot', score, rating: 1000, bot: true };
   },
 
   _renderRound() {
@@ -195,7 +207,7 @@ export const Battle = {
     ov.innerHTML = `
       <div style="width:100%;max-width:420px;display:flex;justify-content:space-between;align-items:center;font-weight:900;font-size:14px;margin-bottom:8px">
         <span>⚔️ ${this._i+1}/${ROUNDS}</span>
-        <span>${cs?'Ty':'You'} <span style="color:#7ec44a">${this._pScore}</span> · <span style="color:#e0705a">${this._bScore}</span> ${cs?'Sok':'Rival'}</span>
+        <span>${cs?'Ty':'You'} <span style="color:#7ec44a">${this._pScore}</span> · 🆚 ${this._rival?.name || (cs?'Sok':'Rival')}</span>
       </div>
       <div style="width:100%;max-width:420px;height:10px;background:rgba(255,255,255,0.15);border-radius:6px;overflow:hidden;margin-bottom:14px">
         <div id="battleTimeBar" style="height:100%;width:100%;background:linear-gradient(90deg,#7ec44a,#f5c842)"></div>
@@ -212,8 +224,6 @@ export const Battle = {
       if (answered) return; answered = true;
       clearInterval(this._timer);
       if (correct) { this._pScore++; Feedback.success?.(); } else { Feedback.error?.(); }
-      // Bot scores this round probabilistically
-      if (Math.random() < (BOT_ACC[this._diff] || 0.65)) this._bScore++;
       setTimeout(() => { this._i++; this._renderRound(); }, 550);
     };
     shuffled.forEach(c => {
@@ -246,7 +256,8 @@ export const Battle = {
     const cs = getLang() === 'cs';
     clearInterval(this._timer);
     document.getElementById('battleRound')?.remove();
-    const win = this._pScore >= this._bScore;   // ties favour the player
+    const rival = this._rival || this._localRival(this._diff);
+    const win = this._pScore >= rival.score;   // ties favour the player
     const s = loadStats(p.id);
     s.wins = (s.wins || 0) + (win ? 1 : 0);
     s.losses = (s.losses || 0) + (win ? 0 : 1);
@@ -259,6 +270,12 @@ export const Battle = {
     else Feedback.error?.();
     const newBadges = this._checkBadges(p.id, s, win, this._diff);
 
+    // Submit to server (async PvP rating + leaderboard) — offline-safe.
+    Net.battleResult({
+      pid: p.id, name: p.name || 'Hráč', difficulty: this._diff,
+      score: this._pScore, oppScore: rival.score, win, oppRating: rival.rating || 1000,
+    }).then(r => { if (r && r.rating) { const st = loadStats(p.id); st.rating = r.rating; st.rank = r.rank; saveStats(p.id, st); } });
+
     const ov = document.createElement('div');
     ov.id = 'battleResult';
     ov.style.cssText = 'position:fixed;inset:0;background:rgba(10,10,15,0.85);display:flex;align-items:center;justify-content:center;z-index:1002;padding:18px';
@@ -266,17 +283,52 @@ export const Battle = {
       <div style="background:#fff;border-radius:22px;max-width:340px;width:100%;padding:26px 20px;text-align:center">
         <div style="font-size:44px;margin-bottom:6px">${win?'🏆':'💪'}</div>
         <div style="font-size:22px;font-weight:900;color:${win?'#2d7a2d':'#b0402a'}">${win?(cs?'Výhra!':'You win!'):(cs?'Prohra':'You lost')}</div>
-        <div style="font-size:15px;font-weight:800;color:#555;margin:6px 0 14px">${cs?'Ty':'You'} ${this._pScore} — ${this._bScore} ${cs?'Sok':'Rival'}</div>
+        <div style="font-size:15px;font-weight:800;color:#555;margin:6px 0 4px">${cs?'Ty':'You'} ${this._pScore} — ${rival.score} ${rival.name}</div>
+        <div style="font-size:11px;color:#bbb;margin-bottom:12px">${rival.bot?(cs?'(bot — zatím nikdo online)':'(bot — no one online yet)'):(cs?'skutečný hráč':'real player')}</div>
         ${win?`<div style="background:#f0fbe8;border-radius:12px;padding:10px;font-weight:900;color:#2d7a2d;margin-bottom:12px">+${reward} 🌱</div>`
              :`<div style="font-size:13px;color:#999;margin-bottom:12px">${cs?'Vstupné propadlo. Zkus to znovu!':'Entry lost. Try again!'}</div>`}
         ${newBadges.length?`<div style="font-size:13px;font-weight:800;color:#c8860a;margin-bottom:12px">🏅 ${newBadges.join(' · ')}</div>`:''}
         <div style="font-size:12px;color:#999;margin-bottom:14px">🏆 ${s.wins} · ${cs?'série':'streak'} ${s.streak} (${cs?'nej':'best'} ${s.bestStreak})</div>
         <button id="battleAgain" style="width:100%;padding:13px;border:none;border-radius:14px;background:linear-gradient(135deg,#d2603a,#b0402a);color:#fff;font-family:inherit;font-weight:900;font-size:15px;cursor:pointer;margin-bottom:8px">${cs?'Znovu ⚔️':'Again ⚔️'}</button>
+        <button id="battleBoard" style="width:100%;padding:11px;border:none;border-radius:14px;background:#f0f0f0;color:#555;font-family:inherit;font-weight:800;font-size:14px;cursor:pointer;margin-bottom:8px">🏆 ${cs?'Žebříček':'Leaderboard'}</button>
         <button id="battleClose" style="width:100%;padding:11px;border:none;background:none;color:#999;font-family:inherit;font-weight:700;font-size:13px;cursor:pointer">${cs?'Zpět do zahrady':'Back to garden'}</button>
       </div>`;
     document.body.appendChild(ov);
     ov.querySelector('#battleAgain').onclick = () => { ov.remove(); this.intro({ outdoor: this._outdoor }); };
+    ov.querySelector('#battleBoard').onclick = () => this.showLeaderboard();
     ov.querySelector('#battleClose').onclick = () => { ov.remove(); Audio.switchScene?.('menu'); try { window.App?.renderMap?.(); } catch {} };
+  },
+
+  // ─── Battle leaderboard overlay (server) ───
+  async showLeaderboard() {
+    const cs = getLang() === 'cs';
+    const p = Profiles.active();
+    document.getElementById('battleBoardOverlay')?.remove();
+    const ov = document.createElement('div');
+    ov.id = 'battleBoardOverlay';
+    ov.style.cssText = 'position:fixed;inset:0;background:rgba(10,10,15,0.8);display:flex;align-items:center;justify-content:center;z-index:1004;padding:18px';
+    ov.onclick = e => { if (e.target === ov) ov.remove(); };
+    ov.innerHTML = `<div style="background:#fff;border-radius:20px;max-width:340px;width:100%;padding:20px;max-height:80vh;overflow-y:auto">
+      <div style="text-align:center;font-size:18px;font-weight:900;color:var(--green-deep);margin-bottom:12px">🏆 ${cs?'Žebříček soubojů':'Battle leaderboard'}</div>
+      <div id="lbList" style="font-size:14px;color:#555">${cs?'Načítám…':'Loading…'}</div>
+      <button onclick="document.getElementById('battleBoardOverlay').remove()" style="width:100%;margin-top:14px;padding:11px;border:none;border-radius:12px;background:var(--green-mid);color:#fff;font-family:inherit;font-weight:800;cursor:pointer">${cs?'Zavřít':'Close'}</button>
+    </div>`;
+    document.body.appendChild(ov);
+    const board = await Net.leaderboard();
+    const list = ov.querySelector('#lbList');
+    if (!list) return;
+    const myRating = loadStats(p?.id).rating;
+    if (!board || !board.length) {
+      list.innerHTML = `<div style="color:#999;text-align:center;padding:10px">${cs?'Zatím žádní hráči. Buď první!':'No players yet. Be the first!'}</div>`;
+    } else {
+      list.innerHTML = board.map((x, i) => `
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 6px;border-bottom:1px solid #f0f0f0">
+          <span style="width:26px;font-weight:900;color:${i<3?'#c8860a':'#bbb'}">${i+1}.</span>
+          <span style="flex:1;font-weight:800;color:var(--green-deep);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${x.name}</span>
+          <span style="font-weight:900;color:#2d7a2d">${x.rating}</span>
+          <span style="font-size:11px;color:#aaa">🏆${x.wins}</span>
+        </div>`).join('') + (myRating ? `<div style="text-align:center;font-size:12px;color:#888;margin-top:10px">${cs?'Tvůj rating':'Your rating'}: <b>${myRating}</b></div>` : '');
+    }
   },
 
   _checkBadges(pid, s, win, diff) {

@@ -16,6 +16,7 @@ import { Skins, SKIN_CATALOG } from './skins.js';
 import { MapView } from './mapview.js';
 import { Dev } from './dev.js';
 import { Battle } from './battle.js';
+import { Net } from './net.js';
 import { Gream, ARCHETYPES, spritePath, smartSpritePath } from './gream.js';
 import { Subscription, FREE_DAILY_INDOOR, PREMIUM_DAILY_INDOOR, INDOOR_MAX_TOTAL, FREE_DAILY_OUTDOOR, SEED_COST_EXTRA_TASK } from './subscription.js';
 import { Ranking } from './ranking.js';
@@ -925,6 +926,57 @@ window.App = {
   },
 
   openBattleIntro(opts) { Battle.intro(opts || {}); },
+
+  reportCurrentChallenge() {
+    try { this.reportChallenge(Challenge.reportInfo()); } catch {}
+  },
+
+  // ─── Report a bad question → server (challengeId + reason + note) ───
+  reportChallenge(info) {
+    if (!info) return;
+    const cs = getLang() === 'cs';
+    const p = Profiles.active();
+    const REASONS = cs
+      ? [['wrong','Špatná odpověď'],['ambiguous','Nejednoznačné'],['typo','Překlep/chyba'],['too_hard','Moc těžké'],['other','Jiné']]
+      : [['wrong','Wrong answer'],['ambiguous','Ambiguous'],['typo','Typo/error'],['too_hard','Too hard'],['other','Other']];
+    document.getElementById('reportOverlay')?.remove();
+    const ov = document.createElement('div');
+    ov.id = 'reportOverlay';
+    ov.style.cssText = 'position:fixed;inset:0;background:rgba(10,10,15,0.7);display:flex;align-items:flex-end;justify-content:center;z-index:1003;padding:0';
+    ov.onclick = e => { if (e.target === ov) ov.remove(); };
+    ov.innerHTML = `
+      <div style="background:#fff;border-radius:22px 22px 0 0;max-width:480px;width:100%;padding:20px 20px 30px">
+        <div style="width:36px;height:4px;background:rgba(0,0,0,0.12);border-radius:2px;margin:0 auto 16px"></div>
+        <div style="font-size:17px;font-weight:900;color:var(--green-deep);margin-bottom:4px">🚩 ${cs?'Nahlásit otázku':'Report question'}</div>
+        <div style="font-size:12px;color:#999;margin-bottom:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${info.text || ''}</div>
+        <div style="font-size:12px;font-weight:800;color:#888;margin-bottom:6px">${cs?'Co je špatně?':'What\'s wrong?'}</div>
+        <div id="repReasons" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px"></div>
+        <textarea id="repNote" placeholder="${cs?'Napiš proč (nepovinné)…':'Tell us why (optional)…'}" style="width:100%;box-sizing:border-box;min-height:64px;border:2px solid rgba(0,0,0,0.12);border-radius:12px;padding:10px;font-family:inherit;font-size:14px;resize:vertical;margin-bottom:12px"></textarea>
+        <button id="repSend" style="width:100%;padding:14px;border:none;border-radius:14px;background:var(--green-mid);color:#fff;font-family:inherit;font-weight:900;font-size:15px;cursor:pointer">${cs?'Odeslat':'Send'}</button>
+      </div>`;
+    document.body.appendChild(ov);
+    let reason = 'wrong';
+    const rr = ov.querySelector('#repReasons');
+    REASONS.forEach(([id, label], i) => {
+      const b = document.createElement('button');
+      const active = i === 0;
+      b.dataset.r = id;
+      b.style.cssText = `padding:8px 12px;border-radius:50px;border:2px solid ${active?'var(--green-mid)':'rgba(0,0,0,0.12)'};background:${active?'var(--green-pale)':'#fff'};font-family:inherit;font-weight:700;font-size:13px;cursor:pointer;color:var(--green-deep)`;
+      b.textContent = label;
+      b.onclick = () => { reason = id; rr.querySelectorAll('button').forEach(x => { const on = x.dataset.r === id; x.style.borderColor = on?'var(--green-mid)':'rgba(0,0,0,0.12)'; x.style.background = on?'var(--green-pale)':'#fff'; }); };
+      rr.appendChild(b);
+    });
+    ov.querySelector('#repSend').onclick = async () => {
+      const note = ov.querySelector('#repNote').value.trim();
+      ov.remove();
+      Feedback.tap?.();
+      this._showToast(cs ? '🚩 Díky, nahlášeno!' : '🚩 Thanks, reported!');
+      Net.report({
+        challengeId: info.id, world: info.world, difficulty: info.difficulty,
+        text: info.enText || info.text, lang: getLang(), reason, note, pid: p?.id || '',
+      });
+    };
+  },
 
   setDifficultyFromGarden(diff) {
     const p = Profiles.active();
