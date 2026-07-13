@@ -39,7 +39,13 @@ const FETCH_TAGS = [
   // Feelings/Social
   'amenity=bench', 'amenity=social_centre', 'amenity=community_centre',
   'amenity=cafe', 'leisure=sports_centre', 'amenity=hospital',
+  // Battle spots — safe, social public places (pubs, bars)
+  'amenity=pub', 'amenity=bar',
 ];
+
+// Kinds usable as ⚔️ battle spots — safe/social public places.
+export const BATTLE_SPOT_KINDS = new Set(['park', 'garden', 'playground', 'cafe', 'social_centre', 'pub', 'bar']);
+export const isBattleSpot = (poi) => !!poi && BATTLE_SPOT_KINDS.has(poi.kind);
 
 export const WORLD_BONUS = {
   nature:   ['park', 'garden', 'nature_reserve', 'tree', 'spring', 'wood', 'peak', 'playground', 'water'],
@@ -281,6 +287,8 @@ export const Geo = {
     if (tags.amenity === 'clock') return 'clock';
     if (tags.amenity === 'telephone') return 'telephone';
     if (tags.amenity === 'cafe') return 'cafe';
+    if (tags.amenity === 'pub') return 'pub';
+    if (tags.amenity === 'bar') return 'bar';
     if (tags.amenity === 'hospital') return 'hospital';
     if (tags.amenity === 'sports_centre') return 'sports_centre';
     if (tags.tourism === 'museum') return 'museum';

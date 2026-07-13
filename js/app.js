@@ -11,7 +11,7 @@ import { Challenge } from './challenge.js';
 // camera/draw/voice removed in v7
 import { Stats } from './stats.js';
 import { Feedback } from './feedback.js';
-import { Geo, WORLD_EMOJIS } from './geo.js';
+import { Geo, WORLD_EMOJIS, isBattleSpot } from './geo.js';
 import { Skins, SKIN_CATALOG } from './skins.js';
 import { MapView } from './mapview.js';
 import { Dev } from './dev.js';
@@ -3062,6 +3062,8 @@ window.App = {
         </div>
         <button id="poiModalStart" onclick="App.startPoiChallenge()"
           style="display:none;width:100%;padding:14px;border-radius:14px;border:none;color:white;font-family:inherit;font-weight:900;font-size:15px;cursor:pointer;margin-bottom:8px"></button>
+        ${isBattleSpot(poi) ? `<button onclick="App.closePoiModal();App.openBattleIntro({outdoor:true})"
+          style="width:100%;padding:13px;border-radius:14px;border:none;background:linear-gradient(135deg,#d2603a,#b0402a);color:#fff;font-family:inherit;font-weight:900;font-size:15px;cursor:pointer;margin-bottom:8px">⚔️ ${lang==='cs'?'Souboj tady (venku)':'Battle here (outdoor)'}</button>` : ''}
         <button onclick="App.closePoiModal()" style="width:100%;background:none;border:none;color:var(--green-mid);font-weight:700;font-size:14px;cursor:pointer;padding:6px">
           ${lang==='cs'?'Zavřít':'Close'}
         </button>

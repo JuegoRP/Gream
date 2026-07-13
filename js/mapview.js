@@ -6,7 +6,7 @@
 //  - Dots highlight green when user is close
 // ═══════════════════════════════════
 
-import { Geo, WORLD_COLORS, WORLD_EMOJIS, WORLD_BONUS } from './geo.js';
+import { Geo, WORLD_COLORS, WORLD_EMOJIS, WORLD_BONUS, isBattleSpot } from './geo.js';
 import { Net } from './net.js';
 
 // Voyager: colourful, kid-friendly basemap (green parks, blue water, street labels)
@@ -287,18 +287,25 @@ export const MapView = {
         }
         const dot = makePoiDot(L, poi, _userPos, (p, d, info) => this._onTap(p, d, L, info));
         dot.addTo(_map);
+        // ⚔️ Battle spots (parks / pubs / cafes …) are marked instantly.
+        if (isBattleSpot(poi) && dot.bindTooltip) {
+          dot.bindTooltip('⚔️', { permanent: true, direction: 'top', className: 'poi-count-tip poi-battle-tip', offset: [0, -6] });
+        }
         _poiLayers.push({ poi, dot, area });
       });
 
       opts.onPoisLoaded?.(pois);
 
-      // Shared map: show how many people (anonymously) completed each public POI.
+      // Shared map: show how many people (anonymously) completed each public POI,
+      // combined with the ⚔️ battle-spot marker.
       Net.poiCounts(pois.map(p => p.id)).then(counts => {
         if (!counts || !_map) return;
         _poiLayers.forEach(({ poi, dot }) => {
           const n = counts[poi.id] || 0;
-          if (n > 0 && dot && dot.bindTooltip) {
-            dot.bindTooltip(`👥 ${n}`, { permanent: true, direction: 'top', className: 'poi-count-tip', offset: [0, -6] });
+          const label = (isBattleSpot(poi) ? '⚔️' : '') + (n > 0 ? ` 👥${n}` : '');
+          if (label && dot && dot.bindTooltip) {
+            if (dot.getTooltip && dot.getTooltip()) dot.setTooltipContent(label.trim());
+            else dot.bindTooltip(label.trim(), { permanent: true, direction: 'top', className: 'poi-count-tip', offset: [0, -6] });
           }
         });
       }).catch(() => {});
