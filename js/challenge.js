@@ -17,7 +17,7 @@ import { Gream, ARCHETYPES, spritePath } from './gream.js';
 import { Subscription } from './subscription.js';
 import { Audio } from './audio.js';
 import { T } from './i18n.js';
-import { challengeId } from './net.js';
+import { Net, challengeId } from './net.js';
 
 const WORLD_ICONS = { nature:'🌿', language:'📖', logic:'🧩', feelings:'💛', arts:'🎨', world:'🌍' };
 
@@ -720,6 +720,8 @@ export const Challenge = {
     if (this._targetPOI) {
       const selectedWorld = this._targetPOI.selectedWorld || this._world;
       Geo.markPOIDone(this._targetPOI.id, selectedWorld);
+      // Shared map: bump the anonymous completion counter for this public POI.
+      Net.poiDone(this._targetPOI.id);
       // Bonus eggs if user played the matching bonus world at this POI
       const bonusSeeds = (this._targetPOI.bonusWorld === selectedWorld) ? 5 : 0;
       if (bonusSeeds > 0 && result.stepsComplete) {

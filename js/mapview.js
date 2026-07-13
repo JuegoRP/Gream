@@ -7,6 +7,7 @@
 // ═══════════════════════════════════
 
 import { Geo, WORLD_COLORS, WORLD_EMOJIS, WORLD_BONUS } from './geo.js';
+import { Net } from './net.js';
 
 // Voyager: colourful, kid-friendly basemap (green parks, blue water, street labels)
 const TILE_URL    = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png';
@@ -224,6 +225,8 @@ export const MapView = {
         .leaflet-container{font-family:'Nunito',sans-serif!important}
         .leaflet-control-zoom{display:none!important}
         .leaflet-control-attribution{font-size:9px!important;opacity:.35!important}
+        .poi-count-tip{background:rgba(26,61,10,0.88)!important;color:#fff!important;border:none!important;border-radius:10px!important;font:800 10px 'Nunito',sans-serif!important;padding:1px 6px!important;box-shadow:0 1px 4px rgba(0,0,0,.3)!important}
+        .poi-count-tip::before{display:none!important}
       `;
       document.head.appendChild(s);
     }
@@ -288,6 +291,17 @@ export const MapView = {
       });
 
       opts.onPoisLoaded?.(pois);
+
+      // Shared map: show how many people (anonymously) completed each public POI.
+      Net.poiCounts(pois.map(p => p.id)).then(counts => {
+        if (!counts || !_map) return;
+        _poiLayers.forEach(({ poi, dot }) => {
+          const n = counts[poi.id] || 0;
+          if (n > 0 && dot && dot.bindTooltip) {
+            dot.bindTooltip(`👥 ${n}`, { permanent: true, direction: 'top', className: 'poi-count-tip', offset: [0, -6] });
+          }
+        });
+      }).catch(() => {});
     } catch (e) {
       opts.onError?.(e);
     }
