@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "test": "node test/sim.mjs && node test/ui.mjs"
+    "test": "node test/content.mjs && node test/sim.mjs && node test/ui.mjs"
   },
   "devDependencies": {
     "acorn": "^8.16.0",
