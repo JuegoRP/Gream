@@ -204,18 +204,31 @@ export const Challenge = {
       }
     }
 
+    // Label for the CURRENT step should match the actual challenge type shown
+    // (the pool cycles types, so the generic per-world stepDef can mislead).
+    const TYPE_LABEL = {
+      choice:     { icon: '🎯', cs: 'Vyber',    en: 'Choose' },
+      number:     { icon: '🔢', cs: 'Spočítej', en: 'Count' },
+      fill_blank: { icon: '✍️', cs: 'Doplň',    en: 'Fill in' },
+      sort:       { icon: '↕️', cs: 'Seřaď',    en: 'Sort' },
+      match:      { icon: '🔗', cs: 'Přiřaď',   en: 'Match' },
+    };
+    const curType = TYPE_LABEL[challenge.check?.type];
+
     const bpSteps = document.getElementById('bpSteps');
     if (bpSteps) {
       bpSteps.innerHTML = '';
       stepDefs.forEach((sd, i) => {
         const done   = i < stepsDone;
         const active = i === stepsDone && !done;
+        const icon   = active && curType ? curType.icon : sd.icon;
+        const label  = active && curType ? (lang === 'cs' ? curType.cs : curType.en) : sd.label;
         const div    = document.createElement('div');
         div.className = `bp-step${done ? ' done' : active ? ' active' : ''}`;
         div.innerHTML = `
           <div class="bp-step-num">${t.step_lbl(i + 1)}</div>
-          <span class="bp-step-icon">${sd.icon}</span>
-          <div class="bp-step-label">${sd.label}</div>
+          <span class="bp-step-icon">${icon}</span>
+          <div class="bp-step-label">${label}</div>
           ${done ? '<div class="bp-step-check">✓</div>' : ''}
         `;
         bpSteps.appendChild(div);

@@ -17,6 +17,7 @@ import { MapView } from './mapview.js';
 import { Dev } from './dev.js';
 import { Battle } from './battle.js';
 import { Net } from './net.js';
+import { hasProfanity } from './profanity.js';
 import { Gream, ARCHETYPES, spritePath, smartSpritePath } from './gream.js';
 import { Subscription, FREE_DAILY_INDOOR, PREMIUM_DAILY_INDOOR, INDOOR_MAX_TOTAL, FREE_DAILY_OUTDOOR, SEED_COST_EXTRA_TASK } from './subscription.js';
 import { Ranking } from './ranking.js';
@@ -619,6 +620,11 @@ window.App = {
   async createProfile() {
     const name = document.getElementById('nameInput')?.value.trim();
     if (!name) return;
+    if (hasProfanity(name)) {
+      Feedback.error?.();
+      this._showToast(getLang() === 'cs' ? '🙈 Zvol prosím slušnější jméno.' : '🙈 Please choose a nicer name.');
+      return;
+    }
     Feedback.success();
     const p = Profiles.create({
       name,
@@ -926,6 +932,7 @@ window.App = {
   },
 
   openBattleIntro(opts) { Battle.intro(opts || {}); },
+  showBattleLeaderboard() { Battle.showLeaderboard(); },
 
   reportCurrentChallenge() {
     try { this.reportChallenge(Challenge.reportInfo()); } catch {}
@@ -2730,7 +2737,15 @@ window.App = {
         } else { prev.textContent = p.avatar || '🧒'; }
       }
       const nameInput = document.getElementById('ssNameInput');
-      if (nameInput) { nameInput.value = p.name; nameInput.oninput = () => Profiles.update(p.id, { name: nameInput.value.trim() || p.name }); }
+      if (nameInput) {
+        nameInput.value = p.name;
+        nameInput.oninput = () => {
+          const v = nameInput.value.trim();
+          if (v && hasProfanity(v)) { nameInput.style.borderColor = '#e05555'; return; }
+          nameInput.style.borderColor = '';
+          Profiles.update(p.id, { name: v || p.name });
+        };
+      }
       // Family code
       const code = Profiles.getFamilyCode();
       this._setText('ssFamilyCodeNum', code || '——');
@@ -2872,6 +2887,41 @@ window.App = {
   async renderStats() {
     const container = document.getElementById('screen-stats');
     if (container) Stats.render(container);
+    this._renderBattleStats(container);
+  },
+
+  // ─── Battle stats + badges section on the Stats screen ───
+  _renderBattleStats(container) {
+    if (!container) return;
+    const p = Profiles.active(); if (!p) return;
+    const cs = getLang() === 'cs';
+    const s = Battle.getStats(p.id);
+    container.querySelector('#battleStatsSection')?.remove();
+    if (!s || !s.total) return;   // no battles yet → nothing to show
+
+    let badges = {};
+    try { badges = JSON.parse(localStorage.getItem('gream_battle_badges') || '{}')[p.id] || {}; } catch {}
+    const BADGE_LBL = cs
+      ? { first_win:'🥇 První výhra', wins_10:'🏆 10 výher', streak_5:'🔥 Série 5', extreme_win:'⚡ Extrémní vítěz' }
+      : { first_win:'🥇 First win', wins_10:'🏆 10 wins', streak_5:'🔥 5 streak', extreme_win:'⚡ Extreme winner' };
+    const owned = Object.keys(badges).filter(k => BADGE_LBL[k]);
+
+    const sec = document.createElement('div');
+    sec.id = 'battleStatsSection';
+    sec.className = 'card-section max-w';
+    sec.style.marginTop = '14px';
+    const winRate = s.total ? Math.round((s.wins || 0) / s.total * 100) : 0;
+    sec.innerHTML = `
+      <div class="section-title">⚔️ ${cs ? 'Souboje' : 'Battles'}</div>
+      <div class="stats-grid" style="margin-bottom:10px">
+        <div class="stat-card"><div class="stat-num">${s.rating || 1000}</div><div class="stat-label">${cs ? 'Rating' : 'Rating'}</div></div>
+        <div class="stat-card"><div class="stat-num">${s.wins || 0}</div><div class="stat-label">${cs ? 'Výhry' : 'Wins'}</div></div>
+        <div class="stat-card"><div class="stat-num">${winRate}%</div><div class="stat-label">${cs ? 'Úspěšnost' : 'Win rate'}</div></div>
+        <div class="stat-card"><div class="stat-num">${s.bestStreak || 0} 🔥</div><div class="stat-label">${cs ? 'Nejdelší série' : 'Best streak'}</div></div>
+      </div>
+      ${owned.length ? `<div style="display:flex;flex-wrap:wrap;gap:6px">${owned.map(k => `<span style="padding:6px 10px;border-radius:50px;background:var(--green-pale);color:var(--green-deep);font-size:12px;font-weight:800">${BADGE_LBL[k]}</span>`).join('')}</div>` : ''}
+      <button onclick="App.showBattleLeaderboard()" style="width:100%;margin-top:12px;padding:11px;border:none;border-radius:12px;background:#f0f0f0;color:#555;font-family:inherit;font-weight:800;font-size:14px;cursor:pointer">🏆 ${cs ? 'Žebříček soubojů' : 'Battle leaderboard'}</button>`;
+    container.appendChild(sec);
   },
 
   // ═══════════════════════════════════
@@ -4057,13 +4107,14 @@ document.addEventListener('screen:ready', ({ detail: { screenId } }) => {
       const t = tr();
       App._setText('sdNextBtn',  t.next_step);
       App._setText('sdLaterBtn', t.come_back);
-      Audio.switchScene('menu');
+      // Keep the challenge music playing through the whole challenge flow —
+      // step-done/badge-earned are part of it. Switching to 'menu' here made the
+      // music restart after every step. Menu music resumes when you leave home.
       break;
     }
     case 'badge-earned': {
       const t = tr();
       App._setText('btn-continue-lbl', t.continue);
-      Audio.switchScene('menu');
       break;
     }
   }
