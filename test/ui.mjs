@@ -77,6 +77,22 @@ result?.querySelector('#battleClose')?.click();
 await sleep(20);
 ok(!document.getElementById('battleResult'), 'result closes cleanly');
 
+// ── Daily round: seeded set, plays to daily board ──
+Battle.daily();
+await sleep(30);
+ok(!!document.getElementById('battleRound'), 'daily round rendered');
+let dRounds = 0;
+for (let i = 0; i < 14; i++) {
+  if (document.getElementById('battleBoardOverlay')) break;
+  const btns = document.querySelectorAll('#battleChoices button');
+  if (btns.length) { btns[0].click(); dRounds++; }
+  await sleep(120); await sleep(500);
+}
+ok(dRounds >= 10, `daily played ~10 rounds (${dRounds})`);
+await sleep(60);
+ok(!!document.getElementById('battleBoardOverlay'), 'daily leaderboard rendered');
+document.getElementById('battleBoardOverlay')?.remove();
+
 ok(errors.length === 0, `no window errors (${errors.length}: ${errors.slice(0,2).join(' | ')})`);
 
 console.log(`\n${fail===0?'✓ ALL PASS':'✗ FAILURES'} — ${pass} passed, ${fail} failed`);

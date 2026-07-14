@@ -22,6 +22,19 @@ function loadJSON(file, fallback) { try { return JSON.parse(fs.readFileSync(file
 const reports = loadJSON(F('reports.json'), []);
 const battle  = loadJSON(F('battle.json'), { players: {}, runs: {} });     // runs: {diff: [{pid,name,score,rating,ts}]}
 const poi     = loadJSON(F('poi.json'), {});
+const daily   = loadJSON(F('daily.json'), {});                             // { 'YYYY-MM-DD': { pid: {name,score,ts} } }
+
+// ─── Simple in-memory rate limiter (per IP): max BURST requests / WINDOW ms ───
+const RL = new Map();
+const RL_WINDOW = 10000, RL_BURST = 40;
+function rateLimited(ip) {
+  const now = Date.now();
+  const arr = (RL.get(ip) || []).filter(t => now - t < RL_WINDOW);
+  arr.push(now);
+  RL.set(ip, arr);
+  if (RL.size > 5000) for (const [k, v] of RL) if (!v.length || now - v[v.length - 1] > RL_WINDOW) RL.delete(k);
+  return arr.length > RL_BURST;
+}
 
 const timers = {};
 function persist(name, file, obj) {
@@ -80,6 +93,37 @@ const server = http.createServer((req, res) => {
   const p = u.pathname.replace(/\/+$/, '') || '/';
 
   if (req.method === 'GET' && (p === '/health' || p === '/')) return send(res, 200, { ok: true, service: 'gream-api' });
+
+  // Rate limit writes (anti-spam / anti-inflation).
+  if (req.method === 'POST') {
+    const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket.remoteAddress || 'x';
+    if (rateLimited(ip)) return send(res, 429, { error: 'rate-limited' });
+  }
+
+  // ─── Daily round: everyone plays the same date-seeded set; ranked per day ───
+  if (req.method === 'POST' && p === '/battle/daily/result') return readBody(req, (d) => {
+    if (!d || !d.pid || !d.date) return send(res, 400, { error: 'bad' });
+    const date = String(d.date).slice(0, 10);
+    const name = clampName(d.name);
+    const score = Math.max(0, Math.min(10, Number(d.score) || 0));
+    const day = daily[date] = daily[date] || {};
+    if (!day[d.pid] || score > day[d.pid].score) day[d.pid] = { name, score, ts: Date.now() };
+    // keep only last 7 days
+    const keys = Object.keys(daily).sort();
+    while (keys.length > 7) delete daily[keys.shift()];
+    persist('daily', F('daily.json'), daily);
+    const board = Object.values(day).sort((a, b) => b.score - a.score);
+    const rank = board.findIndex(x => x.name === name && x.score === day[d.pid].score) + 1;
+    return send(res, 200, { rank: rank || board.length, players: board.length });
+  });
+
+  if (req.method === 'GET' && p === '/battle/daily/leaderboard') {
+    const date = String(u.searchParams.get('date') || '').slice(0, 10);
+    const day = daily[date] || {};
+    const board = Object.values(day).sort((a, b) => b.score - a.score).slice(0, 20)
+      .map(x => ({ name: x.name, score: x.score }));
+    return send(res, 200, board);
+  }
 
   if (req.method === 'POST' && p === '/report') return readBody(req, (d) => {
     if (!d) return send(res, 400, { error: 'bad-json' });

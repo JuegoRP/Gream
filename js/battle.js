@@ -12,7 +12,7 @@ import { Skins } from './skins.js';
 import { Subscription } from './subscription.js';
 import { Feedback } from './feedback.js';
 import { Audio } from './audio.js';
-import { Net } from './net.js';
+import { Net, challengeId } from './net.js';
 
 const WORLD_TO_ARCH = { nature:'lilek', language:'jiskra', logic:'kamen', feelings:'srodik', arts:'vlnka', world:'atlas' };
 const WORLDS = ['nature','language','logic','feelings','arts','world'];
@@ -52,25 +52,41 @@ function timeBonusForWorld(pid, world) {
   return b;
 }
 
-// Pick ROUNDS choice-type questions from random worlds at the given difficulty.
-function pickQuestions(difficulty) {
+// A question is battle-usable if it can be answered fast & scored: choice, or a
+// number with a defined answer (open observation numbers are excluded).
+const battleUsable = c =>
+  (c.check?.type === 'choice' && Array.isArray(c.choices) && c.choices.length >= 2) ||
+  (c.check?.type === 'number' && c.check.answer != null);
+
+// Seeded RNG (mulberry32) so the daily round is identical for everyone.
+function seededRng(seedStr) {
+  let h = 1779033703 ^ seedStr.length;
+  for (let i = 0; i < seedStr.length; i++) { h = Math.imul(h ^ seedStr.charCodeAt(i), 3432918353); h = (h << 13) | (h >>> 19); }
+  let a = h >>> 0;
+  return () => { a |= 0; a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+}
+
+// Pick ROUNDS questions from random worlds at the given difficulty. `rng` optional
+// (deterministic for daily round).
+function pickQuestions(difficulty, rng) {
   const t = tr();
+  const rand = rng || Math.random;
   const out = [];
-  const worldBag = [];
-  for (let i = 0; i < ROUNDS; i++) worldBag.push(WORLDS[i % WORLDS.length]);
-  worldBag.sort(() => Math.random() - 0.5);
+  const worldBag = [...WORLDS, ...WORLDS.slice(0, ROUNDS - WORLDS.length)].slice(0, ROUNDS);
+  worldBag.sort(() => rand() - 0.5);
   const usedText = new Set();
   for (const world of worldBag) {
-    const pool = (t.challenges?.[world]?.[difficulty] || [])
-      .filter(c => (c.check?.type === 'choice') && Array.isArray(c.choices) && c.choices.length >= 2 && !usedText.has(c.text));
+    const pool = (t.challenges?.[world]?.[difficulty] || []).filter(c => battleUsable(c) && !usedText.has(c.text));
     if (!pool.length) continue;
-    const c = pool[Math.floor(Math.random() * pool.length)];
+    const c = pool[Math.floor(rand() * pool.length)];
     usedText.add(c.text);
     out.push({ world, ch: c });
     if (out.length >= ROUNDS) break;
   }
   return out;
 }
+
+const todayISO = () => new Date().toISOString().slice(0, 10);
 
 export const Battle = {
   _q: [], _i: 0, _pScore: 0, _bScore: 0, _diff: 'medium', _outdoor: false, _timer: null, _entry: 0, _reward: 0,
@@ -116,6 +132,7 @@ export const Battle = {
         <div id="battleDailyInfo" style="font-size:11px;color:#aaa;text-align:center;margin-bottom:12px"></div>
 
         <button id="battleStartBtn" style="width:100%;padding:15px;border:none;border-radius:15px;background:linear-gradient(135deg,#d2603a,#b0402a);color:#fff;font-family:inherit;font-weight:900;font-size:16px;cursor:pointer;margin-bottom:8px">${cs?'Zahájit souboj ⚔️':'Start battle ⚔️'}</button>
+        <button id="battleDailyBtn" style="width:100%;padding:12px;border:2px solid var(--green-mid);border-radius:14px;background:#fff;color:var(--green-deep);font-family:inherit;font-weight:800;font-size:14px;cursor:pointer;margin-bottom:8px">📅 ${cs?'Denní kolo (stejné pro všechny)':'Daily round (same for all)'}</button>
         <button onclick="document.getElementById('battleOverlay').remove()" style="width:100%;padding:10px;border:none;background:none;color:#999;font-family:inherit;font-weight:700;font-size:13px;cursor:pointer">${cs?'Zavřít':'Close'}</button>
         <div style="text-align:center;font-size:11px;color:#bbb;margin-top:8px">🏆 ${cs?'Výhry':'Wins'}: ${stats.wins||0} · ${cs?'série':'streak'}: ${stats.streak||0}</div>
       </div>`;
@@ -161,6 +178,7 @@ export const Battle = {
       if (startBtn.disabled) return;
       this._start(startBtn._diff, outdoor, startBtn._entry, startBtn._reward);
     };
+    ov.querySelector('#battleDailyBtn').onclick = () => this.daily();
   },
 
   _start(diff, outdoor, entry, reward) {
@@ -173,6 +191,7 @@ export const Battle = {
       s.count = (s.count || 0) + 1;
       saveStats(p.id, s);
     }
+    this._daily = false;
     this._diff = diff; this._outdoor = outdoor; this._entry = entry; this._reward = reward;
     this._q = pickQuestions(diff);
     this._i = 0; this._pScore = 0;
@@ -192,6 +211,46 @@ export const Battle = {
     return { name: 'Gream Bot', score, rating: 1000, bot: true };
   },
 
+  // ─── Daily round: same date-seeded questions for everyone, ranked per day, 1×/den, free ───
+  daily() {
+    const p = Profiles.active(); if (!p) return;
+    const cs = getLang() === 'cs';
+    const date = todayISO();
+    const key = 'gream_daily_done_' + p.id;
+    if (localStorage.getItem(key) === date) {
+      document.getElementById('battleOverlay')?.remove();
+      this._showDailyBoard(date, cs ? 'Denní kolo už máš dnes hotové 👍' : 'You already played today\'s round 👍');
+      return;
+    }
+    localStorage.setItem(key, date);
+    this._daily = true; this._diff = 'medium'; this._outdoor = false; this._reward = 0;
+    this._q = pickQuestions('medium', seededRng('gream-daily-' + date));
+    this._i = 0; this._pScore = 0; this._rival = null;
+    document.getElementById('battleOverlay')?.remove();
+    Audio.switchScene?.('challenge');
+    this._renderRound();
+  },
+
+  async _showDailyBoard(date, note) {
+    const cs = getLang() === 'cs';
+    document.getElementById('battleBoardOverlay')?.remove();
+    const ov = document.createElement('div');
+    ov.id = 'battleBoardOverlay';
+    ov.style.cssText = 'position:fixed;inset:0;background:rgba(10,10,15,0.8);display:flex;align-items:center;justify-content:center;z-index:1004;padding:18px';
+    ov.onclick = e => { if (e.target === ov) ov.remove(); };
+    ov.innerHTML = `<div style="background:#fff;border-radius:20px;max-width:340px;width:100%;padding:20px;max-height:80vh;overflow-y:auto">
+      <div style="text-align:center;font-size:18px;font-weight:900;color:var(--green-deep);margin-bottom:4px">📅 ${cs?'Denní kolo':'Daily round'}</div>
+      ${note ? `<div style="text-align:center;font-size:12px;color:#888;margin-bottom:12px">${note}</div>` : ''}
+      <div id="dlbList" style="font-size:14px;color:#555">${cs?'Načítám…':'Loading…'}</div>
+      <button onclick="document.getElementById('battleBoardOverlay').remove()" style="width:100%;margin-top:14px;padding:11px;border:none;border-radius:12px;background:var(--green-mid);color:#fff;font-family:inherit;font-weight:800;cursor:pointer">${cs?'Zavřít':'Close'}</button>
+    </div>`;
+    document.body.appendChild(ov);
+    const board = await Net.dailyLeaderboard(date);
+    const list = ov.querySelector('#dlbList'); if (!list) return;
+    if (!board || !board.length) list.innerHTML = `<div style="color:#999;text-align:center;padding:10px">${cs?'Zatím nikdo. Buď první!':'No one yet. Be first!'}</div>`;
+    else list.innerHTML = board.map((x, i) => `<div style="display:flex;align-items:center;gap:10px;padding:8px 6px;border-bottom:1px solid #f0f0f0"><span style="width:26px;font-weight:900;color:${i<3?'#c8860a':'#bbb'}">${i+1}.</span><span style="flex:1;font-weight:800;color:var(--green-deep);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${x.name}</span><span style="font-weight:900;color:#2d7a2d">${x.score}/10</span></div>`).join('');
+  },
+
   _renderRound() {
     const p = Profiles.active();
     const cs = getLang() === 'cs';
@@ -204,21 +263,28 @@ export const Battle = {
     const ov = document.createElement('div');
     ov.id = 'battleRound';
     ov.style.cssText = 'position:fixed;inset:0;background:linear-gradient(180deg,#2a1512,#1a0f14);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;z-index:1001;padding:calc(var(--sat,0px) + 20px) 18px 24px;color:#fff';
+    const rivalLabel = this._daily ? `📅 ${cs?'Denní kolo':'Daily round'}` : `🆚 ${this._rival?.name || (cs?'Sok':'Rival')}`;
     ov.innerHTML = `
       <div style="width:100%;max-width:420px;display:flex;justify-content:space-between;align-items:center;font-weight:900;font-size:14px;margin-bottom:8px">
         <span>⚔️ ${this._i+1}/${ROUNDS}</span>
-        <span>${cs?'Ty':'You'} <span style="color:#7ec44a">${this._pScore}</span> · 🆚 ${this._rival?.name || (cs?'Sok':'Rival')}</span>
+        <span>${cs?'Ty':'You'} <span style="color:#7ec44a">${this._pScore}</span> · ${rivalLabel}</span>
       </div>
       <div style="width:100%;max-width:420px;height:10px;background:rgba(255,255,255,0.15);border-radius:6px;overflow:hidden;margin-bottom:14px">
         <div id="battleTimeBar" style="height:100%;width:100%;background:linear-gradient(90deg,#7ec44a,#f5c842)"></div>
       </div>
       <div style="font-size:13px;font-weight:800;color:${bonus>0?'#7ec44a':'#bbb'};margin-bottom:10px">${WORLD_ICONS[world]} ${cs?'Svět':'World'}: ${tr().worlds?.[world]||world}${bonus>0?` · +${Math.round(bonus/1000)}s 🐣`:''}</div>
       <div style="font-size:18px;font-weight:900;text-align:center;line-height:1.35;max-width:420px;margin-bottom:16px">${ch.text}</div>
-      <div id="battleChoices" style="width:100%;max-width:420px;display:flex;flex-direction:column;gap:9px"></div>`;
+      <div id="battleChoices" style="width:100%;max-width:420px;display:flex;flex-direction:column;gap:9px"></div>
+      <button id="battleReport" style="margin-top:14px;background:none;border:none;color:rgba(255,255,255,0.4);font-family:inherit;font-size:12px;font-weight:700;cursor:pointer">🚩 ${cs?'Nahlásit otázku':'Report question'}</button>`;
     document.body.appendChild(ov);
 
+    // Report the current battle question
+    ov.querySelector('#battleReport').onclick = () => {
+      const d = this._daily ? 'medium' : this._diff;
+      try { window.App?.reportChallenge({ world, difficulty: d, text: ch.text, enText: ch.text, id: challengeId(world, d, ch.text) }); } catch {}
+    };
+
     const choicesEl = ov.querySelector('#battleChoices');
-    const shuffled = [...ch.choices].sort(() => Math.random() - 0.5);
     let answered = false;
     const done = (correct) => {
       if (answered) return; answered = true;
@@ -226,19 +292,47 @@ export const Battle = {
       if (correct) { this._pScore++; Feedback.success?.(); } else { Feedback.error?.(); }
       setTimeout(() => { this._i++; this._renderRound(); }, 550);
     };
-    shuffled.forEach(c => {
-      const b = document.createElement('button');
-      b.style.cssText = 'width:100%;padding:14px 16px;border-radius:14px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.08);color:#fff;font-family:inherit;font-weight:800;font-size:15px;cursor:pointer;text-align:left';
-      b.textContent = c.text;
-      b.onclick = () => {
+
+    if (ch.check?.type === 'number') {
+      // Quick number input
+      const wrap = document.createElement('div');
+      wrap.style.cssText = 'width:100%;display:flex;gap:8px';
+      const input = document.createElement('input');
+      input.type = 'text'; input.inputMode = 'decimal';
+      input.placeholder = cs ? 'Číslo…' : 'Number…';
+      input.style.cssText = 'flex:1;padding:14px;border-radius:14px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:#fff;font-family:inherit;font-weight:900;font-size:18px;text-align:center;outline:none';
+      const submit = document.createElement('button');
+      submit.textContent = '✓';
+      submit.style.cssText = 'padding:14px 20px;border-radius:14px;border:none;background:#7ec44a;color:#fff;font-family:inherit;font-weight:900;font-size:18px;cursor:pointer';
+      const check = () => {
         if (answered) return;
-        const correct = String(c.value ?? c.text).toLowerCase() === String(ch.check.correct).toLowerCase();
-        b.style.background = correct ? 'rgba(126,196,74,0.4)' : 'rgba(224,112,90,0.4)';
-        b.style.borderColor = correct ? '#7ec44a' : '#e0705a';
+        const num = parseFloat(String(input.value).replace(',', '.'));
+        const tol = ch.check.tolerance ?? 0;
+        const correct = !isNaN(num) && Math.abs(num - ch.check.answer) <= tol;
+        input.style.borderColor = correct ? '#7ec44a' : '#e0705a';
         done(correct);
       };
-      choicesEl.appendChild(b);
-    });
+      submit.onclick = check;
+      input.addEventListener('keypress', e => { if (e.key === 'Enter') check(); });
+      wrap.appendChild(input); wrap.appendChild(submit);
+      choicesEl.appendChild(wrap);
+      setTimeout(() => input.focus(), 200);
+    } else {
+      const shuffled = [...ch.choices].sort(() => Math.random() - 0.5);
+      shuffled.forEach(c => {
+        const b = document.createElement('button');
+        b.style.cssText = 'width:100%;padding:14px 16px;border-radius:14px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.08);color:#fff;font-family:inherit;font-weight:800;font-size:15px;cursor:pointer;text-align:left';
+        b.textContent = c.text;
+        b.onclick = () => {
+          if (answered) return;
+          const correct = String(c.value ?? c.text).toLowerCase() === String(ch.check.correct).toLowerCase();
+          b.style.background = correct ? 'rgba(126,196,74,0.4)' : 'rgba(224,112,90,0.4)';
+          b.style.borderColor = correct ? '#7ec44a' : '#e0705a';
+          done(correct);
+        };
+        choicesEl.appendChild(b);
+      });
+    }
 
     // Timer
     const bar = ov.querySelector('#battleTimeBar');
@@ -256,6 +350,22 @@ export const Battle = {
     const cs = getLang() === 'cs';
     clearInterval(this._timer);
     document.getElementById('battleRound')?.remove();
+
+    // ─── Daily round: score-attack ranked on a shared daily leaderboard ───
+    if (this._daily) {
+      const date = todayISO();
+      const reward = this._pScore;   // modest: 1 🌱 per correct answer
+      if (reward > 0) Skins.addSeeds(p.id, reward);
+      Feedback.celebrate?.();
+      Net.dailyResult({ pid: p.id, name: p.name || 'Hráč', date, score: this._pScore }).then(r => {
+        this._showDailyBoard(date, cs
+          ? `Tvé skóre: ${this._pScore}/10 · +${reward} 🌱${r && r.rank ? ` · ${r.rank}. místo` : ''}`
+          : `Your score: ${this._pScore}/10 · +${reward} 🌱${r && r.rank ? ` · rank ${r.rank}` : ''}`);
+      });
+      this._daily = false;
+      return;
+    }
+
     const rival = this._rival || this._localRival(this._diff);
     const win = this._pScore >= rival.score;   // ties favour the player
     const s = loadStats(p.id);

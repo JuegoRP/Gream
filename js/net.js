@@ -38,6 +38,8 @@ export const Net = {
   battleOpponent: (difficulty, rating) => req('POST', '/battle/opponent', { difficulty, rating }),
   battleResult:   (data)              => req('POST', '/battle/result', data),
   leaderboard:    (difficulty)        => req('GET', '/battle/leaderboard' + (difficulty ? `?difficulty=${encodeURIComponent(difficulty)}` : '')),
+  dailyResult:      (data)            => req('POST', '/battle/daily/result', data),
+  dailyLeaderboard: (date)            => req('GET', '/battle/daily/leaderboard?date=' + encodeURIComponent(date)),
   poiDone:        (poiId)             => req('POST', '/poi/done', { poiId }),
   poiCounts:      (ids)              => req('GET', '/poi/counts?ids=' + encodeURIComponent((ids || []).join(','))),
 };
