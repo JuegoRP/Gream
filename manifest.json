@@ -1,7 +1,7 @@
 {
   "name": "Gream",
   "short_name": "Gream",
-  "description": "One adventure every day. Educational outdoor game for kids.",
+  "description": "Family quiz game — explore outdoors, raise a pet, battle other players. Questions from easy to expert.",
   "start_url": "./",
   "display": "standalone",
   "orientation": "portrait",

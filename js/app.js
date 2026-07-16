@@ -2069,11 +2069,12 @@ window.App = {
     const title = lang === 'cs' ? 'Podmínky použití' : 'Terms of use';
     const content = lang === 'cs' ? `
       <p><strong>Co je Gream</strong><br>
-      Gream je vzdělávací mobilní hra. Cílem je inspirovat děti k objevování přírody, jazyka,
-      logiky a vlastních pocitů formou jednoduchých úkolů.</p>
+      Gream je kvízová hra pro celou rodinu. Bav se otázkami od snadných po expertní,
+      objevuj svět venku, líhni a vychovej si greamíky a měř síly v soubojích.</p>
 
       <p><strong>Pro koho</strong><br>
-      Gream je určen dětem od 4 let. Pro děti pod 13 let je vyžadován souhlas rodiče.</p>
+      Gream je pro všechny věkové kategorie — přístupný a bezpečný i pro děti (od 4 let).
+      Pro děti pod 13 let je vyžadován souhlas rodiče.</p>
 
       <p><strong>Bezpečnost</strong><br>
       Některé úkoly vybízejí k venkovní aktivitě. <strong>Rodič nese odpovědnost za bezpečnost
@@ -2096,11 +2097,12 @@ window.App = {
       <p style="font-size:11px;opacity:0.7;margin-top:14px">Naposledy aktualizováno: květen 2026</p>
     ` : `
       <p><strong>What is Gream</strong><br>
-      Gream is an educational mobile game. Its goal is to inspire children to explore nature, language,
-      logic and their own feelings through simple tasks.</p>
+      Gream is a quiz game for the whole family. Enjoy questions from easy to expert,
+      explore the world outdoors, hatch and raise your greamíci, and battle other players.</p>
 
       <p><strong>For whom</strong><br>
-      Gream is intended for children aged 4 and up. For children under 13, parental consent is required.</p>
+      Gream is for all ages — accessible and safe for children too (from age 4).
+      For children under 13, parental consent is required.</p>
 
       <p><strong>Safety</strong><br>
       Some tasks encourage outdoor activity. <strong>Parents are responsible for child safety
