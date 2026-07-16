@@ -10,7 +10,7 @@ export const T = {
     // Onboarding
     ob_name: "Your name", ob_av: "Choose your avatar",
     ob_age: "How old are you?", ob_start: "Let's go! 🌱",
-    ob_placeholder: "Enter your name...",
+    ob_placeholder: "Choose a nickname...",
     // New 4-step onboarding
     ob_step1_title: "Welcome to Gream",
     ob_step1_sub:   "A magical world where curiosity helps things grow.",
@@ -57,7 +57,7 @@ export const T = {
     ob_v4_step4_sub:   "Two optional things. Change anytime in settings.",
 
     ob_v4_step5_title: "Welcome, friend",
-    ob_v4_step5_sub:   "Just a name and avatar — that's all we need.",
+    ob_v4_step5_sub:   "Pick a nickname and avatar. Others see your nickname on leaderboards, so don't use your real name.",
 
     ob_v4_step6_title: "A mystery egg 🥚",
     ob_v4_step6_sub:   "Your Gream is hiding inside — complete 12 tasks and it will hatch. The way you play will reveal who it is!",
@@ -979,7 +979,7 @@ export const T = {
     tagline: "Každý den jedno dobrodružství 🌿",
     ob_name: "Tvoje jméno", ob_av: "Vyber si avatara",
     ob_age: "Kolik ti je let?", ob_start: "Jdeme na to! 🌱",
-    ob_placeholder: "Zadej své jméno...",
+    ob_placeholder: "Zvol si přezdívku...",
     ob_step1_title: "Vítej v Gream",
     ob_step1_sub:   "Svět, kde zvědavost pomáhá věcem růst.",
     ob_step1_btn:   "Pojďme začít",
@@ -1025,7 +1025,7 @@ export const T = {
     ob_v4_step4_sub:   "Dvě nepovinné věci. Můžeš kdykoliv změnit v nastavení.",
 
     ob_v4_step5_title: "Vítej, kamaráde",
-    ob_v4_step5_sub:   "Jen jméno a avatar — víc nepotřebujeme.",
+    ob_v4_step5_sub:   "Vyber si přezdívku a avatara. Přezdívku uvidí ostatní v žebříčcích, tak nepoužívej svoje pravé jméno.",
 
     ob_v4_step6_title: "Záhadné vajíčko 🥚",
     ob_v4_step6_sub:   "Tvůj Greamík se skrývá uvnitř — splň 12 úkolů a vylíhne se. Způsob, jakým hraješ, odhalí, kdo to je!",

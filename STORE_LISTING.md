@@ -155,14 +155,18 @@ smazatelné. Ve formuláři přiznat „users interact: display names on leaderb
 **App Store:** žádné buď/anebo — publikovat jako normální appku **4+** (dostupná
 všem); NEopvírat přísnou „Kids Category".
 
-**Dvě cesty na Play:**
-- **A) Mixed audience hned** (dětská i 13+/dospělá pásma) — appka pro všechny;
-  poctivě vyplnit Data Safety §4 + „users interact" §5. Máme safeguardy.
-- **B) 13+ napřed, mixed v updatu** — nejhladší první schválení (leaderboard u dětí
-  nezkoumají), cílovku lze rozšířit kdykoli později.
+**ROZHODNUTÍ: mixed audience** (zaškrtnout dětská i 13+/dospělá pásma).
+Odpovídá identitě hry (kids-first + all-ages) a dosahu v rodinné/kids kategorii.
 
-**Doporučení:** pokud chceš dosah na děti od začátku, jdi **A) mixed audience** —
-jsme na to připravení. Kdo chce nulové riziko u prvního review, zvolí **B)**.
+Leaderboard-riziko je **technicky ošetřené v appce:** u zadání přezdívky
+(onboarding krok 5) je explicitní výzva „přezdívku uvidí ostatní v žebříčcích,
+nepoužívej svoje pravé jméno" + profanity filtr → doložitelné opatření proti
+zveřejnění identifikačních údajů dítěte. Ve formuláři přiznat „users interact:
+pseudonymní přezdívky na leaderboardu, žádný chat".
+
+Vyplnit: Target audience = dětská + dospělá pásma; Data Safety §4; content rating §5.
+(Nechceš-li u úplně prvního review řešit leaderboard, lze dočasně cílit 13+ a rozšířit
+na mixed v updatu — ale default je mixed.)
 
 ---
 
