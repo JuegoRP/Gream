@@ -138,19 +138,31 @@ a „In-App Purchases" štítky.
 
 ---
 
-## 6. Cílová skupina & Families (ROZHODNUTÍ POTŘEBA)
+## 6. Cílová skupina & Families — „mixed audience" (OBOJÍ jde)
 
-Hra je kids-first + all-ages. Dvě cesty v Google Play „Target audience":
+V Google Play „Target audience and content" jde zaškrtnout **víc věkových pásem
+najednou** (pod 5 / 5–8 / 9–12 / 13–15 / 16–17 / 18+). Dětská + dospělá pásma
+zároveň = **mixed audience** = appka pro všechny, ale spadá pod **Families policy**.
 
-- **A) Zahrnout i děti < 13** → spadá pod **Families policy**. Splňujeme
-  (žádné reklamy, žádný tracking, privacy policy, rodičovská brána), ale program
-  přidává požadavky (schválený obsah, žádné neurčené SDK atd.). Větší dosah,
-  více byrokracie.
-- **B) Target 13+** → jednodušší schválení, appka zůstává „přístupná dětem", ale
-  oficiálně cílí na 13+. Rychlejší start.
+**Splňujeme** (většina hotová): žádné reklamy, žádný tracking/3rd-party analytics,
+privacy policy, rodičovská brána, přezdívka ≠ skutečné jméno (varování) + profanity
+filtr, mazání dat na žádost.
 
-**Doporučení:** začít **B) 13+** kvůli rychlému vydání; po prvních verzích zvážit
-přechod do Families programu, až bude appka stabilní a bude čas na certifikaci.
+**Jediný bod ke zkoumání u dětí:** veřejný **leaderboard s přezdívkami** = sociální/
+sdílecí prvek (COPPA/GDPR-K). Obhajitelné: pseudonymní, filtrované, žádný chat,
+smazatelné. Ve formuláři přiznat „users interact: display names on leaderboard".
+
+**App Store:** žádné buď/anebo — publikovat jako normální appku **4+** (dostupná
+všem); NEopvírat přísnou „Kids Category".
+
+**Dvě cesty na Play:**
+- **A) Mixed audience hned** (dětská i 13+/dospělá pásma) — appka pro všechny;
+  poctivě vyplnit Data Safety §4 + „users interact" §5. Máme safeguardy.
+- **B) 13+ napřed, mixed v updatu** — nejhladší první schválení (leaderboard u dětí
+  nezkoumají), cílovku lze rozšířit kdykoli později.
+
+**Doporučení:** pokud chceš dosah na děti od začátku, jdi **A) mixed audience** —
+jsme na to připravení. Kdo chce nulové riziko u prvního review, zvolí **B)**.
 
 ---
 
