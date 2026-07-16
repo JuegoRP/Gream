@@ -13,7 +13,9 @@ This guide assumes you've already:
 npm install -g @capacitor/cli @capacitor/core
 npm init -y                  # creates package.json
 npm install @capacitor/core @capacitor/ios @capacitor/android
-npm install @capacitor/geolocation @capacitor/camera @capacitor/filesystem @capacitor/preferences
+npm install @capacitor/geolocation @capacitor/filesystem @capacitor/preferences
+# POZN: @capacitor/camera NEinstalovat — foto/kresba/hlas výzvy jsou vypnuté,
+# appka kameru nepoužívá. Deklarovat nepoužívané oprávnění = zamítnutí na Google Play.
 
 # Initialize Capacitor in this folder (capacitor.config.json already exists)
 npx cap init "Gream" "com.gream.app"
@@ -46,7 +48,10 @@ In Xcode:
 5. Upload, then in App Store Connect:
    - Add screenshots (6.7", 6.5", 5.5", iPad)
    - Description (CS + EN)
-   - Privacy questionnaire (NO data collection, NO ads, NO tracking)
+   - Privacy questionnaire: NO ads, NO tracking, NO third-party analytics.
+     ⚠️ NOT "no data collection" — hra posílá na vlastní server zvolenou
+     přezdívku + skóre/rating (leaderboard) a anonymní ID splněných míst.
+     Deklarovat jako: "Data linked to a pseudonymous in-app name, not to identity."
    - Age rating: 4+
    - Submit for review (usually 24-48 hours)
 
@@ -61,25 +66,30 @@ In Android Studio:
    - Description (CS + EN)
    - Content rating questionnaire
    - Age 5+ rating
-   - Data safety form (NO collection, NO sharing)
+   - Data safety form — přesně (NE "no collection"):
+     • Collected: "App activity" (game progress/scores) + user-provided nickname.
+     • Shared: nickname + score jsou VIDITELNÉ ostatním na leaderboardu.
+     • NOT collected: precise location (GPS zůstává v zařízení), photos, contacts,
+       email, ad identifiers. NO tracking across apps. Data NOT sold.
+     • Encrypted in transit: ANO (HTTPS). Deletion: přezdívka+skóre lze smazat na
+       žádost (uveď kontakt v privacy policy).
    - Submit for review (usually 24-72 hours)
 
 ## Required Privacy Policy URL
 
-You'll need a public URL for Privacy Policy (Apple + Google require it).
-Quickest: GitHub Pages with the policy text from in-app settings.
+Google + Apple vyžadují veřejnou URL. Hostuje se na 3rstudio.eu (VPS live FS +
+GDrive + git repo JuegoRP/3Rstudio.eu), stejně jako marketingová stránka Greamu:
 
-```
-1. Create repo: gream-legal
-2. Add privacy.html and terms.html
-3. Settings → Pages → Deploy from main
-4. Use https://yourname.github.io/gream-legal/privacy.html
-```
+    https://3rstudio.eu/gream-privacy.html
+
+Zdroj stránky: repo `3Rstudio.eu` (soubor `gream-privacy.html`). Musí odpovídat
+skutečnému sběru dat (viz Data safety výše) — jméno+skóre na leaderboard, anonymní
+POI, reporty otázek; GPS a fotky NIKDY neopouští zařízení.
 
 ## What WILL break in native that doesn't on web
 
 - `localStorage` works but is ephemeral on iOS — use `@capacitor/preferences` plugin
-- Camera in native is via Capacitor plugin, not getUserMedia
+- Camera: NEPOUŽÍVÁ SE (foto/kresba/hlas výzvy vypnuté) — nedeklarovat oprávnění
 - Geolocation needs explicit `Info.plist` and `AndroidManifest.xml` keys
 - Service Worker doesn't work in Capacitor — use native cache instead
 - File:// URLs in native are different scheme

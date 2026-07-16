@@ -32,9 +32,6 @@
     },
     "Geolocation": {
       "permissions": ["coarseLocation", "fineLocation"]
-    },
-    "Camera": {
-      "permissions": ["camera", "photos"]
     }
   }
 }

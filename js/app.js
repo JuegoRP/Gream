@@ -1986,65 +1986,79 @@ window.App = {
     const lang = getLang();
     const title = lang === 'cs' ? 'Zásady ochrany soukromí' : 'Privacy Policy';
     const content = lang === 'cs' ? `
-      <p><strong>Stručně:</strong> Vaše data zůstávají v zařízení. Nikam se neposílají.</p>
+      <p><strong>Stručně:</strong> Tvoje poloha (GPS) a fotky nikdy neopustí zařízení. Pro souboje a žebříčky posíláme na náš server jen zvolenou přezdívku a skóre.</p>
 
-      <p><strong>1. Jaká data Gream ukládá</strong><br>
-      Jméno, avatar, postup ve hře (úkoly, odznaky, semínka), volitelně pozici "domov" pro venkovní úkoly
-      a historii splněných úkolů.</p>
+      <p><strong>1. Co zůstává jen v zařízení</strong><br>
+      Přezdívka, avatar, postup ve hře (úkoly, odznaky, semínka), greamíci, volitelná fotka,
+      pozice "domov" a historie úkolů. <strong>GPS souřadnice</strong> se zpracují jen v zařízení
+      (rozpoznání „jsi venku / u místa") a nikdy se neodesílají.</p>
 
-      <p><strong>2. Kde jsou data uložena</strong><br>
-      Pouze v lokálním úložišti vašeho prohlížeče (localStorage). Nikdy se neodesílají na žádný server.</p>
+      <p><strong>2. Co posíláme na server</strong> (3rstudio.eu, bez účtu, anonymně)<br>
+      • Přezdívku + skóre a rating ze soubojů → veřejný žebříček<br>
+      • Anonymní ID splněných míst na mapě (kolik hráčů je splnilo)<br>
+      • Nahlášení špatné otázky (které a proč)<br>
+      Přezdívku si volíš ty a je vidět ostatním — nedávej do ní osobní údaje.</p>
 
       <p><strong>3. Co Gream NEDĚLÁ</strong><br>
       • Žádné reklamy<br>
-      • Žádné sledování ani analytika třetích stran<br>
-      • Žádné prodávání dat<br>
-      • Žádné účty ani přihlášení<br>
-      • Žádné cookies ke sledování</p>
+      • Žádné sledování napříč aplikacemi ani reklamní ID<br>
+      • Žádná analytika třetích stran ve hře<br>
+      • Neprodáváme data · nesbíráme e-mail/telefon<br>
+      • GPS a fotky nikdy neopustí zařízení</p>
 
       <p><strong>4. Externí služby</strong><br>
-      Pro funkci mapy se používá OpenStreetMap (mapové dlaždice). OSM neukládá vaše umístění,
-      jen poskytuje obrázky map. Pro fonty se používá Google Fonts.</p>
+      Mapa používá OpenStreetMap (jen mapové dlaždice). Fonty přes Google Fonts.</p>
 
-      <p><strong>5. Děti pod 13 let</strong><br>
-      V souladu s COPPA a GDPR-K vyžaduje Gream souhlas rodiče v onboardingu.</p>
+      <p><strong>5. Děti</strong><br>
+      Obsah je bezpečný a bez reklam; v úvodu je obrazovka pro rodiče. Rodič může požádat
+      o smazání přezdívky a skóre dítěte ze serveru.</p>
 
       <p><strong>6. Vaše práva</strong><br>
-      • Právo na výmaz: tlačítko "Smazat všechna data" v Nastavení smaže vše permanentně.<br>
-      • Právo na přenos: data jsou JSON v localStorage, snadno exportovatelná pomocí DevTools.<br>
-      • Žádné kontaktní údaje neukládáme.</p>
+      • Výmaz: tlačítko "Smazat všechna data" smaže vše v zařízení.<br>
+      • Přezdívku a skóre ze serveru smažeme na žádost e-mailem.</p>
 
-      <p style="font-size:11px;opacity:0.7;margin-top:14px">Naposledy aktualizováno: květen 2026</p>
+      <p style="margin-top:12px"><strong>Úplné znění:</strong>
+      <a href="https://3rstudio.eu/gream-privacy.html" target="_blank" rel="noopener">3rstudio.eu/gream-privacy.html</a><br>
+      Kontakt: romanpavlorek@gmail.com</p>
+
+      <p style="font-size:11px;opacity:0.7;margin-top:14px">Naposledy aktualizováno: červenec 2026</p>
     ` : `
-      <p><strong>In short:</strong> Your data stays on your device. Nothing is sent anywhere.</p>
+      <p><strong>In short:</strong> Your location (GPS) and photos never leave your device. For battles and leaderboards we send only your chosen nickname and score to our server.</p>
 
-      <p><strong>1. What Gream stores</strong><br>
-      Name, avatar, game progress (tasks, badges, seeds), optional "home" pin for outdoor tasks,
-      history of completed tasks and text answers you write.</p>
+      <p><strong>1. What stays only on your device</strong><br>
+      Nickname, avatar, game progress (tasks, badges, seeds), greamíci, optional photo,
+      "home" pin and task history. <strong>GPS coordinates</strong> are processed on-device only
+      (to detect "you're outdoors / at a place") and are never sent.</p>
 
-      <p><strong>2. Where data is stored</strong><br>
-      Only in your browser's local storage (localStorage). Never sent to any server.</p>
+      <p><strong>2. What we send to our server</strong> (3rstudio.eu, no account, anonymous)<br>
+      • Nickname + score and rating from battles → public leaderboard<br>
+      • Anonymous IDs of completed map places (how many players completed them)<br>
+      • Bad-question reports (which one and why)<br>
+      You choose your nickname and others can see it — don't put personal details in it.</p>
 
       <p><strong>3. What Gream does NOT do</strong><br>
       • No ads<br>
-      • No third-party tracking or analytics<br>
-      • No data selling<br>
-      • No accounts or sign-ins<br>
-      • No tracking cookies</p>
+      • No cross-app tracking or advertising IDs<br>
+      • No third-party analytics in the game<br>
+      • We don't sell data · we don't collect email/phone<br>
+      • GPS and photos never leave the device</p>
 
       <p><strong>4. External services</strong><br>
-      For the map feature, OpenStreetMap is used (map tiles). OSM does not store your location,
-      it only provides map images. Google Fonts is used for typography.</p>
+      The map uses OpenStreetMap (map tiles only). Fonts via Google Fonts.</p>
 
-      <p><strong>5. Children under 13</strong><br>
-      In compliance with COPPA and GDPR-K, Gream requires parental consent during onboarding.</p>
+      <p><strong>5. Children</strong><br>
+      Content is safe and ad-free; a parent screen appears at the start. Parents can request
+      deletion of a child's nickname and scores from the server.</p>
 
       <p><strong>6. Your rights</strong><br>
-      • Right to erasure: "Delete all data" button in Settings permanently removes everything.<br>
-      • Data portability: data is JSON in localStorage, easily exportable via DevTools.<br>
-      • We do not store contact information.</p>
+      • Erasure: the "Delete all data" button removes everything on the device.<br>
+      • We delete your server nickname and scores on request by email.</p>
 
-      <p style="font-size:11px;opacity:0.7;margin-top:14px">Last updated: May 2026</p>
+      <p style="margin-top:12px"><strong>Full policy:</strong>
+      <a href="https://3rstudio.eu/gream-privacy.html" target="_blank" rel="noopener">3rstudio.eu/gream-privacy.html</a><br>
+      Contact: romanpavlorek@gmail.com</p>
+
+      <p style="font-size:11px;opacity:0.7;margin-top:14px">Last updated: July 2026</p>
     `;
     this._showInfoModal(title, content);
   },
