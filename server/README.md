@@ -16,13 +16,16 @@ Bezzávislostní Node server (stdlib). Běží na VPS Hetzneru za Caddy.
 - `GET  /battle/leaderboard`
 - `POST /poi/done` `{poiId}` / `GET /poi/counts?ids=a,b`
 
+> Konkrétní VPS IP / SSH přístup NEuvádět v repu (je veřejný + bundluje se do appky).
+> Reálná adresa je v privátních poznámkách. Níže `<VPS>` = ta adresa.
+
 ## Aktualizace serveru
 ```
-scp server/gream-api.js root@89.167.123.58:/opt/roman-storage/gream-api.js
-ssh root@89.167.123.58 'cd /opt/roman-storage && docker compose restart gream-api'
+scp server/gream-api.js root@<VPS>:/opt/roman-storage/gream-api.js
+ssh root@<VPS> 'cd /opt/roman-storage && docker compose restart gream-api'
 ```
 
 ## Kontrola reportů (k ladění otázek)
 ```
-ssh root@89.167.123.58 'cat /opt/roman-storage/gream-data/reports.json' | python3 -m json.tool
+ssh root@<VPS> 'cat /opt/roman-storage/gream-data/reports.json' | python3 -m json.tool
 ```

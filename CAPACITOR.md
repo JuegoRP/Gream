@@ -86,6 +86,33 @@ Zdroj stránky: repo `3Rstudio.eu` (soubor `gream-privacy.html`). Musí odpovíd
 skutečnému sběru dat (viz Data safety výše) — jméno+skóre na leaderboard, anonymní
 POI, reporty otázek; GPS a fotky NIKDY neopouští zařízení.
 
+## ⚠️ BEZPEČNOST: co NEbalit do appky (`webDir: "."`)
+
+`webDir` je `"."` → `npx cap sync` zkopíruje **celou složku repa** do nativní appky
+(`android/app/src/main/assets/public/`, `ios/App/App/public/`). APK/IPA je jen ZIP —
+kdokoli ho rozbalí a přečte. Runtime kód (`js/`, `screens/`) je čistý (jediné volání
+ven = veřejné `https://3rstudio.eu/api/gream`), ALE tyhle do buildu NEPATŘÍ:
+
+- `server/` — kód serveru + deploy poznámky (infra)
+- `.git/` — celá historie commitů
+- `node_modules/`, `package*.json` — bloat
+- `CAPACITOR.md`, `CLOSED_TESTING.md`, `STORE_LISTING.md`, `CLAUDE.md`, `TODO.md`, `README.md` — interní dokumenty
+- `make_sprites.py`, `run-mac.sh`, `test/`
+
+**Po každém `npx cap sync` vyčistit nativní assets** (spustit před buildem AAB/IPA):
+```bash
+for P in android/app/src/main/assets/public ios/App/App/public; do
+  [ -d "$P" ] || continue
+  rm -rf "$P/server" "$P/test" "$P/node_modules" "$P/.git" \
+         "$P"/*.md "$P/make_sprites.py" "$P/run-mac.sh" \
+         "$P/package.json" "$P/package-lock.json" "$P/CLAUDE.md"
+done
+```
+(Nebo dlouhodobě: přesunout web do dedikované `www/` a nastavit `webDir: "www"`.)
+
+**Pravidlo:** do repa ani do appky nedávat konkrétní VPS IP / SSH / klíče — jen `<VPS>`
+placeholder; reálná adresa žije v privátních poznámkách.
+
 ## What WILL break in native that doesn't on web
 
 - `localStorage` works but is ephemeral on iOS — use `@capacitor/preferences` plugin
