@@ -23,6 +23,7 @@ const reports = loadJSON(F('reports.json'), []);
 const battle  = loadJSON(F('battle.json'), { players: {}, runs: {} });     // runs: {diff: [{pid,name,score,rating,ts}]}
 const poi     = loadJSON(F('poi.json'), {});
 const daily   = loadJSON(F('daily.json'), {});                             // { 'YYYY-MM-DD': { pid: {name,score,ts} } }
+const rank    = loadJSON(F('rank.json'), {});                              // { pid: {name,avatar,score,tasks,badges,streak,greamStage,ts} }
 
 // ─── Simple in-memory rate limiter (per IP): max BURST requests / WINDOW ms ───
 const RL = new Map();
@@ -193,6 +194,37 @@ const server = http.createServer((req, res) => {
     const ids = String(u.searchParams.get('ids') || '').split(',').filter(Boolean).slice(0, 200);
     const out = {}; for (const id of ids) out[id] = poi[id] || 0;
     return send(res, 200, out);
+  }
+
+  // ─── Global overall-score ranking (the "Svět" leaderboard) ───
+  if (req.method === 'POST' && p === '/rank/submit') return readBody(req, (d) => {
+    if (!d || !d.pid) return send(res, 400, { error: 'bad' });
+    rank[d.pid] = {
+      name:       clampName(d.name),
+      avatar:     String(d.avatar || '🧒').slice(0, 8),
+      score:      Math.max(0, Math.min(1e9, Number(d.score)  || 0)),
+      tasks:      Math.max(0, Math.min(1e7, Number(d.tasks)  || 0)),
+      badges:     Math.max(0, Math.min(1000, Number(d.badges) || 0)),
+      streak:     Math.max(0, Math.min(1e5, Number(d.streak) || 0)),
+      greamStage: Math.max(0, Math.min(4,   Number(d.greamStage) || 0)),
+      ts: Date.now(),
+    };
+    // cap stored entries (keep the 500 highest scores)
+    const keys = Object.keys(rank);
+    if (keys.length > 500) {
+      const low = keys.map(k => [k, rank[k].score]).sort((a, b) => a[1] - b[1]);
+      for (let i = 0; i < keys.length - 500; i++) delete rank[low[i][0]];
+    }
+    persist('rank', F('rank.json'), rank);
+    const board = Object.values(rank).sort((a, b) => b.score - a.score);
+    const myRank = board.findIndex(x => x.score <= rank[d.pid].score) + 1;
+    return send(res, 200, { rank: myRank || board.length, total: board.length });
+  });
+
+  if (req.method === 'GET' && p === '/rank/top') {
+    const board = Object.values(rank).sort((a, b) => b.score - a.score).slice(0, 50)
+      .map(x => ({ name: x.name, avatar: x.avatar, score: x.score, tasks: x.tasks, badges: x.badges, streak: x.streak, greamStage: x.greamStage }));
+    return send(res, 200, board);
   }
 
   return send(res, 404, { error: 'not-found' });

@@ -31,6 +31,10 @@ let _heading      = null;    // device compass heading (deg from north, clockwis
 let _headingOn    = false;   // orientation listener active
 let _destination  = null;    // { lat, lon, label } — navigation target
 let _destMarker   = null;
+let _mapHost      = null;    // persistent Leaflet container — survives screen changes (keep-alive)
+let _following    = true;    // auto-pan to follow the user until they drag
+let _lastFetchCenter = null; // centre of the last POI fetch (for refetch-on-move)
+let _lastOpts     = null;    // remembered open() opts (radius, callbacks, gream)
 
 function loadLeaflet() {
   if (_leafletReady) return _leafletReady;
@@ -283,14 +287,12 @@ export const MapView = {
 
   async open(containerId, center, opts = {}) {
     const L = await loadLeaflet();
-    const container = document.getElementById(containerId);
-    if (!container) return;
-    this._container = container;
-
-    if (_map) { _map.remove(); _map = null; }
-    _poiLayers.forEach(({ dot, area }) => { dot?.remove(); area?.remove(); });
-    _poiLayers = [];
-    _userPos = { lat: center.lat, lon: center.lon };
+    const placeholder = document.getElementById(containerId);
+    if (!placeholder) return;
+    this._container = placeholder;
+    _onPoiTap = opts.onPoiTap || null;
+    _lastOpts = opts;
+    if (placeholder.style.position !== 'relative' && placeholder.style.position !== 'absolute') placeholder.style.position = 'relative';
 
     if (!document.getElementById('gream-map-styles')) {
       const s = document.createElement('style');
@@ -309,7 +311,29 @@ export const MapView = {
       document.head.appendChild(s);
     }
 
-    _map = L.map(container, {
+    // ── KEEP-ALIVE: reuse the warm map instead of rebuilding + reloading it ──
+    if (_map && _mapHost) {
+      placeholder.appendChild(_mapHost);           // re-parent into the freshly-rendered screen
+      if (center) _userPos = { lat: center.lat, lon: center.lon };
+      _following = true;
+      // Leaflet must recompute size after the host is moved/resized in the DOM.
+      requestAnimationFrame(() => { try { _map.invalidateSize(false); if (center) _map.setView([center.lat, center.lon], _map.getZoom()); } catch {} });
+      this._startWatch(L);
+      if (_destination) { _renderNavOverlay(); _updateNav(); }
+      if (_allPois.length) opts.onPoisLoaded?.(_allPois);   // instant — no reload
+      else this._loadPOI(L, center || _userPos, opts);
+      return _map;
+    }
+
+    // ── First build: create the persistent host + Leaflet instance ──
+    _mapHost = document.createElement('div');
+    _mapHost.style.cssText = 'position:absolute;inset:0;width:100%;height:100%';
+    placeholder.appendChild(_mapHost);
+    _poiLayers = [];
+    _userPos = { lat: center.lat, lon: center.lon };
+    _following = true;
+
+    _map = L.map(_mapHost, {
       center: [center.lat, center.lon],
       zoom: opts.zoom || 16,
       zoomControl: false, scrollWheelZoom: true, doubleClickZoom: true,
@@ -319,9 +343,7 @@ export const MapView = {
 
     L.tileLayer(TILE_URL, { attribution: TILE_ATTR, subdomains: 'abcd', maxZoom: 19 }).addTo(_map);
 
-    _onPoiTap = opts.onPoiTap || null;
-    _allPois  = [];
-
+    _allPois = [];
     this._loadPOI(L, center, opts);
 
     _userMarker = L.marker([center.lat, center.lon], {
@@ -329,25 +351,36 @@ export const MapView = {
       zIndexOffset: 1000
     }).addTo(_map);
 
-    let _following = true;
     _map.on('dragstart', () => { _following = false; });
+    this._startWatch(L);
 
-    if (_watchId != null) Geo.clearWatch(_watchId);
+    return _map;
+  },
+
+  // Start (or resume) the GPS watch. Idempotent — safe to call on every open().
+  _startWatch(L) {
+    if (_watchId != null) return;
     _watchId = Geo.watchPosition(pos => {
       if (!_map || !_userMarker) return;
       const next = { lat: pos.lat, lon: pos.lon };
       const moved = _userPos ? distM(_userPos, next) : 999;
       _userPos = next;
       _userMarker.setLatLng([pos.lat, pos.lon]);
-      // Only pan / restyle when the user has actually moved a bit — panning on every
-      // GPS tick (they fire ~1/s, often with noise) caused the map to visibly stutter.
+      // Only pan / restyle when the user actually moved — panning on every noisy GPS
+      // tick (~1/s) made the map visibly stutter.
       if (moved < 4) { _updateNav(); return; }
       if (_following) _map.panTo([pos.lat, pos.lon], { animate: true, duration: 0.4 });
       this._refreshDotStyles(L);
       _updateNav();
+      // Moving far (walking / driving): pull in POIs for the new area once we've left
+      // ~40% of the fetch radius. Overpass is cached 12h so it's cheap, and _loadPOI
+      // replaces the set → places left behind drop off the map automatically.
+      const fetchR = (_lastOpts && _lastOpts.radius) || 2000;
+      if (_lastFetchCenter && distM(_lastFetchCenter, next) > fetchR * 0.4) {
+        _lastFetchCenter = next;   // set before the async fetch to avoid duplicate triggers
+        this._loadPOI(L, next, _lastOpts || {});
+      }
     }, () => {});
-
-    return _map;
   },
 
   // ─── Facing direction (compass) ───
@@ -398,6 +431,7 @@ export const MapView = {
       const pois = await Geo.fetchAllPOI(center, opts.radius || 1500);
       _allPois = pois;
       if (!_map) return;
+      _lastFetchCenter = center;
 
       _poiLayers.forEach(({ dot, area }) => { dot?.remove(); area?.remove(); });
       _poiLayers = [];
@@ -489,7 +523,27 @@ export const MapView = {
     if (_map && pos) _map.panTo([pos.lat, pos.lon], { animate: true });
   },
 
+  // Called by the router when leaving the map screen. KEEP-ALIVE: we pause (stop the
+  // GPS watch, park the map host in a hidden holder) instead of tearing the map down,
+  // so coming back is instant and never reloads.
   destroy() {
+    if (_watchId != null) { Geo.clearWatch(_watchId); _watchId = null; }
+    document.getElementById('navOverlay')?.remove();
+    if (_mapHost) {
+      let holder = document.getElementById('gream-map-holder');
+      if (!holder) {
+        holder = document.createElement('div');
+        holder.id = 'gream-map-holder';
+        holder.style.cssText = 'position:absolute;left:-9999px;top:-9999px;width:0;height:0;overflow:hidden';
+        document.body.appendChild(holder);
+      }
+      holder.appendChild(_mapHost);   // survives the screen container being wiped
+    }
+    // _map, _mapHost, _allPois, _userPos, heading & destination all stay warm.
+  },
+
+  // Full teardown — only for profile switch / logout, not normal navigation.
+  hardDestroy() {
     if (_watchId != null) { Geo.clearWatch(_watchId); _watchId = null; }
     if (_headingOn) {
       window.removeEventListener('deviceorientationabsolute', _onOrientation, true);
@@ -499,7 +553,8 @@ export const MapView = {
     _heading = null; _destination = null; _destMarker = null;
     document.getElementById('navOverlay')?.remove();
     if (_map) { _map.remove(); _map = null; }
-    _poiLayers.forEach(({ dot, area }) => { dot?.remove(); area?.remove(); });
+    _mapHost = null; _lastFetchCenter = null;
+    document.getElementById('gream-map-holder')?.remove();
     _poiLayers = []; _userMarker = null; _activePoi = null; _allPois = []; _userPos = null;
   },
 

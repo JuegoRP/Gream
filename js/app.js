@@ -2561,6 +2561,16 @@ window.App = {
     Ranking.update(p.id, p, badges, pet);
 
     const own = Ranking.own(p.id);
+    // Submit our overall score to the global "Svět" leaderboard (offline-safe).
+    if (own) {
+      Net.rankSubmit({
+        pid: p.id, name: own.name, avatar: own.avatar,
+        score: own.score, tasks: own.tasks,
+        badges: own.badges ?? (badges?.length || 0),
+        streak: own.streak ?? (p.streak || 0),
+        greamStage: own.greamStage ?? (pet?.stage || 0),
+      });
+    }
     const ownCard = document.getElementById('rankOwnCard');
     if (ownCard && own) {
       const title = Ranking.rankTitle(own.score, lang);
@@ -2592,12 +2602,8 @@ window.App = {
     const p    = Profiles.active();
 
     if (tab === 'global') {
-      list.innerHTML = `
-        <div style="text-align:center;padding:30px;color:#aaa">
-          <div style="font-size:40px;margin-bottom:12px">🌍</div>
-          <div style="font-size:15px;font-weight:700">${cs?'Globální žebříček':'Global leaderboard'}</div>
-          <div style="font-size:12px;margin-top:6px">${cs?'Dostupný po spuštění online serveru. Hráči budou sdílet obarvenou mapu!':'Available when online server launches. Players will share a colored map!'}</div>
-        </div>`;
+      list.innerHTML = `<div style="text-align:center;padding:24px;color:#aaa"><div style="font-size:32px;margin-bottom:8px">🌍</div><div style="font-size:13px;font-weight:700">${cs?'Načítám svět…':'Loading world…'}</div></div>`;
+      this._renderGlobalRank(list, p);
       return;
     }
 
@@ -2637,6 +2643,50 @@ window.App = {
       list.appendChild(card);
     });
   },
+
+  // ─── Global "Svět" leaderboard (server) ───
+  async _renderGlobalRank(list, p) {
+    const cs = getLang() === 'cs';
+    const board = await Net.rankTop();
+    if (!list || !document.getElementById('rankTabGlobal')?.classList.contains('active')) return;
+    if (!board) {
+      list.innerHTML = `<div style="text-align:center;padding:24px;color:#aaa"><div style="font-size:32px;margin-bottom:8px">📡</div><div style="font-size:13px;font-weight:700">${cs?'Svět není dostupný (offline?)':'World unavailable (offline?)'}</div></div>`;
+      return;
+    }
+    if (!board.length) {
+      list.innerHTML = `<div style="text-align:center;padding:20px;color:#aaa">${cs?'Zatím žádní hráči 🌱':'No players yet 🌱'}</div>`;
+      return;
+    }
+    const medals = ['🥇','🥈','🥉'];
+    const stageNames = cs ? ['','Vajíčko','Mládě','Dospívající','Dospělý'] : ['','Egg','Baby','Teen','Adult'];
+    list.innerHTML = '';
+    board.forEach((entry, i) => {
+      const isOwn = entry.name === p?.name;
+      const medal = medals[i] || `${i+1}.`;
+      const title = Ranking.rankTitle(entry.score, getLang());
+      const card  = document.createElement('div');
+      card.style.cssText = `background:${isOwn?'rgba(74,138,46,0.08)':'white'};border-radius:14px;padding:12px 14px;border:${isOwn?'2px solid var(--green-mid)':'2px solid rgba(0,0,0,0.06)'};display:flex;align-items:center;gap:12px`;
+      card.innerHTML = `
+        <div style="font-size:22px;width:32px;text-align:center;flex-shrink:0">${medal}</div>
+        <div style="font-size:28px;flex-shrink:0">${entry.avatar||'🧒'}</div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:14px;font-weight:800;color:var(--green-deep)">${entry.name}</div>
+          <div style="font-size:11px;color:#888;font-weight:600">${title}</div>
+          <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap">
+            <span style="font-size:11px;color:var(--green-mid);font-weight:700">✅ ${entry.tasks||0} ${cs?'úkolů':'tasks'}</span>
+            <span style="font-size:11px;color:#f5a623;font-weight:700">🔥 ${entry.streak||0}</span>
+            <span style="font-size:11px;color:#7a4abc;font-weight:700">🏅 ${entry.badges||0}</span>
+            <span style="font-size:11px;color:#2d7abf;font-weight:700">🥚 ${stageNames[entry.greamStage]||'?'}</span>
+          </div>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="font-size:16px;font-weight:900;color:var(--green-deep)">${(entry.score||0).toLocaleString()}</div>
+          <div style="font-size:10px;color:#aaa">${cs?'bodů':'pts'}</div>
+        </div>`;
+      list.appendChild(card);
+    });
+  },
+
   async renderBadges() {
     const p = Profiles.active();
     if (!p) return;
@@ -2918,32 +2968,41 @@ window.App = {
     if (!container) return;
     const p = Profiles.active(); if (!p) return;
     const cs = getLang() === 'cs';
-    const s = Battle.getStats(p.id);
+    const s = Battle.getStats(p.id) || {};
     container.querySelector('#battleStatsSection')?.remove();
-    if (!s || !s.total) return;   // no battles yet → nothing to show
 
     let badges = {};
     try { badges = JSON.parse(localStorage.getItem('gream_battle_badges') || '{}')[p.id] || {}; } catch {}
+    // All 4 badges are always shown — earned in colour, locked greyed with 🔒 — so the
+    // player sees the whole collection to complete (not just what they already have).
     const BADGE_LBL = cs
       ? { first_win:'🥇 První výhra', wins_10:'🏆 10 výher', streak_5:'🔥 Série 5', extreme_win:'⚡ Extrémní vítěz' }
       : { first_win:'🥇 First win', wins_10:'🏆 10 wins', streak_5:'🔥 5 streak', extreme_win:'⚡ Extreme winner' };
-    const owned = Object.keys(badges).filter(k => BADGE_LBL[k]);
+    const earnedCount = Object.keys(badges).filter(k => BADGE_LBL[k]).length;
+    const badgeChips = Object.keys(BADGE_LBL).map(k => {
+      const on = !!badges[k];
+      return `<span style="padding:6px 10px;border-radius:50px;background:${on?'var(--green-pale)':'#f1f1f1'};color:${on?'var(--green-deep)':'#b3b3b3'};font-size:12px;font-weight:800">${on ? BADGE_LBL[k] : '🔒 ' + BADGE_LBL[k].replace(/^\S+\s/, '')}</span>`;
+    }).join('');
 
+    const hasBattles = !!s.total;
+    const winRate = hasBattles ? Math.round((s.wins || 0) / s.total * 100) : 0;
     const sec = document.createElement('div');
     sec.id = 'battleStatsSection';
     sec.className = 'card-section max-w';
     sec.style.marginTop = '14px';
-    const winRate = s.total ? Math.round((s.wins || 0) / s.total * 100) : 0;
     sec.innerHTML = `
       <div class="section-title">⚔️ ${cs ? 'Souboje' : 'Battles'}</div>
-      <div class="stats-grid" style="margin-bottom:10px">
+      ${hasBattles ? `
+      <div class="stats-grid" style="margin-bottom:12px">
         <div class="stat-card"><div class="stat-num">${s.rating || 1000}</div><div class="stat-label">${cs ? 'Rating' : 'Rating'}</div></div>
         <div class="stat-card"><div class="stat-num">${s.wins || 0}</div><div class="stat-label">${cs ? 'Výhry' : 'Wins'}</div></div>
         <div class="stat-card"><div class="stat-num">${winRate}%</div><div class="stat-label">${cs ? 'Úspěšnost' : 'Win rate'}</div></div>
         <div class="stat-card"><div class="stat-num">${s.bestStreak || 0} 🔥</div><div class="stat-label">${cs ? 'Nejdelší série' : 'Best streak'}</div></div>
-      </div>
-      ${owned.length ? `<div style="display:flex;flex-wrap:wrap;gap:6px">${owned.map(k => `<span style="padding:6px 10px;border-radius:50px;background:var(--green-pale);color:var(--green-deep);font-size:12px;font-weight:800">${BADGE_LBL[k]}</span>`).join('')}</div>` : ''}
-      <button onclick="App.showBattleLeaderboard()" style="width:100%;margin-top:12px;padding:11px;border:none;border-radius:12px;background:#f0f0f0;color:#555;font-family:inherit;font-weight:800;font-size:14px;cursor:pointer">🏆 ${cs ? 'Žebříček soubojů' : 'Battle leaderboard'}</button>`;
+      </div>` : `
+      <div style="font-size:13px;color:#888;font-weight:600;margin-bottom:12px;line-height:1.4">${cs ? '⚔️ Zatím žádné souboje — vyzkoušej je a získej odznaky!' : '⚔️ No battles yet — try one and earn badges!'}</div>`}
+      <div style="font-size:11px;font-weight:800;color:#999;margin-bottom:7px;text-transform:uppercase;letter-spacing:.5px">${cs ? 'Odznaky' : 'Badges'} ${earnedCount}/4</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">${badgeChips}</div>
+      <button onclick="App.showBattleLeaderboard()" style="width:100%;margin-top:14px;padding:11px;border:none;border-radius:12px;background:#f0f0f0;color:#555;font-family:inherit;font-weight:800;font-size:14px;cursor:pointer">🏆 ${cs ? 'Žebříček soubojů' : 'Battle leaderboard'}</button>`;
     container.appendChild(sec);
   },
 

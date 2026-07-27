@@ -42,4 +42,6 @@ export const Net = {
   dailyLeaderboard: (date)            => req('GET', '/battle/daily/leaderboard?date=' + encodeURIComponent(date)),
   poiDone:        (poiId)             => req('POST', '/poi/done', { poiId }),
   poiCounts:      (ids)              => req('GET', '/poi/counts?ids=' + encodeURIComponent((ids || []).join(','))),
+  rankSubmit:     (data)             => req('POST', '/rank/submit', data),
+  rankTop:        ()                 => req('GET', '/rank/top'),
 };
