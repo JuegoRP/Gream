@@ -3245,6 +3245,13 @@ window.App = {
   //  WARDROBE
   // ═══════════════════════════════════
   _wardTab: 'greams',
+  _wardAvatarSub: 'greams',   // avatars sub-tab: 'greams' | 'emoji'
+
+  wardAvatarSub(sub) {
+    this._wardAvatarSub = sub;
+    Feedback.tap();
+    this._renderWardrobeGrid('avatars');
+  },
 
   async renderWardrobe() {
     const p = Profiles.active();
@@ -3626,6 +3633,7 @@ window.App = {
     if (tab === 'avatars') {
       const cs = lang === 'cs';
       const seeds = Skins.getSeeds(p.id);
+      const sub = this._wardAvatarSub || 'greams';
       const unlockedArchetypes = new Set(
         Gream.all(p.id).filter(g => !g.archived && g.stage >= 2 && g.archetype).map(g => g.archetype)
       );
@@ -3634,94 +3642,87 @@ window.App = {
         if (!bestStage[g.archetype] || g.stage > bestStage[g.archetype]) bestStage[g.archetype] = g.stage;
       });
 
-      grid.style.cssText = 'max-width:420px;margin:0 auto;display:flex;flex-direction:column;gap:0';
+      grid.style.cssText = 'max-width:420px;margin:0 auto;display:flex;flex-direction:column;gap:10px';
+      grid.innerHTML = '';
 
-      // Section 1: Greamík portraits
-      const hdr1 = document.createElement('div');
-      hdr1.style.cssText = 'font-size:11px;font-weight:800;color:#888;letter-spacing:.5px;padding:0 4px 8px;text-transform:uppercase';
-      hdr1.textContent = cs ? '🐾 Tvoji Greamíci' : '🐾 Your Greams';
-      grid.appendChild(hdr1);
-
-      const gGrid = document.createElement('div');
-      gGrid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(85px,1fr));gap:8px;margin-bottom:18px';
-      grid.appendChild(gGrid);
-
-      const AV = 56;
-      SKIN_CATALOG.gream_avatars.forEach(ga => {
-        const arch = ga.archetype;
-        const isUnlocked = unlockedArchetypes.has(arch);
-        const isEquipped = equipped.avatar === ga.id;
-        const stage = Math.min(bestStage[arch] || 2, 4);
-        const btn = document.createElement('button');
-        btn.style.cssText = `display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 6px 8px;border-radius:14px;font-family:inherit;background:${isEquipped?'linear-gradient(135deg,#cbe3a0,#a8cd7c)':(isUnlocked?'rgba(255,255,255,0.9)':'rgba(0,0,0,0.04)')};border:2px solid ${isEquipped?'var(--green-mid)':'transparent'};cursor:${isUnlocked?'pointer':'default'};opacity:${isUnlocked?'1':'0.4'};position:relative`;
-        if (isUnlocked) {
-          const cv = document.createElement('canvas');
-          cv.setAttribute('data-sprite-sheet', `img/greamici/${arch}_${stage}.png`);
-          cv.setAttribute('data-sprite-mood', 'happy');
-          cv.setAttribute('width', AV); cv.setAttribute('height', AV);
-          cv.style.cssText = `width:${AV}px;height:${AV}px;border-radius:50%`;
-          btn.appendChild(cv);
-        } else {
-          const ph = document.createElement('div');
-          ph.style.cssText = `width:${AV}px;height:${AV}px;border-radius:50%;background:rgba(0,0,0,0.08);display:flex;align-items:center;justify-content:center;font-size:22px`;
-          ph.textContent = '🔒';
-          btn.appendChild(ph);
-        }
-        const lbl = document.createElement('div');
-        lbl.style.cssText = 'font-size:10px;font-weight:800;color:var(--green-deep);text-align:center';
-        lbl.textContent = ga.name[lang] || ga.name.cs;
-        btn.appendChild(lbl);
-        if (isEquipped) { const c = document.createElement('span'); c.style.cssText='position:absolute;top:4px;right:6px;font-size:11px'; c.textContent='✓'; btn.appendChild(c); }
-        if (isUnlocked) btn.onclick = () => {
-          Feedback.pop();
-          Skins.setEquipped(p.id, 'avatar', ga.id);
-          Profiles.update(p.id, { avatar: '🐾' });
-          this._applyAvatarToEl(document.getElementById('hubAv'), Profiles.active());
-          this._applyAvatarToEl(document.getElementById('mapAv'), Profiles.active());
-          this._renderWardrobeGrid('avatars');
-        };
-        gGrid.appendChild(btn);
+      // ── Sub-tab switcher (segmented): Greamíci | Emoji ──
+      const sw = document.createElement('div');
+      sw.style.cssText = 'display:flex;gap:4px;background:rgba(0,0,0,0.05);border-radius:14px;padding:4px;margin-bottom:2px';
+      [['greams', cs ? '🐾 Greamíci' : '🐾 Greams'], ['emoji', '🎭 Emoji']].forEach(([id, label]) => {
+        const b = document.createElement('button');
+        const on = sub === id;
+        b.textContent = label;
+        b.style.cssText = `flex:1;padding:9px;border-radius:11px;border:none;font-family:inherit;font-weight:800;font-size:13px;cursor:pointer;background:${on ? 'white' : 'transparent'};color:${on ? 'var(--green-deep)' : '#999'};box-shadow:${on ? '0 1px 4px rgba(0,0,0,0.12)' : 'none'};transition:all .15s`;
+        b.onclick = () => this.wardAvatarSub(id);
+        sw.appendChild(b);
       });
-      this._initSpriteCanvases(gGrid);
+      grid.appendChild(sw);
 
-      // Section 2: Emoji
-      const hdr2 = document.createElement('div');
-      hdr2.style.cssText = 'font-size:11px;font-weight:800;color:#888;letter-spacing:.5px;padding:0 4px 8px;text-transform:uppercase';
-      hdr2.textContent = '🎭 Emoji';
-      grid.appendChild(hdr2);
+      // Unified shop card: [thumb] [title + meta] [pill]
+      const mkCard = (thumbHtml, title, metaHtml, pillHtml, onClick, active) => {
+        const card = document.createElement('div');
+        card.style.cssText = `background:white;border-radius:16px;padding:12px 14px;border:2px solid ${active ? 'var(--green-mid)' : 'rgba(0,0,0,0.07)'};display:flex;align-items:center;gap:14px;box-shadow:${active ? '0 4px 12px rgba(74,138,46,0.2)' : '0 2px 8px rgba(0,0,0,0.05)'};cursor:${onClick ? 'pointer' : 'default'}`;
+        card.innerHTML = `<div style="flex-shrink:0;width:52px;height:52px;display:flex;align-items:center;justify-content:center">${thumbHtml}</div><div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:800;color:var(--green-deep)">${title}</div>${metaHtml || ''}</div>${pillHtml || ''}`;
+        if (onClick) card.onclick = onClick;
+        grid.appendChild(card);
+      };
+      const equipPill = `<span style="padding:8px 14px;border-radius:50px;background:#f0f0f0;color:var(--green-mid);font-weight:800;font-size:13px;flex-shrink:0;white-space:nowrap">${cs ? 'Nasadit' : 'Equip'}</span>`;
+      const activePill = `<span style="padding:8px 14px;border-radius:50px;background:var(--green-mid);color:white;font-weight:800;font-size:13px;flex-shrink:0;white-space:nowrap">✓ ${cs ? 'Aktivní' : 'Active'}</span>`;
+      const lockPill = (txt) => `<span style="padding:8px 12px;border-radius:50px;background:#eee;color:#aaa;font-weight:800;font-size:12px;flex-shrink:0;white-space:nowrap">🔒 ${txt}</span>`;
 
-      const eGrid = document.createElement('div');
-      eGrid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(85px,1fr));gap:8px';
-      grid.appendChild(eGrid);
-
-      SKIN_CATALOG.avatars.forEach(skin => {
-        const isBuy = skin.unlock?.type === 'buy';
-        const isUnlocked = isBuy ? owned.has(skin.id) : (skin.unlock.type === 'free' || unlocked.has(skin.id));
-        const isEquipped = equipped.avatar === skin.id;
-        const canAfford = seeds >= (skin.cost || 0);
-        const btn = document.createElement('button');
-        btn.style.cssText = `display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 6px 8px;border-radius:14px;font-family:inherit;background:${isEquipped?'linear-gradient(135deg,#cbe3a0,#a8cd7c)':(isUnlocked?'rgba(255,255,255,0.9)':'rgba(0,0,0,0.04)')};border:2px solid ${isEquipped?'var(--green-mid)':'transparent'};cursor:pointer;position:relative;opacity:${(isUnlocked||isBuy)?'1':'0.55'}`;
-        const costTxt = isBuy && !isUnlocked
-          ? `<div style="font-size:10px;font-weight:800;color:${canAfford?'var(--orange)':'#aaa'}">🌱 ${skin.cost}</div>`
-          : (!isUnlocked ? `<div style="font-size:9px;color:var(--green-mid);font-weight:700">${Skins.unlockText(skin, lang)}</div>` : '');
-        btn.innerHTML = `<span style="font-size:30px;line-height:1">${skin.emoji}</span><div style="font-size:10px;font-weight:800;color:var(--green-deep);text-align:center;line-height:1.2">${skin.name?.[lang]||skin.id}</div>${costTxt}${isEquipped?'<span style="position:absolute;top:4px;right:6px;font-size:11px">✓</span>':''}`;
-        btn.onclick = () => {
-          if (isEquipped) return;
-          if (isBuy && !isUnlocked) {
-            if (!canAfford) { Feedback.error(); return; }
-            if (!Skins.buyAvatar(p.id, skin.id).ok) { Feedback.error(); return; }
-            Feedback.coin();
-            this._setText('wardSeeds', Skins.getSeeds(p.id));
-          } else if (!isUnlocked) { Feedback.error(); return; }
-          Feedback.pop();
-          Skins.setEquipped(p.id, 'avatar', skin.id);
-          Profiles.update(p.id, { avatar: skin.emoji });
-          this._applyAvatarToEl(document.getElementById('hubAv'), Profiles.active());
-          this._applyAvatarToEl(document.getElementById('mapAv'), Profiles.active());
-          this._renderWardrobeGrid('avatars');
-        };
-        eGrid.appendChild(btn);
-      });
+      if (sub === 'greams') {
+        SKIN_CATALOG.gream_avatars.forEach(ga => {
+          const arch = ga.archetype;
+          const isUnlocked = unlockedArchetypes.has(arch);
+          const isEquipped = equipped.avatar === ga.id;
+          const stage = Math.min(bestStage[arch] || 2, 4);
+          const thumb = isUnlocked
+            ? `<canvas data-sprite-sheet="img/greamici/${arch}_${stage}.png" data-sprite-mood="happy" width="52" height="52" style="width:52px;height:52px;border-radius:50%;image-rendering:pixelated"></canvas>`
+            : `<div style="width:52px;height:52px;border-radius:50%;background:rgba(0,0,0,0.08);display:flex;align-items:center;justify-content:center;font-size:22px">🔒</div>`;
+          const meta = `<div style="font-size:12px;color:#999;font-weight:700">${WORLD_EMOJIS[ARCHETYPES[arch]?.primaryWorld] || ''} ${cs ? 'Greamík portrét' : 'Gream portrait'}</div>`;
+          const pill = isEquipped ? activePill : isUnlocked ? equipPill : lockPill(cs ? 'Vylíhni' : 'Hatch');
+          mkCard(thumb, ga.name[lang] || ga.name.cs, meta, pill,
+            (isUnlocked && !isEquipped) ? () => {
+              Feedback.pop();
+              Skins.setEquipped(p.id, 'avatar', ga.id);
+              Profiles.update(p.id, { avatar: '🐾' });
+              this._applyAvatarToEl(document.getElementById('hubAv'), Profiles.active());
+              this._applyAvatarToEl(document.getElementById('mapAv'), Profiles.active());
+              this._renderWardrobeGrid('avatars');
+            } : null, isEquipped);
+        });
+      } else {
+        SKIN_CATALOG.avatars.forEach(skin => {
+          const isBuy = skin.unlock?.type === 'buy';
+          const isUnlocked = isBuy ? owned.has(skin.id) : (skin.unlock.type === 'free' || unlocked.has(skin.id));
+          const isEquipped = equipped.avatar === skin.id;
+          const canAfford = seeds >= (skin.cost || 0);
+          const thumb = `<span style="font-size:32px;line-height:1">${skin.emoji}</span>`;
+          let meta = '';
+          if (isBuy && !isUnlocked) meta = `<div style="font-size:12px;color:${canAfford ? 'var(--green-mid)' : '#aaa'};font-weight:700">${cs ? 'Ke koupi' : 'For sale'}</div>`;
+          else if (!isUnlocked) meta = `<div style="font-size:11px;color:var(--green-mid);font-weight:700">${Skins.unlockText(skin, lang)}</div>`;
+          const pill = isEquipped ? activePill
+            : isUnlocked ? equipPill
+            : isBuy ? `<span style="padding:8px 14px;border-radius:50px;background:${canAfford ? 'var(--green-mid)' : '#ddd'};color:${canAfford ? 'white' : '#aaa'};font-weight:800;font-size:13px;flex-shrink:0;white-space:nowrap">🌱 ${skin.cost}</span>`
+            : lockPill(cs ? 'Zamčeno' : 'Locked');
+          mkCard(thumb, skin.name?.[lang] || skin.id, meta, pill, () => {
+            if (isEquipped) return;
+            if (isBuy && !isUnlocked) {
+              if (!canAfford) { Feedback.error(); this._showToast(cs ? 'Nedostatek semínek 🌱' : 'Not enough seeds 🌱'); return; }
+              if (!Skins.buyAvatar(p.id, skin.id).ok) { Feedback.error(); return; }
+              Feedback.coin();
+              this._setText('wardSeeds', Skins.getSeeds(p.id));
+            } else if (!isUnlocked) { Feedback.error(); return; }
+            Feedback.pop();
+            Skins.setEquipped(p.id, 'avatar', skin.id);
+            Profiles.update(p.id, { avatar: skin.emoji });
+            this._applyAvatarToEl(document.getElementById('hubAv'), Profiles.active());
+            this._applyAvatarToEl(document.getElementById('mapAv'), Profiles.active());
+            this._renderWardrobeGrid('avatars');
+          }, isEquipped);
+        });
+      }
+      this._initSpriteCanvases(grid);
     } else if (tab === 'frames') {
       const items  = SKIN_CATALOG.frames;
       const seeds  = Skins.getSeeds(p.id);
