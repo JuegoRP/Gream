@@ -27,6 +27,10 @@ let _watchId      = null;
 let _onPoiTap     = null;
 let _activePoi    = null;
 let _allPois      = [];
+let _heading      = null;    // device compass heading (deg from north, clockwise)
+let _headingOn    = false;   // orientation listener active
+let _destination  = null;    // { lat, lon, label } — navigation target
+let _destMarker   = null;
 
 function loadLeaflet() {
   if (_leafletReady) return _leafletReady;
@@ -62,6 +66,13 @@ function distM(a, b) {
 function makeUserMarker(L, gream) {
   const COLORS = { nature:'#4a8a2e', language:'#5a4a8a', logic:'#2d7abf', feelings:'#d46d94', arts:'#c87030', world:'#a8743c' };
 
+  // Facing-direction cone — rotates with device compass (see _applyHeading). Hidden
+  // until heading is enabled. inset:0 → rotates around the marker centre.
+  const headingCone = (ring, top) =>
+    `<div class="user-heading-wrap" style="position:absolute;inset:0;transition:transform .15s ease-out;pointer-events:none;display:${_headingOn?'block':'none'};z-index:2">
+       <div style="position:absolute;left:50%;top:${top}px;transform:translateX(-50%);width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-bottom:11px solid ${ring};filter:drop-shadow(0 1px 2px rgba(0,0,0,.35))"></div>
+     </div>`;
+
   if (gream && gream.stage >= 2 && gream.archetype) {
     const stage  = Math.min(gream.stage, 4);
     const src    = `img/greamici/${gream.archetype}_${stage}.png`;
@@ -70,6 +81,7 @@ function makeUserMarker(L, gream) {
 
     return L.divIcon({
       html: `<div style="position:relative;width:48px;height:48px">
+        ${headingCone(ring, -13)}
         <div style="position:absolute;inset:-10px;background:${ring}1a;border-radius:50%;animation:greamPulse 2.2s ease-in-out infinite"></div>
         <div style="position:absolute;inset:0;border-radius:50%;border:2.5px solid ${ring};background:white;box-shadow:0 2px 12px rgba(0,0,0,0.22);overflow:hidden;display:flex;align-items:center;justify-content:center">
           <div style="width:40px;height:40px;background-image:url('${src}');background-size:200% 200%;background-position:100% 100%;background-repeat:no-repeat;image-rendering:pixelated"></div>
@@ -83,6 +95,7 @@ function makeUserMarker(L, gream) {
 
   return L.divIcon({
     html: `<div style="position:relative;width:28px;height:28px">
+      ${headingCone('#4a8a2e', -12)}
       <div style="position:absolute;inset:-10px;background:rgba(74,138,46,0.14);border-radius:50%;animation:greamPulse 2s ease-in-out infinite"></div>
       <div style="position:absolute;inset:0;background:#4a8a2e;border:2.5px solid white;border-radius:50%;box-shadow:0 2px 8px rgba(0,0,0,0.25);display:flex;align-items:center;justify-content:center;font-size:13px">🌱</div>
     </div>`,
@@ -200,6 +213,71 @@ function glowPoi(poi, world, container) {
   }
 }
 
+// ─── Compass heading + navigation ───
+
+// Great-circle bearing from → to, degrees clockwise from north.
+function bearing(from, to) {
+  const φ1 = from.lat * Math.PI/180, φ2 = to.lat * Math.PI/180;
+  const Δλ = (to.lon - from.lon) * Math.PI/180;
+  const y = Math.sin(Δλ) * Math.cos(φ2);
+  const x = Math.cos(φ1) * Math.sin(φ2) - Math.sin(φ1) * Math.cos(φ2) * Math.cos(Δλ);
+  return (Math.atan2(y, x) * 180/Math.PI + 360) % 360;
+}
+
+function _onOrientation(e) {
+  let h = null;
+  if (typeof e.webkitCompassHeading === 'number') h = e.webkitCompassHeading;   // iOS: from north, cw
+  else if (typeof e.alpha === 'number') h = 360 - e.alpha;                       // Android: alpha is ccw
+  if (h == null || isNaN(h)) return;
+  _heading = (h + 360) % 360;
+  _applyHeading();
+}
+
+function _applyHeading() {
+  if (_heading == null) return;
+  document.querySelectorAll('.user-heading-wrap').forEach(el => {
+    el.style.display = 'block';
+    el.style.transform = `rotate(${_heading}deg)`;
+  });
+  _updateNav();
+}
+
+// Nav overlay: big arrow pointing toward destination (bearing − heading) + distance.
+function _renderNavOverlay() {
+  if (!_destination || !MapView._container) return;
+  let ov = document.getElementById('navOverlay');
+  if (!ov) {
+    ov = document.createElement('div');
+    ov.id = 'navOverlay';
+    ov.style.cssText = 'position:absolute;left:50%;bottom:16px;transform:translateX(-50%);z-index:600;background:rgba(26,61,10,0.94);color:#fff;border-radius:16px;padding:12px 16px;display:flex;align-items:center;gap:14px;box-shadow:0 4px 18px rgba(0,0,0,.3);font-family:Nunito,sans-serif;max-width:88%';
+    ov.innerHTML =
+      `<div id="navArrow" style="font-size:30px;line-height:1;transition:transform .15s ease-out;transform:rotate(0deg)">⬆️</div>
+       <div style="line-height:1.25">
+         <div id="navLabel" style="font-weight:900;font-size:14px"></div>
+         <div id="navDist" style="font-weight:800;font-size:13px;opacity:.9"></div>
+         <div id="navHint" style="font-size:10px;opacity:.75;display:none">Klepni pro směr kompasu →</div>
+       </div>
+       <button id="navClose" style="background:rgba(255,255,255,.18);border:none;color:#fff;width:26px;height:26px;border-radius:50%;font-size:15px;font-weight:900;cursor:pointer;flex:none">✕</button>`;
+    MapView._container.appendChild(ov);
+    ov.querySelector('#navClose').onclick = () => MapView.clearDestination();
+    ov.querySelector('#navArrow').onclick  = () => MapView.enableHeading();  // gesture → iOS permission
+  }
+  ov.querySelector('#navLabel').textContent = _destination.label || 'Cíl';
+}
+
+function _updateNav() {
+  if (!_destination || !_userPos) return;
+  const dist = Math.round(distM(_userPos, _destination));
+  const brng = bearing(_userPos, _destination);
+  const rel  = _heading != null ? ((brng - _heading + 360) % 360) : brng;
+  const arrow = document.getElementById('navArrow');
+  const dEl   = document.getElementById('navDist');
+  const hint  = document.getElementById('navHint');
+  if (arrow) arrow.style.transform = `rotate(${rel}deg)`;
+  if (dEl)   dEl.textContent = dist <= PROXIMITY_M ? '📍 Jsi na místě!' : `${dist} m`;
+  if (hint)  hint.style.display = _heading == null ? 'block' : 'none';
+}
+
 export const MapView = {
   _container: null,
 
@@ -261,9 +339,53 @@ export const MapView = {
       _userMarker.setLatLng([pos.lat, pos.lon]);
       if (_following) _map.panTo([pos.lat, pos.lon], { animate: true, duration: 0.8, easeLinearity: 0.5 });
       this._refreshDotStyles(L);
+      _updateNav();
     }, () => {});
 
     return _map;
+  },
+
+  // ─── Facing direction (compass) ───
+  // Must be called from a user gesture on iOS (DeviceOrientation permission).
+  async enableHeading() {
+    if (_headingOn) return true;
+    try {
+      const D = window.DeviceOrientationEvent;
+      if (D && typeof D.requestPermission === 'function') {
+        const perm = await D.requestPermission();
+        if (perm !== 'granted') return false;
+      }
+      window.addEventListener('deviceorientationabsolute', _onOrientation, true);
+      window.addEventListener('deviceorientation', _onOrientation, true);
+      _headingOn = true;
+      return true;
+    } catch { return false; }
+  },
+
+  // ─── Navigation: point an arrow toward a target (POI / battle spot) ───
+  async setDestination(lat, lon, label) {
+    _destination = { lat, lon, label: label || '' };
+    this.enableHeading();   // this call chain is inside a user tap → iOS gets its gesture
+    if (_map) {
+      if (_destMarker) { _destMarker.remove(); _destMarker = null; }
+      const L = window.L;
+      if (L) {
+        _destMarker = L.marker([lat, lon], {
+          icon: L.divIcon({
+            html: `<div style="font-size:26px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.4))">📍</div>`,
+            className: '', iconSize: [26, 26], iconAnchor: [13, 26]
+          }), zIndexOffset: 900
+        }).addTo(_map);
+      }
+    }
+    _renderNavOverlay();
+    _updateNav();
+  },
+
+  clearDestination() {
+    _destination = null;
+    if (_destMarker) { _destMarker.remove(); _destMarker = null; }
+    document.getElementById('navOverlay')?.remove();
   },
 
   async _loadPOI(L, center, opts) {
@@ -364,6 +486,13 @@ export const MapView = {
 
   destroy() {
     if (_watchId != null) { Geo.clearWatch(_watchId); _watchId = null; }
+    if (_headingOn) {
+      window.removeEventListener('deviceorientationabsolute', _onOrientation, true);
+      window.removeEventListener('deviceorientation', _onOrientation, true);
+      _headingOn = false;
+    }
+    _heading = null; _destination = null; _destMarker = null;
+    document.getElementById('navOverlay')?.remove();
     if (_map) { _map.remove(); _map = null; }
     _poiLayers.forEach(({ dot, area }) => { dot?.remove(); area?.remove(); });
     _poiLayers = []; _userMarker = null; _activePoi = null; _allPois = []; _userPos = null;

@@ -3128,8 +3128,10 @@ window.App = {
         </div>
         <button id="poiModalStart" onclick="App.startPoiChallenge()"
           style="display:none;width:100%;padding:14px;border-radius:14px;border:none;color:white;font-family:inherit;font-weight:900;font-size:15px;cursor:pointer;margin-bottom:8px"></button>
-        ${isBattleSpot(poi) ? `<button onclick="App.closePoiModal();App.openBattleIntro({outdoor:true})"
-          style="width:100%;padding:13px;border-radius:14px;border:none;background:linear-gradient(135deg,#d2603a,#b0402a);color:#fff;font-family:inherit;font-weight:900;font-size:15px;cursor:pointer;margin-bottom:8px">⚔️ ${lang==='cs'?'Souboj tady (venku)':'Battle here (outdoor)'}</button>` : ''}
+        <button onclick="App.closePoiModal();App.openBattleIntro({outdoor:true})"
+          style="width:100%;padding:13px;border-radius:14px;border:none;background:linear-gradient(135deg,#d2603a,#b0402a);color:#fff;font-family:inherit;font-weight:900;font-size:15px;cursor:pointer;margin-bottom:8px">⚔️ ${lang==='cs'?'Souboj tady (venku)':'Battle here (outdoor)'}</button>
+        <button onclick="App.navigateToPoi()"
+          style="width:100%;padding:12px;border-radius:14px;border:2px solid var(--green-pale);background:white;color:var(--green-dark);font-family:inherit;font-weight:800;font-size:14px;cursor:pointer;margin-bottom:8px">🧭 ${lang==='cs'?'Navigovat sem':'Navigate here'}</button>
         <button onclick="App.closePoiModal()" style="width:100%;background:none;border:none;color:var(--green-mid);font-weight:700;font-size:14px;cursor:pointer;padding:6px">
           ${lang==='cs'?'Zavřít':'Close'}
         </button>
@@ -3172,6 +3174,20 @@ window.App = {
     };
 
     document.body.appendChild(overlay);
+  },
+
+  navigateToPoi() {
+    const poi = this._currentPoi;
+    if (!poi) return;
+    const lang = getLang();
+    const label = (WORLD_EMOJIS[poi.bonusWorld] ? WORLD_EMOJIS[poi.bonusWorld] + ' ' : '') +
+      (poi.kind ? String(poi.kind).replace(/_/g, ' ') : (lang === 'cs' ? 'Cíl' : 'Target'));
+    try { MapView.setDestination(poi.lat, poi.lon, label); } catch {}
+    document.getElementById('poiModalOverlay')?.remove();
+    window._poiDiff = null;
+    this._currentPoiWorld = null;
+    // keep _currentPoi cleared like closePoiModal, destination now lives in MapView
+    this._currentPoi = null;
   },
 
   closePoiModal() {

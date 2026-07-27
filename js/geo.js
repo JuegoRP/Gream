@@ -144,39 +144,57 @@ export const Geo = {
       return `node["${k}"="${v}"](around:${radiusMeters},${center.lat},${center.lon});\n  way["${k}"="${v}"](around:${radiusMeters},${center.lat},${center.lon});`;
     }).join('\n  ');
 
-    const query = `[out:json][timeout:30];\n(\n  ${parts}\n);\nout center 80;`;
+    const query = `[out:json][timeout:20];\n(\n  ${parts}\n);\nout center 80;`;
 
-    for (const url of OVERPASS_URLS) {
+    // Race all Overpass mirrors in PARALLEL with a per-request timeout — the fastest
+    // one that answers wins. (Sequential + no timeout was the "map takes forever" bug:
+    // a single hung mirror blocked everything for up to a minute.)
+    const fetchFrom = async (url) => {
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), 9000);
       try {
         const res = await fetch(url, {
           method: 'POST',
           body: 'data=' + encodeURIComponent(query),
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          signal: ctrl.signal,
         });
-        if (!res.ok) continue;
-        const json = await res.json();
+        if (!res.ok) throw new Error('overpass-status-' + res.status);
+        return await res.json();
+      } finally { clearTimeout(timer); }
+    };
 
-        const items = (json.elements || []).map(el => {
-          const lat = el.lat ?? el.center?.lat;
-          const lon = el.lon ?? el.center?.lon;
-          if (!lat || !lon) return null;
-          const tags = el.tags || {};
-          const kind = this._kindFromTags(tags);
-          return { id: String(el.id), lat, lon, kind, bonusWorld: this._bonusWorld(kind) };
-        }).filter(Boolean);
-
-        items.forEach(p => p._dist = this.distance(center, p));
-        items.sort((a, b) => a._dist - b._dist);
-        const top = this._deduplicatePOI(items, 25).slice(0, 70);
-
-        try {
-          localStorage.setItem(KEY_POI_CACHE, JSON.stringify({ key: cacheKey, t: Date.now(), data: top }));
-          _sessionPoiCache = { key: cacheKey, data: top, t: Date.now() };
-        } catch {}
-        return this._mergeDoneState(top);
-      } catch { /* try next */ }
+    let json = null;
+    try {
+      json = await Promise.any(OVERPASS_URLS.map(fetchFrom));   // first to succeed
+    } catch {
+      // All mirrors failed/timed out → fall back to STALE cache (ignore TTL) so the
+      // map still shows something, else empty (tiles + user marker still render).
+      try {
+        const raw = localStorage.getItem(KEY_POI_CACHE);
+        if (raw) return this._mergeDoneState(JSON.parse(raw).data || []);
+      } catch {}
+      return [];
     }
-    return [];
+
+    const items = (json.elements || []).map(el => {
+      const lat = el.lat ?? el.center?.lat;
+      const lon = el.lon ?? el.center?.lon;
+      if (!lat || !lon) return null;
+      const tags = el.tags || {};
+      const kind = this._kindFromTags(tags);
+      return { id: String(el.id), lat, lon, kind, bonusWorld: this._bonusWorld(kind) };
+    }).filter(Boolean);
+
+    items.forEach(p => p._dist = this.distance(center, p));
+    items.sort((a, b) => a._dist - b._dist);
+    const top = this._deduplicatePOI(items, 25).slice(0, 70);
+
+    try {
+      localStorage.setItem(KEY_POI_CACHE, JSON.stringify({ key: cacheKey, t: Date.now(), data: top }));
+      _sessionPoiCache = { key: cacheKey, data: top, t: Date.now() };
+    } catch {}
+    return this._mergeDoneState(top);
   },
 
   _mergeDoneState(pois) {
@@ -198,6 +216,16 @@ export const Geo = {
 
   getPOIWorldsDone(poiId) {
     try { return (JSON.parse(localStorage.getItem(KEY_POI_DONE) || '{}')[poiId] || []).map(e => e.world); } catch { return []; }
+  },
+
+  // Was the "right spot" bonus for this POI+world already claimed TODAY?
+  // (Bonus is once per POI+world per day → rewards visiting new places, not camping.)
+  bonusClaimedToday(poiId, world) {
+    try {
+      const done = JSON.parse(localStorage.getItem(KEY_POI_DONE) || '{}');
+      const today = new Date().toDateString();
+      return (done[poiId] || []).some(e => e.world === world && new Date(e.ts).toDateString() === today);
+    } catch { return false; }
   },
 
   async checkAtPOI(poi, requiredMeters = 80) {

@@ -732,12 +732,17 @@ export const Challenge = {
     // ─── Mark POI done for this world + bonus eggs if matching world ───
     if (this._targetPOI) {
       const selectedWorld = this._targetPOI.selectedWorld || this._world;
+      // "Right spot" bonus: +5 seeds, claimable ONCE per POI+world per day. Rewards
+      // visiting new places, not camping one POI. (Normal per-task seeds still apply
+      // on replays.) Check BEFORE markPOIDone, which records today's entry.
+      const bonusEligible = this._targetPOI.bonusWorld === selectedWorld
+        && result.stepsComplete
+        && !Geo.bonusClaimedToday(this._targetPOI.id, selectedWorld);
       Geo.markPOIDone(this._targetPOI.id, selectedWorld);
       // Shared map: bump the anonymous completion counter for this public POI.
       Net.poiDone(this._targetPOI.id);
-      // Bonus eggs if user played the matching bonus world at this POI
-      const bonusSeeds = (this._targetPOI.bonusWorld === selectedWorld) ? 5 : 0;
-      if (bonusSeeds > 0 && result.stepsComplete) {
+      if (bonusEligible) {
+        Skins.addSeeds(p.id, 5);   // ← actually credit it (was only a toast before)
         const lang = localStorage.getItem('gream_lang') || 'en';
         setTimeout(() => this._showToast(lang === 'cs' ? `🌟 +5 semínek za správné místo!` : `🌟 +5 bonus seeds for the right spot!`), 600);
       }
