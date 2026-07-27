@@ -2694,6 +2694,13 @@ window.App = {
     this._setText('ss-privacy-title', t.ss_privacy_title);
     this._setText('ss-privacy-lbl',   t.ss_privacy_lbl);
     this._setText('ss-terms-lbl',     t.ss_terms_lbl);
+    // Player ID
+    const csId = getLang() === 'cs';
+    this._setText('ss-id-title', csId ? '🆔 Tvé ID hráče' : '🆔 Your player ID');
+    this._setText('ss-id-info',  csId
+      ? 'Tvoje jedinečné ID pro párování soupeřů a žebříčky. Klepnutím zkopíruješ.'
+      : 'Your unique ID for matchmaking and leaderboards. Tap to copy.');
+    this._setText('ssPlayerId',  p?.id || '—');
     // Difficulty section
     const cs = getLang() === 'cs';
     this._setText('ss-diff-title', cs ? 'Obtížnost' : 'Difficulty');
@@ -3015,14 +3022,9 @@ window.App = {
         radius: 2000,
         gream: activeGream,
         onPoiTap: (poi, info = {}) => {
-          if (info.tooFar) {
-            const lang = getLang();
-            this._showToast(lang === 'cs'
-              ? `📍 Jsi ${info.dist} m daleko — přibliž se (max 60 m)`
-              : `📍 You're ${info.dist} m away — get closer (max 60 m)`);
-            return;
-          }
-          this.openPoiModal(poi);
+          // Always open the modal — even when far, so the user can NAVIGATE toward
+          // it (play/battle stay gated by proximity inside the modal).
+          this.openPoiModal(poi, info);
         },
         onPoisLoaded: pois => {
           const loading = document.getElementById('mapLoading');
@@ -3084,8 +3086,9 @@ window.App = {
   },
 
   // ─── POI modal (replaces bottom sheet) ───
-  openPoiModal(poi) {
+  openPoiModal(poi, info = {}) {
     Feedback.click();
+    const tooFar = !!info.tooFar;
     this._currentPoi      = poi;
     this._currentPoiWorld = null;
     const t    = tr();
@@ -3117,27 +3120,37 @@ window.App = {
           <div style="font-size:13px;font-weight:700;color:#888;margin-top:4px">${(poi.kind||'').replace(/_/g,' ')}</div>
           ${bonusBadge}
         </div>
-        <div style="font-size:12px;font-weight:800;color:var(--green-mid);margin-bottom:8px">${lang==='cs'?'Vyber svět:':'Pick a world:'}</div>
-        <div id="poiModalWorlds" style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:14px"></div>
-        <div style="font-size:12px;font-weight:800;color:var(--green-mid);margin-bottom:8px">${lang==='cs'?'Obtížnost:':'Difficulty:'}</div>
-        <div style="display:flex;gap:6px;margin-bottom:16px">
-          ${diffs.map(d=>`<button data-d="${d.id}" onclick="window._poiDiff('${d.id}')"
-            style="flex:1;padding:10px 4px;border-radius:10px;border:2.5px solid ${d.id===cur?'var(--green-mid)':'rgba(0,0,0,0.08)'};background:${d.id===cur?'var(--green-pale)':'white'};font-family:inherit;font-weight:800;font-size:16px;cursor:pointer;transition:all 0.12s">
-            ${d.emoji}
-          </button>`).join('')}
-        </div>
-        <button id="poiModalStart" onclick="App.startPoiChallenge()"
-          style="display:none;width:100%;padding:14px;border-radius:14px;border:none;color:white;font-family:inherit;font-weight:900;font-size:15px;cursor:pointer;margin-bottom:8px"></button>
-        <button onclick="App.closePoiModal();App.openBattleIntro({outdoor:true})"
-          style="width:100%;padding:13px;border-radius:14px;border:none;background:linear-gradient(135deg,#d2603a,#b0402a);color:#fff;font-family:inherit;font-weight:900;font-size:15px;cursor:pointer;margin-bottom:8px">⚔️ ${lang==='cs'?'Souboj tady (venku)':'Battle here (outdoor)'}</button>
-        <button onclick="App.navigateToPoi()"
-          style="width:100%;padding:12px;border-radius:14px;border:2px solid var(--green-pale);background:white;color:var(--green-dark);font-family:inherit;font-weight:800;font-size:14px;cursor:pointer;margin-bottom:8px">🧭 ${lang==='cs'?'Navigovat sem':'Navigate here'}</button>
+        ${tooFar ? `
+          <div style="background:#fff6e6;border:2px solid rgba(245,166,35,0.5);border-radius:14px;padding:12px 14px;margin-bottom:14px;text-align:center">
+            <div style="font-size:14px;font-weight:800;color:#8a5200">📍 ${lang==='cs'?`Jsi ${info.dist} m daleko`:`You're ${info.dist} m away`}</div>
+            <div style="font-size:11px;color:#a05000;font-weight:600;margin-top:3px;line-height:1.35">${lang==='cs'?'Přijď blíž (max 60 m) a můžeš hrát výzvu nebo souboj. Zatím tě sem navedu.':'Come within 60 m to play a challenge or battle. For now, let me guide you here.'}</div>
+          </div>
+          <button onclick="App.navigateToPoi()"
+            style="width:100%;padding:14px;border-radius:14px;border:none;background:var(--green-mid);color:#fff;font-family:inherit;font-weight:900;font-size:15px;cursor:pointer;margin-bottom:8px">🧭 ${lang==='cs'?'Navigovat sem':'Navigate here'}</button>
+        ` : `
+          <div style="font-size:12px;font-weight:800;color:var(--green-mid);margin-bottom:8px">${lang==='cs'?'Vyber svět:':'Pick a world:'}</div>
+          <div id="poiModalWorlds" style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:14px"></div>
+          <div style="font-size:12px;font-weight:800;color:var(--green-mid);margin-bottom:8px">${lang==='cs'?'Obtížnost:':'Difficulty:'}</div>
+          <div style="display:flex;gap:6px;margin-bottom:16px">
+            ${diffs.map(d=>`<button data-d="${d.id}" onclick="window._poiDiff('${d.id}')"
+              style="flex:1;padding:10px 4px;border-radius:10px;border:2.5px solid ${d.id===cur?'var(--green-mid)':'rgba(0,0,0,0.08)'};background:${d.id===cur?'var(--green-pale)':'white'};font-family:inherit;font-weight:800;font-size:16px;cursor:pointer;transition:all 0.12s">
+              ${d.emoji}
+            </button>`).join('')}
+          </div>
+          <button id="poiModalStart" onclick="App.startPoiChallenge()"
+            style="display:none;width:100%;padding:14px;border-radius:14px;border:none;color:white;font-family:inherit;font-weight:900;font-size:15px;cursor:pointer;margin-bottom:8px"></button>
+          <button onclick="App.closePoiModal();App.openBattleIntro({outdoor:true})"
+            style="width:100%;padding:13px;border-radius:14px;border:none;background:linear-gradient(135deg,#d2603a,#b0402a);color:#fff;font-family:inherit;font-weight:900;font-size:15px;cursor:pointer;margin-bottom:8px">⚔️ ${lang==='cs'?'Souboj tady (venku)':'Battle here (outdoor)'}</button>
+          <button onclick="App.navigateToPoi()"
+            style="width:100%;padding:12px;border-radius:14px;border:2px solid var(--green-pale);background:white;color:var(--green-dark);font-family:inherit;font-weight:800;font-size:14px;cursor:pointer;margin-bottom:8px">🧭 ${lang==='cs'?'Navigovat sem':'Navigate here'}</button>
+        `}
         <button onclick="App.closePoiModal()" style="width:100%;background:none;border:none;color:var(--green-mid);font-weight:700;font-size:14px;cursor:pointer;padding:6px">
           ${lang==='cs'?'Zavřít':'Close'}
         </button>
       </div>`;
 
-    // World buttons
+    // World buttons (only in the in-range modal)
+    if (tooFar) { document.body.appendChild(overlay); return; }
     const worldGrid = overlay.querySelector('#poiModalWorlds');
     WORLDS.forEach(w => {
       const done = (poi.worldsDone || []).includes(w);
@@ -3195,6 +3208,15 @@ window.App = {
     window._poiDiff = null;
     this._currentPoi      = null;
     this._currentPoiWorld = null;
+  },
+
+  copyPlayerId() {
+    const p = Profiles.active();
+    if (!p) return;
+    const cs = getLang() === 'cs';
+    try { navigator.clipboard?.writeText(p.id); } catch {}
+    Feedback.tap();
+    this._showToast(cs ? '📋 ID zkopírováno' : '📋 ID copied');
   },
 
   // kept for legacy calls

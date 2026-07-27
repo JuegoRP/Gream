@@ -335,9 +335,14 @@ export const MapView = {
     if (_watchId != null) Geo.clearWatch(_watchId);
     _watchId = Geo.watchPosition(pos => {
       if (!_map || !_userMarker) return;
-      _userPos = { lat: pos.lat, lon: pos.lon };
+      const next = { lat: pos.lat, lon: pos.lon };
+      const moved = _userPos ? distM(_userPos, next) : 999;
+      _userPos = next;
       _userMarker.setLatLng([pos.lat, pos.lon]);
-      if (_following) _map.panTo([pos.lat, pos.lon], { animate: true, duration: 0.8, easeLinearity: 0.5 });
+      // Only pan / restyle when the user has actually moved a bit — panning on every
+      // GPS tick (they fire ~1/s, often with noise) caused the map to visibly stutter.
+      if (moved < 4) { _updateNav(); return; }
+      if (_following) _map.panTo([pos.lat, pos.lon], { animate: true, duration: 0.4 });
       this._refreshDotStyles(L);
       _updateNav();
     }, () => {});

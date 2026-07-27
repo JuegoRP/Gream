@@ -82,6 +82,16 @@
   <button class="btn-danger" id="ss-reset-btn" onclick="App.resetAll()"></button>
 </div>
 
+<!-- Player ID -->
+<div class="card-section">
+  <div class="section-title" id="ss-id-title"></div>
+  <div style="font-size:11px;color:var(--green-mid);font-weight:600;margin-bottom:8px;line-height:1.4" id="ss-id-info"></div>
+  <button onclick="App.copyPlayerId()" style="width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-radius:12px;border:2px solid var(--green-pale);background:white;cursor:pointer;font-family:inherit">
+    <span id="ssPlayerId" style="font-family:monospace;font-size:13px;font-weight:800;color:var(--green-deep);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">—</span>
+    <span style="font-size:15px;flex-shrink:0">📋</span>
+  </button>
+</div>
+
 <!-- Version -->
 <div style="text-align:center;font-size:10px;color:var(--green-mid);font-weight:600;margin-top:14px;opacity:0.6">
   Gream <span id="ssVersion">v5</span>
