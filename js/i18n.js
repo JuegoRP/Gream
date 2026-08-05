@@ -369,7 +369,7 @@ export const T = {
           {text:"Put the words in alphabetical order:", action:"sort", items:["Cat","Apple","Dog","Ball"], check:{type:"sort",correct:["Apple","Ball","Cat","Dog"]}, mode:"indoor_ok"},
           {text:"Which one is a question mark?", action:"choice", choices:[{text:"?",value:"q"},{text:"!",value:"e"},{text:".",value:"d"}], check:{type:"choice",correct:"q"}, mode:"indoor_ok"},
           {text:"How many letters are in the word 'dog'?", action:"number", check:{type:"number",answer:3,tolerance:0}, mode:"indoor_ok"},
-          {text:"How many letters are in the word 'sun'?", action:"number", check:{type:"number",answer:3,tolerance:0}, mode:"indoor_ok"},,
+          {text:"How many letters are in the word 'sun'?", action:"number", check:{type:"number",answer:3,tolerance:0}, mode:"indoor_ok"},
           {"text":"Which word is a noun?","action":"choice","choices":[{"text":"Dog","value":"correct"},{"text":"Run","value":"wrong1"},{"text":"Quickly","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"The opposite of \"hot\" is ____.","action":"fill_blank","blank":{"before":"The opposite of \"hot\" is","after":".","correct":"cold"},"check":{"type":"fill_blank","correct":"cold"},"mode":"indoor_ok"},
           {"text":"Which word rhymes with \"cat\"?","action":"choice","choices":[{"text":"Hat","value":"correct"},{"text":"Dog","value":"wrong1"},{"text":"Sun","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
@@ -852,11 +852,9 @@ export const T = {
           {text:"Which is a warm color?", action:"choice", choices:[{text:"🔴 Red",value:"red"},{text:"🔵 Blue",value:"blue"},{text:"🟢 Green",value:"green"}], check:{type:"choice",correct:"red"}, mode:"indoor_ok"},
           {text:"Red mixed with blue makes...", action:"choice", choices:[{text:"Purple",value:"purple"},{text:"Green",value:"green"},{text:"Orange",value:"orange"}], check:{type:"choice",correct:"purple"}, mode:"indoor_ok"},
           {text:"How many lines does a music staff have?", action:"number", check:{type:"number",answer:5,tolerance:0}, mode:"indoor_ok"},
-          {"text":"Who painted the Mona Lisa?","action":"choice","choices":[{"text":"Leonardo da Vinci","value":"correct"},{"text":"Pablo Picasso","value":"wrong1"},{"text":"Vincent van Gogh","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"The speed of a piece of music is called its ____.","action":"fill_blank","blank":{"before":"The speed of a piece of music is called its","after":".","correct":"tempo"},"check":{"type":"fill_blank","correct":"tempo"},"mode":"indoor_ok"},
           {"text":"Which instrument has black and white keys?","action":"choice","choices":[{"text":"Piano","value":"correct"},{"text":"Violin","value":"wrong1"},{"text":"Drum","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
-          {"text":"Order these from lightest to darkest shade:","action":"sort","items":["White","Light gray","Dark gray","Black"],"check":{"type":"sort","correct":["White","Light gray","Dark gray","Black"]},"mode":"indoor_ok"},
-          {"text":"What are the three primary colors?","action":"choice","choices":[{"text":"Red, blue, yellow","value":"correct"},{"text":"Green, orange, purple","value":"wrong1"},{"text":"Black, white, gray","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
+          {"text":"Order these from lightest to darkest shade:","action":"sort","items":["White","Light gray","Dark gray","Black"],"check":{"type":"sort","correct":["White","Light gray","Dark gray","Black"]},"mode":"indoor_ok"}
         ],
         "hard": [
           {text:"What art movement was Salvador Dalí associated with?", action:"choice", choices:[{text:"Surrealism",value:"correct"},{text:"Impressionism",value:"wrong1"},{text:"Cubism",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -923,7 +921,6 @@ export const T = {
           {"text":"The Italian term for very loud in music is ____.","action":"fill_blank","blank":{"before":"The Italian term for very loud in music is","after":".","correct":"fortissimo"},"check":{"type":"fill_blank","correct":"fortissimo"},"mode":"indoor_ok"},
           {"text":"Which ceiling did Michelangelo paint?","action":"choice","choices":[{"text":"Sistine Chapel","value":"correct"},{"text":"Notre-Dame","value":"wrong1"},{"text":"Louvre","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Match each term to its art form:","action":"match","pairs":[{"a":"Sonnet","b":"Poetry"},{"a":"Sonata","b":"Music"},{"a":"Fresco","b":"Painting"},{"a":"Ballet","b":"Dance"}],"check":{"type":"match"},"mode":"indoor_ok"},
-          {"text":"Order these art periods, earliest first:","action":"sort","items":["Renaissance","Baroque","Romanticism","Modernism"],"check":{"type":"sort","correct":["Renaissance","Baroque","Romanticism","Modernism"]},"mode":"indoor_ok"},
           {"text":"How many notes are in a standard octave (do to do)?","action":"choice","choices":[{"text":"8","value":"correct"},{"text":"7","value":"wrong1"},{"text":"12","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
         ]
       },
@@ -1387,7 +1384,6 @@ export const T = {
           {text:"Kolik kostí má přibližně dospělý člověk?", action:"number", check:{type:"number",answer:206,tolerance:4}, mode:"indoor_ok"},
           {text:"Zelené barvivo, díky kterému rostliny vyrábějí potravu, se jmenuje ____.", action:"fill_blank", blank:{before:"Zelené barvivo, díky kterému rostliny vyrábějí potravu, se jmenuje",after:".",correct:"chlorofyl"}, check:{type:"fill_blank",correct:"chlorofyl"}, mode:"indoor_ok"},
           {text:"Co z toho NENÍ obnovitelný zdroj?", action:"choice", choices:[{text:"Uhlí",value:"coal"},{text:"Vítr",value:"wind"},{text:"Sluneční záření",value:"solar"}], check:{type:"choice",correct:"coal"}, mode:"indoor_ok"},
-          {"text":"Co je „elektrárna buňky\"?","action":"choice","choices":[{"text":"Mitochondrie","value":"correct"},{"text":"Jádro","value":"wrong1"},{"text":"Ribozom","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Věda o počasí se jmenuje ____.","action":"fill_blank","blank":{"before":"Věda o počasí se jmenuje","after":".","correct":"meteorologie"},"check":{"type":"fill_blank","correct":"meteorologie"},"mode":"indoor_ok"},
           {"text":"Kolik komor a síní má lidské srdce?","action":"number","check":{"type":"number","answer":4,"tolerance":0},"mode":"indoor_ok"},
           {"text":"Které krvinky bojují s infekcí?","action":"choice","choices":[{"text":"Bílé krvinky","value":"correct"},{"text":"Červené krvinky","value":"wrong1"},{"text":"Krevní destičky","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
@@ -1457,7 +1453,7 @@ export const T = {
           {text:"Seřaď slova podle abecedy:", action:"sort", items:["Kočka","Auto","Pes","Banán"], check:{type:"sort",correct:["Auto","Banán","Kočka","Pes"]}, mode:"indoor_ok"},
           {text:"Který znak je otazník?", action:"choice", choices:[{text:"?",value:"q"},{text:"!",value:"e"},{text:".",value:"d"}], check:{type:"choice",correct:"q"}, mode:"indoor_ok"},
           {text:"Kolik písmen má slovo 'kočka'?", action:"number", check:{type:"number",answer:3,tolerance:0}, mode:"indoor_ok"},
-          {text:"Kolik písmen má slovo 'sto'?", action:"number", check:{type:"number",answer:3,tolerance:0}, mode:"indoor_ok"},,
+          {text:"Kolik písmen má slovo 'sto'?", action:"number", check:{type:"number",answer:3,tolerance:0}, mode:"indoor_ok"},
           {"text":"Které slovo je podstatné jméno?","action":"choice","choices":[{"text":"Pes","value":"correct"},{"text":"Běžet","value":"wrong1"},{"text":"Rychle","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Opak slova „horký\" je ____.","action":"fill_blank","blank":{"before":"Opak slova „horký\" je","after":".","correct":"studený"},"check":{"type":"fill_blank","correct":"studený"},"mode":"indoor_ok"},
           {"text":"Které slovo se rýmuje s „kos\"?","action":"choice","choices":[{"text":"Nos","value":"correct"},{"text":"Pes","value":"wrong1"},{"text":"Dům","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
@@ -1688,8 +1684,7 @@ export const T = {
           {"text":"Co následuje: 2, 3, 5, 8, 13, ?","action":"choice","choices":[{"text":"21","value":"correct"},{"text":"18","value":"wrong1"},{"text":"20","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"outdoor_bonus"},
           {"text":"Trojúhelník má úhly 90° a 30°. Kolik má třetí úhel?","action":"number","check":{"type":"number","answer":60,"tolerance":0},"mode":"indoor_ok"},
           {"text":"Číslo dělitelné jen 1 a sebou samým je ____ číslo.","action":"fill_blank","blank":{"before":"Číslo dělitelné jen 1 a sebou samým je","after":"číslo.","correct":"prvočíslo"},"check":{"type":"fill_blank","correct":"prvočíslo"},"mode":"indoor_ok"},
-          {"text":"Seřaď podle hodnoty:","action":"sort","items":["0,5","0,75","1,2","2,0"],"check":{"type":"sort","correct":["0,5","0,75","1,2","2,0"]},"mode":"indoor_ok"},
-          {"text":"Kolik je odmocnina ze 144?","action":"choice","choices":[{"text":"12","value":"correct"},{"text":"14","value":"wrong1"},{"text":"24","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
+          {"text":"Seřaď podle hodnoty:","action":"sort","items":["0,5","0,75","1,2","2,0"],"check":{"type":"sort","correct":["0,5","0,75","1,2","2,0"]},"mode":"indoor_ok"}
         ],
         "extreme": [
           {text:"Pokud jsou všechny blůpy hrůzy a všechny hrůzy jsou lůzy — jsou všechny blůpy lůzy?", action:"choice", choices:[{text:"Ano — tranzitivní logika",value:"correct"},{text:"Ne — nedá se říct",value:"wrong1"},{text:"Jen někdy",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
@@ -1903,7 +1898,6 @@ export const T = {
           {text:"Kolik barev smícháš, abys měl zelenou?", action:"number", check:{type:"number",answer:2,tolerance:0}, mode:"indoor_ok"},
           {text:"Kolik barev má duha?", action:"number", check:{type:"number",answer:7,tolerance:0}, mode:"indoor_ok"},
           {text:"Čím se kreslí?", action:"choice", choices:[{text:"✏️ Tužka",value:"pencil"},{text:"🥄 Lžíce",value:"spoon"},{text:"🧦 Ponožka",value:"sock"}], check:{type:"choice",correct:"pencil"}, mode:"indoor_ok"},
-          {"text":"Co z tohoto je hudební nástroj?","action":"choice","choices":[{"text":"🎸 Kytara","value":"correct"},{"text":"🍎 Jablko","value":"wrong1"},{"text":"🚗 Auto","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Přiřaď míchání barev k výsledku:","action":"match","pairs":[{"a":"Modrá + žlutá","b":"Zelená"},{"a":"Červená + modrá","b":"Fialová"},{"a":"Červená + žlutá","b":"Oranžová"},{"a":"Černá + bílá","b":"Šedá"}],"check":{"type":"match"},"mode":"indoor_ok"},
           {"text":"Kolik je základních barev?","action":"choice","choices":[{"text":"Tři","value":"correct"},{"text":"Pět","value":"wrong1"},{"text":"Sedm","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Člověk, který maluje obrazy, je ____.","action":"fill_blank","blank":{"before":"Člověk, který maluje obrazy, je","after":".","correct":"malíř"},"check":{"type":"fill_blank","correct":"malíř"},"mode":"indoor_ok"},
@@ -1944,7 +1938,6 @@ export const T = {
           {text:"Kolik linek má notová osnova?", action:"number", check:{type:"number",answer:5,tolerance:0}, mode:"indoor_ok"},
           {"text":"Rychlost hudební skladby se nazývá ____.","action":"fill_blank","blank":{"before":"Rychlost hudební skladby se nazývá","after":".","correct":"tempo"},"check":{"type":"fill_blank","correct":"tempo"},"mode":"indoor_ok"},
           {"text":"Který nástroj má černé a bílé klávesy?","action":"choice","choices":[{"text":"Klavír","value":"correct"},{"text":"Housle","value":"wrong1"},{"text":"Buben","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
-          {"text":"Přiřaď nástroj k rodině:","action":"match","pairs":[{"a":"Housle","b":"Smyčce"},{"a":"Trubka","b":"Žestě"},{"a":"Flétna","b":"Dřeva"},{"a":"Buben","b":"Bicí"}],"check":{"type":"match"},"mode":"indoor_ok"},
           {"text":"Seřaď od nejsvětlejšího po nejtmavší:","action":"sort","items":["Bílá","Světle šedá","Tmavě šedá","Černá"],"check":{"type":"sort","correct":["Bílá","Světle šedá","Tmavě šedá","Černá"]},"mode":"indoor_ok"}
         ],
         "hard": [
@@ -2132,7 +2125,6 @@ export const T = {
           {"text":"Která říše postavila Koloseum?","action":"choice","choices":[{"text":"Římská","value":"correct"},{"text":"Osmanská","value":"wrong1"},{"text":"Britská","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Věda o mapách a povrchu Země se jmenuje ____.","action":"fill_blank","blank":{"before":"Věda o mapách a povrchu Země se jmenuje","after":".","correct":"geografie"},"check":{"type":"fill_blank","correct":"geografie"},"mode":"indoor_ok"},
           {"text":"V kterém roce skončila druhá světová válka?","action":"choice","choices":[{"text":"1945","value":"correct"},{"text":"1918","value":"wrong1"},{"text":"1939","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
-          {"text":"Přiřaď zemi k měně:","action":"match","pairs":[{"a":"Japonsko","b":"Jen"},{"a":"USA","b":"Dolar"},{"a":"Česko","b":"Koruna"},{"a":"Británie","b":"Libra"}],"check":{"type":"match"},"mode":"indoor_ok"},
           {"text":"Seřaď dějinná období, nejstarší první:","action":"sort","items":["Starověk","Středověk","Renesance","Novověk"],"check":{"type":"sort","correct":["Starověk","Středověk","Renesance","Novověk"]},"mode":"indoor_ok"},
           {"text":"Která hora je nejvyšší nad hladinou moře?","action":"choice","choices":[{"text":"Everest","value":"correct"},{"text":"K2","value":"wrong1"},{"text":"Mont Blanc","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
         ],
@@ -2159,7 +2151,6 @@ export const T = {
           {"text":"Která starověká civilizace postavila Machu Picchu?","action":"choice","choices":[{"text":"Inkové","value":"correct"},{"text":"Aztékové","value":"wrong1"},{"text":"Mayové","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Úzký pruh země spojující dvě větší oblasti je ____.","action":"fill_blank","blank":{"before":"Úzký pruh země spojující dvě větší oblasti je","after":".","correct":"šíje"},"check":{"type":"fill_blank","correct":"šíje"},"mode":"indoor_ok"},
           {"text":"Kdo první stanul na Měsíci?","action":"choice","choices":[{"text":"Neil Armstrong","value":"correct"},{"text":"Jurij Gagarin","value":"wrong1"},{"text":"Buzz Aldrin","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
-          {"text":"Přiřaď starověký div k místu:","action":"match","pairs":[{"a":"Pyramidy","b":"Egypt"},{"a":"Kolos","b":"Rhodos"},{"a":"Visuté zahrady","b":"Babylon"},{"a":"Maják","b":"Alexandrie"}],"check":{"type":"match"},"mode":"indoor_ok"},
           {"text":"Seřaď události, nejstarší první:","action":"sort","items":["Pád Říma","Kolumbus 1492","Francouzská revoluce","Přistání na Měsíci"],"check":{"type":"sort","correct":["Pád Říma","Kolumbus 1492","Francouzská revoluce","Přistání na Měsíci"]},"mode":"indoor_ok"},
           {"text":"V kterém roce padla Berlínská zeď?","action":"choice","choices":[{"text":"1989","value":"correct"},{"text":"1991","value":"wrong1"},{"text":"1979","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
         ]
