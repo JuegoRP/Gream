@@ -221,7 +221,15 @@ export const T = {
           {"text":"How many legs does an ant have?","action":"number","check":{"type":"number","answer":6,"tolerance":0},"mode":"indoor_ok"},
           {"text":"A group of wolves is called a ____.","action":"fill_blank","blank":{"before":"A group of wolves is called a","after":".","correct":"pack"},"check":{"type":"fill_blank","correct":"pack"},"mode":"indoor_ok"},
           {"text":"Sort these from smallest to biggest:","action":"sort","items":["🐁 Mouse","🐈 Cat","🐕 Dog","🐎 Horse"],"check":{"type":"sort","correct":["🐁 Mouse","🐈 Cat","🐕 Dog","🐎 Horse"]},"mode":"indoor_ok"},
-          {"text":"Match each animal to where it lives:","action":"match","pairs":[{"a":"Fish","b":"Water"},{"a":"Bird","b":"Nest"},{"a":"Bear","b":"Cave"},{"a":"Bee","b":"Hive"}],"check":{"type":"match"},"mode":"outdoor_bonus"}
+          {"text":"Match each animal to where it lives:","action":"match","pairs":[{"a":"Fish","b":"Water"},{"a":"Bird","b":"Nest"},{"a":"Bear","b":"Cave"},{"a":"Bee","b":"Hive"}],"check":{"type":"match"},"mode":"outdoor_bonus"},
+          {"text":"What do plants make in their leaves using sunlight?","action":"choice","choices":[{"text":"🍃 Food","value":"correct"},{"text":"🪨 Rocks","value":"wrong1"},{"text":"💨 Wind","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"outdoor_bonus"},
+          {"text":"Which animal is the largest land animal?","action":"choice","choices":[{"text":"🐘 Elephant","value":"correct"},{"text":"🐁 Mouse","value":"wrong1"},{"text":"🐇 Rabbit","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"How many colors are in a rainbow?","action":"number","check":{"type":"number","answer":7,"tolerance":0},"mode":"indoor_ok"},
+          {"text":"Rain, snow and hail are all types of ____.","action":"fill_blank","blank":{"before":"Rain, snow and hail are all types of","after":".","correct":"precipitation"},"check":{"type":"fill_blank","correct":"precipitation"},"mode":"indoor_ok"},
+          {"text":"Sort these from land to sky:","action":"sort","items":["🌱 Grass","🌳 Tree","☁️ Cloud","☀️ Sun"],"check":{"type":"sort","correct":["🌱 Grass","🌳 Tree","☁️ Cloud","☀️ Sun"]},"mode":"indoor_ok"},
+          {"text":"Match each weather to its symbol:","action":"match","pairs":[{"a":"Sunny","b":"☀️"},{"a":"Rainy","b":"🌧️"},{"a":"Snowy","b":"❄️"},{"a":"Windy","b":"💨"}],"check":{"type":"match"},"mode":"outdoor_bonus"},
+          {"text":"What part of a plant takes in water from the soil?","action":"choice","choices":[{"text":"🌱 Roots","value":"correct"},{"text":"🌸 Flower","value":"wrong1"},{"text":"🍃 Leaf","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"How many legs does a bee have?","action":"number","check":{"type":"number","answer":6,"tolerance":0},"mode":"indoor_ok"}
         ],
         "medium": [
           {text:"What do plants need to grow?", hint:"Think about what you'd give a plant every day.", action:"choice", choices:[{text:"🌊 Water & sun",value:"water_sun"},{text:"🍫 Chocolate",value:"choco"},{text:"🧊 Ice only",value:"ice"}], check:{type:"choice",correct:"water_sun"}, mode:"outdoor_bonus"},
@@ -264,7 +272,15 @@ export const T = {
           {"text":"Water freezes at ____ degrees Celsius.","action":"fill_blank","blank":{"before":"Water freezes at","after":"degrees Celsius.","correct":"0"},"check":{"type":"fill_blank","correct":"0"},"mode":"indoor_ok"},
           {"text":"What is the largest mammal on Earth?","action":"choice","choices":[{"text":"Blue whale","value":"correct"},{"text":"Elephant","value":"wrong1"},{"text":"Giraffe","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Order these by size, smallest first:","action":"sort","items":["⚛️ Atom","🦠 Cell","🐜 Ant","🐘 Elephant"],"check":{"type":"sort","correct":["⚛️ Atom","🦠 Cell","🐜 Ant","🐘 Elephant"]},"mode":"indoor_ok"},
-          {"text":"Match each animal group to an example:","action":"match","pairs":[{"a":"Mammal","b":"Dog"},{"a":"Reptile","b":"Snake"},{"a":"Amphibian","b":"Frog"},{"a":"Insect","b":"Ant"}],"check":{"type":"match"},"mode":"indoor_ok"}
+          {"text":"Match each animal group to an example:","action":"match","pairs":[{"a":"Mammal","b":"Dog"},{"a":"Reptile","b":"Snake"},{"a":"Amphibian","b":"Frog"},{"a":"Insect","b":"Ant"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Which animal can regrow a lost limb?","action":"choice","choices":[{"text":"🦎 Lizard","value":"correct"},{"text":"🐕 Dog","value":"wrong1"},{"text":"🐦 Bird","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"The largest organ of the human body is the ____.","action":"fill_blank","blank":{"before":"The largest organ of the human body is the","after":".","correct":"skin"},"check":{"type":"fill_blank","correct":"skin"},"mode":"indoor_ok"},
+          {"text":"How many legs do most spiders have?","action":"number","check":{"type":"number","answer":8,"tolerance":0},"mode":"indoor_ok"},
+          {"text":"What do we call animals that eat only plants?","action":"choice","choices":[{"text":"Herbivores","value":"correct"},{"text":"Carnivores","value":"wrong1"},{"text":"Insects","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Order the water cycle, starting with evaporation:","action":"sort","items":["💧 Evaporation","☁️ Condensation","🌧️ Precipitation","🏞️ Collection"],"check":{"type":"sort","correct":["💧 Evaporation","☁️ Condensation","🌧️ Precipitation","🏞️ Collection"]},"mode":"indoor_ok"},
+          {"text":"Match each biome to a feature:","action":"match","pairs":[{"a":"Desert","b":"Sand"},{"a":"Rainforest","b":"Rain"},{"a":"Tundra","b":"Cold"},{"a":"Ocean","b":"Salt water"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Which gas do we breathe out?","action":"choice","choices":[{"text":"Carbon dioxide","value":"correct"},{"text":"Oxygen","value":"wrong1"},{"text":"Helium","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"At how many °C does water boil? (sea level)","action":"number","check":{"type":"number","answer":100,"tolerance":0},"mode":"indoor_ok"}
         ],
         "hard": [
           {text:"What is photosynthesis?", hint:"What do plants make from sunlight?", action:"choice", choices:[{text:"🌞 Converting sunlight into food",value:"correct"},{text:"🌙 Sleeping during daytime",value:"wrong1"},{text:"💧 Drinking rainwater only",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -304,7 +320,15 @@ export const T = {
           {"text":"How many chambers does a human heart have?","action":"number","check":{"type":"number","answer":4,"tolerance":0},"mode":"indoor_ok"},
           {"text":"Which blood cells fight infection?","action":"choice","choices":[{"text":"White blood cells","value":"correct"},{"text":"Red blood cells","value":"wrong1"},{"text":"Platelets","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Order the classification, broadest first:","action":"sort","items":["Kingdom","Phylum","Class","Species"],"check":{"type":"sort","correct":["Kingdom","Phylum","Class","Species"]},"mode":"indoor_ok"},
-          {"text":"Match each planet to its trait:","action":"match","pairs":[{"a":"Mars","b":"Red planet"},{"a":"Jupiter","b":"Largest"},{"a":"Saturn","b":"Rings"},{"a":"Venus","b":"Hottest"}],"check":{"type":"match"},"mode":"indoor_ok"}
+          {"text":"Match each planet to its trait:","action":"match","pairs":[{"a":"Mars","b":"Red planet"},{"a":"Jupiter","b":"Largest"},{"a":"Saturn","b":"Rings"},{"a":"Venus","b":"Hottest"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Which part of the plant cell captures sunlight?","action":"choice","choices":[{"text":"Chloroplast","value":"correct"},{"text":"Nucleus","value":"wrong1"},{"text":"Cell wall","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"An animal active mainly at dawn and dusk is ____.","action":"fill_blank","blank":{"before":"An animal active mainly at dawn and dusk is","after":".","correct":"crepuscular"},"check":{"type":"fill_blank","correct":"crepuscular"},"mode":"indoor_ok"},
+          {"text":"How many pairs of chromosomes do humans have?","action":"number","check":{"type":"number","answer":23,"tolerance":0},"mode":"indoor_ok"},
+          {"text":"What is the hardest natural substance?","action":"choice","choices":[{"text":"Diamond","value":"correct"},{"text":"Iron","value":"wrong1"},{"text":"Quartz","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Order the trophic levels, producer first:","action":"sort","items":["Producer","Primary consumer","Secondary consumer","Apex predator"],"check":{"type":"sort","correct":["Producer","Primary consumer","Secondary consumer","Apex predator"]},"mode":"indoor_ok"},
+          {"text":"Match each rock type to how it forms:","action":"match","pairs":[{"a":"Igneous","b":"Cooled magma"},{"a":"Sedimentary","b":"Layers"},{"a":"Metamorphic","b":"Heat & pressure"},{"a":"Fossil","b":"Remains"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Which vitamin does sunlight help your skin produce?","action":"choice","choices":[{"text":"Vitamin D","value":"correct"},{"text":"Vitamin C","value":"wrong1"},{"text":"Vitamin B12","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"outdoor_bonus"},
+          {"text":"How many teeth does an adult human usually have?","action":"number","check":{"type":"number","answer":32,"tolerance":0},"mode":"indoor_ok"}
         ],
         "extreme": [
           {text:"Which process converts nitrogen gas into forms usable by plants?", action:"choice", choices:[{text:"Nitrogen fixation",value:"correct"},{text:"Photosynthesis",value:"wrong1"},{text:"Transpiration",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -334,7 +358,15 @@ export const T = {
           {"text":"At what temperature (°C) does water boil at sea level?","action":"number","check":{"type":"number","answer":100,"tolerance":0},"mode":"indoor_ok"},
           {"text":"Which scientist proposed the theory of evolution by natural selection?","action":"choice","choices":[{"text":"Charles Darwin","value":"correct"},{"text":"Isaac Newton","value":"wrong1"},{"text":"Gregor Mendel","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Order the geological eras, oldest first:","action":"sort","items":["Paleozoic","Mesozoic","Cenozoic","Present"],"check":{"type":"sort","correct":["Paleozoic","Mesozoic","Cenozoic","Present"]},"mode":"indoor_ok"},
-          {"text":"Match each scientist to their field:","action":"match","pairs":[{"a":"Mendel","b":"Genetics"},{"a":"Newton","b":"Gravity"},{"a":"Curie","b":"Radioactivity"},{"a":"Pasteur","b":"Microbes"}],"check":{"type":"match"},"mode":"indoor_ok"}
+          {"text":"Match each scientist to their field:","action":"match","pairs":[{"a":"Mendel","b":"Genetics"},{"a":"Newton","b":"Gravity"},{"a":"Curie","b":"Radioactivity"},{"a":"Pasteur","b":"Microbes"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"What is the process of cell division that creates gametes?","action":"choice","choices":[{"text":"Meiosis","value":"correct"},{"text":"Mitosis","value":"wrong1"},{"text":"Osmosis","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"The pigment that makes plants green is ____.","action":"fill_blank","blank":{"before":"The pigment that makes plants green is","after":".","correct":"chlorophyll"},"check":{"type":"fill_blank","correct":"chlorophyll"},"mode":"indoor_ok"},
+          {"text":"How many bones does an adult human have?","action":"number","check":{"type":"number","answer":206,"tolerance":4},"mode":"indoor_ok"},
+          {"text":"Which scientist is credited with the laws of inheritance?","action":"choice","choices":[{"text":"Gregor Mendel","value":"correct"},{"text":"Louis Pasteur","value":"wrong1"},{"text":"Charles Darwin","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Order the taxonomic ranks below Class, broadest first:","action":"sort","items":["Order","Family","Genus","Species"],"check":{"type":"sort","correct":["Order","Family","Genus","Species"]},"mode":"indoor_ok"},
+          {"text":"Match each element to its symbol:","action":"match","pairs":[{"a":"Oxygen","b":"O"},{"a":"Hydrogen","b":"H"},{"a":"Carbon","b":"C"},{"a":"Iron","b":"Fe"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"What is the pH of a neutral solution?","action":"choice","choices":[{"text":"7","value":"correct"},{"text":"0","value":"wrong1"},{"text":"14","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"How many chambers does a fish heart have?","action":"number","check":{"type":"number","answer":2,"tolerance":0},"mode":"indoor_ok"}
         ]
       },
       language: {
@@ -374,7 +406,13 @@ export const T = {
           {"text":"The opposite of \"hot\" is ____.","action":"fill_blank","blank":{"before":"The opposite of \"hot\" is","after":".","correct":"cold"},"check":{"type":"fill_blank","correct":"cold"},"mode":"indoor_ok"},
           {"text":"Which word rhymes with \"cat\"?","action":"choice","choices":[{"text":"Hat","value":"correct"},{"text":"Dog","value":"wrong1"},{"text":"Sun","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Match each animal to its baby name:","action":"match","pairs":[{"a":"Cat","b":"Kitten"},{"a":"Dog","b":"Puppy"},{"a":"Cow","b":"Calf"},{"a":"Horse","b":"Foal"}],"check":{"type":"match"},"mode":"indoor_ok"},
-          {"text":"Which letter is a vowel?","action":"choice","choices":[{"text":"A","value":"correct"},{"text":"B","value":"wrong1"},{"text":"C","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
+          {"text":"Which letter is a vowel?","action":"choice","choices":[{"text":"A","value":"correct"},{"text":"B","value":"wrong1"},{"text":"C","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"The plural of \"child\" is ____.","action":"fill_blank","blank":{"before":"The plural of \"child\" is","after":".","correct":"children"},"check":{"type":"fill_blank","correct":"children"},"mode":"indoor_ok"},
+          {"text":"Which word starts with a capital letter correctly?","action":"choice","choices":[{"text":"London","value":"correct"},{"text":"london","value":"wrong1"},{"text":"LONDON","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Match each word to its category:","action":"match","pairs":[{"a":"Apple","b":"Fruit"},{"a":"Dog","b":"Animal"},{"a":"Red","b":"Color"},{"a":"Three","b":"Number"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Order these letters alphabetically:","action":"sort","items":["B","D","F","H"],"check":{"type":"sort","correct":["B","D","F","H"]},"mode":"indoor_ok"},
+          {"text":"Which is a question?","action":"choice","choices":[{"text":"Where are you?","value":"correct"},{"text":"I am here.","value":"wrong1"},{"text":"Sit down.","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"How many letters are in the word \"book\"?","action":"choice","choices":[{"text":"4 / 5","value":"correct"},{"text":"3","value":"wrong1"},{"text":"6","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
         ],
         "medium": [
           {text:"What is an antonym of the word HAPPY?", action:"choice", choices:[{text:"Sad 😢",value:"sad"},{text:"Joyful 😄",value:"joyful"},{text:"Big 🐘",value:"big"}], check:{type:"choice",correct:"sad"}, mode:"outdoor_bonus"},
@@ -415,7 +453,13 @@ export const T = {
           {"text":"Which sentence is punctuated correctly?","action":"choice","choices":[{"text":"She said, \"Hello!\"","value":"correct"},{"text":"She said \"Hello!","value":"wrong1"},{"text":"She said, Hello!\"","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Match each word to its opposite:","action":"match","pairs":[{"a":"Big","b":"Small"},{"a":"Fast","b":"Slow"},{"a":"Happy","b":"Sad"},{"a":"Light","b":"Dark"}],"check":{"type":"match"},"mode":"indoor_ok"},
           {"text":"Order these to make a sentence:","action":"sort","items":["The","cat","sat","down"],"check":{"type":"sort","correct":["The","cat","sat","down"]},"mode":"indoor_ok"},
-          {"text":"What part of speech describes an action?","action":"choice","choices":[{"text":"Verb","value":"correct"},{"text":"Noun","value":"wrong1"},{"text":"Adjective","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
+          {"text":"What part of speech describes an action?","action":"choice","choices":[{"text":"Verb","value":"correct"},{"text":"Noun","value":"wrong1"},{"text":"Adjective","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Which word is an adjective?","action":"choice","choices":[{"text":"Beautiful","value":"correct"},{"text":"Quickly","value":"wrong1"},{"text":"Run","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"A word that sounds the same but is spelled differently is a ____.","action":"fill_blank","blank":{"before":"A word that sounds the same but is spelled differently is a","after":".","correct":"homophone"},"check":{"type":"fill_blank","correct":"homophone"},"mode":"indoor_ok"},
+          {"text":"Which sentence is in the future tense?","action":"choice","choices":[{"text":"I will go tomorrow","value":"correct"},{"text":"I went yesterday","value":"wrong1"},{"text":"I am going now","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Order these to make a question:","action":"sort","items":["Where","is","the","dog?"],"check":{"type":"sort","correct":["Where","is","the","dog?"]},"mode":"indoor_ok"},
+          {"text":"What is the comparative of \"good\"?","action":"choice","choices":[{"text":"Better","value":"correct"},{"text":"Gooder","value":"wrong1"},{"text":"Best","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Which word is a synonym of \"happy\"?","action":"choice","choices":[{"text":"Joyful","value":"correct"},{"text":"Sad","value":"wrong1"},{"text":"Tired","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
         ],
         "hard": [
           {text:"Which literary device is used in: 'The wind whispered secrets'?", action:"choice", choices:[{text:"Personification",value:"correct"},{text:"Rhyme",value:"wrong1"},{text:"Alliteration",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -454,7 +498,14 @@ export const T = {
           {"text":"What is the subject in \"The dog barked loudly\"?","action":"choice","choices":[{"text":"The dog","value":"correct"},{"text":"barked","value":"wrong1"},{"text":"loudly","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Match each literary device to its example:","action":"match","pairs":[{"a":"Simile","b":"Like a rose"},{"a":"Metaphor","b":"Heart of stone"},{"a":"Alliteration","b":"Big blue box"},{"a":"Hyperbole","b":"Ton of homework"}],"check":{"type":"match"},"mode":"indoor_ok"},
           {"text":"Order these from letter to full text:","action":"sort","items":["Letter","Word","Sentence","Paragraph"],"check":{"type":"sort","correct":["Letter","Word","Sentence","Paragraph"]},"mode":"indoor_ok"},
-          {"text":"Which sentence uses the passive voice?","action":"choice","choices":[{"text":"The ball was thrown","value":"correct"},{"text":"She throws the ball","value":"wrong1"},{"text":"Throw the ball","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
+          {"text":"Which sentence uses the passive voice?","action":"choice","choices":[{"text":"The ball was thrown","value":"correct"},{"text":"She throws the ball","value":"wrong1"},{"text":"Throw the ball","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"What is the term for a word that describes a verb?","action":"choice","choices":[{"text":"Adverb","value":"correct"},{"text":"Adjective","value":"wrong1"},{"text":"Pronoun","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"An extreme exaggeration for effect is called ____.","action":"fill_blank","blank":{"before":"An extreme exaggeration for effect is called","after":".","correct":"hyperbole"},"check":{"type":"fill_blank","correct":"hyperbole"},"mode":"indoor_ok"},
+          {"text":"In \"quickly ran\", what is \"quickly\"?","action":"choice","choices":[{"text":"Adverb","value":"correct"},{"text":"Noun","value":"wrong1"},{"text":"Verb","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Match each figure of speech to its example:","action":"match","pairs":[{"a":"Idiom","b":"Break a leg"},{"a":"Simile","b":"Cold as ice"},{"a":"Personification","b":"The wind sang"},{"a":"Onomatopoeia","b":"Buzz"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Order these by length, shortest first:","action":"sort","items":["Syllable","Word","Clause","Paragraph"],"check":{"type":"sort","correct":["Syllable","Word","Clause","Paragraph"]},"mode":"indoor_ok"},
+          {"text":"Which noun is abstract (not a physical object)?","action":"choice","choices":[{"text":"Freedom","value":"correct"},{"text":"Table","value":"wrong1"},{"text":"Apple","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"What do you call the person telling a story?","action":"choice","choices":[{"text":"Narrator","value":"correct"},{"text":"Author","value":"wrong1"},{"text":"Editor","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
         ],
         "extreme": [
           {text:"What literary device gives human qualities to non-human things?", action:"choice", choices:[{text:"Personification",value:"correct"},{text:"Alliteration",value:"wrong1"},{text:"Onomatopoeia",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
@@ -483,7 +534,14 @@ export const T = {
           {"text":"Which word is an example of an oxymoron?","action":"choice","choices":[{"text":"Deafening silence","value":"correct"},{"text":"Bright light","value":"wrong1"},{"text":"Fast car","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Match each Greek root to its meaning:","action":"match","pairs":[{"a":"bio","b":"life"},{"a":"geo","b":"earth"},{"a":"photo","b":"light"},{"a":"tele","b":"far"}],"check":{"type":"match"},"mode":"indoor_ok"},
           {"text":"Order the writing process:","action":"sort","items":["Brainstorm","Draft","Revise","Publish"],"check":{"type":"sort","correct":["Brainstorm","Draft","Revise","Publish"]},"mode":"indoor_ok"},
-          {"text":"A \"protagonist\" in a story is the ____.","action":"choice","choices":[{"text":"main character","value":"correct"},{"text":"villain","value":"wrong1"},{"text":"setting","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
+          {"text":"A \"protagonist\" in a story is the ____.","action":"choice","choices":[{"text":"main character","value":"correct"},{"text":"villain","value":"wrong1"},{"text":"setting","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"A comparison using \"like\" or \"as\" is a ____.","action":"choice","choices":[{"text":"simile","value":"correct"},{"text":"metaphor","value":"wrong1"},{"text":"pun","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"The repetition of consonant sounds at word starts is ____.","action":"fill_blank","blank":{"before":"The repetition of consonant sounds at word starts is","after":".","correct":"alliteration"},"check":{"type":"fill_blank","correct":"alliteration"},"mode":"indoor_ok"},
+          {"text":"Which sentence contains a dependent clause?","action":"choice","choices":[{"text":"Because it rained, we stayed in","value":"correct"},{"text":"We stayed in","value":"wrong1"},{"text":"It rained","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Match each Latin root to its meaning:","action":"match","pairs":[{"a":"aqua","b":"water"},{"a":"terra","b":"earth"},{"a":"audio","b":"hear"},{"a":"scrib","b":"write"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Order the plot structure:","action":"sort","items":["Exposition","Rising action","Climax","Resolution"],"check":{"type":"sort","correct":["Exposition","Rising action","Climax","Resolution"]},"mode":"indoor_ok"},
+          {"text":"A word opposite in meaning to another is an ____.","action":"choice","choices":[{"text":"antonym","value":"correct"},{"text":"synonym","value":"wrong1"},{"text":"acronym","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"What is the mood of a verb giving a command?","action":"choice","choices":[{"text":"Imperative","value":"correct"},{"text":"Indicative","value":"wrong1"},{"text":"Interrogative","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
         ]
       },
       logic: {
@@ -522,7 +580,14 @@ export const T = {
           {"text":"Put these numbers in order, smallest first:","action":"sort","items":["2","5","8","11"],"check":{"type":"sort","correct":["2","5","8","11"]},"mode":"indoor_ok"},
           {"text":"What comes next: 2, 4, 6, ?","action":"number","check":{"type":"number","answer":8,"tolerance":0},"mode":"indoor_ok"},
           {"text":"A shape with four equal sides is a ____.","action":"fill_blank","blank":{"before":"A shape with four equal sides is a","after":".","correct":"square"},"check":{"type":"fill_blank","correct":"square"},"mode":"indoor_ok"},
-          {"text":"Match each number to its double:","action":"match","pairs":[{"a":"3","b":"6"},{"a":"5","b":"10"},{"a":"7","b":"14"},{"a":"9","b":"18"}],"check":{"type":"match"},"mode":"indoor_ok"}
+          {"text":"Match each number to its double:","action":"match","pairs":[{"a":"3","b":"6"},{"a":"5","b":"10"},{"a":"7","b":"14"},{"a":"9","b":"18"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"What is 9 + 8?","action":"number","check":{"type":"number","answer":17,"tolerance":0},"mode":"indoor_ok"},
+          {"text":"What is 20 − 7?","action":"number","check":{"type":"number","answer":13,"tolerance":0},"mode":"indoor_ok"},
+          {"text":"Which number is even?","action":"choice","choices":[{"text":"8","value":"correct"},{"text":"7","value":"wrong1"},{"text":"5","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Ten tens make one ____.","action":"fill_blank","blank":{"before":"Ten tens make one","after":".","correct":"hundred"},"check":{"type":"fill_blank","correct":"hundred"},"mode":"indoor_ok"},
+          {"text":"Continue the pattern: 5, 10, 15, ...","action":"sort","items":["5","10","15","20"],"check":{"type":"sort","correct":["5","10","15","20"]},"mode":"indoor_ok"},
+          {"text":"What is half of 10?","action":"number","check":{"type":"number","answer":5,"tolerance":0},"mode":"indoor_ok"},
+          {"text":"What comes next: 🔺🔵🔺🔵 ?","action":"choice","choices":[{"text":"🔺","value":"correct"},{"text":"🟩","value":"wrong1"},{"text":"🔵","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
         ],
         "medium": [
           {text:"Which shape has 4 equal sides and 4 right angles?", action:"choice", choices:[{text:"Square ⬛",value:"square"},{text:"Triangle 🔺",value:"triangle"},{text:"Circle ⭕",value:"circle"}], check:{type:"choice",correct:"square"}, mode:"outdoor_bonus"},
@@ -562,7 +627,15 @@ export const T = {
           {"text":"How many minutes are in 2 hours?","action":"number","check":{"type":"number","answer":120,"tolerance":0},"mode":"indoor_ok"},
           {"text":"The result of a multiplication is called the ____.","action":"fill_blank","blank":{"before":"The result of a multiplication is called the","after":".","correct":"product"},"check":{"type":"fill_blank","correct":"product"},"mode":"indoor_ok"},
           {"text":"Order these fractions, smallest first:","action":"sort","items":["1/4","1/2","3/4","1"],"check":{"type":"sort","correct":["1/4","1/2","3/4","1"]},"mode":"indoor_ok"},
-          {"text":"If all cats are animals, and Tom is a cat, then Tom is ____.","action":"choice","choices":[{"text":"an animal","value":"correct"},{"text":"a dog","value":"wrong1"},{"text":"a plant","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
+          {"text":"If all cats are animals, and Tom is a cat, then Tom is ____.","action":"choice","choices":[{"text":"an animal","value":"correct"},{"text":"a dog","value":"wrong1"},{"text":"a plant","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"What is 8 × 7?","action":"number","check":{"type":"number","answer":56,"tolerance":0},"mode":"indoor_ok"},
+          {"text":"What is 100 ÷ 4?","action":"number","check":{"type":"number","answer":25,"tolerance":0},"mode":"indoor_ok"},
+          {"text":"Which is a prime number?","action":"choice","choices":[{"text":"11","value":"correct"},{"text":"9","value":"wrong1"},{"text":"15","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"The distance around a shape is its ____.","action":"fill_blank","blank":{"before":"The distance around a shape is its","after":".","correct":"perimeter"},"check":{"type":"fill_blank","correct":"perimeter"},"mode":"indoor_ok"},
+          {"text":"Order these times of day:","action":"sort","items":["Morning","Noon","Evening","Night"],"check":{"type":"sort","correct":["Morning","Noon","Evening","Night"]},"mode":"indoor_ok"},
+          {"text":"If a shirt costs 40 and is 50% off, the price is:","action":"choice","choices":[{"text":"20","value":"correct"},{"text":"30","value":"wrong1"},{"text":"10","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"How many sides does a hexagon have?","action":"number","check":{"type":"number","answer":6,"tolerance":0},"mode":"indoor_ok"},
+          {"text":"What comes next: 3, 6, 12, 24, ?","action":"choice","choices":[{"text":"48","value":"correct"},{"text":"36","value":"wrong1"},{"text":"30","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
         ],
         "hard": [
           {text:"What is the next prime number after 7?", action:"choice", choices:[{text:"11",value:"correct"},{text:"9",value:"wrong1"},{text:"12",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -600,7 +673,15 @@ export const T = {
           {"text":"What comes next: 2, 3, 5, 8, 13, ?","action":"choice","choices":[{"text":"21","value":"correct"},{"text":"18","value":"wrong1"},{"text":"20","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"outdoor_bonus"},
           {"text":"A triangle has angles of 90° and 30°. What is the third angle?","action":"number","check":{"type":"number","answer":60,"tolerance":0},"mode":"indoor_ok"},
           {"text":"A number divisible only by 1 and itself is a ____ number.","action":"fill_blank","blank":{"before":"A number divisible only by 1 and itself is a","after":"number.","correct":"prime"},"check":{"type":"fill_blank","correct":"prime"},"mode":"indoor_ok"},
-          {"text":"Order these by value:","action":"sort","items":["0.5","0.75","1.2","2.0"],"check":{"type":"sort","correct":["0.5","0.75","1.2","2.0"]},"mode":"indoor_ok"}
+          {"text":"Order these by value:","action":"sort","items":["0.5","0.75","1.2","2.0"],"check":{"type":"sort","correct":["0.5","0.75","1.2","2.0"]},"mode":"indoor_ok"},
+          {"text":"What is 25% of 80?","action":"number","check":{"type":"number","answer":20,"tolerance":0},"mode":"indoor_ok"},
+          {"text":"What is 13 × 6?","action":"number","check":{"type":"number","answer":78,"tolerance":0},"mode":"indoor_ok"},
+          {"text":"What is the next prime after 7?","action":"choice","choices":[{"text":"11","value":"correct"},{"text":"9","value":"wrong1"},{"text":"10","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"The longest side of a right triangle is the ____.","action":"fill_blank","blank":{"before":"The longest side of a right triangle is the","after":".","correct":"hypotenuse"},"check":{"type":"fill_blank","correct":"hypotenuse"},"mode":"indoor_ok"},
+          {"text":"Order these units of length, smallest first:","action":"sort","items":["mm","cm","m","km"],"check":{"type":"sort","correct":["mm","cm","m","km"]},"mode":"indoor_ok"},
+          {"text":"How many faces does a cube have?","action":"choice","choices":[{"text":"6","value":"correct"},{"text":"8","value":"wrong1"},{"text":"4","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"If 3x = 21, what is x?","action":"number","check":{"type":"number","answer":7,"tolerance":0},"mode":"indoor_ok"},
+          {"text":"What comes next: 1, 1, 2, 3, 5, 8, ?","action":"choice","choices":[{"text":"13","value":"correct"},{"text":"11","value":"wrong1"},{"text":"12","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
         ],
         "extreme": [
           {text:"If all bloops are razzles and all razzles are lazzles, are all bloops definitely lazzles?", action:"choice", choices:[{text:"Yes — transitive logic",value:"correct"},{text:"No — can't tell",value:"wrong1"},{text:"Only sometimes",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
@@ -628,7 +709,15 @@ export const T = {
           {"text":"The sum of angles in a triangle is how many degrees?","action":"number","check":{"type":"number","answer":180,"tolerance":0},"mode":"indoor_ok"},
           {"text":"In a right triangle, a² + b² = c² is the ____ theorem.","action":"fill_blank","blank":{"before":"In a right triangle, a² + b² = c² is the","after":"theorem.","correct":"Pythagorean"},"check":{"type":"fill_blank","correct":"Pythagorean"},"mode":"indoor_ok"},
           {"text":"Order these numbers, smallest first:","action":"sort","items":["-5","0","3","7"],"check":{"type":"sort","correct":["-5","0","3","7"]},"mode":"indoor_ok"},
-          {"text":"How many degrees are in a full circle?","action":"choice","choices":[{"text":"360","value":"correct"},{"text":"180","value":"wrong1"},{"text":"270","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
+          {"text":"How many degrees are in a full circle?","action":"choice","choices":[{"text":"360","value":"correct"},{"text":"180","value":"wrong1"},{"text":"270","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"What is 3 to the power of 4?","action":"number","check":{"type":"number","answer":81,"tolerance":0},"mode":"indoor_ok"},
+          {"text":"What is 12 squared?","action":"number","check":{"type":"number","answer":144,"tolerance":0},"mode":"indoor_ok"},
+          {"text":"What is the sum of interior angles of a quadrilateral?","action":"choice","choices":[{"text":"360°","value":"correct"},{"text":"180°","value":"wrong1"},{"text":"270°","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"A number that reads the same backwards is a ____.","action":"fill_blank","blank":{"before":"A number that reads the same backwards is a","after":".","correct":"palindrome"},"check":{"type":"fill_blank","correct":"palindrome"},"mode":"indoor_ok"},
+          {"text":"Order these by value, smallest first:","action":"sort","items":["1/8","1/4","1/2","1"],"check":{"type":"sort","correct":["1/8","1/4","1/2","1"]},"mode":"indoor_ok"},
+          {"text":"What is the factorial of 4 (4!)?","action":"choice","choices":[{"text":"24","value":"correct"},{"text":"12","value":"wrong1"},{"text":"16","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"How many edges does a cube have?","action":"number","check":{"type":"number","answer":12,"tolerance":0},"mode":"indoor_ok"},
+          {"text":"Which is an irrational number?","action":"choice","choices":[{"text":"√2","value":"correct"},{"text":"0.5","value":"wrong1"},{"text":"4","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
         ]
       },
       feelings: {
@@ -668,7 +757,13 @@ export const T = {
           {"text":"What is a kind thing to say to a friend?","action":"choice","choices":[{"text":"\"Great job!\"","value":"correct"},{"text":"\"Go away!\"","value":"wrong1"},{"text":"\"You are boring\"","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"When you help someone, you are being ____.","action":"fill_blank","blank":{"before":"When you help someone, you are being","after":".","correct":"kind"},"check":{"type":"fill_blank","correct":"kind"},"mode":"indoor_ok"},
           {"text":"What should you do if a friend is sad?","action":"choice","choices":[{"text":"Comfort them","value":"correct"},{"text":"Laugh at them","value":"wrong1"},{"text":"Ignore them","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
-          {"text":"Match the situation to a feeling:","action":"match","pairs":[{"a":"Winning","b":"Joy"},{"a":"Losing a toy","b":"Sadness"},{"a":"A loud noise","b":"Fear"},{"a":"A surprise","b":"Excitement"}],"check":{"type":"match"},"mode":"indoor_ok"}
+          {"text":"Match the situation to a feeling:","action":"match","pairs":[{"a":"Winning","b":"Joy"},{"a":"Losing a toy","b":"Sadness"},{"a":"A loud noise","b":"Fear"},{"a":"A surprise","b":"Excitement"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"How do you feel when you get a hug from someone you love?","action":"choice","choices":[{"text":"😊 Warm & safe","value":"correct"},{"text":"😠 Angry","value":"wrong1"},{"text":"😨 Scared","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Sharing your toys with others is being ____.","action":"fill_blank","blank":{"before":"Sharing your toys with others is being","after":".","correct":"generous"},"check":{"type":"fill_blank","correct":"generous"},"mode":"indoor_ok"},
+          {"text":"Match each action to a feeling it can cause:","action":"match","pairs":[{"a":"A gift","b":"Joy"},{"a":"A goodbye","b":"Sadness"},{"a":"A surprise party","b":"Excitement"},{"a":"A loud bang","b":"Fright"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"If you break a friend's toy by accident, you should:","action":"choice","choices":[{"text":"Say sorry","value":"correct"},{"text":"Hide it","value":"wrong1"},{"text":"Blame them","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"What helps when you feel worried?","action":"choice","choices":[{"text":"Talking to someone","value":"correct"},{"text":"Keeping it secret","value":"wrong1"},{"text":"Yelling","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Order the strength of these feelings, calm to strong:","action":"sort","items":["😌 Calm","🙂 Content","😃 Happy","🤩 Thrilled"],"check":{"type":"sort","correct":["😌 Calm","🙂 Content","😃 Happy","🤩 Thrilled"]},"mode":"indoor_ok"}
         ],
         "medium": [
           {text:"What's the best way to help a friend who is sad?", action:"choice", choices:[{text:"Listen and be with them 🤝",value:"correct"},{text:"Ignore them and walk away",value:"wrong1"},{text:"Tell them to stop being sad",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -707,7 +802,14 @@ export const T = {
           {"text":"A good way to solve a disagreement is to ____.","action":"choice","choices":[{"text":"talk it out","value":"correct"},{"text":"shout louder","value":"wrong1"},{"text":"stop talking forever","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Match each need to a healthy response:","action":"match","pairs":[{"a":"Tired","b":"Rest"},{"a":"Lonely","b":"Call a friend"},{"a":"Angry","b":"Take a breath"},{"a":"Hungry","b":"Eat"}],"check":{"type":"match"},"mode":"indoor_ok"},
           {"text":"What is it called when you say sorry and mean it?","action":"choice","choices":[{"text":"A sincere apology","value":"correct"},{"text":"A joke","value":"wrong1"},{"text":"A secret","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
-          {"text":"Order the steps to calm down when upset:","action":"sort","items":["Notice the feeling","Breathe deeply","Think","Choose a response"],"check":{"type":"sort","correct":["Notice the feeling","Breathe deeply","Think","Choose a response"]},"mode":"indoor_ok"}
+          {"text":"Order the steps to calm down when upset:","action":"sort","items":["Notice the feeling","Breathe deeply","Think","Choose a response"],"check":{"type":"sort","correct":["Notice the feeling","Breathe deeply","Think","Choose a response"]},"mode":"indoor_ok"},
+          {"text":"What does \"patience\" mean?","action":"choice","choices":[{"text":"Waiting calmly","value":"correct"},{"text":"Getting angry fast","value":"wrong1"},{"text":"Giving up","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Understanding how someone else feels is called ____.","action":"fill_blank","blank":{"before":"Understanding how someone else feels is called","after":".","correct":"empathy"},"check":{"type":"fill_blank","correct":"empathy"},"mode":"indoor_ok"},
+          {"text":"A friend is left out of a game. The kind thing is to:","action":"choice","choices":[{"text":"Invite them in","value":"correct"},{"text":"Ignore them","value":"wrong1"},{"text":"Laugh","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Match each feeling to its body sign:","action":"match","pairs":[{"a":"Nervous","b":"Butterflies in tummy"},{"a":"Angry","b":"Hot face"},{"a":"Tired","b":"Heavy eyes"},{"a":"Happy","b":"Smiling"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"What is a good way to disagree respectfully?","action":"choice","choices":[{"text":"\"I see it differently\"","value":"correct"},{"text":"\"You are stupid\"","value":"wrong1"},{"text":"Shouting","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Order the steps of making up after a fight:","action":"sort","items":["Cool down","Talk","Apologize","Move on"],"check":{"type":"sort","correct":["Cool down","Talk","Apologize","Move on"]},"mode":"indoor_ok"},
+          {"text":"Being \"honest\" means you:","action":"choice","choices":[{"text":"Tell the truth","value":"correct"},{"text":"Keep secrets","value":"wrong1"},{"text":"Make things up","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
         ],
         "hard": [
           {text:"What is empathy?", action:"choice", choices:[{text:"Understanding how others feel",value:"correct"},{text:"Feeling angry at others",value:"wrong1"},{text:"Only thinking about yourself",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -746,7 +848,14 @@ export const T = {
           {"text":"Which is a healthy way to handle stress?","action":"choice","choices":[{"text":"Exercise or talk to someone","value":"correct"},{"text":"Bottle it up","value":"wrong1"},{"text":"Take it out on others","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Match each emotion to a coping strategy:","action":"match","pairs":[{"a":"Anxiety","b":"Deep breathing"},{"a":"Sadness","b":"Talking"},{"a":"Anger","b":"Counting to ten"},{"a":"Boredom","b":"A new activity"}],"check":{"type":"match"},"mode":"indoor_ok"},
           {"text":"\"Active listening\" means you ____.","action":"choice","choices":[{"text":"pay full attention","value":"correct"},{"text":"plan your reply","value":"wrong1"},{"text":"check your phone","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
-          {"text":"Order Maslow's needs, most basic first:","action":"sort","items":["Food & water","Safety","Belonging","Self-esteem"],"check":{"type":"sort","correct":["Food & water","Safety","Belonging","Self-esteem"]},"mode":"indoor_ok"}
+          {"text":"Order Maslow's needs, most basic first:","action":"sort","items":["Food & water","Safety","Belonging","Self-esteem"],"check":{"type":"sort","correct":["Food & water","Safety","Belonging","Self-esteem"]},"mode":"indoor_ok"},
+          {"text":"What is \"self-control\"?","action":"choice","choices":[{"text":"Managing your impulses","value":"correct"},{"text":"Doing whatever you want","value":"wrong1"},{"text":"Never having feelings","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Bouncing back after a setback shows ____.","action":"fill_blank","blank":{"before":"Bouncing back after a setback shows","after":".","correct":"resilience"},"check":{"type":"fill_blank","correct":"resilience"},"mode":"indoor_ok"},
+          {"text":"Which shows good \"teamwork\"?","action":"choice","choices":[{"text":"Sharing the task","value":"correct"},{"text":"Doing it all alone","value":"wrong1"},{"text":"Blaming others","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Match each scenario to the best response:","action":"match","pairs":[{"a":"A friend is crying","b":"Comfort them"},{"a":"You made a mistake","b":"Apologize"},{"a":"You feel overwhelmed","b":"Take a break"},{"a":"Someone is unfair","b":"Speak calmly"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Order the intensity, mild to intense:","action":"sort","items":["Annoyed","Frustrated","Angry","Furious"],"check":{"type":"sort","correct":["Annoyed","Frustrated","Angry","Furious"]},"mode":"indoor_ok"},
+          {"text":"\"Gratitude\" is the feeling of being:","action":"choice","choices":[{"text":"Thankful","value":"correct"},{"text":"Jealous","value":"wrong1"},{"text":"Bored","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"What does it mean to \"compromise\"?","action":"choice","choices":[{"text":"Both give a little","value":"correct"},{"text":"One person wins all","value":"wrong1"},{"text":"Nobody talks","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
         ],
         "extreme": [
           {text:"What psychological concept describes the discomfort of holding two conflicting beliefs?", action:"choice", choices:[{text:"Cognitive dissonance",value:"correct"},{text:"Confirmation bias",value:"wrong1"},{text:"Dunning-Kruger effect",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
@@ -777,7 +886,14 @@ export const T = {
           {"text":"Setting a limit on what you will accept is called a ____.","action":"choice","choices":[{"text":"boundary","value":"correct"},{"text":"grudge","value":"wrong1"},{"text":"reward","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Match each term to its meaning:","action":"match","pairs":[{"a":"Empathy","b":"Feeling with others"},{"a":"Sympathy","b":"Feeling for others"},{"a":"Apathy","b":"Feeling nothing"},{"a":"Compassion","b":"Wanting to help"}],"check":{"type":"match"},"mode":"indoor_ok"},
           {"text":"Order the stages of resolving conflict:","action":"sort","items":["Listen","Understand","Find common ground","Agree"],"check":{"type":"sort","correct":["Listen","Understand","Find common ground","Agree"]},"mode":"indoor_ok"},
-          {"text":"Reframing a negative thought into a balanced one is a skill from ____.","action":"choice","choices":[{"text":"cognitive therapy","value":"correct"},{"text":"astrology","value":"wrong1"},{"text":"gardening","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
+          {"text":"Reframing a negative thought into a balanced one is a skill from ____.","action":"choice","choices":[{"text":"cognitive therapy","value":"correct"},{"text":"astrology","value":"wrong1"},{"text":"gardening","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"The ability to stay motivated toward long-term goals is ____.","action":"choice","choices":[{"text":"perseverance","value":"correct"},{"text":"apathy","value":"wrong1"},{"text":"impulsivity","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Judging your worth kindly rather than harshly is self-____.","action":"fill_blank","blank":{"before":"Judging your worth kindly rather than harshly is self-","after":".","correct":"compassion"},"check":{"type":"fill_blank","correct":"compassion"},"mode":"indoor_ok"},
+          {"text":"Which best describes \"emotional regulation\"?","action":"choice","choices":[{"text":"Managing feelings healthily","value":"correct"},{"text":"Hiding all emotions","value":"wrong1"},{"text":"Acting on every urge","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Match each need to Maslow's level:","action":"match","pairs":[{"a":"Food","b":"Physiological"},{"a":"Safety","b":"Security"},{"a":"Friendship","b":"Belonging"},{"a":"Respect","b":"Esteem"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Order the grief stages (Kübler-Ross):","action":"sort","items":["Denial","Anger","Bargaining","Acceptance"],"check":{"type":"sort","correct":["Denial","Anger","Bargaining","Acceptance"]},"mode":"indoor_ok"},
+          {"text":"Recognizing a thought is \"just a thought\" is a core idea of ____.","action":"choice","choices":[{"text":"mindfulness","value":"correct"},{"text":"debate","value":"wrong1"},{"text":"memorizing","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Assertiveness means expressing needs while ____.","action":"choice","choices":[{"text":"respecting others","value":"correct"},{"text":"ignoring others","value":"wrong1"},{"text":"staying silent","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
         ]
       },
       arts: {
@@ -818,7 +934,14 @@ export const T = {
           {"text":"How many primary colors are there?","action":"choice","choices":[{"text":"Three","value":"correct"},{"text":"Five","value":"wrong1"},{"text":"Seven","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"A person who paints pictures is called a ____.","action":"fill_blank","blank":{"before":"A person who paints pictures is called a","after":".","correct":"painter"},"check":{"type":"fill_blank","correct":"painter"},"mode":"indoor_ok"},
           {"text":"How many strings does a standard guitar have?","action":"number","check":{"type":"number","answer":6,"tolerance":0},"mode":"indoor_ok"},
-          {"text":"Order the rainbow colors correctly:","action":"sort","items":["🔴 Red","🟡 Yellow","🟢 Green","🔵 Blue"],"check":{"type":"sort","correct":["🔴 Red","🟡 Yellow","🟢 Green","🔵 Blue"]},"mode":"indoor_ok"}
+          {"text":"Order the rainbow colors correctly:","action":"sort","items":["🔴 Red","🟡 Yellow","🟢 Green","🔵 Blue"],"check":{"type":"sort","correct":["🔴 Red","🟡 Yellow","🟢 Green","🔵 Blue"]},"mode":"indoor_ok"},
+          {"text":"Which of these do you play by hitting it?","action":"choice","choices":[{"text":"🥁 Drum","value":"correct"},{"text":"🎻 Violin","value":"wrong1"},{"text":"🎺 Trumpet","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"What do you use to paint a picture?","action":"choice","choices":[{"text":"🖌️ Brush","value":"correct"},{"text":"🔨 Hammer","value":"wrong1"},{"text":"🍴 Fork","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"How many colors are in a traditional rainbow?","action":"number","check":{"type":"number","answer":7,"tolerance":0},"mode":"indoor_ok"},
+          {"text":"Red, yellow and blue are the ____ colors.","action":"fill_blank","blank":{"before":"Red, yellow and blue are the","after":"colors.","correct":"primary"},"check":{"type":"fill_blank","correct":"primary"},"mode":"indoor_ok"},
+          {"text":"Match each art tool to what it does:","action":"match","pairs":[{"a":"Brush","b":"Paint"},{"a":"Pencil","b":"Draw"},{"a":"Scissors","b":"Cut"},{"a":"Clay","b":"Sculpt"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Order these sounds from quiet to loud:","action":"sort","items":["🤫 Whisper","🗣️ Talk","📣 Shout","💥 Bang"],"check":{"type":"sort","correct":["🤫 Whisper","🗣️ Talk","📣 Shout","💥 Bang"]},"mode":"indoor_ok"},
+          {"text":"Which is a warm color?","action":"choice","choices":[{"text":"Red","value":"correct"},{"text":"Blue","value":"wrong1"},{"text":"Green","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
         ],
         "medium": [
           {text:"Which famous artist painted the Mona Lisa?", action:"choice", choices:[{text:"Leonardo da Vinci 🎨",value:"correct"},{text:"Pablo Picasso",value:"wrong1"},{text:"Vincent van Gogh",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -854,7 +977,14 @@ export const T = {
           {text:"How many lines does a music staff have?", action:"number", check:{type:"number",answer:5,tolerance:0}, mode:"indoor_ok"},
           {"text":"The speed of a piece of music is called its ____.","action":"fill_blank","blank":{"before":"The speed of a piece of music is called its","after":".","correct":"tempo"},"check":{"type":"fill_blank","correct":"tempo"},"mode":"indoor_ok"},
           {"text":"Which instrument has black and white keys?","action":"choice","choices":[{"text":"Piano","value":"correct"},{"text":"Violin","value":"wrong1"},{"text":"Drum","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
-          {"text":"Order these from lightest to darkest shade:","action":"sort","items":["White","Light gray","Dark gray","Black"],"check":{"type":"sort","correct":["White","Light gray","Dark gray","Black"]},"mode":"indoor_ok"}
+          {"text":"Order these from lightest to darkest shade:","action":"sort","items":["White","Light gray","Dark gray","Black"],"check":{"type":"sort","correct":["White","Light gray","Dark gray","Black"]},"mode":"indoor_ok"},
+          {"text":"Who painted \"Starry Night\"?","action":"choice","choices":[{"text":"Van Gogh","value":"correct"},{"text":"Da Vinci","value":"wrong1"},{"text":"Michelangelo","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"A group of musicians playing together is an ____.","action":"fill_blank","blank":{"before":"A group of musicians playing together is an","after":".","correct":"orchestra"},"check":{"type":"fill_blank","correct":"orchestra"},"mode":"indoor_ok"},
+          {"text":"How many keys does a standard piano have?","action":"choice","choices":[{"text":"88","value":"correct"},{"text":"66","value":"wrong1"},{"text":"100","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Match each color to a fruit of that color:","action":"match","pairs":[{"a":"Red","b":"🍓 Strawberry"},{"a":"Yellow","b":"🍌 Banana"},{"a":"Green","b":"🍏 Apple"},{"a":"Purple","b":"🍇 Grapes"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Order these musical note lengths, longest first:","action":"sort","items":["Whole","Half","Quarter","Eighth"],"check":{"type":"sort","correct":["Whole","Half","Quarter","Eighth"]},"mode":"indoor_ok"},
+          {"text":"What color do you get mixing red and white?","action":"choice","choices":[{"text":"Pink","value":"correct"},{"text":"Purple","value":"wrong1"},{"text":"Brown","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"A sculpture is a work of art that is ____.","action":"choice","choices":[{"text":"three-dimensional","value":"correct"},{"text":"flat","value":"wrong1"},{"text":"a song","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
         ],
         "hard": [
           {text:"What art movement was Salvador Dalí associated with?", action:"choice", choices:[{text:"Surrealism",value:"correct"},{text:"Impressionism",value:"wrong1"},{text:"Cubism",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -891,7 +1021,14 @@ export const T = {
           {"text":"A painting made on wet plaster is called a ____.","action":"fill_blank","blank":{"before":"A painting made on wet plaster is called a","after":".","correct":"fresco"},"check":{"type":"fill_blank","correct":"fresco"},"mode":"indoor_ok"},
           {"text":"How many lines are in a standard musical staff?","action":"choice","choices":[{"text":"Five","value":"correct"},{"text":"Four","value":"wrong1"},{"text":"Six","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Order these tempos from slowest to fastest:","action":"sort","items":["Largo","Andante","Allegro","Presto"],"check":{"type":"sort","correct":["Largo","Andante","Allegro","Presto"]},"mode":"indoor_ok"},
-          {"text":"What is the technique of using light and shadow called?","action":"choice","choices":[{"text":"Chiaroscuro","value":"correct"},{"text":"Collage","value":"wrong1"},{"text":"Origami","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
+          {"text":"What is the technique of using light and shadow called?","action":"choice","choices":[{"text":"Chiaroscuro","value":"correct"},{"text":"Collage","value":"wrong1"},{"text":"Origami","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Which movement is Claude Monet famous for?","action":"choice","choices":[{"text":"Impressionism","value":"correct"},{"text":"Surrealism","value":"wrong1"},{"text":"Cubism","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"The Italian word for \"moderately slow\" in music is ____.","action":"fill_blank","blank":{"before":"The Italian word for \"moderately slow\" in music is","after":".","correct":"andante"},"check":{"type":"fill_blank","correct":"andante"},"mode":"indoor_ok"},
+          {"text":"Complementary colors sit ____ on the color wheel.","action":"choice","choices":[{"text":"opposite","value":"correct"},{"text":"next to each other","value":"wrong1"},{"text":"at the center","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Match each artwork to its artist:","action":"match","pairs":[{"a":"Mona Lisa","b":"Da Vinci"},{"a":"Guernica","b":"Picasso"},{"a":"The Scream","b":"Munch"},{"a":"Sunflowers","b":"Van Gogh"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Order the color wheel primaries clockwise from red:","action":"sort","items":["Red","Yellow","Blue"],"check":{"type":"sort","correct":["Red","Yellow","Blue"]},"mode":"indoor_ok"},
+          {"text":"What is a \"self-portrait\"?","action":"choice","choices":[{"text":"A painting of oneself","value":"correct"},{"text":"A landscape","value":"wrong1"},{"text":"A still life","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Which clef is used for high-pitched instruments?","action":"choice","choices":[{"text":"Treble clef","value":"correct"},{"text":"Bass clef","value":"wrong1"},{"text":"Alto clef","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
         ],
         "extreme": [
           {text:"Which art movement rejected tradition and embraced chance and absurdity?", action:"choice", choices:[{text:"Dadaism",value:"correct"},{text:"Romanticism",value:"wrong1"},{text:"Neoclassicism",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
@@ -921,7 +1058,14 @@ export const T = {
           {"text":"The Italian term for very loud in music is ____.","action":"fill_blank","blank":{"before":"The Italian term for very loud in music is","after":".","correct":"fortissimo"},"check":{"type":"fill_blank","correct":"fortissimo"},"mode":"indoor_ok"},
           {"text":"Which ceiling did Michelangelo paint?","action":"choice","choices":[{"text":"Sistine Chapel","value":"correct"},{"text":"Notre-Dame","value":"wrong1"},{"text":"Louvre","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Match each term to its art form:","action":"match","pairs":[{"a":"Sonnet","b":"Poetry"},{"a":"Sonata","b":"Music"},{"a":"Fresco","b":"Painting"},{"a":"Ballet","b":"Dance"}],"check":{"type":"match"},"mode":"indoor_ok"},
-          {"text":"How many notes are in a standard octave (do to do)?","action":"choice","choices":[{"text":"8","value":"correct"},{"text":"7","value":"wrong1"},{"text":"12","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
+          {"text":"How many notes are in a standard octave (do to do)?","action":"choice","choices":[{"text":"8","value":"correct"},{"text":"7","value":"wrong1"},{"text":"12","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Who sculpted the statue of David?","action":"choice","choices":[{"text":"Michelangelo","value":"correct"},{"text":"Donatello","value":"wrong1"},{"text":"Rodin","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"The Italian term for gradually getting louder is ____.","action":"fill_blank","blank":{"before":"The Italian term for gradually getting louder is","after":".","correct":"crescendo"},"check":{"type":"fill_blank","correct":"crescendo"},"mode":"indoor_ok"},
+          {"text":"Which artist co-founded Cubism with Braque?","action":"choice","choices":[{"text":"Picasso","value":"correct"},{"text":"Dalí","value":"wrong1"},{"text":"Monet","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Match each composer to their era:","action":"match","pairs":[{"a":"Bach","b":"Baroque"},{"a":"Mozart","b":"Classical"},{"a":"Chopin","b":"Romantic"},{"a":"Stravinsky","b":"Modern"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Order these intervals, smallest first:","action":"sort","items":["Second","Third","Fifth","Octave"],"check":{"type":"sort","correct":["Second","Third","Fifth","Octave"]},"mode":"indoor_ok"},
+          {"text":"The technique of applying paint in small dots is called ____.","action":"choice","choices":[{"text":"pointillism","value":"correct"},{"text":"collage","value":"wrong1"},{"text":"etching","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"How many movements does a typical classical symphony have?","action":"number","check":{"type":"number","answer":4,"tolerance":0},"mode":"indoor_ok"}
         ]
       },
       world: {
@@ -962,7 +1106,12 @@ export const T = {
           {"text":"What is the largest ocean?","action":"choice","choices":[{"text":"Pacific","value":"correct"},{"text":"Atlantic","value":"wrong1"},{"text":"Arctic","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"The capital of the Czech Republic is ____.","action":"fill_blank","blank":{"before":"The capital of the Czech Republic is","after":".","correct":"Prague"},"check":{"type":"fill_blank","correct":"Prague"},"mode":"indoor_ok"},
           {"text":"How many continents are there?","action":"number","check":{"type":"number","answer":7,"tolerance":0},"mode":"indoor_ok"},
-          {"text":"Order these by size, smallest first:","action":"sort","items":["Town","City","Country","Continent"],"check":{"type":"sort","correct":["Town","City","Country","Continent"]},"mode":"indoor_ok"}
+          {"text":"Order these by size, smallest first:","action":"sort","items":["Town","City","Country","Continent"],"check":{"type":"sort","correct":["Town","City","Country","Continent"]},"mode":"indoor_ok"},
+          {"text":"Which is a country?","action":"choice","choices":[{"text":"Germany","value":"correct"},{"text":"Berlin","value":"wrong1"},{"text":"Europe","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"What is frozen water called?","action":"choice","choices":[{"text":"Ice","value":"correct"},{"text":"Steam","value":"wrong1"},{"text":"Sand","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"The largest hot desert is the ____.","action":"fill_blank","blank":{"before":"The largest hot desert is the","after":".","correct":"Sahara"},"check":{"type":"fill_blank","correct":"Sahara"},"mode":"indoor_ok"},
+          {"text":"Which direction does the sun rise?","action":"choice","choices":[{"text":"East","value":"correct"},{"text":"West","value":"wrong1"},{"text":"North","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"outdoor_bonus"},
+          {"text":"How many months are in a year?","action":"number","check":{"type":"number","answer":12,"tolerance":0},"mode":"indoor_ok"}
         ],
         "medium": [
           {text:"What is the capital city of France?", action:"choice", choices:[{text:"🗼 Paris",value:"correct"},{text:"🏰 London",value:"wrong1"},{text:"🎭 Rome",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -1001,7 +1150,14 @@ export const T = {
           {"text":"Which country has the most people?","action":"choice","choices":[{"text":"India","value":"correct"},{"text":"Canada","value":"wrong1"},{"text":"Australia","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Match each landmark to its country:","action":"match","pairs":[{"a":"Eiffel Tower","b":"France"},{"a":"Colosseum","b":"Italy"},{"a":"Pyramids","b":"Egypt"},{"a":"Statue of Liberty","b":"USA"}],"check":{"type":"match"},"mode":"indoor_ok"},
           {"text":"Order these from smallest to largest area:","action":"sort","items":["Vatican","Czechia","France","Russia"],"check":{"type":"sort","correct":["Vatican","Czechia","France","Russia"]},"mode":"indoor_ok"},
-          {"text":"On which continent is the Sahara Desert?","action":"choice","choices":[{"text":"Africa","value":"correct"},{"text":"Asia","value":"wrong1"},{"text":"Europe","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
+          {"text":"On which continent is the Sahara Desert?","action":"choice","choices":[{"text":"Africa","value":"correct"},{"text":"Asia","value":"wrong1"},{"text":"Europe","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Which country is home to the kangaroo?","action":"choice","choices":[{"text":"Australia","value":"correct"},{"text":"Brazil","value":"wrong1"},{"text":"Canada","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"The tallest mountain on Earth is Mount ____.","action":"fill_blank","blank":{"before":"The tallest mountain on Earth is Mount","after":".","correct":"Everest"},"check":{"type":"fill_blank","correct":"Everest"},"mode":"indoor_ok"},
+          {"text":"Which continent is the coldest?","action":"choice","choices":[{"text":"Antarctica","value":"correct"},{"text":"Africa","value":"wrong1"},{"text":"Asia","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Match each country to its flag color trio:","action":"match","pairs":[{"a":"France","b":"Blue-white-red"},{"a":"Germany","b":"Black-red-gold"},{"a":"Italy","b":"Green-white-red"},{"a":"Ireland","b":"Green-white-orange"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Order these Czech cities by population, largest first:","action":"sort","items":["Prague","Brno","Ostrava","Plzeň"],"check":{"type":"sort","correct":["Prague","Brno","Ostrava","Plzeň"]},"mode":"indoor_ok"},
+          {"text":"The Great Wall is located in which country?","action":"choice","choices":[{"text":"China","value":"correct"},{"text":"India","value":"wrong1"},{"text":"Japan","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"How many time zones does the world have (roughly)?","action":"number","check":{"type":"number","answer":24,"tolerance":1},"mode":"indoor_ok"}
         ],
         "hard": [
           {text:"Which ocean is the largest on Earth?", action:"choice", choices:[{text:"🌊 Pacific Ocean",value:"correct"},{text:"Atlantic Ocean",value:"wrong1"},{text:"Indian Ocean",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -1042,7 +1198,12 @@ export const T = {
           {"text":"The study of maps and Earth's features is called ____.","action":"fill_blank","blank":{"before":"The study of maps and Earth's features is called","after":".","correct":"geography"},"check":{"type":"fill_blank","correct":"geography"},"mode":"indoor_ok"},
           {"text":"In which year did World War II end?","action":"choice","choices":[{"text":"1945","value":"correct"},{"text":"1918","value":"wrong1"},{"text":"1939","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Order these historical periods, earliest first:","action":"sort","items":["Ancient","Medieval","Renaissance","Modern"],"check":{"type":"sort","correct":["Ancient","Medieval","Renaissance","Modern"]},"mode":"indoor_ok"},
-          {"text":"Which mountain is the tallest above sea level?","action":"choice","choices":[{"text":"Everest","value":"correct"},{"text":"K2","value":"wrong1"},{"text":"Mont Blanc","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
+          {"text":"Which mountain is the tallest above sea level?","action":"choice","choices":[{"text":"Everest","value":"correct"},{"text":"K2","value":"wrong1"},{"text":"Mont Blanc","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"The imaginary line at 0° longitude is the ____ Meridian.","action":"fill_blank","blank":{"before":"The imaginary line at 0° longitude is the","after":"Meridian.","correct":"Prime"},"check":{"type":"fill_blank","correct":"Prime"},"mode":"indoor_ok"},
+          {"text":"In which year did the Czech Republic split from Slovakia?","action":"choice","choices":[{"text":"1993","value":"correct"},{"text":"1989","value":"wrong1"},{"text":"2004","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Order these wars by start date, earliest first:","action":"sort","items":["Napoleonic Wars","World War I","World War II","Cold War"],"check":{"type":"sort","correct":["Napoleonic Wars","World War I","World War II","Cold War"]},"mode":"indoor_ok"},
+          {"text":"Which ocean lies between Europe and America?","action":"choice","choices":[{"text":"Atlantic","value":"correct"},{"text":"Pacific","value":"wrong1"},{"text":"Indian","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"In which century did Charles IV rule Bohemia? (e.g. 14)","action":"number","check":{"type":"number","answer":14,"tolerance":0},"mode":"indoor_ok"}
         ],
         "extreme": [
           {text:"Which international agreement set binding targets to reduce greenhouse gas emissions?", action:"choice", choices:[{text:"Paris Agreement (2015)",value:"correct"},{text:"Kyoto Protocol (1997)",value:"wrong1"},{text:"Montreal Protocol (1987)",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -1068,7 +1229,14 @@ export const T = {
           {"text":"A narrow strip of land connecting two larger areas is an ____.","action":"fill_blank","blank":{"before":"A narrow strip of land connecting two larger areas is an","after":".","correct":"isthmus"},"check":{"type":"fill_blank","correct":"isthmus"},"mode":"indoor_ok"},
           {"text":"Who was the first person to walk on the Moon?","action":"choice","choices":[{"text":"Neil Armstrong","value":"correct"},{"text":"Yuri Gagarin","value":"wrong1"},{"text":"Buzz Aldrin","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Order these events, earliest first:","action":"sort","items":["Fall of Rome","Columbus 1492","French Revolution","Moon landing"],"check":{"type":"sort","correct":["Fall of Rome","Columbus 1492","French Revolution","Moon landing"]},"mode":"indoor_ok"},
-          {"text":"The Berlin Wall fell in which year?","action":"choice","choices":[{"text":"1989","value":"correct"},{"text":"1991","value":"wrong1"},{"text":"1979","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
+          {"text":"The Berlin Wall fell in which year?","action":"choice","choices":[{"text":"1989","value":"correct"},{"text":"1991","value":"wrong1"},{"text":"1979","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"What is the capital of Australia?","action":"choice","choices":[{"text":"Canberra","value":"correct"},{"text":"Sydney","value":"wrong1"},{"text":"Melbourne","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"The supercontinent that existed 300 million years ago was ____.","action":"fill_blank","blank":{"before":"The supercontinent that existed 300 million years ago was","after":".","correct":"Pangaea"},"check":{"type":"fill_blank","correct":"Pangaea"},"mode":"indoor_ok"},
+          {"text":"Which empire was ruled by Genghis Khan?","action":"choice","choices":[{"text":"Mongol","value":"correct"},{"text":"Roman","value":"wrong1"},{"text":"Ottoman","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Match each country to its capital:","action":"match","pairs":[{"a":"Canada","b":"Ottawa"},{"a":"Brazil","b":"Brasília"},{"a":"Turkey","b":"Ankara"},{"a":"Norway","b":"Oslo"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Order these empires by peak era, earliest first:","action":"sort","items":["Egyptian","Roman","Mongol","British"],"check":{"type":"sort","correct":["Egyptian","Roman","Mongol","British"]},"mode":"indoor_ok"},
+          {"text":"The Amazon rainforest is mostly in which country?","action":"choice","choices":[{"text":"Brazil","value":"correct"},{"text":"Peru","value":"wrong1"},{"text":"Colombia","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"In which year did the first humans land on the Moon?","action":"number","check":{"type":"number","answer":1969,"tolerance":0},"mode":"indoor_ok"}
         ]
       }
     },
@@ -1305,7 +1473,15 @@ export const T = {
           {"text":"Kolik nohou má mravenec?","action":"number","check":{"type":"number","answer":6,"tolerance":0},"mode":"indoor_ok"},
           {"text":"Smečka je skupina ____.","action":"fill_blank","blank":{"before":"Smečka je skupina","after":".","correct":"vlků"},"check":{"type":"fill_blank","correct":"vlků"},"mode":"indoor_ok"},
           {"text":"Seřaď od nejmenšího po největší:","action":"sort","items":["🐁 Myš","🐈 Kočka","🐕 Pes","🐎 Kůň"],"check":{"type":"sort","correct":["🐁 Myš","🐈 Kočka","🐕 Pes","🐎 Kůň"]},"mode":"indoor_ok"},
-          {"text":"Přiřaď zvíře k jeho domovu:","action":"match","pairs":[{"a":"Ryba","b":"Voda"},{"a":"Pták","b":"Hnízdo"},{"a":"Medvěd","b":"Jeskyně"},{"a":"Včela","b":"Úl"}],"check":{"type":"match"},"mode":"outdoor_bonus"}
+          {"text":"Přiřaď zvíře k jeho domovu:","action":"match","pairs":[{"a":"Ryba","b":"Voda"},{"a":"Pták","b":"Hnízdo"},{"a":"Medvěd","b":"Jeskyně"},{"a":"Včela","b":"Úl"}],"check":{"type":"match"},"mode":"outdoor_bonus"},
+          {"text":"Co rostliny vyrábějí v listech pomocí slunce?","action":"choice","choices":[{"text":"🍃 Potravu","value":"correct"},{"text":"🪨 Kameny","value":"wrong1"},{"text":"💨 Vítr","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"outdoor_bonus"},
+          {"text":"Které je největší suchozemské zvíře?","action":"choice","choices":[{"text":"🐘 Slon","value":"correct"},{"text":"🐁 Myš","value":"wrong1"},{"text":"🐇 Králík","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Kolik barev má duha?","action":"number","check":{"type":"number","answer":7,"tolerance":0},"mode":"indoor_ok"},
+          {"text":"Déšť, sníh a kroupy jsou druhy ____.","action":"fill_blank","blank":{"before":"Déšť, sníh a kroupy jsou druhy","after":".","correct":"srážek"},"check":{"type":"fill_blank","correct":"srážek"},"mode":"indoor_ok"},
+          {"text":"Seřaď odspodu nahoru (od země k obloze):","action":"sort","items":["🌱 Tráva","🌳 Strom","☁️ Mrak","☀️ Slunce"],"check":{"type":"sort","correct":["🌱 Tráva","🌳 Strom","☁️ Mrak","☀️ Slunce"]},"mode":"indoor_ok"},
+          {"text":"Přiřaď počasí k symbolu:","action":"match","pairs":[{"a":"Slunečno","b":"☀️"},{"a":"Deštivo","b":"🌧️"},{"a":"Sněžení","b":"❄️"},{"a":"Větrno","b":"💨"}],"check":{"type":"match"},"mode":"outdoor_bonus"},
+          {"text":"Která část rostliny nasává vodu z půdy?","action":"choice","choices":[{"text":"🌱 Kořeny","value":"correct"},{"text":"🌸 Květ","value":"wrong1"},{"text":"🍃 List","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Kolik nohou má včela?","action":"number","check":{"type":"number","answer":6,"tolerance":0},"mode":"indoor_ok"}
         ],
         "medium": [
           {text:"Co rostliny potřebují k růstu?", hint:"Co dáváš rostlině každý den?", action:"choice", choices:[{text:"🌊 Vodu a slunce",value:"voda_slunce"},{text:"🍫 Čokoládu",value:"cokolada"},{text:"🧊 Jen led",value:"led"}], check:{type:"choice",correct:"voda_slunce"}, mode:"outdoor_bonus"},
@@ -1348,7 +1524,15 @@ export const T = {
           {"text":"Voda mrzne při ____ stupních Celsia.","action":"fill_blank","blank":{"before":"Voda mrzne při","after":"stupních Celsia.","correct":"0"},"check":{"type":"fill_blank","correct":"0"},"mode":"indoor_ok"},
           {"text":"Který je největší savec na Zemi?","action":"choice","choices":[{"text":"Modrá velryba","value":"correct"},{"text":"Slon","value":"wrong1"},{"text":"Žirafa","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Seřaď podle velikosti, nejmenší první:","action":"sort","items":["⚛️ Atom","🦠 Buňka","🐜 Mravenec","🐘 Slon"],"check":{"type":"sort","correct":["⚛️ Atom","🦠 Buňka","🐜 Mravenec","🐘 Slon"]},"mode":"indoor_ok"},
-          {"text":"Přiřaď skupinu zvířat k příkladu:","action":"match","pairs":[{"a":"Savec","b":"Pes"},{"a":"Plaz","b":"Had"},{"a":"Obojživelník","b":"Žába"},{"a":"Hmyz","b":"Mravenec"}],"check":{"type":"match"},"mode":"indoor_ok"}
+          {"text":"Přiřaď skupinu zvířat k příkladu:","action":"match","pairs":[{"a":"Savec","b":"Pes"},{"a":"Plaz","b":"Had"},{"a":"Obojživelník","b":"Žába"},{"a":"Hmyz","b":"Mravenec"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Které zvíře dokáže dorůst ztracenou končetinu?","action":"choice","choices":[{"text":"🦎 Ještěrka","value":"correct"},{"text":"🐕 Pes","value":"wrong1"},{"text":"🐦 Pták","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Největší orgán lidského těla je ____.","action":"fill_blank","blank":{"before":"Největší orgán lidského těla je","after":".","correct":"kůže"},"check":{"type":"fill_blank","correct":"kůže"},"mode":"indoor_ok"},
+          {"text":"Kolik nohou má většina pavouků?","action":"number","check":{"type":"number","answer":8,"tolerance":0},"mode":"indoor_ok"},
+          {"text":"Jak se nazývají zvířata, která jedí jen rostliny?","action":"choice","choices":[{"text":"Býložravci","value":"correct"},{"text":"Masožravci","value":"wrong1"},{"text":"Hmyz","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Seřaď koloběh vody, začni odpařováním:","action":"sort","items":["💧 Odpařování","☁️ Kondenzace","🌧️ Srážky","🏞️ Sběr"],"check":{"type":"sort","correct":["💧 Odpařování","☁️ Kondenzace","🌧️ Srážky","🏞️ Sběr"]},"mode":"indoor_ok"},
+          {"text":"Přiřaď biom k rysu:","action":"match","pairs":[{"a":"Poušť","b":"Písek"},{"a":"Prales","b":"Déšť"},{"a":"Tundra","b":"Chlad"},{"a":"Oceán","b":"Slaná voda"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Který plyn vydechujeme?","action":"choice","choices":[{"text":"Oxid uhličitý","value":"correct"},{"text":"Kyslík","value":"wrong1"},{"text":"Helium","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Při kolika °C vře voda? (u hladiny moře)","action":"number","check":{"type":"number","answer":100,"tolerance":0},"mode":"indoor_ok"}
         ],
         "hard": [
           {text:"Co je fotosyntéza?", hint:"Co rostliny vyrábí ze slunečního světla?", action:"choice", choices:[{text:"🌞 Přeměna světla v potravu",value:"correct"},{text:"🌙 Spánek během dne",value:"wrong1"},{text:"💧 Pití dešťové vody",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -1388,7 +1572,15 @@ export const T = {
           {"text":"Kolik komor a síní má lidské srdce?","action":"number","check":{"type":"number","answer":4,"tolerance":0},"mode":"indoor_ok"},
           {"text":"Které krvinky bojují s infekcí?","action":"choice","choices":[{"text":"Bílé krvinky","value":"correct"},{"text":"Červené krvinky","value":"wrong1"},{"text":"Krevní destičky","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Seřaď třídění, od nejširšího:","action":"sort","items":["Říše","Kmen","Třída","Druh"],"check":{"type":"sort","correct":["Říše","Kmen","Třída","Druh"]},"mode":"indoor_ok"},
-          {"text":"Přiřaď planetu k vlastnosti:","action":"match","pairs":[{"a":"Mars","b":"Rudá planeta"},{"a":"Jupiter","b":"Největší"},{"a":"Saturn","b":"Prstence"},{"a":"Venuše","b":"Nejteplejší"}],"check":{"type":"match"},"mode":"indoor_ok"}
+          {"text":"Přiřaď planetu k vlastnosti:","action":"match","pairs":[{"a":"Mars","b":"Rudá planeta"},{"a":"Jupiter","b":"Největší"},{"a":"Saturn","b":"Prstence"},{"a":"Venuše","b":"Nejteplejší"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Která část rostlinné buňky zachycuje světlo?","action":"choice","choices":[{"text":"Chloroplast","value":"correct"},{"text":"Jádro","value":"wrong1"},{"text":"Buněčná stěna","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Zvíře aktivní hlavně za svítání a soumraku je ____.","action":"fill_blank","blank":{"before":"Zvíře aktivní hlavně za svítání a soumraku je","after":".","correct":"krepuskulární"},"check":{"type":"fill_blank","correct":"krepuskulární"},"mode":"indoor_ok"},
+          {"text":"Kolik párů chromozomů má člověk?","action":"number","check":{"type":"number","answer":23,"tolerance":0},"mode":"indoor_ok"},
+          {"text":"Která přírodní látka je nejtvrdší?","action":"choice","choices":[{"text":"Diamant","value":"correct"},{"text":"Železo","value":"wrong1"},{"text":"Křemen","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Seřaď trofické úrovně, producent první:","action":"sort","items":["Producent","Primární konzument","Sekundární konzument","Vrcholový predátor"],"check":{"type":"sort","correct":["Producent","Primární konzument","Sekundární konzument","Vrcholový predátor"]},"mode":"indoor_ok"},
+          {"text":"Přiřaď typ horniny ke vzniku:","action":"match","pairs":[{"a":"Vyvřelá","b":"Ztuhlé magma"},{"a":"Usazená","b":"Vrstvy"},{"a":"Přeměněná","b":"Teplo a tlak"},{"a":"Zkamenělina","b":"Pozůstatky"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Kterou vitamín pomáhá kůži vyrobit sluneční světlo?","action":"choice","choices":[{"text":"Vitamín D","value":"correct"},{"text":"Vitamín C","value":"wrong1"},{"text":"Vitamín B12","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"outdoor_bonus"},
+          {"text":"Kolik zubů má obvykle dospělý člověk?","action":"number","check":{"type":"number","answer":32,"tolerance":0},"mode":"indoor_ok"}
         ],
         "extreme": [
           {text:"Který proces přeměňuje dusík na formy využitelné rostlinami?", action:"choice", choices:[{text:"Fixace dusíku",value:"correct"},{text:"Fotosyntéza",value:"wrong1"},{text:"Transpirace",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -1418,7 +1610,15 @@ export const T = {
           {"text":"Při jaké teplotě (°C) vře voda u hladiny moře?","action":"number","check":{"type":"number","answer":100,"tolerance":0},"mode":"indoor_ok"},
           {"text":"Kdo navrhl teorii evoluce přirozeným výběrem?","action":"choice","choices":[{"text":"Charles Darwin","value":"correct"},{"text":"Isaac Newton","value":"wrong1"},{"text":"Gregor Mendel","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Seřaď geologické éry, nejstarší první:","action":"sort","items":["Paleozoikum","Mezozoikum","Kenozoikum","Současnost"],"check":{"type":"sort","correct":["Paleozoikum","Mezozoikum","Kenozoikum","Současnost"]},"mode":"indoor_ok"},
-          {"text":"Přiřaď vědce k oboru:","action":"match","pairs":[{"a":"Mendel","b":"Genetika"},{"a":"Newton","b":"Gravitace"},{"a":"Curie","b":"Radioaktivita"},{"a":"Pasteur","b":"Mikroby"}],"check":{"type":"match"},"mode":"indoor_ok"}
+          {"text":"Přiřaď vědce k oboru:","action":"match","pairs":[{"a":"Mendel","b":"Genetika"},{"a":"Newton","b":"Gravitace"},{"a":"Curie","b":"Radioaktivita"},{"a":"Pasteur","b":"Mikroby"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Jak se jmenuje dělení buněk tvořící pohlavní buňky?","action":"choice","choices":[{"text":"Meióza","value":"correct"},{"text":"Mitóza","value":"wrong1"},{"text":"Osmóza","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Barvivo, které dělá rostliny zelené, je ____.","action":"fill_blank","blank":{"before":"Barvivo, které dělá rostliny zelené, je","after":".","correct":"chlorofyl"},"check":{"type":"fill_blank","correct":"chlorofyl"},"mode":"indoor_ok"},
+          {"text":"Kolik kostí má dospělý člověk?","action":"number","check":{"type":"number","answer":206,"tolerance":4},"mode":"indoor_ok"},
+          {"text":"Kdo je považován za autora zákonů dědičnosti?","action":"choice","choices":[{"text":"Gregor Mendel","value":"correct"},{"text":"Louis Pasteur","value":"wrong1"},{"text":"Charles Darwin","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Seřaď taxony pod třídou, od nejširšího:","action":"sort","items":["Řád","Čeleď","Rod","Druh"],"check":{"type":"sort","correct":["Řád","Čeleď","Rod","Druh"]},"mode":"indoor_ok"},
+          {"text":"Přiřaď prvek ke značce:","action":"match","pairs":[{"a":"Kyslík","b":"O"},{"a":"Vodík","b":"H"},{"a":"Uhlík","b":"C"},{"a":"Železo","b":"Fe"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Jaké pH má neutrální roztok?","action":"choice","choices":[{"text":"7","value":"correct"},{"text":"0","value":"wrong1"},{"text":"14","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Kolik oddílů má srdce ryby?","action":"number","check":{"type":"number","answer":2,"tolerance":0},"mode":"indoor_ok"}
         ]
       },
       language: {
@@ -1458,7 +1658,13 @@ export const T = {
           {"text":"Opak slova „horký\" je ____.","action":"fill_blank","blank":{"before":"Opak slova „horký\" je","after":".","correct":"studený"},"check":{"type":"fill_blank","correct":"studený"},"mode":"indoor_ok"},
           {"text":"Které slovo se rýmuje s „kos\"?","action":"choice","choices":[{"text":"Nos","value":"correct"},{"text":"Pes","value":"wrong1"},{"text":"Dům","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Přiřaď zvíře k mláděti:","action":"match","pairs":[{"a":"Kočka","b":"Kotě"},{"a":"Pes","b":"Štěně"},{"a":"Kráva","b":"Tele"},{"a":"Kůň","b":"Hříbě"}],"check":{"type":"match"},"mode":"indoor_ok"},
-          {"text":"Které písmeno je samohláska?","action":"choice","choices":[{"text":"A","value":"correct"},{"text":"B","value":"wrong1"},{"text":"C","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
+          {"text":"Které písmeno je samohláska?","action":"choice","choices":[{"text":"A","value":"correct"},{"text":"B","value":"wrong1"},{"text":"C","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Množné číslo od „dítě\" je ____.","action":"fill_blank","blank":{"before":"Množné číslo od „dítě\" je","after":".","correct":"děti"},"check":{"type":"fill_blank","correct":"děti"},"mode":"indoor_ok"},
+          {"text":"Které slovo správně začíná velkým písmenem?","action":"choice","choices":[{"text":"Praha","value":"correct"},{"text":"praha","value":"wrong1"},{"text":"PRAHA","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Přiřaď slovo do kategorie:","action":"match","pairs":[{"a":"Jablko","b":"Ovoce"},{"a":"Pes","b":"Zvíře"},{"a":"Červená","b":"Barva"},{"a":"Tři","b":"Číslo"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Seřaď písmena podle abecedy:","action":"sort","items":["B","D","F","H"],"check":{"type":"sort","correct":["B","D","F","H"]},"mode":"indoor_ok"},
+          {"text":"Co je otázka?","action":"choice","choices":[{"text":"Kde jsi?","value":"correct"},{"text":"Jsem tady.","value":"wrong1"},{"text":"Sedni si.","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Kolik písmen má slovo „kniha\"?","action":"choice","choices":[{"text":"5","value":"correct"},{"text":"3","value":"wrong1"},{"text":"6","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
         ],
         "medium": [
           {text:"Co je opak slova VESELÝ?", action:"choice", choices:[{text:"Smutný 😢",value:"smutný"},{text:"Radostný 😄",value:"radostný"},{text:"Velký 🐘",value:"velký"}], check:{type:"choice",correct:"smutný"}, mode:"outdoor_bonus"},
@@ -1499,7 +1705,13 @@ export const T = {
           {"text":"Která věta je správně interpunkčně?","action":"choice","choices":[{"text":"Řekla: „Ahoj!\"","value":"correct"},{"text":"Řekla „Ahoj!","value":"wrong1"},{"text":"Řekla, „Ahoj!","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Přiřaď slovo k opaku:","action":"match","pairs":[{"a":"Velký","b":"Malý"},{"a":"Rychlý","b":"Pomalý"},{"a":"Šťastný","b":"Smutný"},{"a":"Světlý","b":"Tmavý"}],"check":{"type":"match"},"mode":"indoor_ok"},
           {"text":"Seřaď slova do věty:","action":"sort","items":["Kočka","si","sedla","dolů"],"check":{"type":"sort","correct":["Kočka","si","sedla","dolů"]},"mode":"indoor_ok"},
-          {"text":"Který slovní druh vyjadřuje děj?","action":"choice","choices":[{"text":"Sloveso","value":"correct"},{"text":"Podstatné jméno","value":"wrong1"},{"text":"Přídavné jméno","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
+          {"text":"Který slovní druh vyjadřuje děj?","action":"choice","choices":[{"text":"Sloveso","value":"correct"},{"text":"Podstatné jméno","value":"wrong1"},{"text":"Přídavné jméno","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Které slovo je přídavné jméno?","action":"choice","choices":[{"text":"Krásný","value":"correct"},{"text":"Rychle","value":"wrong1"},{"text":"Běžet","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Slovo znějící stejně, ale psané jinak, je ____.","action":"fill_blank","blank":{"before":"Slovo znějící stejně, ale psané jinak, je","after":".","correct":"homofon"},"check":{"type":"fill_blank","correct":"homofon"},"mode":"indoor_ok"},
+          {"text":"Která věta je v budoucím čase?","action":"choice","choices":[{"text":"Půjdu zítra","value":"correct"},{"text":"Šel jsem včera","value":"wrong1"},{"text":"Jdu právě teď","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Seřaď do otázky:","action":"sort","items":["Kde","je","ten","pes?"],"check":{"type":"sort","correct":["Kde","je","ten","pes?"]},"mode":"indoor_ok"},
+          {"text":"Jaký je 2. stupeň od „dobrý\" (v angličtině good)?","action":"choice","choices":[{"text":"Better","value":"correct"},{"text":"Gooder","value":"wrong1"},{"text":"Best","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Které slovo je synonymum ke „šťastný\"?","action":"choice","choices":[{"text":"Radostný","value":"correct"},{"text":"Smutný","value":"wrong1"},{"text":"Unavený","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
         ],
         "hard": [
           {text:"Jaký jazykový prostředek je v: 'Vítr šeptal tajemství'?", action:"choice", choices:[{text:"Personifikace",value:"correct"},{text:"Rým",value:"wrong1"},{text:"Metafora",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -1538,7 +1750,14 @@ export const T = {
           {"text":"Co je podmět ve větě „Pes hlasitě štěkal\"?","action":"choice","choices":[{"text":"Pes","value":"correct"},{"text":"štěkal","value":"wrong1"},{"text":"hlasitě","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Přiřaď básnický prostředek k příkladu:","action":"match","pairs":[{"a":"Přirovnání","b":"Jako růže"},{"a":"Metafora","b":"Srdce z kamene"},{"a":"Aliterace","b":"Pět pěkných psů"},{"a":"Nadsázka","b":"Tuna úkolů"}],"check":{"type":"match"},"mode":"indoor_ok"},
           {"text":"Seřaď od písmene po celý text:","action":"sort","items":["Písmeno","Slovo","Věta","Odstavec"],"check":{"type":"sort","correct":["Písmeno","Slovo","Věta","Odstavec"]},"mode":"indoor_ok"},
-          {"text":"Která věta je v trpném rodě?","action":"choice","choices":[{"text":"Míč byl hozen","value":"correct"},{"text":"Hodila míč","value":"wrong1"},{"text":"Hoď míč","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
+          {"text":"Která věta je v trpném rodě?","action":"choice","choices":[{"text":"Míč byl hozen","value":"correct"},{"text":"Hodila míč","value":"wrong1"},{"text":"Hoď míč","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Jak se nazývá slovo, které rozvíjí sloveso?","action":"choice","choices":[{"text":"Příslovce","value":"correct"},{"text":"Přídavné jméno","value":"wrong1"},{"text":"Zájmeno","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Přehnané zveličení pro efekt se nazývá ____.","action":"fill_blank","blank":{"before":"Přehnané zveličení pro efekt se nazývá","after":".","correct":"hyperbola"},"check":{"type":"fill_blank","correct":"hyperbola"},"mode":"indoor_ok"},
+          {"text":"Ve spojení „rychle běžel\" je „rychle\" co?","action":"choice","choices":[{"text":"Příslovce","value":"correct"},{"text":"Podstatné jméno","value":"wrong1"},{"text":"Sloveso","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Přiřaď obrat k příkladu:","action":"match","pairs":[{"a":"Idiom","b":"Zlom vaz"},{"a":"Přirovnání","b":"Studený jako led"},{"a":"Personifikace","b":"Vítr zpíval"},{"a":"Onomatopoie","b":"Bzz"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Seřaď podle délky, od nejkratšího:","action":"sort","items":["Slabika","Slovo","Věta","Odstavec"],"check":{"type":"sort","correct":["Slabika","Slovo","Věta","Odstavec"]},"mode":"indoor_ok"},
+          {"text":"Které podstatné jméno je abstraktní (není hmatatelné)?","action":"choice","choices":[{"text":"Svoboda","value":"correct"},{"text":"Stůl","value":"wrong1"},{"text":"Jablko","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Jak se nazývá ten, kdo příběh vypráví?","action":"choice","choices":[{"text":"Vypravěč","value":"correct"},{"text":"Autor","value":"wrong1"},{"text":"Redaktor","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
         ],
         "extreme": [
           {text:"Jaký literární prostředek přiřazuje lidské vlastnosti nelidským věcem?", action:"choice", choices:[{text:"Personifikace",value:"correct"},{text:"Aliterace",value:"wrong1"},{text:"Onomatopoeia",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
@@ -1567,7 +1786,14 @@ export const T = {
           {"text":"Co je příklad oxymóronu?","action":"choice","choices":[{"text":"Ohlušující ticho","value":"correct"},{"text":"Jasné světlo","value":"wrong1"},{"text":"Rychlé auto","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Přiřaď řecký kořen k významu:","action":"match","pairs":[{"a":"bio","b":"život"},{"a":"geo","b":"země"},{"a":"foto","b":"světlo"},{"a":"tele","b":"daleko"}],"check":{"type":"match"},"mode":"indoor_ok"},
           {"text":"Seřaď proces psaní:","action":"sort","items":["Nápady","Koncept","Revize","Zveřejnění"],"check":{"type":"sort","correct":["Nápady","Koncept","Revize","Zveřejnění"]},"mode":"indoor_ok"},
-          {"text":"„Protagonista\" v příběhu je ____.","action":"choice","choices":[{"text":"hlavní postava","value":"correct"},{"text":"padouch","value":"wrong1"},{"text":"prostředí","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
+          {"text":"„Protagonista\" v příběhu je ____.","action":"choice","choices":[{"text":"hlavní postava","value":"correct"},{"text":"padouch","value":"wrong1"},{"text":"prostředí","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Přirovnání se slovy „jako\" je ____.","action":"choice","choices":[{"text":"přirovnání","value":"correct"},{"text":"metafora","value":"wrong1"},{"text":"slovní hříčka","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Opakování souhlásek na začátku slov je ____.","action":"fill_blank","blank":{"before":"Opakování souhlásek na začátku slov je","after":".","correct":"aliterace"},"check":{"type":"fill_blank","correct":"aliterace"},"mode":"indoor_ok"},
+          {"text":"Která věta obsahuje vedlejší větu?","action":"choice","choices":[{"text":"Protože pršelo, zůstali jsme doma","value":"correct"},{"text":"Zůstali jsme doma","value":"wrong1"},{"text":"Pršelo","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Přiřaď latinský kořen k významu:","action":"match","pairs":[{"a":"aqua","b":"voda"},{"a":"terra","b":"země"},{"a":"audio","b":"slyšet"},{"a":"scrib","b":"psát"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Seřaď stavbu příběhu:","action":"sort","items":["Expozice","Zápletka","Vrchol","Rozuzlení"],"check":{"type":"sort","correct":["Expozice","Zápletka","Vrchol","Rozuzlení"]},"mode":"indoor_ok"},
+          {"text":"Slovo opačného významu je ____.","action":"choice","choices":[{"text":"antonymum","value":"correct"},{"text":"synonymum","value":"wrong1"},{"text":"akronym","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Jaký způsob má sloveso vydávající rozkaz?","action":"choice","choices":[{"text":"Rozkazovací","value":"correct"},{"text":"Oznamovací","value":"wrong1"},{"text":"Tázací","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
         ]
       },
       logic: {
@@ -1606,7 +1832,14 @@ export const T = {
           {"text":"Seřaď čísla od nejmenšího:","action":"sort","items":["2","5","8","11"],"check":{"type":"sort","correct":["2","5","8","11"]},"mode":"indoor_ok"},
           {"text":"Co následuje: 2, 4, 6, ?","action":"number","check":{"type":"number","answer":8,"tolerance":0},"mode":"indoor_ok"},
           {"text":"Tvar se čtyřmi stejnými stranami je ____.","action":"fill_blank","blank":{"before":"Tvar se čtyřmi stejnými stranami je","after":".","correct":"čtverec"},"check":{"type":"fill_blank","correct":"čtverec"},"mode":"indoor_ok"},
-          {"text":"Přiřaď číslo k jeho dvojnásobku:","action":"match","pairs":[{"a":"3","b":"6"},{"a":"5","b":"10"},{"a":"7","b":"14"},{"a":"9","b":"18"}],"check":{"type":"match"},"mode":"indoor_ok"}
+          {"text":"Přiřaď číslo k jeho dvojnásobku:","action":"match","pairs":[{"a":"3","b":"6"},{"a":"5","b":"10"},{"a":"7","b":"14"},{"a":"9","b":"18"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Kolik je 9 + 8?","action":"number","check":{"type":"number","answer":17,"tolerance":0},"mode":"indoor_ok"},
+          {"text":"Kolik je 20 − 7?","action":"number","check":{"type":"number","answer":13,"tolerance":0},"mode":"indoor_ok"},
+          {"text":"Které číslo je sudé?","action":"choice","choices":[{"text":"8","value":"correct"},{"text":"7","value":"wrong1"},{"text":"5","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Deset desítek dělá jednu ____.","action":"fill_blank","blank":{"before":"Deset desítek dělá jednu","after":".","correct":"stovku"},"check":{"type":"fill_blank","correct":"stovku"},"mode":"indoor_ok"},
+          {"text":"Pokračuj: 5, 10, 15, ...","action":"sort","items":["5","10","15","20"],"check":{"type":"sort","correct":["5","10","15","20"]},"mode":"indoor_ok"},
+          {"text":"Kolik je polovina z 10?","action":"number","check":{"type":"number","answer":5,"tolerance":0},"mode":"indoor_ok"},
+          {"text":"Co následuje: 🔺🔵🔺🔵 ?","action":"choice","choices":[{"text":"🔺","value":"correct"},{"text":"🟩","value":"wrong1"},{"text":"🔵","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
         ],
         "medium": [
           {text:"Který tvar má 4 stejné strany a 4 pravé úhly?", action:"choice", choices:[{text:"Čtverec ⬛",value:"čtverec"},{text:"Trojúhelník 🔺",value:"trojúhelník"},{text:"Kruh ⭕",value:"kruh"}], check:{type:"choice",correct:"čtverec"}, mode:"outdoor_bonus"},
@@ -1646,7 +1879,15 @@ export const T = {
           {"text":"Kolik minut mají 2 hodiny?","action":"number","check":{"type":"number","answer":120,"tolerance":0},"mode":"indoor_ok"},
           {"text":"Výsledek násobení se nazývá ____.","action":"fill_blank","blank":{"before":"Výsledek násobení se nazývá","after":".","correct":"součin"},"check":{"type":"fill_blank","correct":"součin"},"mode":"indoor_ok"},
           {"text":"Seřaď zlomky od nejmenšího:","action":"sort","items":["1/4","1/2","3/4","1"],"check":{"type":"sort","correct":["1/4","1/2","3/4","1"]},"mode":"indoor_ok"},
-          {"text":"Jsou-li všechny kočky zvířata a Tom je kočka, pak Tom je ____.","action":"choice","choices":[{"text":"zvíře","value":"correct"},{"text":"pes","value":"wrong1"},{"text":"rostlina","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
+          {"text":"Jsou-li všechny kočky zvířata a Tom je kočka, pak Tom je ____.","action":"choice","choices":[{"text":"zvíře","value":"correct"},{"text":"pes","value":"wrong1"},{"text":"rostlina","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Kolik je 8 × 7?","action":"number","check":{"type":"number","answer":56,"tolerance":0},"mode":"indoor_ok"},
+          {"text":"Kolik je 100 ÷ 4?","action":"number","check":{"type":"number","answer":25,"tolerance":0},"mode":"indoor_ok"},
+          {"text":"Které je prvočíslo?","action":"choice","choices":[{"text":"11","value":"correct"},{"text":"9","value":"wrong1"},{"text":"15","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Délka obvodu tvaru je jeho ____.","action":"fill_blank","blank":{"before":"Délka kolem tvaru je jeho","after":".","correct":"obvod"},"check":{"type":"fill_blank","correct":"obvod"},"mode":"indoor_ok"},
+          {"text":"Seřaď denní doby:","action":"sort","items":["Ráno","Poledne","Večer","Noc"],"check":{"type":"sort","correct":["Ráno","Poledne","Večer","Noc"]},"mode":"indoor_ok"},
+          {"text":"Košile stojí 40 a je sleva 50 %. Cena je:","action":"choice","choices":[{"text":"20","value":"correct"},{"text":"30","value":"wrong1"},{"text":"10","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Kolik stran má šestiúhelník?","action":"number","check":{"type":"number","answer":6,"tolerance":0},"mode":"indoor_ok"},
+          {"text":"Co následuje: 3, 6, 12, 24, ?","action":"choice","choices":[{"text":"48","value":"correct"},{"text":"36","value":"wrong1"},{"text":"30","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
         ],
         "hard": [
           {text:"Jaké je nejmenší prvočíslo větší než 7?", action:"choice", choices:[{text:"11",value:"11"},{text:"9",value:"9"},{text:"12",value:"12"}], check:{type:"choice",correct:"11"}, mode:"outdoor_bonus"},
@@ -1684,7 +1925,15 @@ export const T = {
           {"text":"Co následuje: 2, 3, 5, 8, 13, ?","action":"choice","choices":[{"text":"21","value":"correct"},{"text":"18","value":"wrong1"},{"text":"20","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"outdoor_bonus"},
           {"text":"Trojúhelník má úhly 90° a 30°. Kolik má třetí úhel?","action":"number","check":{"type":"number","answer":60,"tolerance":0},"mode":"indoor_ok"},
           {"text":"Číslo dělitelné jen 1 a sebou samým je ____ číslo.","action":"fill_blank","blank":{"before":"Číslo dělitelné jen 1 a sebou samým je","after":"číslo.","correct":"prvočíslo"},"check":{"type":"fill_blank","correct":"prvočíslo"},"mode":"indoor_ok"},
-          {"text":"Seřaď podle hodnoty:","action":"sort","items":["0,5","0,75","1,2","2,0"],"check":{"type":"sort","correct":["0,5","0,75","1,2","2,0"]},"mode":"indoor_ok"}
+          {"text":"Seřaď podle hodnoty:","action":"sort","items":["0,5","0,75","1,2","2,0"],"check":{"type":"sort","correct":["0,5","0,75","1,2","2,0"]},"mode":"indoor_ok"},
+          {"text":"Kolik je 25 % z 80?","action":"number","check":{"type":"number","answer":20,"tolerance":0},"mode":"indoor_ok"},
+          {"text":"Kolik je 13 × 6?","action":"number","check":{"type":"number","answer":78,"tolerance":0},"mode":"indoor_ok"},
+          {"text":"Které je další prvočíslo po 7?","action":"choice","choices":[{"text":"11","value":"correct"},{"text":"9","value":"wrong1"},{"text":"10","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Nejdelší strana pravoúhlého trojúhelníku je ____.","action":"fill_blank","blank":{"before":"Nejdelší strana pravoúhlého trojúhelníku je","after":".","correct":"přepona"},"check":{"type":"fill_blank","correct":"přepona"},"mode":"indoor_ok"},
+          {"text":"Seřaď jednotky délky od nejmenší:","action":"sort","items":["mm","cm","m","km"],"check":{"type":"sort","correct":["mm","cm","m","km"]},"mode":"indoor_ok"},
+          {"text":"Kolik stěn má krychle?","action":"choice","choices":[{"text":"6","value":"correct"},{"text":"8","value":"wrong1"},{"text":"4","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Když 3x = 21, kolik je x?","action":"number","check":{"type":"number","answer":7,"tolerance":0},"mode":"indoor_ok"},
+          {"text":"Co následuje: 1, 1, 2, 3, 5, 8, ?","action":"choice","choices":[{"text":"13","value":"correct"},{"text":"11","value":"wrong1"},{"text":"12","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
         ],
         "extreme": [
           {text:"Pokud jsou všechny blůpy hrůzy a všechny hrůzy jsou lůzy — jsou všechny blůpy lůzy?", action:"choice", choices:[{text:"Ano — tranzitivní logika",value:"correct"},{text:"Ne — nedá se říct",value:"wrong1"},{text:"Jen někdy",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
@@ -1712,7 +1961,15 @@ export const T = {
           {"text":"Součet úhlů v trojúhelníku je kolik stupňů?","action":"number","check":{"type":"number","answer":180,"tolerance":0},"mode":"indoor_ok"},
           {"text":"V pravoúhlém trojúhelníku a² + b² = c² je ____ věta.","action":"fill_blank","blank":{"before":"V pravoúhlém trojúhelníku a² + b² = c² je","after":"věta.","correct":"Pythagorova"},"check":{"type":"fill_blank","correct":"Pythagorova"},"mode":"indoor_ok"},
           {"text":"Seřaď čísla od nejmenšího:","action":"sort","items":["-5","0","3","7"],"check":{"type":"sort","correct":["-5","0","3","7"]},"mode":"indoor_ok"},
-          {"text":"Kolik stupňů má plný kruh?","action":"choice","choices":[{"text":"360","value":"correct"},{"text":"180","value":"wrong1"},{"text":"270","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
+          {"text":"Kolik stupňů má plný kruh?","action":"choice","choices":[{"text":"360","value":"correct"},{"text":"180","value":"wrong1"},{"text":"270","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Kolik je 3 na čtvrtou?","action":"number","check":{"type":"number","answer":81,"tolerance":0},"mode":"indoor_ok"},
+          {"text":"Kolik je 12 na druhou?","action":"number","check":{"type":"number","answer":144,"tolerance":0},"mode":"indoor_ok"},
+          {"text":"Jaký je součet vnitřních úhlů čtyřúhelníku?","action":"choice","choices":[{"text":"360°","value":"correct"},{"text":"180°","value":"wrong1"},{"text":"270°","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Číslo, které se čte stejně pozpátku, je ____.","action":"fill_blank","blank":{"before":"Číslo, které se čte stejně pozpátku, je","after":".","correct":"palindrom"},"check":{"type":"fill_blank","correct":"palindrom"},"mode":"indoor_ok"},
+          {"text":"Seřaď podle hodnoty od nejmenší:","action":"sort","items":["1/8","1/4","1/2","1"],"check":{"type":"sort","correct":["1/8","1/4","1/2","1"]},"mode":"indoor_ok"},
+          {"text":"Kolik je faktoriál 4 (4!)?","action":"choice","choices":[{"text":"24","value":"correct"},{"text":"12","value":"wrong1"},{"text":"16","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Kolik hran má krychle?","action":"number","check":{"type":"number","answer":12,"tolerance":0},"mode":"indoor_ok"},
+          {"text":"Které je iracionální číslo?","action":"choice","choices":[{"text":"√2","value":"correct"},{"text":"0,5","value":"wrong1"},{"text":"4","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
         ]
       },
       feelings: {
@@ -1752,7 +2009,13 @@ export const T = {
           {"text":"Co je milé říct kamarádovi?","action":"choice","choices":[{"text":"„Skvělá práce!\"","value":"correct"},{"text":"„Jdi pryč!\"","value":"wrong1"},{"text":"„Jsi nudný\"","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Když někomu pomůžeš, jsi ____.","action":"fill_blank","blank":{"before":"Když někomu pomůžeš, jsi","after":".","correct":"laskavý"},"check":{"type":"fill_blank","correct":"laskavý"},"mode":"indoor_ok"},
           {"text":"Co uděláš, když je kamarád smutný?","action":"choice","choices":[{"text":"Utěšit ho","value":"correct"},{"text":"Vysmát se mu","value":"wrong1"},{"text":"Ignorovat ho","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
-          {"text":"Přiřaď situaci k pocitu:","action":"match","pairs":[{"a":"Výhra","b":"Radost"},{"a":"Ztráta hračky","b":"Smutek"},{"a":"Hlasitý zvuk","b":"Strach"},{"a":"Překvapení","b":"Nadšení"}],"check":{"type":"match"},"mode":"indoor_ok"}
+          {"text":"Přiřaď situaci k pocitu:","action":"match","pairs":[{"a":"Výhra","b":"Radost"},{"a":"Ztráta hračky","b":"Smutek"},{"a":"Hlasitý zvuk","b":"Strach"},{"a":"Překvapení","b":"Nadšení"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Jak se cítíš, když tě obejme někdo, koho máš rád?","action":"choice","choices":[{"text":"😊 Hřejivě a bezpečně","value":"correct"},{"text":"😠 Naštvaně","value":"wrong1"},{"text":"😨 Vyděšeně","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Když se s ostatními dělíš o hračky, jsi ____.","action":"fill_blank","blank":{"before":"Když se dělíš o hračky, jsi","after":".","correct":"štědrý"},"check":{"type":"fill_blank","correct":"štědrý"},"mode":"indoor_ok"},
+          {"text":"Přiřaď čin k pocitu, který může vyvolat:","action":"match","pairs":[{"a":"Dárek","b":"Radost"},{"a":"Loučení","b":"Smutek"},{"a":"Překvapivá oslava","b":"Nadšení"},{"a":"Rána","b":"Leknutí"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Když omylem rozbiješ kamarádovi hračku, měl bys:","action":"choice","choices":[{"text":"Omluvit se","value":"correct"},{"text":"Schovat to","value":"wrong1"},{"text":"Svést to na něj","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Co pomáhá, když máš strach?","action":"choice","choices":[{"text":"Popovídat si s někým","value":"correct"},{"text":"Nechat si to pro sebe","value":"wrong1"},{"text":"Křičet","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Seřaď sílu pocitů od klidu k silnému:","action":"sort","items":["😌 Klid","🙂 Spokojenost","😃 Radost","🤩 Nadšení"],"check":{"type":"sort","correct":["😌 Klid","🙂 Spokojenost","😃 Radost","🤩 Nadšení"]},"mode":"indoor_ok"}
         ],
         "medium": [
           {text:"Jak nejlépe pomoci kamarádovi, který je smutný?", action:"choice", choices:[{text:"Poslechnout ho a být s ním 🤝",value:"correct"},{text:"Odejít a ignorovat ho",value:"wrong1"},{text:"Říct mu, ať přestane být smutný",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -1791,7 +2054,14 @@ export const T = {
           {"text":"Dobrý způsob, jak vyřešit neshodu, je ____.","action":"choice","choices":[{"text":"promluvit si o tom","value":"correct"},{"text":"křičet víc","value":"wrong1"},{"text":"přestat mluvit napořád","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Přiřaď potřebu ke zdravé reakci:","action":"match","pairs":[{"a":"Únava","b":"Odpočinek"},{"a":"Osamělost","b":"Zavolat kamaráda"},{"a":"Vztek","b":"Nadechnout se"},{"a":"Hlad","b":"Najíst se"}],"check":{"type":"match"},"mode":"indoor_ok"},
           {"text":"Jak se říká upřímnému omluvení?","action":"choice","choices":[{"text":"Upřímná omluva","value":"correct"},{"text":"Vtip","value":"wrong1"},{"text":"Tajemství","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
-          {"text":"Seřaď kroky ke zklidnění, když jsi rozrušený:","action":"sort","items":["Všimni si pocitu","Zhluboka dýchej","Přemýšlej","Zvol reakci"],"check":{"type":"sort","correct":["Všimni si pocitu","Zhluboka dýchej","Přemýšlej","Zvol reakci"]},"mode":"indoor_ok"}
+          {"text":"Seřaď kroky ke zklidnění, když jsi rozrušený:","action":"sort","items":["Všimni si pocitu","Zhluboka dýchej","Přemýšlej","Zvol reakci"],"check":{"type":"sort","correct":["Všimni si pocitu","Zhluboka dýchej","Přemýšlej","Zvol reakci"]},"mode":"indoor_ok"},
+          {"text":"Co znamená „trpělivost\"?","action":"choice","choices":[{"text":"Klidně počkat","value":"correct"},{"text":"Rychle se naštvat","value":"wrong1"},{"text":"Vzdát to","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Pochopení, jak se cítí druhý, se nazývá ____.","action":"fill_blank","blank":{"before":"Pochopení, jak se cítí druhý, se nazývá","after":".","correct":"empatie"},"check":{"type":"fill_blank","correct":"empatie"},"mode":"indoor_ok"},
+          {"text":"Kamarád je vynechaný ze hry. Milé je:","action":"choice","choices":[{"text":"Pozvat ho","value":"correct"},{"text":"Ignorovat ho","value":"wrong1"},{"text":"Smát se","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Přiřaď pocit k tělesnému znaku:","action":"match","pairs":[{"a":"Nervozita","b":"Motýli v břiše"},{"a":"Vztek","b":"Rudá tvář"},{"a":"Únava","b":"Těžká víčka"},{"a":"Radost","b":"Úsměv"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Jak nesouhlasit slušně?","action":"choice","choices":[{"text":"„Vidím to jinak\"","value":"correct"},{"text":"„Jsi hloupý\"","value":"wrong1"},{"text":"Křikem","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Seřaď kroky usmíření po hádce:","action":"sort","items":["Zchladni","Promluv si","Omluv se","Jdi dál"],"check":{"type":"sort","correct":["Zchladni","Promluv si","Omluv se","Jdi dál"]},"mode":"indoor_ok"},
+          {"text":"Být „upřímný\" znamená, že:","action":"choice","choices":[{"text":"Říkáš pravdu","value":"correct"},{"text":"Tajíš věci","value":"wrong1"},{"text":"Vymýšlíš si","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
         ],
         "hard": [
           {text:"Co je empatie?", action:"choice", choices:[{text:"Rozumět tomu, jak se cítí druzí",value:"correct"},{text:"Zlobit se na ostatní",value:"wrong1"},{text:"Myslet jen na sebe",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -1830,7 +2100,14 @@ export const T = {
           {"text":"Co je zdravý způsob, jak zvládat stres?","action":"choice","choices":[{"text":"Pohyb nebo si popovídat","value":"correct"},{"text":"Dusit to v sobě","value":"wrong1"},{"text":"Vylévat si to na druhých","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Přiřaď emoci ke zvládací strategii:","action":"match","pairs":[{"a":"Úzkost","b":"Hluboké dýchání"},{"a":"Smutek","b":"Rozhovor"},{"a":"Vztek","b":"Počítání do deseti"},{"a":"Nuda","b":"Nová činnost"}],"check":{"type":"match"},"mode":"indoor_ok"},
           {"text":"„Aktivní naslouchání\" znamená, že ____.","action":"choice","choices":[{"text":"věnuješ plnou pozornost","value":"correct"},{"text":"chystáš odpověď","value":"wrong1"},{"text":"koukáš do mobilu","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
-          {"text":"Seřaď Maslowovy potřeby, od nejzákladnější:","action":"sort","items":["Jídlo a voda","Bezpečí","Sounáležitost","Sebeúcta"],"check":{"type":"sort","correct":["Jídlo a voda","Bezpečí","Sounáležitost","Sebeúcta"]},"mode":"indoor_ok"}
+          {"text":"Seřaď Maslowovy potřeby, od nejzákladnější:","action":"sort","items":["Jídlo a voda","Bezpečí","Sounáležitost","Sebeúcta"],"check":{"type":"sort","correct":["Jídlo a voda","Bezpečí","Sounáležitost","Sebeúcta"]},"mode":"indoor_ok"},
+          {"text":"Co je „sebeovládání\"?","action":"choice","choices":[{"text":"Zvládání impulzů","value":"correct"},{"text":"Dělat cokoli","value":"wrong1"},{"text":"Nikdy nic necítit","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Zvednout se po nezdaru ukazuje ____.","action":"fill_blank","blank":{"before":"Zvednout se po nezdaru ukazuje","after":".","correct":"odolnost"},"check":{"type":"fill_blank","correct":"odolnost"},"mode":"indoor_ok"},
+          {"text":"Co ukazuje dobrou „týmovou práci\"?","action":"choice","choices":[{"text":"Rozdělit si úkol","value":"correct"},{"text":"Dělat vše sám","value":"wrong1"},{"text":"Obviňovat ostatní","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Přiřaď situaci k nejlepší reakci:","action":"match","pairs":[{"a":"Kamarád pláče","b":"Utěš ho"},{"a":"Udělal jsi chybu","b":"Omluv se"},{"a":"Jsi zahlcený","b":"Dej si pauzu"},{"a":"Někdo je nefér","b":"Řekni to klidně"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Seřaď intenzitu od mírné po silnou:","action":"sort","items":["Otrávený","Frustrovaný","Naštvaný","Zuřivý"],"check":{"type":"sort","correct":["Otrávený","Frustrovaný","Naštvaný","Zuřivý"]},"mode":"indoor_ok"},
+          {"text":"„Vděčnost\" je pocit, že jsi:","action":"choice","choices":[{"text":"Vděčný","value":"correct"},{"text":"Žárlivý","value":"wrong1"},{"text":"Znuděný","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Co znamená „udělat kompromis\"?","action":"choice","choices":[{"text":"Oba trochu ustoupí","value":"correct"},{"text":"Jeden bere vše","value":"wrong1"},{"text":"Nikdo nemluví","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
         ],
         "extreme": [
           {text:"Jaký psychologický koncept popisuje nepohodlí z držení dvou protichůdných přesvědčení?", action:"choice", choices:[{text:"Kognitivní disonance",value:"correct"},{text:"Potvrzovací zkreslení",value:"wrong1"},{text:"Dunning-Krugerův efekt",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
@@ -1861,7 +2138,14 @@ export const T = {
           {"text":"Stanovení hranice toho, co přijmeš, se nazývá ____.","action":"choice","choices":[{"text":"hranice","value":"correct"},{"text":"zášť","value":"wrong1"},{"text":"odměna","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Přiřaď pojem k významu:","action":"match","pairs":[{"a":"Empatie","b":"Cítit s druhými"},{"a":"Sympatie","b":"Cítit pro druhé"},{"a":"Apatie","b":"Necítit nic"},{"a":"Soucit","b":"Chtít pomoci"}],"check":{"type":"match"},"mode":"indoor_ok"},
           {"text":"Seřaď fáze řešení konfliktu:","action":"sort","items":["Naslouchej","Pochop","Najdi společné","Dohodni se"],"check":{"type":"sort","correct":["Naslouchej","Pochop","Najdi společné","Dohodni se"]},"mode":"indoor_ok"},
-          {"text":"Přerámování negativní myšlenky na vyváženou je dovednost z ____.","action":"choice","choices":[{"text":"kognitivní terapie","value":"correct"},{"text":"astrologie","value":"wrong1"},{"text":"zahradničení","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
+          {"text":"Přerámování negativní myšlenky na vyváženou je dovednost z ____.","action":"choice","choices":[{"text":"kognitivní terapie","value":"correct"},{"text":"astrologie","value":"wrong1"},{"text":"zahradničení","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Schopnost zůstat motivovaný k dlouhodobým cílům je ____.","action":"choice","choices":[{"text":"vytrvalost","value":"correct"},{"text":"apatie","value":"wrong1"},{"text":"impulzivita","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Laskavé, ne přísné hodnocení sebe je sebe____.","action":"fill_blank","blank":{"before":"Laskavé posuzování sebe je sebe","after":".","correct":"soucit"},"check":{"type":"fill_blank","correct":"soucit"},"mode":"indoor_ok"},
+          {"text":"Co nejlépe popisuje „regulaci emocí\"?","action":"choice","choices":[{"text":"Zdravé zvládání pocitů","value":"correct"},{"text":"Skrývání všech emocí","value":"wrong1"},{"text":"Jednat podle každého nutkání","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Přiřaď potřebu k Maslowově úrovni:","action":"match","pairs":[{"a":"Jídlo","b":"Fyziologická"},{"a":"Bezpečí","b":"Bezpečí"},{"a":"Přátelství","b":"Sounáležitost"},{"a":"Respekt","b":"Uznání"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Seřaď fáze zármutku (Kübler-Rossová):","action":"sort","items":["Popírání","Hněv","Smlouvání","Přijetí"],"check":{"type":"sort","correct":["Popírání","Hněv","Smlouvání","Přijetí"]},"mode":"indoor_ok"},
+          {"text":"Uvědomit si, že myšlenka je „jen myšlenka\", je jádro ____.","action":"choice","choices":[{"text":"všímavosti","value":"correct"},{"text":"debaty","value":"wrong1"},{"text":"memorování","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Asertivita znamená vyjádřit potřeby a přitom ____.","action":"choice","choices":[{"text":"respektovat druhé","value":"correct"},{"text":"ignorovat druhé","value":"wrong1"},{"text":"mlčet","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
         ]
       },
       arts: {
@@ -1902,7 +2186,14 @@ export const T = {
           {"text":"Kolik je základních barev?","action":"choice","choices":[{"text":"Tři","value":"correct"},{"text":"Pět","value":"wrong1"},{"text":"Sedm","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Člověk, který maluje obrazy, je ____.","action":"fill_blank","blank":{"before":"Člověk, který maluje obrazy, je","after":".","correct":"malíř"},"check":{"type":"fill_blank","correct":"malíř"},"mode":"indoor_ok"},
           {"text":"Kolik strun má běžná kytara?","action":"number","check":{"type":"number","answer":6,"tolerance":0},"mode":"indoor_ok"},
-          {"text":"Seřaď barvy duhy správně:","action":"sort","items":["🔴 Červená","🟡 Žlutá","🟢 Zelená","🔵 Modrá"],"check":{"type":"sort","correct":["🔴 Červená","🟡 Žlutá","🟢 Zelená","🔵 Modrá"]},"mode":"indoor_ok"}
+          {"text":"Seřaď barvy duhy správně:","action":"sort","items":["🔴 Červená","🟡 Žlutá","🟢 Zelená","🔵 Modrá"],"check":{"type":"sort","correct":["🔴 Červená","🟡 Žlutá","🟢 Zelená","🔵 Modrá"]},"mode":"indoor_ok"},
+          {"text":"Na který nástroj se hraje bušením?","action":"choice","choices":[{"text":"🥁 Buben","value":"correct"},{"text":"🎻 Housle","value":"wrong1"},{"text":"🎺 Trubka","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Čím maluješ obraz?","action":"choice","choices":[{"text":"🖌️ Štětec","value":"correct"},{"text":"🔨 Kladivo","value":"wrong1"},{"text":"🍴 Vidlička","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Kolik barev má tradiční duha?","action":"number","check":{"type":"number","answer":7,"tolerance":0},"mode":"indoor_ok"},
+          {"text":"Červená, žlutá a modrá jsou ____ barvy.","action":"fill_blank","blank":{"before":"Červená, žlutá a modrá jsou","after":"barvy.","correct":"základní"},"check":{"type":"fill_blank","correct":"základní"},"mode":"indoor_ok"},
+          {"text":"Přiřaď pomůcku k použití:","action":"match","pairs":[{"a":"Štětec","b":"Malovat"},{"a":"Tužka","b":"Kreslit"},{"a":"Nůžky","b":"Stříhat"},{"a":"Hlína","b":"Modelovat"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Seřaď zvuky od tichého po hlasitý:","action":"sort","items":["🤫 Šepot","🗣️ Řeč","📣 Křik","💥 Rána"],"check":{"type":"sort","correct":["🤫 Šepot","🗣️ Řeč","📣 Křik","💥 Rána"]},"mode":"indoor_ok"},
+          {"text":"Která barva je teplá?","action":"choice","choices":[{"text":"Červená","value":"correct"},{"text":"Modrá","value":"wrong1"},{"text":"Zelená","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
         ],
         "medium": [
           {text:"Kdo namaloval Monu Lisu?", action:"choice", choices:[{text:"Leonardo da Vinci 🎨",value:"correct"},{text:"Pablo Picasso",value:"wrong1"},{text:"Vincent van Gogh",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -1938,7 +2229,14 @@ export const T = {
           {text:"Kolik linek má notová osnova?", action:"number", check:{type:"number",answer:5,tolerance:0}, mode:"indoor_ok"},
           {"text":"Rychlost hudební skladby se nazývá ____.","action":"fill_blank","blank":{"before":"Rychlost hudební skladby se nazývá","after":".","correct":"tempo"},"check":{"type":"fill_blank","correct":"tempo"},"mode":"indoor_ok"},
           {"text":"Který nástroj má černé a bílé klávesy?","action":"choice","choices":[{"text":"Klavír","value":"correct"},{"text":"Housle","value":"wrong1"},{"text":"Buben","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
-          {"text":"Seřaď od nejsvětlejšího po nejtmavší:","action":"sort","items":["Bílá","Světle šedá","Tmavě šedá","Černá"],"check":{"type":"sort","correct":["Bílá","Světle šedá","Tmavě šedá","Černá"]},"mode":"indoor_ok"}
+          {"text":"Seřaď od nejsvětlejšího po nejtmavší:","action":"sort","items":["Bílá","Světle šedá","Tmavě šedá","Černá"],"check":{"type":"sort","correct":["Bílá","Světle šedá","Tmavě šedá","Černá"]},"mode":"indoor_ok"},
+          {"text":"Kdo namaloval „Hvězdnou noc\"?","action":"choice","choices":[{"text":"Van Gogh","value":"correct"},{"text":"Da Vinci","value":"wrong1"},{"text":"Michelangelo","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Skupina společně hrajících hudebníků je ____.","action":"fill_blank","blank":{"before":"Skupina společně hrajících hudebníků je","after":".","correct":"orchestr"},"check":{"type":"fill_blank","correct":"orchestr"},"mode":"indoor_ok"},
+          {"text":"Kolik kláves má standardní klavír?","action":"choice","choices":[{"text":"88","value":"correct"},{"text":"66","value":"wrong1"},{"text":"100","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Přiřaď barvu k ovoci té barvy:","action":"match","pairs":[{"a":"Červená","b":"🍓 Jahoda"},{"a":"Žlutá","b":"🍌 Banán"},{"a":"Zelená","b":"🍏 Jablko"},{"a":"Fialová","b":"🍇 Hrozny"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Seřaď délky not, nejdelší první:","action":"sort","items":["Celá","Půlová","Čtvrťová","Osminová"],"check":{"type":"sort","correct":["Celá","Půlová","Čtvrťová","Osminová"]},"mode":"indoor_ok"},
+          {"text":"Jakou barvu dá červená a bílá?","action":"choice","choices":[{"text":"Růžová","value":"correct"},{"text":"Fialová","value":"wrong1"},{"text":"Hnědá","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Socha je umělecké dílo, které je ____.","action":"choice","choices":[{"text":"trojrozměrné","value":"correct"},{"text":"ploché","value":"wrong1"},{"text":"píseň","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
         ],
         "hard": [
           {text:"S jakým uměleckým směrem je spojen Salvador Dalí?", action:"choice", choices:[{text:"Surrealismus",value:"correct"},{text:"Impresionismus",value:"wrong1"},{text:"Kubismus",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -1975,7 +2273,14 @@ export const T = {
           {"text":"Malba do vlhké omítky se nazývá ____.","action":"fill_blank","blank":{"before":"Malba do vlhké omítky se nazývá","after":".","correct":"freska"},"check":{"type":"fill_blank","correct":"freska"},"mode":"indoor_ok"},
           {"text":"Kolik linek má notová osnova?","action":"choice","choices":[{"text":"Pět","value":"correct"},{"text":"Čtyři","value":"wrong1"},{"text":"Šest","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Seřaď tempa od nejpomalejšího:","action":"sort","items":["Largo","Andante","Allegro","Presto"],"check":{"type":"sort","correct":["Largo","Andante","Allegro","Presto"]},"mode":"indoor_ok"},
-          {"text":"Jak se nazývá technika práce se světlem a stínem?","action":"choice","choices":[{"text":"Šerosvit (chiaroscuro)","value":"correct"},{"text":"Koláž","value":"wrong1"},{"text":"Origami","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
+          {"text":"Jak se nazývá technika práce se světlem a stínem?","action":"choice","choices":[{"text":"Šerosvit (chiaroscuro)","value":"correct"},{"text":"Koláž","value":"wrong1"},{"text":"Origami","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Kterým směrem je proslulý Claude Monet?","action":"choice","choices":[{"text":"Impresionismus","value":"correct"},{"text":"Surrealismus","value":"wrong1"},{"text":"Kubismus","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Italský výraz pro „mírně pomalu\" v hudbě je ____.","action":"fill_blank","blank":{"before":"Italský výraz pro „mírně pomalu\" v hudbě je","after":".","correct":"andante"},"check":{"type":"fill_blank","correct":"andante"},"mode":"indoor_ok"},
+          {"text":"Doplňkové barvy leží na barevném kruhu ____.","action":"choice","choices":[{"text":"naproti","value":"correct"},{"text":"vedle sebe","value":"wrong1"},{"text":"ve středu","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Přiřaď dílo k autorovi:","action":"match","pairs":[{"a":"Mona Lisa","b":"Da Vinci"},{"a":"Guernica","b":"Picasso"},{"a":"Výkřik","b":"Munch"},{"a":"Slunečnice","b":"Van Gogh"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Seřaď základní barvy kruhu od červené (po směru):","action":"sort","items":["Červená","Žlutá","Modrá"],"check":{"type":"sort","correct":["Červená","Žlutá","Modrá"]},"mode":"indoor_ok"},
+          {"text":"Co je „autoportrét\"?","action":"choice","choices":[{"text":"Obraz sebe sama","value":"correct"},{"text":"Krajina","value":"wrong1"},{"text":"Zátiší","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Který klíč se používá pro vysoké nástroje?","action":"choice","choices":[{"text":"Houslový klíč","value":"correct"},{"text":"Basový klíč","value":"wrong1"},{"text":"Altový klíč","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
         ],
         "extreme": [
           {text:"Který umělecký směr odmítal tradici a přijímal náhodu a absurditu?", action:"choice", choices:[{text:"Dadaismus",value:"correct"},{text:"Romantismus",value:"wrong1"},{text:"Neoklasicismus",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"indoor_ok"},
@@ -2005,7 +2310,14 @@ export const T = {
           {"text":"Italský termín pro velmi hlasitě v hudbě je ____.","action":"fill_blank","blank":{"before":"Italský termín pro velmi hlasitě v hudbě je","after":".","correct":"fortissimo"},"check":{"type":"fill_blank","correct":"fortissimo"},"mode":"indoor_ok"},
           {"text":"Který strop namaloval Michelangelo?","action":"choice","choices":[{"text":"Sixtinská kaple","value":"correct"},{"text":"Notre-Dame","value":"wrong1"},{"text":"Louvre","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Přiřaď pojem k umělecké formě:","action":"match","pairs":[{"a":"Sonet","b":"Poezie"},{"a":"Sonáta","b":"Hudba"},{"a":"Freska","b":"Malba"},{"a":"Balet","b":"Tanec"}],"check":{"type":"match"},"mode":"indoor_ok"},
-          {"text":"Kolik tónů má oktáva (do až do, včetně)?","action":"choice","choices":[{"text":"8","value":"correct"},{"text":"7","value":"wrong1"},{"text":"12","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
+          {"text":"Kolik tónů má oktáva (do až do, včetně)?","action":"choice","choices":[{"text":"8","value":"correct"},{"text":"7","value":"wrong1"},{"text":"12","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Kdo vytvořil sochu Davida?","action":"choice","choices":[{"text":"Michelangelo","value":"correct"},{"text":"Donatello","value":"wrong1"},{"text":"Rodin","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Italský výraz pro postupné zesilování je ____.","action":"fill_blank","blank":{"before":"Italský výraz pro postupné zesilování je","after":".","correct":"crescendo"},"check":{"type":"fill_blank","correct":"crescendo"},"mode":"indoor_ok"},
+          {"text":"Který umělec spoluzaložil kubismus s Braquem?","action":"choice","choices":[{"text":"Picasso","value":"correct"},{"text":"Dalí","value":"wrong1"},{"text":"Monet","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Přiřaď skladatele k epoše:","action":"match","pairs":[{"a":"Bach","b":"Baroko"},{"a":"Mozart","b":"Klasicismus"},{"a":"Chopin","b":"Romantismus"},{"a":"Stravinskij","b":"Moderna"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Seřaď intervaly od nejmenšího:","action":"sort","items":["Sekunda","Tercie","Kvinta","Oktáva"],"check":{"type":"sort","correct":["Sekunda","Tercie","Kvinta","Oktáva"]},"mode":"indoor_ok"},
+          {"text":"Technika malby drobnými body se nazývá ____.","action":"choice","choices":[{"text":"pointilismus","value":"correct"},{"text":"koláž","value":"wrong1"},{"text":"lept","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Kolik vět má typická klasická symfonie?","action":"number","check":{"type":"number","answer":4,"tolerance":0},"mode":"indoor_ok"}
         ]
       },
       world: {
@@ -2046,7 +2358,12 @@ export const T = {
           {"text":"Který je největší oceán?","action":"choice","choices":[{"text":"Tichý","value":"correct"},{"text":"Atlantský","value":"wrong1"},{"text":"Severní ledový","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Hlavní město Česka je ____.","action":"fill_blank","blank":{"before":"Hlavní město Česka je","after":".","correct":"Praha"},"check":{"type":"fill_blank","correct":"Praha"},"mode":"indoor_ok"},
           {"text":"Kolik je světadílů?","action":"number","check":{"type":"number","answer":7,"tolerance":0},"mode":"indoor_ok"},
-          {"text":"Seřaď podle velikosti, nejmenší první:","action":"sort","items":["Město (malé)","Velkoměsto","Země","Světadíl"],"check":{"type":"sort","correct":["Město (malé)","Velkoměsto","Země","Světadíl"]},"mode":"indoor_ok"}
+          {"text":"Seřaď podle velikosti, nejmenší první:","action":"sort","items":["Město (malé)","Velkoměsto","Země","Světadíl"],"check":{"type":"sort","correct":["Město (malé)","Velkoměsto","Země","Světadíl"]},"mode":"indoor_ok"},
+          {"text":"Co je stát?","action":"choice","choices":[{"text":"Německo","value":"correct"},{"text":"Berlín","value":"wrong1"},{"text":"Evropa","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Jak se říká zmrzlé vodě?","action":"choice","choices":[{"text":"Led","value":"correct"},{"text":"Pára","value":"wrong1"},{"text":"Písek","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Největší horká poušť je ____.","action":"fill_blank","blank":{"before":"Největší horká poušť je","after":".","correct":"Sahara"},"check":{"type":"fill_blank","correct":"Sahara"},"mode":"indoor_ok"},
+          {"text":"Kde vychází slunce?","action":"choice","choices":[{"text":"Na východě","value":"correct"},{"text":"Na západě","value":"wrong1"},{"text":"Na severu","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"outdoor_bonus"},
+          {"text":"Kolik měsíců má rok?","action":"number","check":{"type":"number","answer":12,"tolerance":0},"mode":"indoor_ok"}
         ],
         "medium": [
           {text:"Jaké je hlavní město Francie?", action:"choice", choices:[{text:"🗼 Paříž",value:"correct"},{text:"🏰 Londýn",value:"wrong1"},{text:"🎭 Řím",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -2085,7 +2402,14 @@ export const T = {
           {"text":"Která země má nejvíce obyvatel?","action":"choice","choices":[{"text":"Indie","value":"correct"},{"text":"Kanada","value":"wrong1"},{"text":"Austrálie","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Přiřaď památku k zemi:","action":"match","pairs":[{"a":"Eiffelovka","b":"Francie"},{"a":"Koloseum","b":"Itálie"},{"a":"Pyramidy","b":"Egypt"},{"a":"Socha svobody","b":"USA"}],"check":{"type":"match"},"mode":"indoor_ok"},
           {"text":"Seřaď podle rozlohy od nejmenší:","action":"sort","items":["Vatikán","Česko","Francie","Rusko"],"check":{"type":"sort","correct":["Vatikán","Česko","Francie","Rusko"]},"mode":"indoor_ok"},
-          {"text":"Na kterém světadíle je Sahara?","action":"choice","choices":[{"text":"Afrika","value":"correct"},{"text":"Asie","value":"wrong1"},{"text":"Evropa","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
+          {"text":"Na kterém světadíle je Sahara?","action":"choice","choices":[{"text":"Afrika","value":"correct"},{"text":"Asie","value":"wrong1"},{"text":"Evropa","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Ve které zemi žijí klokani?","action":"choice","choices":[{"text":"Austrálie","value":"correct"},{"text":"Brazílie","value":"wrong1"},{"text":"Kanada","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Nejvyšší hora Země je Mount ____.","action":"fill_blank","blank":{"before":"Nejvyšší hora Země je Mount","after":".","correct":"Everest"},"check":{"type":"fill_blank","correct":"Everest"},"mode":"indoor_ok"},
+          {"text":"Který světadíl je nejchladnější?","action":"choice","choices":[{"text":"Antarktida","value":"correct"},{"text":"Afrika","value":"wrong1"},{"text":"Asie","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Přiřaď zemi k barvám vlajky:","action":"match","pairs":[{"a":"Francie","b":"Modrá-bílá-červená"},{"a":"Německo","b":"Černá-červená-zlatá"},{"a":"Itálie","b":"Zelená-bílá-červená"},{"a":"Irsko","b":"Zelená-bílá-oranžová"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Seřaď česká města podle počtu obyvatel, největší první:","action":"sort","items":["Praha","Brno","Ostrava","Plzeň"],"check":{"type":"sort","correct":["Praha","Brno","Ostrava","Plzeň"]},"mode":"indoor_ok"},
+          {"text":"Ve které zemi je Velká zeď?","action":"choice","choices":[{"text":"Čína","value":"correct"},{"text":"Indie","value":"wrong1"},{"text":"Japonsko","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Kolik má svět zhruba časových pásem?","action":"number","check":{"type":"number","answer":24,"tolerance":1},"mode":"indoor_ok"}
         ],
         "hard": [
           {text:"Který oceán je největší na Zemi?", action:"choice", choices:[{text:"🌊 Tichý oceán",value:"correct"},{text:"Atlantický oceán",value:"wrong1"},{text:"Indický oceán",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -2126,7 +2450,12 @@ export const T = {
           {"text":"Věda o mapách a povrchu Země se jmenuje ____.","action":"fill_blank","blank":{"before":"Věda o mapách a povrchu Země se jmenuje","after":".","correct":"geografie"},"check":{"type":"fill_blank","correct":"geografie"},"mode":"indoor_ok"},
           {"text":"V kterém roce skončila druhá světová válka?","action":"choice","choices":[{"text":"1945","value":"correct"},{"text":"1918","value":"wrong1"},{"text":"1939","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Seřaď dějinná období, nejstarší první:","action":"sort","items":["Starověk","Středověk","Renesance","Novověk"],"check":{"type":"sort","correct":["Starověk","Středověk","Renesance","Novověk"]},"mode":"indoor_ok"},
-          {"text":"Která hora je nejvyšší nad hladinou moře?","action":"choice","choices":[{"text":"Everest","value":"correct"},{"text":"K2","value":"wrong1"},{"text":"Mont Blanc","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
+          {"text":"Která hora je nejvyšší nad hladinou moře?","action":"choice","choices":[{"text":"Everest","value":"correct"},{"text":"K2","value":"wrong1"},{"text":"Mont Blanc","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Pomyslná čára na 0° délky je ____ poledník.","action":"fill_blank","blank":{"before":"Pomyslná čára na 0° délky je","after":"poledník.","correct":"nultý"},"check":{"type":"fill_blank","correct":"nultý"},"mode":"indoor_ok"},
+          {"text":"V kterém roce se Česko oddělilo od Slovenska?","action":"choice","choices":[{"text":"1993","value":"correct"},{"text":"1989","value":"wrong1"},{"text":"2004","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Seřaď války podle začátku, nejstarší první:","action":"sort","items":["Napoleonské války","1. světová válka","2. světová válka","Studená válka"],"check":{"type":"sort","correct":["Napoleonské války","1. světová válka","2. světová válka","Studená válka"]},"mode":"indoor_ok"},
+          {"text":"Který oceán je mezi Evropou a Amerikou?","action":"choice","choices":[{"text":"Atlantský","value":"correct"},{"text":"Tichý","value":"wrong1"},{"text":"Indický","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"V kterém století vládl Karel IV. v Čechách? (např. 14)","action":"number","check":{"type":"number","answer":14,"tolerance":0},"mode":"indoor_ok"}
         ],
         "extreme": [
           {text:"Která mezinárodní dohoda stanovila cíl omezit globální oteplování na 1,5 °C?", action:"choice", choices:[{text:"Pařížská dohoda (2015)",value:"correct"},{text:"Kjótský protokol (1997)",value:"wrong1"},{text:"Montrealský protokol (1987)",value:"wrong2"}], check:{type:"choice",correct:"correct"}, mode:"outdoor_bonus"},
@@ -2152,7 +2481,14 @@ export const T = {
           {"text":"Úzký pruh země spojující dvě větší oblasti je ____.","action":"fill_blank","blank":{"before":"Úzký pruh země spojující dvě větší oblasti je","after":".","correct":"šíje"},"check":{"type":"fill_blank","correct":"šíje"},"mode":"indoor_ok"},
           {"text":"Kdo první stanul na Měsíci?","action":"choice","choices":[{"text":"Neil Armstrong","value":"correct"},{"text":"Jurij Gagarin","value":"wrong1"},{"text":"Buzz Aldrin","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
           {"text":"Seřaď události, nejstarší první:","action":"sort","items":["Pád Říma","Kolumbus 1492","Francouzská revoluce","Přistání na Měsíci"],"check":{"type":"sort","correct":["Pád Říma","Kolumbus 1492","Francouzská revoluce","Přistání na Měsíci"]},"mode":"indoor_ok"},
-          {"text":"V kterém roce padla Berlínská zeď?","action":"choice","choices":[{"text":"1989","value":"correct"},{"text":"1991","value":"wrong1"},{"text":"1979","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"}
+          {"text":"V kterém roce padla Berlínská zeď?","action":"choice","choices":[{"text":"1989","value":"correct"},{"text":"1991","value":"wrong1"},{"text":"1979","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Jaké je hlavní město Austrálie?","action":"choice","choices":[{"text":"Canberra","value":"correct"},{"text":"Sydney","value":"wrong1"},{"text":"Melbourne","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Superkontinent existující před 300 miliony let byl ____.","action":"fill_blank","blank":{"before":"Superkontinent existující před 300 miliony let byl","after":".","correct":"Pangea"},"check":{"type":"fill_blank","correct":"Pangea"},"mode":"indoor_ok"},
+          {"text":"Které říši vládl Čingischán?","action":"choice","choices":[{"text":"Mongolská","value":"correct"},{"text":"Římská","value":"wrong1"},{"text":"Osmanská","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"Přiřaď zemi k hlavnímu městu:","action":"match","pairs":[{"a":"Kanada","b":"Ottawa"},{"a":"Brazílie","b":"Brasília"},{"a":"Turecko","b":"Ankara"},{"a":"Norsko","b":"Oslo"}],"check":{"type":"match"},"mode":"indoor_ok"},
+          {"text":"Seřaď říše podle vrcholu, nejstarší první:","action":"sort","items":["Egyptská","Římská","Mongolská","Britská"],"check":{"type":"sort","correct":["Egyptská","Římská","Mongolská","Britská"]},"mode":"indoor_ok"},
+          {"text":"Amazonský prales je z větší části ve které zemi?","action":"choice","choices":[{"text":"Brazílie","value":"correct"},{"text":"Peru","value":"wrong1"},{"text":"Kolumbie","value":"wrong2"}],"check":{"type":"choice","correct":"correct"},"mode":"indoor_ok"},
+          {"text":"V kterém roce lidé poprvé přistáli na Měsíci?","action":"number","check":{"type":"number","answer":1969,"tolerance":0},"mode":"indoor_ok"}
         ]
       }
     },
