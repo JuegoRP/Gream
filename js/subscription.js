@@ -1,26 +1,34 @@
 // ═══════════════════════════════════
-//  GREAM — subscription.js
-//  Free:    2 domácí zdarma, max 6 celkem (za semínka), venku max 6/den
-//  Premium: 4 domácí zdarma, max 6 celkem (za semínka), venku neomezeno
-//  Trial:   7 dní Premium zdarma
+//  GREAM — subscription.js   (freemium model, agreed 2026-08)
+//  Free:    max 2 úkoly DOMA/den + max 6 CELKEM/den (doma i venku dohromady)
+//  Premium: NEOMEZENĚ úkolů + extrémní obtížnost + souboje
+//  Cena:    69 Kč/měs · 599 Kč/rok   Trial: 7 dní Premium zdarma
 // ═══════════════════════════════════
 
 const KEY_SUB = 'gream_sub';
 
 // ─── Paywall master switch ───
-// v1 ships FREE (no real in-app purchase wired up yet). While false:
-//   • everyone is treated as premium (4 free indoor/day, unlimited outdoor)
-//   • no trial countdown, no "Subscribe" UI, no fake purchase button
-// Flip to true only once a real IAP (RevenueCat / Capacitor plugin) is wired up
-// AND the purchase flow sits behind the parent gate.
+// While false: everyone is treated as Premium (unlimited, no limits, no "Subscribe"
+// UI). The freemium model below (limits + Premium upsell) ONLY makes sense once a
+// real IAP is wired up — otherwise free users hit the limit with no way to upgrade.
+// FLIP TO TRUE only after: (1) Google Play Billing wired (RevenueCat / Capacitor
+// plugin), (2) subscription products created in Play Console at the prices below,
+// (3) purchase flow behind the parent gate.
 export const PAYWALL_ENABLED = false;
 
-export const FREE_DAILY_INDOOR    = 2;   // zdarma domácí
-export const PREMIUM_DAILY_INDOOR = 4;   // zdarma domácí pro premium
-export const INDOOR_MAX_TOTAL     = 6;   // absolutní strop (zdarma + koupené)
-export const FREE_DAILY_OUTDOOR   = 6;   // venkovní limit pro volný účet
-export const SEED_COST_EXTRA_TASK = 3;   // semínek za 1 extra domácí slot
-export const TRIAL_DAYS           = 7;
+export const FREE_DAILY_INDOOR = 2;   // zdarma úkoly doma/den (tvrdý strop pro free)
+export const FREE_DAILY_TOTAL  = 6;   // zdarma úkoly CELKEM/den (doma + venku)
+export const TRIAL_DAYS        = 7;
+
+// Premium ceny + Play Console product ID (pro subscribe UI + billing integraci).
+export const PREMIUM_PRICE = { monthly: '69 Kč', yearly: '599 Kč' };
+export const PRODUCT_IDS   = { monthly: 'gream_premium_monthly', yearly: 'gream_premium_yearly' };
+
+// Zpětná kompatibilita (staré importy) — už se nepoužívají v logice.
+export const PREMIUM_DAILY_INDOOR = Infinity;
+export const INDOOR_MAX_TOTAL     = FREE_DAILY_TOTAL;
+export const FREE_DAILY_OUTDOOR   = FREE_DAILY_TOTAL;
+export const SEED_COST_EXTRA_TASK = 3;
 
 function load() {
   try { return JSON.parse(localStorage.getItem(KEY_SUB) || '{}'); } catch { return {}; }
@@ -72,35 +80,25 @@ export const Subscription = {
     save(d);
   },
 
-  canStartIndoor(profileId, seeds) {
-    const sub  = this.get(profileId);
-    const done = this.getIndoorToday(profileId);
-    const free = sub.isPremium ? PREMIUM_DAILY_INDOOR : FREE_DAILY_INDOOR;
-    const lang = localStorage.getItem('gream_lang') || 'en';
-    const cs   = lang === 'cs';
+  canStartIndoor(profileId /* , seeds (kept for signature compat) */) {
+    const sub = this.get(profileId);
+    if (sub.isPremium) return { allowed: true, seedCost: 0 };   // Premium = neomezeně
 
-    if (done < free) return { allowed: true, seedCost: 0 };
+    const cs      = (localStorage.getItem('gream_lang') || 'en') === 'cs';
+    const indoor  = this.getIndoorToday(profileId);
+    const total   = indoor + this.getOutdoorToday(profileId);
 
-    if (done >= INDOOR_MAX_TOTAL) {
-      return {
-        allowed: false,
-        reason: cs
-          ? `Denní limit ${INDOOR_MAX_TOTAL} domácích výzev vyčerpán. Jdi ven! 🌳`
-          : `Daily limit of ${INDOOR_MAX_TOTAL} home challenges reached. Go outside! 🌳`,
-        seedCost: 0,
-      };
+    if (total >= FREE_DAILY_TOTAL) {
+      return { allowed: false, seedCost: 0, reason: cs
+        ? `Denní limit ${FREE_DAILY_TOTAL} úkolů (zdarma) vyčerpán. Vrať se zítra, nebo přejdi na Premium! 🌟`
+        : `Daily limit of ${FREE_DAILY_TOTAL} tasks (free) reached. Come back tomorrow, or go Premium! 🌟` };
     }
-
-    // Extra slot available — costs seeds
-    const canAfford = seeds >= SEED_COST_EXTRA_TASK;
-    return {
-      allowed: canAfford,
-      seedCost: SEED_COST_EXTRA_TASK,
-      isPurchase: true,
-      reason: canAfford ? null : (cs
-        ? `Potřebuješ ${SEED_COST_EXTRA_TASK} 🌱 pro další domácí výzvu (zbývá ${INDOOR_MAX_TOTAL - done} slotů).`
-        : `You need ${SEED_COST_EXTRA_TASK} 🌱 for another home challenge (${INDOOR_MAX_TOTAL - done} slots left).`),
-    };
+    if (indoor >= FREE_DAILY_INDOOR) {
+      return { allowed: false, seedCost: 0, reason: cs
+        ? `Doma zdarma max ${FREE_DAILY_INDOOR} úkoly/den. Jdi ven 🌳, nebo přejdi na Premium! 🌟`
+        : `Free: max ${FREE_DAILY_INDOOR} home tasks/day. Go outside 🌳, or go Premium! 🌟` };
+    }
+    return { allowed: true, seedCost: 0 };
   },
 
   // ─── Outdoor tracking ───
@@ -118,18 +116,14 @@ export const Subscription = {
   },
 
   canStartOutdoor(profileId) {
-    const sub  = this.get(profileId);
-    if (sub.isPremium) return { allowed: true };
-    const done = this.getOutdoorToday(profileId);
-    const lang = localStorage.getItem('gream_lang') || 'en';
-    const cs   = lang === 'cs';
-    if (done >= FREE_DAILY_OUTDOOR) {
-      return {
-        allowed: false,
-        reason: cs
-          ? `Denní limit ${FREE_DAILY_OUTDOOR} venkovních výzev pro bezplatnou verzi. Vrať se zítra nebo přejdi na Premium! 🌟`
-          : `Daily limit of ${FREE_DAILY_OUTDOOR} outdoor challenges for free users. Come back tomorrow or go Premium! 🌟`,
-      };
+    const sub = this.get(profileId);
+    if (sub.isPremium) return { allowed: true };   // Premium = neomezeně
+    const cs    = (localStorage.getItem('gream_lang') || 'en') === 'cs';
+    const total = this.getIndoorToday(profileId) + this.getOutdoorToday(profileId);
+    if (total >= FREE_DAILY_TOTAL) {
+      return { allowed: false, reason: cs
+        ? `Denní limit ${FREE_DAILY_TOTAL} úkolů (zdarma) vyčerpán. Vrať se zítra, nebo přejdi na Premium! 🌟`
+        : `Daily limit of ${FREE_DAILY_TOTAL} tasks (free) reached. Come back tomorrow, or go Premium! 🌟` };
     }
     return { allowed: true };
   },

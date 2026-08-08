@@ -17,7 +17,7 @@ Privacy policy URL do listingu: **https://3rstudio.eu/gream-privacy.html**
 | Web | https://3rstudio.eu/gream.html |
 | Privacy Policy | https://3rstudio.eu/gream-privacy.html |
 | Kontakt | romanpavlorek@gmail.com |
-| In-app purchases | ANO — Premium (odemyká Extreme obtížnost + domácí souboje) |
+| In-app purchases | ANO — **Premium 69 Kč/měs · 599 Kč/rok** (7 dní trial). Odemyká: neomezené úkoly (free = 2 doma/den + 6 celkem/den), extrémní obtížnost, souboje. Product IDy: `gream_premium_monthly`, `gream_premium_yearly` |
 | Reklamy | NE |
 
 ---
@@ -55,7 +55,8 @@ navíc denní kolo — všichni mají stejných 10 otázek a společný žebří
 Žádné reklamy. Žádné sledování. Bezpečný obsah a rodičovská obrazovka na úvod.
 Kids-first, ale kvízy baví každého.
 
-Zdarma s volitelným Premium (Extreme obtížnost a domácí souboje).
+Zdarma (2 úkoly doma denně + 6 celkem) s volitelným Premium (69 Kč/měs) —
+neomezené úkoly, extrémní obtížnost a souboje.
 ```
 
 ### EN
@@ -85,7 +86,8 @@ round — everyone gets the same 10 questions and a shared leaderboard.
 No ads. No tracking. Safe content and a parent screen at the start.
 Kids-first, but the quizzes are fun for everyone.
 
-Free with optional Premium (Extreme difficulty and home battles).
+Free (2 home tasks a day + 6 total) with optional Premium (from 69 CZK/mo) —
+unlimited tasks, extreme difficulty and battles.
 ```
 
 ---
