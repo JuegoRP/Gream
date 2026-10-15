@@ -12,36 +12,13 @@ const POI_CACHE_TTL = 12 * 60 * 60 * 1000; // 12h localStorage cache
 // In-memory session cache — instant hit when user opens map twice in same session
 let _sessionPoiCache = null; // { key, data, t }
 
-const OVERPASS_URLS = [
-  'https://overpass-api.de/api/interpreter',
-  'https://overpass.kumi.systems/api/interpreter',
-  'https://overpass.openstreetmap.fr/api/interpreter'
-];
+// Místa v okolí bere náš server (3rstudio.eu/api/gream/poi) – posíláme mu jen polohu
+// zaokrouhlenou na ≈500 m, přesná poloha zůstává v telefonu (vzdálenosti počítáme tady).
+const POI_URL = 'https://3rstudio.eu/api/gream/poi';
+const ROUND = 0.005;   // ≈ 550 m severojižně, ≈ 350 m východozápadně (ve střední Evropě)
+export const roundPos = (p) => ({ lat: Math.round(p.lat / ROUND) * ROUND, lon: Math.round(p.lon / ROUND) * ROUND });
 
-const FETCH_TAGS = [
-  // Nature
-  'leisure=park', 'leisure=garden', 'leisure=nature_reserve', 'leisure=playground',
-  'natural=tree', 'natural=spring', 'natural=peak', 'natural=wood', 'natural=water',
-  // World/History
-  'historic=monument', 'historic=memorial', 'historic=castle', 'historic=ruins',
-  'historic=wayside_cross', 'historic=boundary_stone',
-  'amenity=place_of_worship', 'tourism=attraction', 'tourism=viewpoint',
-  // Logic/Knowledge
-  'amenity=library', 'tourism=museum', 'amenity=planetarium',
-  'amenity=school', 'amenity=university', 'amenity=post_office',
-  'information=board', 'information=map',
-  // Arts/Culture
-  'tourism=artwork', 'tourism=gallery', 'amenity=theatre', 'amenity=arts_centre',
-  'amenity=cinema', 'amenity=music_venue',
-  // Language/Communication
-  'amenity=fountain', 'tourism=information', 'amenity=clock',
-  'amenity=telephone', 'man_made=tower',
-  // Feelings/Social
-  'amenity=bench', 'amenity=social_centre', 'amenity=community_centre',
-  'amenity=cafe', 'leisure=sports_centre', 'amenity=hospital',
-  // Battle spots — safe, social public places (pubs, bars)
-  'amenity=pub', 'amenity=bar',
-];
+// Seznam druhů míst (parky, památky, knihovny…) je na serveru – server/gream-api.js (POI_TAGS).
 
 // Kinds usable as ⚔️ battle spots — safe/social public places.
 export const BATTLE_SPOT_KINDS = new Set(['park', 'garden', 'playground', 'cafe', 'social_centre', 'pub', 'bar']);
@@ -119,7 +96,8 @@ export const Geo = {
   async fetchAllPOI(center, radiusMeters = 2000) {
     if (!center) return [];
 
-    const cacheKey = `${center.lat.toFixed(3)}_${center.lon.toFixed(3)}_${radiusMeters}`;
+    const rc = roundPos(center);
+    const cacheKey = `${rc.lat.toFixed(3)}_${rc.lon.toFixed(3)}_${radiusMeters}`;
 
     // 1. In-memory session cache — instant hit, no JSON parsing
     if (_sessionPoiCache && _sessionPoiCache.key === cacheKey &&
@@ -139,34 +117,25 @@ export const Geo = {
       }
     } catch {}
 
-    const parts = FETCH_TAGS.map(tag => {
-      const [k, v] = tag.split('=');
-      return `node["${k}"="${v}"](around:${radiusMeters},${center.lat},${center.lon});\n  way["${k}"="${v}"](around:${radiusMeters},${center.lat},${center.lon});`;
-    }).join('\n  ');
-
-    const query = `[out:json][timeout:20];\n(\n  ${parts}\n);\nout center 80;`;
-
-    // Race all Overpass mirrors in PARALLEL with a per-request timeout — the fastest
-    // one that answers wins. (Sequential + no timeout was the "map takes forever" bug:
-    // a single hung mirror blocked everything for up to a minute.)
-    const fetchFrom = async (url) => {
+    const coarse = roundPos(center);
+    const fetchFrom = async () => {
       const ctrl = new AbortController();
-      const timer = setTimeout(() => ctrl.abort(), 9000);
+      const timer = setTimeout(() => ctrl.abort(), 20000);
       try {
-        const res = await fetch(url, {
+        const res = await fetch(POI_URL, {
           method: 'POST',
-          body: 'data=' + encodeURIComponent(query),
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: JSON.stringify({ lat: coarse.lat, lon: coarse.lon }),
+          headers: { 'Content-Type': 'application/json' },
           signal: ctrl.signal,
         });
-        if (!res.ok) throw new Error('overpass-status-' + res.status);
+        if (!res.ok) throw new Error('poi-status-' + res.status);
         return await res.json();
       } finally { clearTimeout(timer); }
     };
 
     let json = null;
     try {
-      json = await Promise.any(OVERPASS_URLS.map(fetchFrom));   // first to succeed
+      json = await fetchFrom();
     } catch {
       // All mirrors failed/timed out → fall back to STALE cache (ignore TTL) so the
       // map still shows something, else empty (tiles + user marker still render).

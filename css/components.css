@@ -551,19 +551,8 @@ body.bg-starry { background:linear-gradient(180deg,#0d1b3d,#2c3e7a 50%,#4a5fa3);
 /* ─── POI sheet animations ─── */
 #poiSheet { will-change: transform; }
 
-/* ─── Leaflet container fix ─── */
-.leaflet-container {
-  font-family: 'Nunito', sans-serif !important;
-  background: #cbe3a0 !important;
-}
-.leaflet-control-attribution {
-  font-size: 9px !important;
-  background: rgba(255,255,255,0.7) !important;
-}
-.leaflet-control-zoom a {
-  font-family: 'Nunito', sans-serif !important;
-  font-weight: 800 !important;
-}
+/* ─── Mapa (MapLibre) – podklad během načítání v barvě stylu Gream ─── */
+.maplibregl-map { background: #f7f3e8; }
 
 /* ═══════════════════════════════════
    HOME SCREEN with GREAM (v3)

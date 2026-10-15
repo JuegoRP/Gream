@@ -1,13 +1,12 @@
 // ═══════════════════════════════════
 //  GREAM — sw.js  v3
 //  Strategy: network-first for app code (always fresh)
-//            cache-first for media (audio, images, leaflet, OSM tiles)
+//            cache-first for media (audio, images, fonts, MapLibre, map tiles from our server)
 // ═══════════════════════════════════
 
-const VERSION = 'gream-v17';
+const VERSION = 'gream-v18';
 const STATIC_CACHE = `${VERSION}-static`;
-const TILES_CACHE  = `gream-tiles-v1`;
-const LEAFLET_CACHE = `gream-leaflet-v1`;
+const TILES_CACHE  = `gream-tiles-v2`;   // vektorové dlaždice z 3rstudio.eu/api/gream/tiles
 
 // ─── On install: pre-cache only known-stable files ───
 const STATIC_ASSETS = [
@@ -17,6 +16,7 @@ const STATIC_ASSETS = [
   'css/layout.css',
   'css/components.css',
   'css/themes.css',
+  'css/fonts.css',
 ];
 
 self.addEventListener('install', e => {
@@ -33,7 +33,7 @@ self.addEventListener('activate', e => {
     caches.keys().then(keys =>
       Promise.all(
         keys
-          .filter(k => k !== STATIC_CACHE && k !== TILES_CACHE && k !== LEAFLET_CACHE)
+          .filter(k => k !== STATIC_CACHE && k !== TILES_CACHE)
           .map(k => caches.delete(k))
       )
     ).then(() => self.clients.claim())
@@ -49,26 +49,12 @@ self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
   const url = new URL(e.request.url);
 
-  // External: Overpass = bypass (live data)
-  if (url.hostname.includes('overpass')) return;
-
-  // External: Leaflet from CDN — cache-first
-  if (url.hostname === 'unpkg.com' && url.pathname.includes('leaflet')) {
-    e.respondWith(cacheFirst(e.request, LEAFLET_CACHE));
-    return;
-  }
-
-  // External: map tiles (OSM + CartoDB basemaps) — cache-first for fast, judder-free map
-  if (url.hostname.includes('tile.openstreetmap.org') || url.hostname.includes('basemaps.cartocdn.com')) {
+  // Vlastní server: místa v okolí = vždy živě (POST se sem stejně nedostane); dlaždice mapy = cache-first
+  if (url.hostname === '3rstudio.eu' && url.pathname.startsWith('/api/gream/tiles/')) {
     e.respondWith(cacheFirst(e.request, TILES_CACHE));
     return;
   }
-
-  // External: Google Fonts — cache-first
-  if (url.hostname.includes('fonts.googleapis.com') || url.hostname.includes('fonts.gstatic.com')) {
-    e.respondWith(cacheFirst(e.request, STATIC_CACHE));
-    return;
-  }
+  if (url.hostname !== self.location.hostname) return;   // nic jiného cizího aplikace nenačítá
 
   // Local: JS modules / screens / json → network-first (always fresh code)
   if (url.pathname.match(/\.(js|json)$/) || url.pathname.startsWith('/screens/')) {
@@ -77,7 +63,7 @@ self.addEventListener('fetch', e => {
   }
 
   // Local: images, audio, css → cache-first
-  if (url.pathname.match(/\.(png|jpg|jpeg|svg|webp|gif|wav|mp3|css)$/)) {
+  if (url.pathname.match(/\.(png|jpg|jpeg|svg|webp|gif|wav|mp3|ogg|css|woff2)$/)) {
     e.respondWith(cacheFirst(e.request, STATIC_CACHE));
     return;
   }

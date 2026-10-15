@@ -69,6 +69,7 @@ In Android Studio:
    - Data safety form — přesně (NE "no collection"):
      • Collected: "App activity" (game progress/scores) + user-provided nickname.
      • Shared: nickname + score jsou VIDITELNÉ ostatním na leaderboardu.
+     • Collected (ephemeral, not shared): approximate location ≈ 500 m kvůli mapě (viz STORE_LISTING §4).
      • NOT collected: precise location (GPS zůstává v zařízení), photos, contacts,
        email, ad identifiers. NO tracking across apps. Data NOT sold.
      • Encrypted in transit: ANO (HTTPS). Deletion: přezdívka+skóre lze smazat na
@@ -84,14 +85,14 @@ GDrive + git repo JuegoRP/3Rstudio.eu), stejně jako marketingová stránka Grea
 
 Zdroj stránky: repo `3Rstudio.eu` (soubor `gream-privacy.html`). Musí odpovídat
 skutečnému sběru dat (viz Data safety výše) — jméno+skóre na leaderboard, anonymní
-POI, reporty otázek; GPS a fotky NIKDY neopouští zařízení.
+POI, reporty otázek, přibližná poloha ≈ 500 m kvůli mapě (neukládá se); přesná GPS a fotky NIKDY neopouští zařízení.
 
 ## ⚠️ BEZPEČNOST: co NEbalit do appky (`webDir: "."`)
 
 `webDir` je `"."` → `npx cap sync` zkopíruje **celou složku repa** do nativní appky
 (`android/app/src/main/assets/public/`, `ios/App/App/public/`). APK/IPA je jen ZIP —
 kdokoli ho rozbalí a přečte. Runtime kód (`js/`, `screens/`) je čistý (jediné volání
-ven = veřejné `https://3rstudio.eu/api/gream`), ALE tyhle do buildu NEPATŘÍ:
+ven = veřejné `https://3rstudio.eu/api/gream` – i mapa a místa jdou přes něj), ALE tyhle do buildu NEPATŘÍ:
 
 - `server/` — kód serveru + deploy poznámky (infra)
 - `.git/` — celá historie commitů

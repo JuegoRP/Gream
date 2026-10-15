@@ -9,9 +9,14 @@
 //   GET  /battle/leaderboard?difficulty=medium                 -> [{name, rating, wins}]
 //   POST /poi/done        {poiId}                              -> {count}
 //   GET  /poi/counts?ids=a,b,c                                 -> {a:1,b:0,...}
+//   POST /poi             {lat, lon}  (≈500 m, zaokrouhluje i server) -> Overpass JSON {elements}
+//   GET  /tiles/{z}/{x}/{y}.pbf  vektorové dlaždice mapy (OpenFreeMap) přes cache – cizí server hráče nevidí
+//
+// Soukromí: nic z /poi ani /tiles se neukládá s IP ani polohou hráče (jen cache podle buňky/dlaždice).
 const http = require('http');
 const fs   = require('fs');
 const path = require('path');
+const zlib = require('zlib');
 
 const PORT     = 8092;
 const DATA_DIR = process.env.GREAM_DATA_DIR || '/data';
@@ -49,7 +54,14 @@ function persist(name, file, obj) {
 }
 
 const DIFFS = ['easy','medium','hard','extreme'];
-const clampName = (s) => String(s || 'Hráč').slice(0, 20).replace(/[<>]/g, '');
+// Přezdívky vidí ostatní (i děti) → filtr i na serveru, aplikace se dá obejít.
+const BAD = ['kurv', 'pica', 'picus', 'picovin', 'kokot', 'curak', 'debil', 'zmrd', 'hovn', 'prdel', 'sukat', 'buzn', 'kreten', 'idiot', 'cikan', 'negr', 'nigg',
+  'fuck', 'shit', 'bitch', 'cunt', 'dick', 'cock', 'pussy', 'whore', 'slut', 'fagg', 'nazi', 'hitler', 'porn', 'sex', 'penis', 'vagin', 'rape', 'zabij'];
+const norm = (s) => String(s).toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
+  .replace(/[0@]/g, 'o').replace(/[1!|]/g, 'i').replace(/3/g, 'e').replace(/4/g, 'a').replace(/5|\$/g, 's').replace(/7/g, 't').replace(/[^a-z]/g, '');
+const BADN = [...new Set(BAD.map(norm))].filter(w => w.length >= 3);
+const isBadName = (s) => { const n = norm(s); return BADN.some(w => n.includes(w)); };
+const clampName = (s) => { const n = String(s || 'Hráč').slice(0, 20).replace(/[<>]/g, '').trim() || 'Hráč'; return isBadName(n) ? 'Hráč' : n; };
 const MAX_REPORTS = 8000;
 const RUNS_PER_DIFF = 300;      // pool of recent runs used as async opponents
 
@@ -227,7 +239,81 @@ const server = http.createServer((req, res) => {
     return send(res, 200, board);
   }
 
+  // ─── Místa v okolí: klient posílá polohu zaokrouhlenou na ≈500 m, server zaokrouhlí znovu ───
+  if (req.method === 'POST' && p === '/poi') return readBody(req, async (d) => {
+    const lat = Number(d && d.lat), lon = Number(d && d.lon);
+    if (!isFinite(lat) || !isFinite(lon) || Math.abs(lat) > 85 || Math.abs(lon) > 180) return send(res, 400, { error: 'bad' });
+    try { return send(res, 200, await poiCell(roundCoord(lat), roundCoord(lon))); }
+    catch { return send(res, 502, { error: 'overpass-unavailable' }); }
+  });
+
+  // ─── Vektorové dlaždice mapy (OpenFreeMap) přes cache ───
+  const tm = p.match(/^\/tiles\/(\d{1,2})\/(\d{1,6})\/(\d{1,6})\.pbf$/);
+  if (req.method === 'GET' && tm) {
+    const [z, x, y] = tm.slice(1).map(Number);
+    if (z > TILE_MAX_Z || x >= 2 ** z || y >= 2 ** z) return send(res, 404, { error: 'not-found' });
+    return tile(z, x, y).then((gz) => {
+      res.setHeader('Content-Type', 'application/x-protobuf');
+      res.setHeader('Cache-Control', 'public, max-age=604800');
+      if (!gz.length) { res.writeHead(204); return res.end(); }
+      // dlaždice držíme gzipované (≈5× menší); prohlížeč/MapLibre je rozbalí sám
+      if (/\bgzip\b/.test(req.headers['accept-encoding'] || '')) { res.setHeader('Content-Encoding', 'gzip'); res.writeHead(200); return res.end(gz); }
+      res.writeHead(200); res.end(zlib.gunzipSync(gz));
+    }).catch(() => send(res, 502, { error: 'tiles-unavailable' }));
+  }
+
   return send(res, 404, { error: 'not-found' });
 });
+
+// ─── Místa (Overpass) – cache po buňkách ≈500 m na 24 h, bez vazby na hráče ───
+const roundCoord = (v) => Math.round(v / 0.005) * 0.005;
+const POI_TAGS = ['leisure=park', 'leisure=garden', 'leisure=nature_reserve', 'leisure=playground', 'natural=tree', 'natural=spring', 'natural=peak', 'natural=wood', 'natural=water',
+  'historic=monument', 'historic=memorial', 'historic=castle', 'historic=ruins', 'historic=wayside_cross', 'historic=boundary_stone', 'amenity=place_of_worship', 'tourism=attraction', 'tourism=viewpoint',
+  'amenity=library', 'tourism=museum', 'amenity=planetarium', 'amenity=school', 'amenity=university', 'amenity=post_office', 'information=board', 'information=map',
+  'tourism=artwork', 'tourism=gallery', 'amenity=theatre', 'amenity=arts_centre', 'amenity=cinema', 'amenity=music_venue',
+  'amenity=fountain', 'tourism=information', 'amenity=clock', 'amenity=telephone', 'man_made=tower',
+  'amenity=bench', 'amenity=social_centre', 'amenity=community_centre', 'amenity=cafe', 'leisure=sports_centre', 'amenity=hospital', 'amenity=pub', 'amenity=bar'];
+const OVERPASS = ['https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter', 'https://overpass.openstreetmap.fr/api/interpreter'];
+const poiCache = new Map(); // klíč buňky → { t, data }
+async function poiCell(lat, lon) {
+  const key = `${lat.toFixed(3)},${lon.toFixed(3)}`;
+  const c = poiCache.get(key);
+  if (c && Date.now() - c.t < 24 * 3600e3) return c.data;
+  const parts = POI_TAGS.map(t => { const [k, v] = t.split('='); return `node["${k}"="${v}"](around:2200,${lat},${lon});way["${k}"="${v}"](around:2200,${lat},${lon});`; }).join('');
+  const body = 'data=' + encodeURIComponent(`[out:json][timeout:20];(${parts});out center 120;`);
+  const one = async (url) => {
+    const r = await fetch(url, { method: 'POST', body, headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'Gream/1.0 (3rstudio.eu)' }, signal: AbortSignal.timeout(15000) });
+    if (!r.ok) throw new Error('overpass ' + r.status);
+    return r.json();
+  };
+  const json = await Promise.any(OVERPASS.map(one));
+  const data = { elements: (json.elements || []).map(e => ({ id: e.id, lat: e.lat, lon: e.lon, center: e.center, tags: e.tags })) };
+  poiCache.set(key, { t: Date.now(), data });
+  if (poiCache.size > 3000) poiCache.delete(poiCache.keys().next().value);
+  return data;
+}
+
+// ─── Dlaždice: OpenFreeMap (zdarma i komerčně, data © OpenStreetMap) – cache na disku 30 dní ───
+const TILE_MAX_Z = 14;
+const TILE_DIR = path.join(DATA_DIR, 'tiles');
+let tileTpl = null, tileTplAt = 0;
+async function tileTemplate() {
+  if (tileTpl && Date.now() - tileTplAt < 24 * 3600e3) return tileTpl;
+  const r = await fetch('https://tiles.openfreemap.org/planet', { signal: AbortSignal.timeout(10000) });
+  const j = await r.json();
+  tileTpl = j.tiles[0]; tileTplAt = Date.now();
+  return tileTpl;
+}
+async function tile(z, x, y) {
+  const f = path.join(TILE_DIR, String(z), String(x), `${y}.pbf.gz`);
+  try { const st = fs.statSync(f); if (Date.now() - st.mtimeMs < 30 * 86400e3) return fs.readFileSync(f); } catch { /* není v cache */ }
+  const url = (await tileTemplate()).replace('{z}', z).replace('{x}', x).replace('{y}', y);
+  const r = await fetch(url, { signal: AbortSignal.timeout(15000), headers: { 'User-Agent': 'Gream/1.0 (3rstudio.eu)' } });
+  if (r.status === 404 || r.status === 204) return Buffer.alloc(0);
+  if (!r.ok) throw new Error('tile ' + r.status);
+  const buf = zlib.gzipSync(Buffer.from(await r.arrayBuffer()), { level: 9 });
+  try { fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f + '.tmp', buf); fs.renameSync(f + '.tmp', f); } catch { /* cache je bonus */ }
+  return buf;
+}
 
 server.listen(PORT, () => console.log('gream-api on', PORT));

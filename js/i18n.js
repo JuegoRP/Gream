@@ -37,8 +37,8 @@ export const T = {
 
     ob_v4_step2_title: "For parents 👨‍👩‍👧",
     ob_v4_step2_sub:   "Before your child plays, please review how Gream works.",
-    ob_v4_legal_data_name:  "All data stays on this device",
-    ob_v4_legal_data_desc:  "Name, progress, photos — never sent to any server. Local storage only.",
+    ob_v4_legal_data_name:  "Your precise location stays on this device",
+    ob_v4_legal_data_desc:  "Name, progress and photos stay on the device. For the map we send only an approximate location (≈ 500 m), for leaderboards a nickname and score.",
     ob_v4_legal_loc_name:   "Location is private",
     ob_v4_legal_loc_desc:   "Used only to find places nearby. Never stored remotely or shared.",
     ob_v4_legal_cam_name:   "No ads, ever",
@@ -1367,8 +1367,8 @@ export const T = {
 
     ob_v4_step2_title: "Pro rodiče 👨‍👩‍👧",
     ob_v4_step2_sub:   "Než si dítě začne hrát, prosím přečtěte si, jak Gream funguje.",
-    ob_v4_legal_data_name:  "Všechna data zůstávají v zařízení",
-    ob_v4_legal_data_desc:  "Jméno, postup, fotky — nikdy se neposílají na server. Pouze lokálně.",
+    ob_v4_legal_data_name:  "Tvoje přesná poloha zůstává v zařízení",
+    ob_v4_legal_data_desc:  "Jméno, postup a fotky zůstávají v zařízení. Kvůli mapě posíláme jen přibližnou polohu (≈ 500 m), pro žebříček přezdívku a skóre.",
     ob_v4_legal_loc_name:   "Poloha je soukromá",
     ob_v4_legal_loc_desc:   "Slouží jen k hledání míst poblíž. Nikam se neukládá ani nesdílí.",
     ob_v4_legal_cam_name:   "Žádné reklamy",

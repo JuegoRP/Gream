@@ -1,14 +1,14 @@
 # CLAUDE.md — Gream
 
-Outdoorová PWA hra pro děti 7–15 let (vanilla JS + Capacitor). Bez backendu — všechna data včetně GPS zůstávají lokálně na zařízení. Stav a zbývající práce: `TODO.md` a README sekce „Stav projektu".
+Kvízová hra pro celou rodinu (kids-first), venku i doma (vanilla JS PWA + Capacitor → Google Play). Profil a postup jsou lokálně v zařízení; server `3rstudio.eu/api/gream` (kód v `server/gream-api.js`) obsluhuje souboje, žebříčky, místa na mapě a mapové dlaždice. Stav a zbývající práce: `TODO.md`, zadání vydání 1.0: GDrive `system/specs/spec-gream-1.0.md`, audit: GDrive `system/audit/gream-2026-10-15/AUDIT.md`.
 
 ## Konvence
 
 - **Texty výhradně přes `js/i18n.js`** (EN + CZ kompletní) — nikdy hardcodované řetězce v kódu ani šablonách
-- **Žádné nové frameworky/závislosti** — vanilla JS, moduly v `js/`, obrazovky jako šablony v `screens/*.html`
+- **Žádné nové frameworky/závislosti** — vanilla JS, moduly v `js/`, obrazovky jako šablony v `screens/*.html`. Výjimka: mapa MapLibre (`vendor/maplibre/`, lokálně) a písmo Nunito (`fonts/`) – nic se nenačítá z CDN.
 - Logika obrazovek v `js/app.js`, navigace přes `js/router.js` (úklid MapView při změně obrazovky)
 - Geo funkce v `js/geo.js` — pozor na cache invalidation a iOS DeviceMotion permission flow
-- Soukromí je feature: GPS souřadnice a fotky NIKDY neposílat na server
+- **Soukromí je feature (Google Play Families policy):** přesné GPS souřadnice a fotky NIKDY neposílat nikam. Mapa i místa jdou jen přes náš server a jen s polohou zaokrouhlenou na ≈ 500 m (`Geo.roundPos`). Aplikace se nesmí spojit s žádnou cizí doménou (kontrola: audit `checks/poi_leak.mjs`, `ui_smoke.mjs`). Každá změna sběru dat = aktualizovat zásady (3rstudio.eu/gream-privacy.html), text v aplikaci (`showPrivacy` v app.js, `ob_v4_legal_*` v i18n) a STORE_LISTING §4.
 - Store build: postup v `CAPACITOR.md`
 
 ## Testování
@@ -22,4 +22,4 @@ Geo funkce: Chrome DevTools → Sensors → Geolocation override, nebo reálný 
 
 1. Zaškrtni hotové položky v `TODO.md` s datem: `[x] Hotovo (RRRR-MM-DD)`
 2. Změnila-li se fáze projektu, aktualizuj README sekci „Stav projektu"
-3. **Připomeň Romanovi aktualizovat `projects.json`** (admin.romanpavlorek.eu) — n8n agenti z něj čtou živý stav projektů; zastaralý kontext = špatné výstupy celého studia
+3. Aktualizuj kartu projektu Gream v 3R Control (admin.romanpavlorek.eu/app → Projekty) – z ní čerpají agenti i Claude

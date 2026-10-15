@@ -1986,28 +1986,29 @@ window.App = {
     const lang = getLang();
     const title = lang === 'cs' ? 'Zásady ochrany soukromí' : 'Privacy Policy';
     const content = lang === 'cs' ? `
-      <p><strong>Stručně:</strong> Tvoje poloha (GPS) a fotky nikdy neopustí zařízení. Pro souboje a žebříčky posíláme na náš server jen zvolenou přezdívku a skóre.</p>
+      <p><strong>Stručně:</strong> Tvoje přesná poloha (GPS) a fotky nikdy neopustí zařízení. Kvůli mapě posíláme na náš server jen přibližnou polohu (zaokrouhlenou na zhruba 500 m) a neukládáme ji. Pro souboje a žebříčky posíláme jen zvolenou přezdívku a skóre.</p>
 
       <p><strong>1. Co zůstává jen v zařízení</strong><br>
       Přezdívka, avatar, postup ve hře (úkoly, odznaky, semínka), greamíci, volitelná fotka,
-      pozice "domov" a historie úkolů. <strong>GPS souřadnice</strong> se zpracují jen v zařízení
-      (rozpoznání „jsi venku / u místa") a nikdy se neodesílají.</p>
+      pozice "domov" a historie úkolů. <strong>Přesné GPS souřadnice</strong> se zpracují jen v zařízení
+      (vzdálenost k místům, „jsi u místa") a nikdy se neodesílají.</p>
 
       <p><strong>2. Co posíláme na server</strong> (3rstudio.eu, bez účtu, anonymně)<br>
       • Přezdívku + skóre a rating ze soubojů → veřejný žebříček<br>
       • Anonymní ID splněných míst na mapě (kolik hráčů je splnilo)<br>
       • Nahlášení špatné otázky (které a proč)<br>
-      Přezdívku si volíš ty a je vidět ostatním — nedávej do ní osobní údaje.</p>
+      • <strong>Přibližnou polohu</strong> (zaokrouhlenou na ≈ 500 m) a výřez mapy – náš server podle ní najde zajímavá místa v okolí a pošle mapu. Neukládáme ji a není spojená s tebou ani s přezdívkou.<br>
+      Přezdívku si volíš ty a je vidět ostatním — nedávej do ní osobní údaje. Nevhodné přezdívky server automaticky nahradí.</p>
 
       <p><strong>3. Co Gream NEDĚLÁ</strong><br>
       • Žádné reklamy<br>
       • Žádné sledování napříč aplikacemi ani reklamní ID<br>
       • Žádná analytika třetích stran ve hře<br>
       • Neprodáváme data · nesbíráme e-mail/telefon<br>
-      • GPS a fotky nikdy neopustí zařízení</p>
+      • Přesná poloha a fotky nikdy neopustí zařízení</p>
 
       <p><strong>4. Externí služby</strong><br>
-      Mapa používá OpenStreetMap (jen mapové dlaždice). Fonty přes Google Fonts.</p>
+      Mapová data © OpenStreetMap (přes OpenFreeMap) – stahuje je náš server, tvoje zařízení se s cizími servery nespojuje. Písmo je součástí aplikace.</p>
 
       <p><strong>5. Děti</strong><br>
       Obsah je bezpečný a bez reklam; v úvodu je obrazovka pro rodiče. Rodič může požádat
@@ -2021,30 +2022,31 @@ window.App = {
       <a href="https://3rstudio.eu/gream-privacy.html" target="_blank" rel="noopener">3rstudio.eu/gream-privacy.html</a><br>
       Kontakt: romanpavlorek@gmail.com</p>
 
-      <p style="font-size:11px;opacity:0.7;margin-top:14px">Naposledy aktualizováno: červenec 2026</p>
+      <p style="font-size:11px;opacity:0.7;margin-top:14px">Naposledy aktualizováno: říjen 2026</p>
     ` : `
-      <p><strong>In short:</strong> Your location (GPS) and photos never leave your device. For battles and leaderboards we send only your chosen nickname and score to our server.</p>
+      <p><strong>In short:</strong> Your precise location (GPS) and photos never leave your device. For the map we send our server only an approximate location (rounded to about 500 m) and don't store it. For battles and leaderboards we send only your chosen nickname and score.</p>
 
       <p><strong>1. What stays only on your device</strong><br>
       Nickname, avatar, game progress (tasks, badges, seeds), greamíci, optional photo,
-      "home" pin and task history. <strong>GPS coordinates</strong> are processed on-device only
-      (to detect "you're outdoors / at a place") and are never sent.</p>
+      "home" pin and task history. <strong>Precise GPS coordinates</strong> are processed on-device only
+      (distance to places, "you're at a place") and are never sent.</p>
 
       <p><strong>2. What we send to our server</strong> (3rstudio.eu, no account, anonymous)<br>
       • Nickname + score and rating from battles → public leaderboard<br>
       • Anonymous IDs of completed map places (how many players completed them)<br>
       • Bad-question reports (which one and why)<br>
-      You choose your nickname and others can see it — don't put personal details in it.</p>
+      • <strong>Approximate location</strong> (rounded to ≈ 500 m) and the map area – our server uses it to find interesting places nearby and to send the map. It is not stored and not linked to you or your nickname.<br>
+      You choose your nickname and others can see it — don't put personal details in it. The server automatically replaces inappropriate nicknames.</p>
 
       <p><strong>3. What Gream does NOT do</strong><br>
       • No ads<br>
       • No cross-app tracking or advertising IDs<br>
       • No third-party analytics in the game<br>
       • We don't sell data · we don't collect email/phone<br>
-      • GPS and photos never leave the device</p>
+      • Precise location and photos never leave the device</p>
 
       <p><strong>4. External services</strong><br>
-      The map uses OpenStreetMap (map tiles only). Fonts via Google Fonts.</p>
+      Map data © OpenStreetMap (via OpenFreeMap) – downloaded by our server; your device does not connect to third-party servers. The font is bundled with the app.</p>
 
       <p><strong>5. Children</strong><br>
       Content is safe and ad-free; a parent screen appears at the start. Parents can request
@@ -2058,7 +2060,7 @@ window.App = {
       <a href="https://3rstudio.eu/gream-privacy.html" target="_blank" rel="noopener">3rstudio.eu/gream-privacy.html</a><br>
       Contact: romanpavlorek@gmail.com</p>
 
-      <p style="font-size:11px;opacity:0.7;margin-top:14px">Last updated: July 2026</p>
+      <p style="font-size:11px;opacity:0.7;margin-top:14px">Last updated: October 2026</p>
     `;
     this._showInfoModal(title, content);
   },
