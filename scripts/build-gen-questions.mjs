@@ -1,9 +1,9 @@
 // Sestaví js/challenges-gen.js z vygenerovaných a ověřených otázek.
-//   node scripts/build-gen-questions.mjs <gen.jsonl>
+//   node scripts/build-gen-questions.mjs <gen.jsonl> [facts-check.jsonl]
 // Zdroj: generátor přes n8n agenta (gen-questions.mjs) + druhý průchod fact-checkem (verdict ok)
 // + RUČNÍ výběr (content/gen-1.1-keep.json: pořadová čísla mezi „ok“ otázkami, opravy textů).
 import fs from 'node:fs';
-const [SRC] = process.argv.slice(2);
+const [SRC, CHECK] = process.argv.slice(2);
 const cfg = JSON.parse(fs.readFileSync(new URL('../content/gen-1.1-keep.json', import.meta.url), 'utf8'));
 const ok = fs.readFileSync(SRC, 'utf8').split('\n').filter(Boolean).map(l => JSON.parse(l)).filter(r => r.verdict === 'ok');
 const keep = new Set(cfg.keep);
@@ -34,6 +34,11 @@ ok.forEach((r, i) => {
   if (item.kind === 'odd') for (const lang of ['cs', 'en']) if (/^(Co sem nepatří\?|Which one doesn't belong\?)$/.test(item[lang].text.trim())) item[lang].text = `${item[lang].text.trim()} ${item[lang].choices.join(' · ')}`;
   out.push(item);
 });
+// Zajímavosti, které neprošly samostatnou kontrolou (content/facts-check-1.1.jsonl, id gen<i>|<jazyk>), vynechat
+if (CHECK) {
+  const ok = new Map(fs.readFileSync(CHECK, 'utf8').split('\n').filter(Boolean).map(l => JSON.parse(l)).map(r => [r.id, String(r.ok).toLowerCase() === 'yes']));
+  out.forEach((o, i) => { if (!o.fact) return; for (const lang of ['cs', 'en']) if (!ok.get(`gen${i}|${lang}`)) delete o.fact[lang]; if (!o.fact.cs && !o.fact.en) delete o.fact; });
+}
 // Stejné obecné zadání časové osy ve stejné sadě → neviditelné rozlišení (zero-width), text zůstane stejný
 const seen = new Map();
 for (const o of out) for (const lang of ['cs', 'en']) { const k = `${lang}|${o.w}|${o.d}|${o[lang].text}`; const n = seen.get(k) || 0; seen.set(k, n + 1); if (n) o[lang].text += '\u200b'.repeat(n); }

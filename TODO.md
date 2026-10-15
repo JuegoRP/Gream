@@ -5,6 +5,22 @@
 
 ---
 
+## Verze 1.1 (větev `release-1.1`, čeká na schválení Romana)
+- [x] Greamíci: nové stádium 4 všech šesti ve stylu stádií 2–3, původní v `img/greamici/puvodni/` (2026-10-15)
+- [x] Aréna soubojů: životy, energie, speciály, animace útoků; balanc simulací v `npm test` (2026-10-15)
+- [x] Rodinný souboj na jednom telefonu, týdenní ligy, bitevní místa (anonymní držitel) (2026-10-15)
+- [x] Obchůdek: doplňky viditelné na greamíkovi, výzdoba zahrady (2026-10-15)
+- [x] Mapa: výprava dne, vzácné místo, prozkoumané okolí (jen v telefonu) (2026-10-15)
+- [x] Pro rodiče: brána před odkazy ven, denní čas hraní, přehled pokroku (2026-10-15)
+- [x] Kontrola pravdivosti všech 2 124 otázek (CZ i EN) + ruční posouzení nálezů, opravy (2026-10-15)
+- [x] Nové druhy: Pravda/mýtus, Odhadni, Časová osa, Co sem nepatří, Kde to je? (mapa), tematické balíčky – 198 + 33 otázek (2026-10-15)
+- [x] „Víš, že…?“ zajímavosti (ověřené) po odpovědi i po chybě (2026-10-15)
+- [x] OPRAVA: správná odpověď byla na obrazovce výzvy vždy první (2026-10-15)
+- [x] Nastavení: obtížnost zpět v nastavení, přeskupení (2026-10-15)
+- [ ] Zásady na webu (3rstudio.eu/gream-privacy.html): doplnit ligy a bitevní místa – PR do 3Rstudio.eu
+- [ ] Balíčky: zatím rozptýlené v běžných otázkách (pole `pack`); samostatný výběr balíčku + doplnit na 150 otázek/balíček
+- [x] Vzácné „zářivé“ greamíky – už existují (1 : 100, zlatá záře v zahradě i aréně), ponecháno (2026-10-15)
+
 ## Před vydáním (cíl Q4 2026 — Google Play + App Store)
 
 ### Platformní opravy

@@ -1,13 +1,14 @@
 // Kontrola pravdivosti otázek – export a sestavení zajímavostí „Víš, že…?“
 //   node scripts/qa-questions.mjs export <cs|en> <out.json>      – otázky k ověření (id = challengeId z textu v daném jazyce)
-//   node scripts/qa-questions.mjs facts <qa-cs.jsonl> <qa-en.jsonl> – zapíše js/facts-data.js (jen otázky s verdiktem „ok“ / opravené)
+//   node scripts/qa-questions.mjs facts <qa-cs.jsonl> <qa-en.jsonl> [facts-check.jsonl] – zapíše js/facts-data.js
+//     (jen otázky s verdiktem ok/obtiznost, které ve hře pořád jsou, a jen zajímavosti, které prošly samostatnou kontrolou)
 // Ověřování běží přes n8n agenta (3R Control kontejner, qa-run.mjs) – výsledky jsou JSONL: id, verdict, fact_cs, fact_en, source.
 import fs from 'node:fs';
 globalThis.localStorage ??= { getItem: () => null, setItem: () => {} };
 globalThis.navigator ??= { language: 'cs' };
 const { T } = await import('../js/i18n.js');
 const { challengeId } = await import('../js/net.js');
-const [cmd, a1, a2] = process.argv.slice(2);
+const [cmd, a1, a2, a3] = process.argv.slice(2);
 
 const flat = (lang) => {
   const out = [];
@@ -30,10 +31,12 @@ if (cmd === 'export') {
 } else if (cmd === 'facts') {
   const read = (f) => f && fs.existsSync(f) ? fs.readFileSync(f, 'utf8').split('\n').filter(Boolean).map(l => JSON.parse(l)) : [];
   const live = { cs: new Set(flat('cs').map(q => q.id)), en: new Set(flat('en').map(q => q.id)) };
+  const checked = a3 ? new Map(read(a3).map(r => [r.id, String(r.ok).toLowerCase() === 'yes'])) : null;   // id = "<id>|<jazyk>"
   const facts = {};
   for (const [lang, file] of [['cs', a1], ['en', a2]]) for (const r of read(file)) {
     const t = lang === 'cs' ? r.fact_cs : r.fact_en;
     if (!live[lang].has(r.id) || !t || !/^(ok|obtiznost)$/.test(r.verdict)) continue;   // jen ověřené otázky, které ve hře pořád jsou
+    if (checked && !checked.get(`${r.id}|${lang}`)) continue;   // zajímavost neprošla kontrolou
     (facts[r.id] ||= {})[lang] = String(t).trim().slice(0, 220);
     if (r.source) facts[r.id].src = String(r.source).slice(0, 80);
   }

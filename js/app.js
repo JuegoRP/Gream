@@ -2034,11 +2034,14 @@ window.App = {
       <p><strong>1. Co zůstává jen v zařízení</strong><br>
       Přezdívka, avatar, postup ve hře (úkoly, odznaky, semínka), greamíci, volitelná fotka,
       pozice "domov" a historie úkolů. <strong>Přesné GPS souřadnice</strong> se zpracují jen v zařízení
-      (vzdálenost k místům, „jsi u místa") a nikdy se neodesílají.</p>
+      (vzdálenost k místům, „jsi u místa") a nikdy se neodesílají. Jen v zařízení zůstává i prozkoumané okolí,
+      výprava dne a denní čas hraní nastavený rodičem. Otázka „Kde to je?“ tvou polohu nepoužívá.</p>
 
       <p><strong>2. Co posíláme na server</strong> (3rstudio.eu, bez účtu, anonymně)<br>
       • Přezdívku + skóre a rating ze soubojů → veřejný žebříček<br>
       • Anonymní ID splněných míst na mapě (kolik hráčů je splnilo)<br>
+      • Bitevní místa: u místa uložíme jen greamíka a skóre toho, kdo ho drží (bez přezdívky a ID), na 14 dní<br>
+      • Týdenní liga: body ze soubojů pod náhodným ID hráče (žebříček ligy ukazuje přezdívky)<br>
       • Nahlášení špatné otázky (které a proč)<br>
       • <strong>Přibližnou polohu</strong> (zaokrouhlenou na ≈ 500 m) a výřez mapy – náš server podle ní najde zajímavá místa v okolí a pošle mapu. Neukládáme ji a není spojená s tebou ani s přezdívkou.<br>
       Přezdívku si volíš ty a je vidět ostatním — nedávej do ní osobní údaje. Nevhodné přezdívky server automaticky nahradí.</p>
@@ -2072,11 +2075,14 @@ window.App = {
       <p><strong>1. What stays only on your device</strong><br>
       Nickname, avatar, game progress (tasks, badges, seeds), greamíci, optional photo,
       "home" pin and task history. <strong>Precise GPS coordinates</strong> are processed on-device only
-      (distance to places, "you're at a place") and are never sent.</p>
+      (distance to places, "you're at a place") and are never sent. Explored areas, the daily expedition
+      and the daily play time set by a parent also stay on your device. The "Where is it?" question doesn't use your location.</p>
 
       <p><strong>2. What we send to our server</strong> (3rstudio.eu, no account, anonymous)<br>
       • Nickname + score and rating from battles → public leaderboard<br>
       • Anonymous IDs of completed map places (how many players completed them)<br>
+      • Battle spots: for a place we store only the greamík and score of whoever holds it (no nickname or ID), for 14 days<br>
+      • Weekly league: battle points under a random player ID (the league table shows nicknames)<br>
       • Bad-question reports (which one and why)<br>
       • <strong>Approximate location</strong> (rounded to ≈ 500 m) and the map area – our server uses it to find interesting places nearby and to send the map. It is not stored and not linked to you or your nickname.<br>
       You choose your nickname and others can see it — don't put personal details in it. The server automatically replaces inappropriate nicknames.</p>

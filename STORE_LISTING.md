@@ -107,6 +107,11 @@ The whole game is free.
 | **Personal info → Name** (zvolená přezdívka) | ANO | ANO (veřejný leaderboard) | App functionality | Vyžadováno pro hru |
 | **App activity → Other actions** (skóre, rating, splněné výzvy/POI) | ANO | ANO (leaderboard, počty u míst) | App functionality | — |
 
+**Verze 1.1 – beze změny kategorií** (vše spadá pod App activity / Name výše):
+- Týdenní liga: body ze soubojů pod náhodným ID hráče + přezdívka v tabulce ligy.
+- Bitevní místa: u místa (id POI) server drží jen greamíka, skóre a náhodný žeton držitele, 14 dní – bez přezdívky a ID hráče.
+- Jen v zařízení: prozkoumané okolí (buňky 200 m), výprava dne, denní čas hraní (rodič), otázka „Kde to je?“ (polohu nepoužívá).
+
 ### NEsbírané / NEsdílené (explicitně)
 - **Location → Precise location** → NE. Přesné souřadnice zůstávají v zařízení (vzdálenost k místům se počítá v telefonu).
 - **Location → Approximate location** → **ANO, collected, NOT shared**, *processed ephemerally* (zaškrtnout „Data is processed ephemerally“), účel **App functionality**, povinné pro mapu.
