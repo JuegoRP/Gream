@@ -84,7 +84,9 @@
 <script type="module" src="js/app.js"></script>
 <script>
   // If module fails to load (Safari syntax error, CORS, etc.), show error after 4s
+  // Hláška jen když se modul hry opravdu nenačetl (pomalý telefon ≠ chyba) – app.js hned na začátku nastaví __greamLoaded
   setTimeout(function() {
+    if (window.__greamLoaded) return;
     var fallback = document.getElementById('appLoadingFallback');
     var msg = document.getElementById('appLoadingMsg');
     if (fallback && fallback.style.display !== 'none' && msg && msg.textContent === 'Loading...') {
@@ -95,7 +97,7 @@
         'Check the browser console (Web Inspector) for errors.</div>' +
         '<button onclick="location.reload()" style="margin-top:12px;padding:8px 16px;border:none;border-radius:8px;background:#4a8a2e;color:white;font-weight:700;cursor:pointer">Reload</button>';
     }
-  }, 4000);
+  }, 10000);
 </script>
 </body>
 </html>

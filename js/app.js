@@ -23,6 +23,7 @@ import { Subscription, FREE_DAILY_INDOOR, PREMIUM_DAILY_INDOOR, INDOOR_MAX_TOTAL
 import { Ranking } from './ranking.js';
 import { Audio } from './audio.js';
 import { fillIcons } from './icons.js';
+window.__greamLoaded = true; // modul hry se načetl (index.html pak neukáže „Failed to start“)
 
 // ─── Global error boundary ───
 // Catches uncaught errors and shows a friendly recovery UI instead of white screen

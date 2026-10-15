@@ -13,6 +13,8 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:background">@null</item>
+        <!-- Pruh pod stavovou/navigační lištou v barvě hry (místo šedé) -->
+        <item name="android:windowBackground">@color/gream_bg</item>
     </style>
 
 
