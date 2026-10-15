@@ -4,31 +4,33 @@
 //  Připraveno na server sync (future)
 // ═══════════════════════════════════
 
+import { Badges } from './badges.js';
+
 const KEY_RANK = 'gream_rank_v1';
 
 export const Ranking = {
 
-  // ─── Aktualizuj lokální skóre po každém splněném úkolu ───
-  update(profileId, profile, badges, gream) {
+  // ─── Aktualizuj lokální skóre (po splněném úkolu / otevření žebříčku) ───
+  update(profileId, profile, _badges, gream) {
     const data = this._load();
-    const tasks  = Profiles_getTotalTasks(profileId);
-    const streak = profile?.streak || 0;
-    const badgeCt = badges?.length || 0;
-    const greamStage = gream?.stage || 1;
-    const worlds = this._worldCount(profileId);
-
+    const s = this.summary(profile, gream);
     data[profileId] = {
       name:      profile?.name || 'Player',
       avatar:    profile?.avatar || '🧒',
-      tasks,
-      streak,
-      badges:    badgeCt,
-      greamStage,
-      worlds,
-      score:     this._calcScore(tasks, streak, badgeCt, greamStage, worlds),
+      ...s,
       updatedAt: Date.now(),
     };
     this._save(data);
+  },
+
+  // ─── Jediný výpočet bodů pro celou hru (žebříček, statistiky, profil) ───
+  summary(profile, gream) {
+    const tasks  = profile?.totalTasks || 0;
+    const streak = profile?.streak || 0;
+    const badges = Badges.earnedCount(profile);
+    const greamStage = gream?.stage || 1;
+    const worlds = Object.values(profile?.worldTasks || {}).filter(n => n > 0).length;
+    return { tasks, streak, badges, greamStage, worlds, score: this._calcScore(tasks, streak, badges, greamStage, worlds) };
   },
 
   // ─── Získej vlastní záznam ───
@@ -53,14 +55,6 @@ export const Ranking = {
          + (worlds * 100);
   },
 
-  // ─── Počet světů s alespoň 1 splněným úkolem ───
-  _worldCount(profileId) {
-    try {
-      const raw = localStorage.getItem('gream_badge_progress_' + profileId) || '{}';
-      return Object.keys(JSON.parse(raw)).length;
-    } catch { return 0; }
-  },
-
   // ─── Rank title podle skóre ───
   rankTitle(score, lang = 'cs') {
     const titles = [
@@ -83,13 +77,3 @@ export const Ranking = {
     try { localStorage.setItem(KEY_RANK, JSON.stringify(d)); } catch {}
   },
 };
-
-// ─── Helper — total tasks for a profile ───
-function Profiles_getTotalTasks(profileId) {
-  try {
-    const raw = localStorage.getItem('gream_profiles') || '[]';
-    const profiles = JSON.parse(raw);
-    const p = profiles.find(x => x.id === profileId);
-    return p?.totalTasks || 0;
-  } catch { return 0; }
-}

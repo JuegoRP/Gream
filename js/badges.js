@@ -79,6 +79,21 @@ export const Badges = {
     } catch { return []; }
   },
 
+  // ─── Jediný zdroj pravdy pro „získané odznaky“ (statistiky, žebříček, odznaky) ───
+  // Odznak za sérii zůstává, i když se série přeruší → počítá se z nejlepší série.
+  bestStreak(profile) {
+    return Math.max(profile?.bestStreak || 0, profile?.streak || 0);
+  },
+  streakEarned(profile, sb) {
+    return this.bestStreak(profile) >= sb.days;
+  },
+  earnedCount(profile) {
+    if (!profile) return 0;
+    const worldLevels = this.getAllBadges(profile.worldTasks || {}).reduce((n, b) => n + b.level, 0);
+    const streak = (tr().streakBadges || []).filter(sb => this.streakEarned(profile, sb)).length;
+    return worldLevels + streak;
+  },
+
   // ─── Streak badge check ───
   checkStreakBadges(profile) {
     const t = tr();

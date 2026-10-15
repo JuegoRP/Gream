@@ -38,14 +38,6 @@
   font-size:var(--fs-sm); font-weight:800; color:var(--danger);
 }
 
-.btn-back {
-  width:44px; height:44px; border-radius:50%;
-  background:rgba(255,255,255,0.87); border:none;
-  font-size:21px; display:flex; align-items:center; justify-content:center;
-  box-shadow:0 2px 10px rgba(0,0,0,0.1); flex-shrink:0;
-  transition:transform var(--t-fast);
-}
-.btn-back:active { transform:scale(0.9); }
 
 .btn-action {
   width:100%; padding:15px; border-radius:var(--r-lg); border:none;
@@ -495,17 +487,6 @@
   transform:translateX(22px);
 }
 
-/* ─── BACK BUTTON ─── */
-.btn-back {
-  font-family:inherit;
-  font-weight:800;
-  color:var(--green-deep);
-  cursor:pointer;
-  font-size:15px;
-  background:none;
-  border:none;
-  padding:8px 12px;
-}
 
 /* ─── BACKGROUND THEMES (wardrobe purchasable) ─── */
 body.bg-sunset { background:linear-gradient(180deg,#ffd699,#ffaa6b 50%,#ff8a73); }
@@ -1333,3 +1314,49 @@ body.bg-starry { background:linear-gradient(180deg,#0d1b3d,#2c3e7a 50%,#4a5fa3);
   60%  { transform: rotate(0deg) scale(1); }
   100% { transform: rotate(0deg) scale(1); }
 }
+
+/* ═══════════════════════════════════
+   Gream 1.0 — sdílené komponenty (tokeny z base.css)
+═══════════════════════════════════ */
+
+/* Hlavička obrazovky: zpět vlevo · nadpis na střed · akce vpravo */
+.scr-header {
+  width:100%; max-width:480px; margin:0 auto var(--space-4);
+  display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:var(--space-2);
+  min-height:44px; flex-shrink:0;
+}
+.scr-header > .scr-left  { justify-self:start; display:flex; gap:var(--space-2); }
+.scr-header > .scr-right { justify-self:end;   display:flex; gap:var(--space-2); align-items:center; }
+.scr-title {
+  font-size:var(--text-lg); font-weight:900; color:var(--ink); line-height:1.2;
+  text-align:center; margin:0; min-width:0; max-width:62vw;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.scr-sub { display:block; font-size:var(--text-xs); font-weight:700; color:var(--ink-soft); text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+/* Kulaté ikonové tlačítko (zpět, akce v hlavičce) */
+.btn-back, .icon-btn {
+  width:44px; height:44px; border-radius:var(--radius-full); flex-shrink:0;
+  background:var(--surface); border:2px solid var(--line); color:var(--ink);
+  display:inline-flex; align-items:center; justify-content:center;
+  font-size:var(--text-lg); line-height:1; box-shadow:var(--elev-1);
+  cursor:pointer; padding:0; transition:transform var(--t-fast);
+}
+.btn-back:active, .icon-btn:active { transform:scale(0.92); }
+.btn-back svg, .icon-btn svg, .tab-icon svg { width:24px; height:24px; display:block; }
+.icon-btn.is-on { background:var(--green-mid); border-color:var(--green-mid); color:#fff; }
+
+/* Prázdný stav: ilustrace + text + výzva k akci */
+.empty-state {
+  width:100%; max-width:420px; margin:var(--space-5) auto; padding:var(--space-5) var(--space-4);
+  display:flex; flex-direction:column; align-items:center; text-align:center; gap:var(--space-3);
+  background:var(--surface); border-radius:var(--radius-lg); box-shadow:var(--elev-1);
+}
+.empty-state img { width:96px; height:96px; image-rendering:pixelated; animation:emptyFloat 3s ease-in-out infinite; }
+.empty-state .es-title { font-size:var(--text-md); font-weight:900; color:var(--ink); }
+.empty-state .es-text  { font-size:var(--text-sm); font-weight:600; color:var(--ink-soft); line-height:1.45; }
+.empty-state .btn-primary { margin-top:var(--space-2); padding:var(--space-3) var(--space-5); font-size:var(--text-md); width:auto; }
+.empty-state.compact { margin:var(--space-2) 0 0; box-shadow:none; background:var(--green-bg); padding:var(--space-4); }
+.empty-state.compact img { width:64px; height:64px; }
+@keyframes emptyFloat { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-6px); } }
+@media (prefers-reduced-motion: reduce) { .empty-state img { animation:none; } }
