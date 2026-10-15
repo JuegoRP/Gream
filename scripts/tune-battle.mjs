@@ -9,7 +9,7 @@ const P = {
   lilek:  { A: ['dmg', 0, 20],  B: ['mult', 1, 4, +1] },
   jiskra: { A: ['dmg', 0, 30],  B: ['stun', 0.15, 1, -1] },
   kamen:  { A: ['dmg', 0, 20],  B: ['block', 0.05, 0.95, +1] },
-  srdik:  { A: ['heal', 2, 50], B: null },  // vrácená energie je skoková → necháváme 0
+  srodik:  { A: ['heal', 2, 50], B: null },  // vrácená energie je skoková → necháváme 0
   vlnka:  { A: ['dmg', 0, 30],  B: ['mult', 1, 3, +1] },
   atlas:  { A: ['dmg', 0, 30],  B: null },
 };

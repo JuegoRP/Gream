@@ -40,7 +40,8 @@ export const Validator = {
             : { passed: false, feedback: lang === 'cs' ? `Správná odpověď: ${correct}` : `Correct answer: ${correct}` };
         }
         const norm = s => s.toLowerCase().trim().normalize('NFC');
-        return norm(proof) === norm(correct)
+        // check.accept = další správné varianty (synonyma, např. „odolnost / resilience“)
+        return [correct, ...(check.accept || [])].some(c => norm(proof) === norm(String(c)))
           ? { passed: true, feedback: '' }
           : { passed: false, feedback: lang === 'cs' ? `Správná odpověď: ${correct}` : `Correct answer: ${correct}` };
       }
@@ -128,7 +129,7 @@ export const Validator = {
       case 'fill_blank': {
         if (!proof || !check.correct) return 80;
         const norm = s => s.toLowerCase().trim().normalize('NFC');
-        return norm(proof) === norm(check.correct) ? 100 : 20;
+        return [check.correct, ...(check.accept || [])].some(c => norm(proof) === norm(String(c))) ? 100 : 20;
       }
 
       case 'sort': {
