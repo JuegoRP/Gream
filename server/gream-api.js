@@ -27,6 +27,9 @@ function loadJSON(file, fallback) { try { return JSON.parse(fs.readFileSync(file
 const reports = loadJSON(F('reports.json'), []);
 const battle  = loadJSON(F('battle.json'), { players: {}, runs: {} });     // runs: {diff: [{pid,name,score,rating,ts}]}
 const league  = loadJSON(F('league.json'), { week: null, tier: {}, pts: {}, last: {} });   // týdenní ligy (1.1)
+// Bitevní místa (1.1): kdo místo „drží“ – BEZ přezdívky a ID hráče (jen greamík, skóre, náhodný žeton z telefonu),
+// aby nevznikal záznam o tom, kde kdo byl. Platnost 14 dní.
+const spots   = loadJSON(F('spots.json'), {});
 const poi     = loadJSON(F('poi.json'), {});
 const daily   = loadJSON(F('daily.json'), {});                             // { 'YYYY-MM-DD': { pid: {name,score,ts} } }
 const rank    = loadJSON(F('rank.json'), {});                              // { pid: {name,avatar,score,tasks,badges,streak,greamStage,ts} }
@@ -254,6 +257,24 @@ const server = http.createServer((req, res) => {
     const board = Object.values(battle.players).sort((a, b) => b.rating - a.rating);
     const rank = board.findIndex(x => x.name === name && x.rating === pl.rating) + 1;
     return send(res, 200, { rating: pl.rating, rank: rank || board.length, wins: pl.wins });
+  });
+
+  if (req.method === 'GET' && p === '/spots') {
+    const ids = String(u.searchParams.get('ids') || '').split(',').map(x => x.slice(0, 40)).filter(Boolean).slice(0, 60);
+    const now = Date.now(), out = {};
+    for (const id of ids) { const h = spots[id]; if (h && now - h.ts < 14 * 864e5) out[id] = { arch: h.arch, stage: h.stage, acc: h.acc, score: h.score, tok: h.tok }; }
+    return send(res, 200, out);
+  }
+  if (req.method === 'POST' && p === '/spots/claim') return readBody(req, (d) => {
+    if (!d || !d.id || !ARCHES.includes(d.arch)) return send(res, 400, { error: 'bad' });
+    const id = String(d.id).slice(0, 40), score = Math.max(0, Math.min(200, Math.round(Number(d.score) || 0)));
+    const cur = spots[id], now = Date.now();
+    const free = !cur || now - cur.ts >= 14 * 864e5;
+    if (!free && score <= cur.score) return send(res, 200, { held: false, best: cur.score });
+    spots[id] = { arch: d.arch, stage: Math.max(2, Math.min(4, Number(d.stage) || 2)), acc: /^acc_[a-z]{2,12}$/.test(d.acc || '') ? d.acc : null,
+      score, tok: String(d.tok || '').replace(/[^a-z0-9]/gi, '').slice(0, 16), ts: now };
+    persist('spots', F('spots.json'), spots);
+    return send(res, 200, { held: true, best: score });
   });
 
   if (req.method === 'GET' && p === '/league') {

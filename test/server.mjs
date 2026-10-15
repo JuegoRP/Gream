@@ -19,6 +19,12 @@ try {
   ok(o.name !== 'Hráč 9' && o.arch === 'lilek' && o.answers?.length === 10 && o.acc === 'acc_crown', 'soupeř: nahrávka jiného hráče i s doplňkem');
   const bad = await post('/battle/result', { pid: 'x', name: 'kokot', difficulty: 'medium', score: 3, win: false, arch: 'zlo', answers: [{ ok: 1, ms: -5 }] });
   ok(bad.rating, 'výsledek s nesmyslnými daty nepadá');
+  // Bitevní místa: převzetí jen lepším skóre, bez identity hráče
+  ok((await post('/spots/claim', { id: 'node/1', arch: 'kamen', stage: 3, score: 80, tok: 'aaa', name: 'Ema', pid: 'p1' })).held === true, 'místo: první převezme');
+  ok((await post('/spots/claim', { id: 'node/1', arch: 'lilek', stage: 2, score: 60, tok: 'bbb' })).held === false, 'místo: slabší skóre nepřevezme');
+  ok((await post('/spots/claim', { id: 'node/1', arch: 'vlnka', stage: 4, score: 95, tok: 'ccc' })).held === true, 'místo: lepší skóre převezme');
+  const sp = await fetch(B + '/spots?ids=node/1,node/2').then(r => r.json());
+  ok(sp['node/1']?.arch === 'vlnka' && sp['node/1'].score === 95 && !('name' in sp['node/1']) && !('pid' in sp['node/1']) && !sp['node/2'], 'místo: vrací greamíka a skóre, žádné jméno ani ID');
   await sleep(1200);
   const f = path.join(dir, 'league.json'); const d = JSON.parse(fs.readFileSync(f, 'utf8')); d.week = '2020-W01'; fs.writeFileSync(f, JSON.stringify(d));
   srv.kill(); await sleep(300); srv = start(); await sleep(800);

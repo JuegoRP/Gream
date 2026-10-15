@@ -213,6 +213,7 @@ export const Battle = {
 
     startBtn.onclick = () => {
       if (startBtn.disabled) return;
+      this._spot = opts.spot || null;
       this._start(startBtn._diff, outdoor, startBtn._entry, startBtn._reward, pick);
     };
     ov.querySelector('#battleDailyBtn').onclick = () => this.daily(pick);
@@ -604,6 +605,20 @@ export const Battle = {
     if (win) { reward = this._reward; Skins.addSeeds(p.id, reward); Feedback.celebrate?.(); }
     else Feedback.error?.();
     const newBadges = this._checkBadges(p.id, s, win, this._diff);
+
+    // Bitevní místo: výhra s lepším skóre (životy + 5 za správnou odpověď) místo převezme
+    let spotMsg = '';
+    if (win && this._spot && this._outdoor) {
+      const score = Math.max(0, Math.round(this._f[0].hp)) + myCorrect * 5;
+      let toks = []; try { toks = JSON.parse(localStorage.getItem('gream_spot_tokens') || '[]'); } catch {}
+      const tok = Math.random().toString(36).slice(2, 12);
+      const spotId = this._spot.id;
+      Net.spotClaim({ id: spotId, arch: this._me.arch, stage: this._me.stage || 2, acc: Skins.getAccessory(p.id) || null, score, tok }).then(r => {
+        if (r?.held) { toks.push(tok); try { localStorage.setItem('gream_spot_tokens', JSON.stringify(toks.slice(-200))); } catch {} window.App?._showToast?.(`👑 ${t.spot_won(score)}`); }
+        else if (r) window.App?._showToast?.(t.spot_not_enough(score, r.best));
+      });
+    }
+    this._spot = null;
 
     // Server: rating + nahrávka souboje (odpovědi a časy), aby ji mohli hrát ostatní jako soupeře
     Net.battleResult({

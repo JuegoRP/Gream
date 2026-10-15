@@ -962,7 +962,7 @@ window.App = {
     });
   },
 
-  openBattleIntro(opts) { Battle.intro(opts || {}); },
+  openBattleIntro(opts) { opts = opts || {}; if (opts.spot === true) opts.spot = this._lastPoi ? { id: this._lastPoi.id, kind: this._lastPoi.kind } : null; Battle.intro(opts); },
   showBattleLeaderboard() { Battle.showLeaderboard(); },
 
   reportCurrentChallenge() {
@@ -3154,6 +3154,19 @@ window.App = {
     }
   },
 
+  // ─── Bitevní místo: kdo ho drží (anonymně – jen greamík a skóre) ───
+  async _loadSpotHolder(poi) {
+    const el = document.getElementById('poiSpotHolder'); if (!el) return;
+    const t = tr();
+    const h = (await Net.spots([poi.id]))?.[poi.id];
+    if (!document.getElementById('poiSpotHolder')) return;
+    if (!h) { el.innerHTML = `<span>👑</span><div>${t.spot_free}</div>`; return; }
+    const mine = (JSON.parse(localStorage.getItem('gream_spot_tokens') || '[]')).includes(h.tok);
+    el.innerHTML = `<canvas width="44" height="44"></canvas><div><b>${mine ? t.spot_mine : t.spot_held}</b><br>${ARCHETYPES[h.arch]?.name?.[getLang()] || h.arch} · ${h.score} ${t.spot_pts}${mine ? '' : ` · ${t.spot_beat}`}</div>`;
+    const { drawFighter } = await import('./arena.js');
+    drawFighter(el.querySelector('canvas'), h.arch, h.stage, { acc: h.acc });
+  },
+
   // ─── Výprava dne: štítek na mapě + seznam míst s navigací ───
   _renderExpeditionChip(st, pois) {
     const mapEl = document.getElementById('leafletMap');
@@ -3247,6 +3260,8 @@ window.App = {
     overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;z-index:999;padding:20px';
     overlay.onclick = e => { if (e.target === overlay) this.closePoiModal(); };
 
+    this._lastPoi = poi;
+    if (isBattleSpot(poi)) setTimeout(() => this._loadSpotHolder(poi), 0);
     const kindIcon = this._poiIcon(poi.kind);
     const bonusBadge = poi.bonusWorld
       ? `<div style="display:inline-block;padding:3px 10px;border-radius:50px;background:${WC[poi.bonusWorld]};color:white;font-size:11px;font-weight:800;margin-bottom:12px">${WORLD_EMOJIS[poi.bonusWorld]} +5 🌱</div>`
@@ -3278,7 +3293,8 @@ window.App = {
           </div>
           <button id="poiModalStart" onclick="App.startPoiChallenge()"
             style="display:none;width:100%;padding:14px;border-radius:14px;border:none;color:white;font-family:inherit;font-weight:900;font-size:15px;cursor:pointer;margin-bottom:8px"></button>
-          <button onclick="App.closePoiModal();App.openBattleIntro({outdoor:true})"
+          <div id="poiSpotHolder" class="spot-holder"></div>
+          <button onclick="App.closePoiModal();App.openBattleIntro({outdoor:true,spot:true})"
             style="width:100%;padding:13px;border-radius:14px;border:none;background:linear-gradient(135deg,#d2603a,#b0402a);color:#fff;font-family:inherit;font-weight:900;font-size:15px;cursor:pointer;margin-bottom:8px">⚔️ ${lang==='cs'?'Souboj tady (venku)':'Battle here (outdoor)'}</button>
           <button onclick="App.navigateToPoi()"
             style="width:100%;padding:12px;border-radius:14px;border:2px solid var(--green-pale);background:white;color:var(--green-dark);font-family:inherit;font-weight:800;font-size:14px;cursor:pointer;margin-bottom:8px">🧭 ${lang==='cs'?'Navigovat sem':'Navigate here'}</button>
