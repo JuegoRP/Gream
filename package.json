@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "test": "node test/content.mjs && node test/sim.mjs && node test/ui.mjs",
+    "test": "node test/content.mjs && node test/sim.mjs && node test/ui.mjs && node test/battle-balance.mjs",
     "build:www": "node scripts/build-www.mjs",
     "build:android": "node scripts/build-www.mjs && npx cap sync android"
   },
