@@ -7,6 +7,7 @@
 
 import { factCard } from './facts.js';
 import { Expedition } from './expedition.js';
+import { Playtime } from './parents.js';
 import { tr } from './i18n.js';
 import { Profiles } from './profiles.js';
 import { Badges } from './badges.js';
@@ -46,6 +47,7 @@ export const Challenge = {
   async open(world, opts = {}) {
     const p = Profiles.active();
     if (!p) return;
+    if (!Playtime.allow(p.id, () => this.open(world, opts))) return;   // denní limit od rodiče
     this._world      = world;
     this._proof      = null;
     this._proofType  = null;

@@ -18,6 +18,7 @@ import { RULES, SPECIALS, ARCH_WORLD, ARCHES, newFighter, useSpecial, canSpecial
 import { Arena, drawFighter } from './arena.js';
 import { factFor } from './facts.js';
 import { numTolerance } from './validator.js';
+import { Playtime } from './parents.js';
 const ARCHETYPE_NAME = (a) => ARCHETYPES[a]?.name?.[getLang() === 'cs' ? 'cs' : 'en'] || a;
 
 const WORLD_TO_ARCH = { nature:'lilek', language:'jiskra', logic:'kamen', feelings:'srodik', arts:'vlnka', world:'atlas' };
@@ -103,6 +104,7 @@ export const Battle = {
   // ─── Intro overlay: advantages, difficulty, entry/reward, start ───
   intro(opts = {}) {
     const p = Profiles.active(); if (!p) return;
+    if (!Playtime.allow(p.id, () => this.intro(opts))) return;   // denní limit od rodiče
     const cs = getLang() === 'cs';
     const outdoor = !!opts.outdoor;
     const stats = loadStats(p.id);

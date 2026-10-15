@@ -1555,3 +1555,20 @@ canvas.aura, #greamSpriteCanvas.aura { filter:drop-shadow(0 0 6px #ffe27a) drop-
 .spot-holder:empty { display:none; }
 .spot-holder canvas { width:44px; height:44px; image-rendering:pixelated; flex-shrink:0; }
 .spot-holder span { font-size:24px; }
+
+/* Rodičovská brána a denní limit */
+.pg-overlay { position:fixed; inset:0; z-index:1200; background:rgba(20,30,15,.6); display:flex; align-items:center; justify-content:center; padding:var(--space-4); }
+.pg-card { width:100%; max-width:360px; background:#fff; border-radius:var(--radius-lg); padding:var(--space-5) var(--space-4); text-align:center; box-shadow:var(--elev-2); }
+.pg-title { font-size:var(--text-lg); font-weight:900; color:var(--ink); margin-bottom:var(--space-2); }
+.pg-reason { font-size:var(--text-sm); font-weight:700; color:var(--ink-soft); line-height:1.45; margin-bottom:var(--space-3); }
+.pg-q { font-size:var(--text-md); font-weight:800; color:var(--ink); margin-bottom:var(--space-3); }
+.pg-in { width:120px; padding:var(--space-3); font-size:var(--text-xl); font-weight:900; text-align:center; border:2px solid var(--line); border-radius:var(--radius-md); margin-bottom:var(--space-2); }
+.pg-err { color:#b0402a; font-size:var(--text-xs); font-weight:800; margin-bottom:var(--space-2); }
+.pg-card .btn-primary { width:100%; margin-top:var(--space-2); }
+.pg-cancel { margin-top:var(--space-2); color:var(--ink-muted); font-weight:800; font-size:var(--text-sm); padding:var(--space-2); }
+.parents-panel { margin-top:var(--space-3); }
+.parents-panel select { width:100%; padding:var(--space-3); border-radius:var(--radius-md); border:2px solid var(--line); font-family:inherit; font-weight:800; font-size:var(--text-sm); background:#fff; margin:var(--space-1) 0 var(--space-3); }
+.parents-row { font-size:var(--text-sm); font-weight:700; color:var(--ink); margin:var(--space-1) 0; }
+.parents-bar { display:grid; grid-template-columns:110px 1fr 36px; gap:var(--space-2); align-items:center; font-size:var(--text-xs); font-weight:800; color:var(--ink-soft); margin:4px 0; }
+.parents-bar i { display:block; height:8px; border-radius:var(--radius-full); background:var(--green-pale); overflow:hidden; }
+.parents-bar i b { display:block; height:100%; background:var(--green-mid); }

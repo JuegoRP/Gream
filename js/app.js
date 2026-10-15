@@ -25,6 +25,7 @@ import { Audio } from './audio.js';
 import { fillIcons } from './icons.js';
 import { drawAccessory, preloadAccessories } from './accessories.js';
 import { Expedition, REWARD as EXP_REWARD } from './expedition.js';
+import { ParentGate, Playtime } from './parents.js';
 preloadAccessories();
 window.__greamLoaded = true;
 const escAttr = (x) => String(x ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); // modul hry se načetl (index.html pak neukáže „Failed to start“)
@@ -245,6 +246,7 @@ window.App = {
   async init() {
     console.log('[Gream] Init starting...');
     this._initNativeBack();
+    Playtime.start(() => Profiles.active()?.id);
     // Ask the OS not to evict our data (profiles, pet, progress live in
     // localStorage). iOS/Safari can clear WebView storage under space pressure;
     // losing a child's Gream is the worst possible bug. Best-effort, non-blocking.
@@ -2060,7 +2062,7 @@ window.App = {
       • Přezdívku a skóre ze serveru smažeme na žádost e-mailem.</p>
 
       <p style="margin-top:12px"><strong>Úplné znění:</strong>
-      <a href="https://3rstudio.eu/gream-privacy.html" target="_blank" rel="noopener">3rstudio.eu/gream-privacy.html</a><br>
+      <a href="#" onclick="App.openExternal('https://3rstudio.eu/gream-privacy.html');return false;">3rstudio.eu/gream-privacy.html</a><br>
       Kontakt: romanpavlorek@gmail.com</p>
 
       <p style="font-size:11px;opacity:0.7;margin-top:14px">Naposledy aktualizováno: říjen 2026</p>
@@ -2098,7 +2100,7 @@ window.App = {
       • We delete your server nickname and scores on request by email.</p>
 
       <p style="margin-top:12px"><strong>Full policy:</strong>
-      <a href="https://3rstudio.eu/gream-privacy.html" target="_blank" rel="noopener">3rstudio.eu/gream-privacy.html</a><br>
+      <a href="#" onclick="App.openExternal('https://3rstudio.eu/gream-privacy.html');return false;">3rstudio.eu/gream-privacy.html</a><br>
       Contact: romanpavlorek@gmail.com</p>
 
       <p style="font-size:11px;opacity:0.7;margin-top:14px">Last updated: October 2026</p>
@@ -2789,6 +2791,8 @@ window.App = {
     this._setText('ss-reset-btn',   t.ss_reset);
     this._setText('ss-data-info',   t.ss_data_info);
     this._setText('ss-privacy-title', t.ss_privacy_title);
+    this._setText('ss-parents-title', t.parents_title);
+    this._setText('parentsOpenBtn', '🔒 ' + t.parents_open);
     this._setText('ss-privacy-lbl',   t.ss_privacy_lbl);
     this._setText('ss-terms-lbl',     t.ss_terms_lbl);
     // Player ID
@@ -3152,6 +3156,37 @@ window.App = {
       const loading = document.getElementById('mapLoading');
       if (loading) loading.querySelector('#mapLoadingMsg').textContent = lang === 'cs' ? 'Chyba načítání.' : 'Load error.';
     }
+  },
+
+  // ─── Odkaz mimo hru jen po rodičovské bráně (Google Play Families) ───
+  async openExternal(url) {
+    if (!/^https:\/\//.test(url)) return;
+    if (await ParentGate.ask(tr().open_link_reason)) window.open(url, '_blank', 'noopener');
+  },
+
+  // ─── Pro rodiče: za bránou – denní limit, přehled ───
+  async openParents() {
+    const p = Profiles.active(); if (!p) return;
+    const t = tr();
+    if (!(await ParentGate.ask(t.parents_title))) return;
+    const box = document.getElementById('parentsPanel'); if (!box) return;
+    const hist = Profiles.getHistory ? Profiles.getHistory(p.id, 500) : [];
+    const week = hist.filter(h => Date.now() - (h.t || 0) < 7 * 864e5).length;
+    const W = ['nature', 'language', 'logic', 'feelings', 'arts', 'world'];
+    const max = Math.max(10, ...W.map(w => p.worldTasks?.[w] || 0));
+    const bs = Battle.getStats(p.id) || {};
+    const lim = Playtime.limitMin(p.id);
+    box.hidden = false;
+    box.innerHTML = `<label class="parents-row">${t.parents_limit}</label>
+      <select id="parentsLimit">${[0, 20, 30, 45, 60, 90, 120].map(m => `<option value="${m}"${m === lim ? ' selected' : ''}>${m ? m + ' min' : t.parents_nolimit}</option>`).join('')}</select>
+      <div class="parents-row">⏱️ ${t.parents_today(Math.round(Playtime.todaySec(p.id) / 60))}</div>
+      <div class="parents-row">📚 ${t.parents_week(week)}</div>
+      <div class="parents-row">⚔️ ${t.parents_battles(bs.total || 0)}</div>
+      <div class="parents-row" style="margin-top:10px">${t.parents_worlds}</div>
+      ${W.map(w => `<div class="parents-bar"><span>${WORLD_EMOJIS[w]} ${t.worlds?.[w] || w}</span><i><b style="width:${Math.round((p.worldTasks?.[w] || 0) / max * 100)}%"></b></i><span>${p.worldTasks?.[w] || 0}</span></div>`).join('')}
+      <div class="parents-row" style="font-size:12px;color:var(--ink-muted);margin-top:10px">🔒 ${t.parents_note}</div>`;
+    box.querySelector('#parentsLimit').onchange = (e) => { Playtime.setLimit(p.id, Number(e.target.value)); Feedback.tap(); };
+    document.getElementById('parentsOpenBtn')?.setAttribute('hidden', '');
   },
 
   // ─── Bitevní místo: kdo ho drží (anonymně – jen greamík a skóre) ───

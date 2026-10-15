@@ -120,6 +120,20 @@ ok(handovers >= 4, `family: phone handed over between players (${handovers})`);
 ok(!!document.getElementById('battleResult'), 'family: result shown');
 document.getElementById('battleResult')?.remove();
 
+// ── Denní limit od rodiče ──
+const { Playtime } = await import(new URL('parents.js', base));
+Playtime.setLimit(p.id, 20);
+localStorage.setItem('gream_playtime', JSON.stringify({ [p.id]: { date: new Date().toISOString().slice(0, 10), sec: 21 * 60, grant: 0 } }));
+document.getElementById('battleOverlay')?.remove();
+Battle.intro();
+ok(!!document.getElementById('limitOverlay') && !document.getElementById('battleOverlay'), 'limit: po vyčerpání se souboj neotevře, ukáže se okno');
+Playtime.grant(p.id, 15);
+document.getElementById('limitOverlay')?.remove();
+Battle.intro();
+ok(!!document.getElementById('battleOverlay'), 'limit: po přidání 15 min jde hrát');
+document.getElementById('battleOverlay')?.remove();
+Playtime.setLimit(p.id, 0);
+
 ok(errors.length === 0, `no window errors (${errors.length}: ${errors.slice(0,2).join(' | ')})`);
 
 console.log(`\n${fail===0?'✓ ALL PASS':'✗ FAILURES'} — ${pass} passed, ${fail} failed`);
