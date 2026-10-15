@@ -35,8 +35,8 @@ export const T = {
     ob_v4_step1_sub:   "A magical world where curiosity helps things grow. Made for kids and families.",
     ob_v4_step1_btn:   "Let's begin",
 
-    ob_v4_step2_title: "For parents 👨‍👩‍👧",
-    ob_v4_step2_sub:   "Before your child plays, please review how Gream works.",
+    ob_v4_step2_title: "Safe for everyone 🛡️",
+    ob_v4_step2_sub:   "How Gream handles your data – for players and parents.",
     ob_v4_legal_data_name:  "Progress stays on this device",
     ob_v4_legal_data_desc:  "Name, progress and Greams are stored only on the phone. Our server receives just a nickname and score (leaderboard, battles).",
     ob_v4_legal_loc_name:   "Precise location stays on the device",
@@ -45,8 +45,8 @@ export const T = {
     ob_v4_legal_cam_desc:   "No chat and no in-app purchases. Nicknames are checked by a filter.",
     ob_v4_legal_ads_name:   "No ads, tracking or analytics",
     ob_v4_legal_ads_desc:   "No advertising and no third parties. Data is never sold.",
-    ob_v4_legal_fineprint:  "Children under 13: parental consent required (COPPA/GDPR-K). For ages 4–6, an adult should help with first setup.",
-    ob_v4_consent:          "I'm a parent or guardian and I consent on behalf of my child.",
+    ob_v4_legal_fineprint:  "Players under 15 need a parent's consent (GDPR). Young children should set up the game together with an adult.",
+    ob_v4_consent:          "I am 15 or older, or I am a parent/guardian and I consent for my child.",
     ob_v4_step2_btn:        "I understand",
 
     ob_v4_step3_title: "Meet the Greams",
@@ -1412,8 +1412,8 @@ export const T = {
     ob_v4_step1_sub:   "Svět, kde zvědavost pomáhá věcem růst. Pro děti i celou rodinu.",
     ob_v4_step1_btn:   "Pojďme začít",
 
-    ob_v4_step2_title: "Pro rodiče 👨‍👩‍👧",
-    ob_v4_step2_sub:   "Než si dítě začne hrát, prosím přečtěte si, jak Gream funguje.",
+    ob_v4_step2_title: "Bezpečné pro všechny 🛡️",
+    ob_v4_step2_sub:   "Jak Gream zachází s daty – pro hráče i rodiče.",
     ob_v4_legal_data_name:  "Postup zůstává v zařízení",
     ob_v4_legal_data_desc:  "Jméno, postup a greamíci jsou uložené jen v telefonu. Na náš server jde jen přezdívka a skóre (žebříček, souboje).",
     ob_v4_legal_loc_name:   "Přesná poloha zůstává v zařízení",
@@ -1422,8 +1422,8 @@ export const T = {
     ob_v4_legal_cam_desc:   "Žádný chat ani nákupy v aplikaci. Přezdívky hlídá filtr.",
     ob_v4_legal_ads_name:   "Žádné reklamy, sledování ani analytika",
     ob_v4_legal_ads_desc:   "Žádná reklama ani třetí strany. Data se nikdy neprodávají.",
-    ob_v4_legal_fineprint:  "Děti do 13 let: vyžaduje souhlas rodiče (COPPA/GDPR-K). U 4–6 let by měl s prvním nastavením pomoci dospělý.",
-    ob_v4_consent:          "Jsem rodič nebo zákonný zástupce a souhlasím za své dítě.",
+    ob_v4_legal_fineprint:  "Hráči do 15 let potřebují souhlas rodiče (GDPR). Malé děti by měly hru nastavit spolu s dospělým.",
+    ob_v4_consent:          "Je mi 15 let nebo víc, nebo jsem rodič či zákonný zástupce a souhlasím za své dítě.",
     ob_v4_step2_btn:        "Rozumím",
 
     ob_v4_step3_title: "Poznej Greamíky",
