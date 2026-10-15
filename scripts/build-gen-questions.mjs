@@ -34,10 +34,32 @@ ok.forEach((r, i) => {
   if (item.kind === 'odd') for (const lang of ['cs', 'en']) if (/^(Co sem nepatří\?|Which one doesn't belong\?)$/.test(item[lang].text.trim())) item[lang].text = `${item[lang].text.trim()} ${item[lang].choices.join(' · ')}`;
   out.push(item);
 });
+// ─── Tematické balíčky (content/packs-1.1.jsonl): verdikt ok, mimo ručně zamítnuté, bez duplicit ───
+// Duplicita = stejná správná odpověď a podobné zadání (≥ 35 % společných slov) jako už zařazená otázka.
+const PACKS_SRC = new URL('../content/packs-1.1.jsonl', import.meta.url);
+const words = (t) => new Set(String(t).toLowerCase().normalize('NFC').replace(/[^\p{L}\p{N} ]/gu, ' ').split(/\s+/).filter(w => w.length > 3));
+const ansOf = (o) => o.kind === 'tf' ? o.correct : o.kind === 'estimate' ? String(o.answer) : o.kind === 'timeline' ? o.cs.items.join('|') : String(o.cs.choices?.[o.correct_index ?? 0] || '').toLowerCase().replace(/[^\p{L}\p{N}]/gu, '');
+const isDup = (a, b) => { if (ansOf(a) !== ansOf(b)) return false; const A = words(a.cs.text), B = words(b.cs.text); let n = 0; for (const w of A) if (B.has(w)) n++; return n / Math.max(1, Math.min(A.size, B.size)) >= 0.35; };
+const packFactIds = new Map();   // položka → id pro kontrolu zajímavostí (pack<řádek>)
+if (fs.existsSync(PACKS_SRC)) {
+  const rej = new Set(cfg.packs_reject || []);
+  let added = 0, dups = 0;
+  fs.readFileSync(PACKS_SRC, 'utf8').split('\n').filter(Boolean).forEach((line, i) => {
+    const r = JSON.parse(line); if (r.verdict !== 'ok' || rej.has(i)) return;
+    const q = r.q; if (!q?.cs?.choices || !q?.en?.choices || q.cs.choices.length !== q.en.choices.length || q.cs.choices.length < 3) return;
+    const item = { kind: 'choice', w: r.w, d: r.d, pack: r.pack, cs: q.cs, en: q.en, correct_index: q.correct_index ?? 0 };
+    if (q.fact_cs || q.fact_en) item.fact = { cs: String(q.fact_cs || '').slice(0, 220), en: String(q.fact_en || '').slice(0, 220), src: String(q.source || '').slice(0, 80) };
+    if (out.some(o => isDup(o, item))) { dups++; return; }
+    packFactIds.set(item, 'pack' + i); out.push(item); added++;
+    if (process.env.LIST && i >= +process.env.LIST) console.log(`${i} ${r.pack} ${r.d[0]}${r.d === 'extreme' ? 'x' : ''}: ${q.cs.text} => ${q.cs.choices.map((x, j) => j === item.correct_index ? '*' + x : x).join(' | ')}`);
+  });
+  console.log('balíčky: přidáno', added, 'duplicit vynecháno', dups);
+}
+
 // Zajímavosti, které neprošly samostatnou kontrolou (content/facts-check-1.1.jsonl, id gen<i>|<jazyk>), vynechat
 if (CHECK) {
   const ok = new Map(fs.readFileSync(CHECK, 'utf8').split('\n').filter(Boolean).map(l => JSON.parse(l)).map(r => [r.id, String(r.ok).toLowerCase() === 'yes']));
-  out.forEach((o, i) => { if (!o.fact) return; for (const lang of ['cs', 'en']) if (!ok.get(`gen${i}|${lang}`)) delete o.fact[lang]; if (!o.fact.cs && !o.fact.en) delete o.fact; });
+  out.forEach((o, i) => { if (!o.fact) return; const fid = packFactIds.get(o) || `gen${i}`; for (const lang of ['cs', 'en']) if (!ok.get(`${fid}|${lang}`)) delete o.fact[lang]; if (!o.fact.cs && !o.fact.en) delete o.fact; });
 }
 // Stejné obecné zadání časové osy ve stejné sadě → neviditelné rozlišení (zero-width), text zůstane stejný
 const seen = new Map();
