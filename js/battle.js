@@ -143,6 +143,7 @@ export const Battle = {
         <div id="battleDailyInfo" style="font-size:11px;color:#aaa;text-align:center;margin-bottom:12px"></div>
 
         <button id="battleStartBtn" style="width:100%;padding:15px;border:none;border-radius:15px;background:linear-gradient(135deg,#d2603a,#b0402a);color:#fff;font-family:inherit;font-weight:900;font-size:16px;cursor:pointer;margin-bottom:8px">${cs?'Zahájit souboj ⚔️':'Start battle ⚔️'}</button>
+        <button id="battleFamilyBtn" style="width:100%;padding:12px;border:2px solid #f5a623;border-radius:14px;background:#fff9e6;color:#8a5a00;font-family:inherit;font-weight:800;font-size:14px;cursor:pointer;margin-bottom:8px">👨‍👩‍👧 ${tr().family_btn}</button>
         <button id="battleDailyBtn" style="width:100%;padding:12px;border:2px solid var(--green-mid);border-radius:14px;background:#fff;color:var(--green-deep);font-family:inherit;font-weight:800;font-size:14px;cursor:pointer;margin-bottom:8px">📅 ${cs?'Denní kolo (stejné pro všechny)':'Daily round (same for all)'}</button>
         <button onclick="document.getElementById('battleOverlay').remove()" style="width:100%;padding:10px;border:none;background:none;color:#999;font-family:inherit;font-weight:700;font-size:13px;cursor:pointer">${cs?'Zavřít':'Close'}</button>
         <div style="text-align:center;font-size:11px;color:#bbb;margin-top:8px">🏆 ${cs?'Výhry':'Wins'}: ${stats.wins||0} · ${cs?'série':'streak'}: ${stats.streak||0}</div>
@@ -212,6 +213,7 @@ export const Battle = {
       this._start(startBtn._diff, outdoor, startBtn._entry, startBtn._reward, pick);
     };
     ov.querySelector('#battleDailyBtn').onclick = () => this.daily(pick);
+    ov.querySelector('#battleFamilyBtn').onclick = () => this.familySetup(pick, sel[0]);
   },
 
   _start(diff, outdoor, entry, reward, pick) {
@@ -288,6 +290,69 @@ export const Battle = {
     else list.innerHTML = board.map((x, i) => `<div style="display:flex;align-items:center;gap:10px;padding:8px 6px;border-bottom:1px solid #f0f0f0"><span style="width:26px;font-weight:900;color:${i<3?'#c8860a':'#bbb'}">${i+1}.</span><span style="flex:1;font-weight:800;color:var(--green-deep);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${x.name}</span><span style="font-weight:900;color:#2d7a2d">${x.score}/10</span></div>`).join('');
   },
 
+  // ─── Rodinný souboj: dva hráči na jednom telefonu (bez vstupného a bez serveru) ───
+  familySetup(pick1, diff = 'medium') {
+    const p = Profiles.active(); if (!p) return;
+    const t = tr();
+    const fighterOf = (pid) => {
+      const g = pid ? Gream.all(pid).find(x => x.stage >= 2 && x.archetype) : null;
+      return g ? { arch: g.archetype, stage: g.stage, shiny: !!g.isShiny } : { arch: ARCHES[Math.floor(Math.random() * ARCHES.length)], stage: 2, loan: true };
+    };
+    const others = Profiles.all().filter(x => x.id !== p.id);
+    document.getElementById('battleOverlay')?.remove();
+    const ov = document.createElement('div');
+    ov.id = 'battleOverlay';
+    ov.style.cssText = 'position:fixed;inset:0;background:rgba(10,10,15,0.75);display:flex;align-items:center;justify-content:center;z-index:1000;padding:18px';
+    ov.innerHTML = `<div style="background:#fff;border-radius:22px;max-width:360px;width:100%;padding:22px 20px;max-height:86vh;overflow-y:auto">
+      <div style="text-align:center;font-size:20px;font-weight:900;color:var(--green-deep)">👨‍👩‍👧 ${t.family_title}</div>
+      <div style="text-align:center;font-size:12px;color:#888;margin:4px 0 14px;line-height:1.4">${t.family_how}</div>
+      <div style="font-size:12px;font-weight:800;color:#888;margin-bottom:6px">${t.family_second}</div>
+      <div id="famList" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px"></div>
+      <input id="famGuest" maxlength="16" placeholder="${t.family_guest_ph}" style="width:100%;padding:12px;border-radius:12px;border:2px solid var(--line);font-family:inherit;font-weight:800;font-size:15px;margin-bottom:14px;box-sizing:border-box">
+      <button id="famStart" class="btn-primary" style="width:100%;margin-bottom:8px">${t.family_start}</button>
+      <button onclick="document.getElementById('battleOverlay').remove()" style="width:100%;padding:10px;border:none;background:none;color:#999;font-family:inherit;font-weight:700;font-size:13px;cursor:pointer">${getLang() === 'cs' ? 'Zavřít' : 'Close'}</button>
+    </div>`;
+    document.body.appendChild(ov);
+    let second = others[0] ? others[0].id : null;
+    const list = ov.querySelector('#famList'), guest = ov.querySelector('#famGuest');
+    const paint = () => list.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.id === String(second)));
+    [...others, { id: '', name: t.family_guest }].forEach(o => {
+      const b = document.createElement('button');
+      b.className = 'shop-item'; b.style.cssText = 'flex-direction:row;justify-content:flex-start;gap:10px;padding:10px 12px';
+      b.dataset.id = o.id; b.innerHTML = `<span style="font-size:22px">${o.avatar || '🙂'}</span><span class="shop-name" style="font-size:14px">${escHtml(o.name)}</span>`;
+      b.onclick = () => { second = o.id || ''; guest.style.display = o.id ? 'none' : ''; paint(); };
+      list.appendChild(b);
+    });
+    guest.style.display = second ? 'none' : '';
+    if (second === null) second = '';
+    paint();
+    ov.querySelector('#famStart').onclick = () => {
+      const p2 = second ? Profiles.all().find(x => x.id === second) : null;
+      const name2 = p2 ? p2.name : (guest.value.trim() || t.family_guest);
+      const f2 = fighterOf(p2?.id);
+      this._family = { names: [p.name || t.battle_you, name2], pids: [p.id, p2?.id || null], acc: [Skins.getAccessory(p.id), p2 ? Skins.getAccessory(p2.id) : null] };
+      this._daily = false; this._diff = diff === 'extreme' && !Subscription.get(p.id).isPremium ? 'hard' : diff; this._outdoor = false; this._reward = 0; this._entry = 0;
+      this._q = pickQuestions(this._diff);
+      this._rival = { ...f2, name: name2, acc: this._family.acc[1], bot: false, family: true };
+      ov.remove();
+      this._run(pick1 || fighterOf(p.id));
+    };
+  },
+
+  // Předání telefonu: schová otázku, dokud se nepřihlásí hráč na řadě
+  _handOver(side, round) {
+    const scr = document.getElementById('battleRound'); if (!scr) return Promise.resolve();
+    const t = tr();
+    return new Promise(res => {
+      const ov = document.createElement('div');
+      ov.className = 'family-hand';
+      ov.innerHTML = `<div><div style="font-size:42px">📱</div><div class="fh-title">${t.family_turn}</div><div class="fh-name">${escHtml(this._family.names[side])}</div>
+        <div style="font-size:12px;opacity:.8;margin-bottom:14px">${t.battle_round} ${round + 1}/${ROUNDS}</div><button class="btn-primary">${t.family_ready}</button></div>`;
+      ov.querySelector('button').onclick = () => { ov.remove(); res(); };
+      scr.appendChild(ov);
+    });
+  },
+
   // ─── Souboj v aréně ───
   async _run(pick) {
     const p = Profiles.active(); if (!p) return;
@@ -311,7 +376,7 @@ export const Battle = {
       <button class="bt-report" id="btReport">🚩 ${cs ? 'Nahlásit otázku' : 'Report question'}</button>`;
     document.body.appendChild(scr);
     this._arena = new Arena(scr.querySelector('.ar-wrap'), {
-      me: { ...pick, acc: Skins.getAccessory(p.id), name: `${t.battle_you} · ${pick.name || ARCHETYPE_NAME(pick.arch)}` },
+      me: { ...pick, acc: this._family ? this._family.acc[0] : Skins.getAccessory(p.id), name: `${this._family ? this._family.names[0] : t.battle_you} · ${pick.name || ARCHETYPE_NAME(pick.arch)}` },
       op: { arch: rival.arch, stage: rival.stage, shiny: !!rival.shiny, acc: rival.acc || null, name: `${rival.name} · ${ARCHETYPE_NAME(rival.arch)}` },
       labels: { energy: t.battle_energy, superEffective: t.battle_super_eff, crit: t.battle_crit },
     });
@@ -320,15 +385,23 @@ export const Battle = {
 
     for (let round = 0; round < ROUNDS && round < this._q.length; round++) {
       const f = this._f;
-      // Soupeř se rozhodne pro speciál na začátku kola
-      if (aiWantsSpecial(f[1])) {
+      // Soupeř (bot/nahrávka) se rozhodne pro speciál na začátku kola; v rodinném souboji rozhoduje člověk
+      if (!this._family && aiWantsSpecial(f[1])) {
         const ev = useSpecial(f[1], f[0]);
         await this._arena.special(1, ev, t.battle_special[ev.id].name);
         this._arena.update(f);
         if (f[0].hp <= 0) break;
       }
-      const mine = await this._askQuestion(round);
-      const opp = this._oppAnswer(round);
+      let mine, opp;
+      if (this._family) {
+        await this._handOver(0, round);
+        mine = await this._askQuestion(round, 0);
+        if (f[1].hp <= 0) { opp = { ok: false }; }
+        else { await this._handOver(1, round); opp = await this._askQuestion(round, 1); }
+      } else {
+        mine = await this._askQuestion(round, 0);
+        opp = this._oppAnswer(round);
+      }
       const hits = resolveRound(f, mine, opp);
       // Animace: zásahy po sobě, životy se odečítají postupně
       const disp = f.map(x => ({ ...x }));
@@ -364,19 +437,20 @@ export const Battle = {
   },
 
   // Otázka kola: vrací { ok, domain, speedFrac }. Hráč může před odpovědí použít speciál.
-  _askQuestion(round) {
+  _askQuestion(round, side = 0) {
     const p = Profiles.active();
     const t = tr(), cs = getLang() === 'cs';
     const scr = document.getElementById('battleRound');
     let { world, ch } = this._q[round];
-    const me = this._f[0];
+    const me = this._f[side], foe = this._f[1 - side];
     return new Promise((resolve) => {
-      let answered = false, start = Date.now(), timeMs = BASE_TIME_MS + timeBonusForWorld(p.id, world), paused = 0;
+      const pid = this._family ? this._family.pids[side] : p.id;
+      let answered = false, start = Date.now(), timeMs = BASE_TIME_MS + (pid ? timeBonusForWorld(pid, world) : 0), paused = 0;
       const elQ = scr.querySelector('#btQ'), elC = scr.querySelector('#btChoices'), bar = scr.querySelector('#btTime');
       const spBtn = scr.querySelector('#btSpecial');
-      scr.querySelector('#btRound').textContent = `⚔️ ${t.battle_round} ${round + 1}/${ROUNDS}`;
+      scr.querySelector('#btRound').textContent = `⚔️ ${t.battle_round} ${round + 1}/${ROUNDS}${this._family ? ` · ${this._family.names[side]}` : ''}`;
       const opCard = scr.querySelector('.ar-op .ar-card'); opCard?.classList.remove('answered');
-      const oppMs = this._rival.answers?.[round]?.ms;
+      const oppMs = side === 0 && !this._family ? this._rival.answers?.[round]?.ms : null;
       const oppTimer = oppMs ? setTimeout(() => opCard?.classList.add('answered'), oppMs) : null;
 
       const render = () => {
@@ -416,19 +490,19 @@ export const Battle = {
         if (answered || !canSpecial(me)) return;
         spBtn.hidden = true;
         const pauseStart = Date.now();
-        const ev = useSpecial(me, this._f[1]);
-        Audio.playCry?.(me.arch, this._me.stage);
+        const ev = useSpecial(me, foe);
+        Audio.playCry?.(me.arch, side === 0 ? this._me.stage : this._rival.stage);
         if (me.ownWorldNext && world !== ARCH_WORLD[me.arch]) {   // Kompas: otázka z mého světa
           const alt = pickQuestions(this._daily ? 'medium' : this._diff).find(x => x.world === ARCH_WORLD[me.arch]);
           const pool = (tr().challenges?.[ARCH_WORLD[me.arch]]?.[this._daily ? 'medium' : this._diff] || []).filter(battleUsable);
           const c = alt?.ch || pool[Math.floor(Math.random() * pool.length)];
-          if (c) { world = ARCH_WORLD[me.arch]; ch = c; this._q[round] = { world, ch }; }
+          if (c) { world = ARCH_WORLD[me.arch]; ch = c; }   // jen pro tohoto hráče
         }
-        await this._arena.special(0, ev, t.battle_special[ev.id].name);
+        await this._arena.special(side, ev, t.battle_special[ev.id].name);
         this._arena.update(this._f);
         paused += Date.now() - pauseStart;
         if (!answered) render();
-        if (this._f[1].hp <= 0) done(false, null, true);
+        if (foe.hp <= 0) done(false, null, true);
       };
 
       const done = (ok, correctText, ko = false) => {
@@ -439,8 +513,8 @@ export const Battle = {
         const left = Math.max(0, 1 - (Date.now() - start - paused) / timeMs);
         const domain = world === ARCH_WORLD[me.arch] || me.ownWorldNext;
         me.fiftyNext = false; me.ownWorldNext = false;
-        if (ok) { this._correct[0]++; Feedback.success?.(); } else if (!ko) { Feedback.error?.(); this._missed.push({ q: ch.text, a: correctText, world, diff: this._daily ? 'medium' : this._diff, ch }); }
-        this._log.push({ ok: !!ok, ms: Math.round(Date.now() - start - paused) });
+        if (ok) { this._correct[side]++; Feedback.success?.(); } else if (!ko) { Feedback.error?.(); if (side === 0 || this._family) this._missed.push({ q: ch.text, a: correctText, world, diff: this._daily ? 'medium' : this._diff, ch, who: this._family?.names[side] }); }
+        if (side === 0) this._log.push({ ok: !!ok, ms: Math.round(Date.now() - start - paused) });
         setTimeout(() => resolve({ ok: !!ok && !ko, domain, speedFrac: ok ? left : 0 }), ok ? 250 : 700);
       };
 
@@ -467,7 +541,29 @@ export const Battle = {
     document.getElementById('battleRound')?.remove();
     const myCorrect = this._correct[0];
     const review = this._missed.length ? `<div style="font-size:12px;font-weight:900;color:#888;margin-top:6px">${t.battle_review}</div>
-      <div class="bt-review">${this._missed.map(m => `<div>${escHtml(m.q)}${m.a ? `<br><b>${t.battle_correct_is}${escHtml(m.a)}</b>` : ''}${(() => { const f = factFor(m.world, m.diff, m.ch); return f ? `<br><span style="color:#b07800">💡 ${escHtml(f.text)}</span>` : ''; })()}</div>`).join('')}</div>` : '';
+      <div class="bt-review">${this._missed.map(m => `<div>${m.who ? `<b>${escHtml(m.who)}:</b> ` : ''}${escHtml(m.q)}${m.a ? `<br><b>${t.battle_correct_is}${escHtml(m.a)}</b>` : ''}${(() => { const f = factFor(m.world, m.diff, m.ch); return f ? `<br><span style="color:#b07800">💡 ${escHtml(f.text)}</span>` : ''; })()}</div>`).join('')}</div>` : '';
+
+    if (this._family) {
+      const fam = this._family; this._family = null;
+      const winName = fam.names[win ? 0 : 1];
+      // Malá odměna: vítěz 3 🌱, druhý 1 🌱 (jen skutečné profily)
+      fam.pids.forEach((pid, i) => { if (pid) Skins.addSeeds(pid, (win ? i === 0 : i === 1) ? 3 : 1); });
+      Feedback.celebrate?.();
+      const ov = document.createElement('div');
+      ov.id = 'battleResult';
+      ov.style.cssText = 'position:fixed;inset:0;background:rgba(10,10,15,0.85);display:flex;align-items:center;justify-content:center;z-index:1002;padding:18px';
+      ov.innerHTML = `<div style="background:#fff;border-radius:22px;max-width:360px;width:100%;padding:22px 20px;text-align:center;max-height:90vh;overflow-y:auto">
+        <div style="font-size:40px">🏆</div>
+        <div style="font-size:22px;font-weight:900;color:#2d7a2d">${escHtml(t.family_winner(winName))}</div>
+        <div style="font-size:14px;font-weight:800;color:#555;margin:6px 0 12px">✓ ${escHtml(fam.names[0])} ${this._correct[0]} — ${this._correct[1]} ${escHtml(fam.names[1])}</div>
+        ${review}
+        <button id="battleAgain" class="btn-primary" style="width:100%;margin-bottom:8px">${t.family_again}</button>
+        <button id="battleClose" style="width:100%;padding:11px;border:none;background:none;color:#999;font-family:inherit;font-weight:700;font-size:13px;cursor:pointer">${cs?'Zpět do zahrady':'Back to garden'}</button></div>`;
+      document.body.appendChild(ov);
+      ov.querySelector('#battleAgain').onclick = () => { ov.remove(); this.familySetup(this._me, this._diff); };
+      ov.querySelector('#battleClose').onclick = () => { ov.remove(); Audio.switchScene?.('menu'); try { window.App?.renderMap?.(); } catch {} };
+      return;
+    }
 
     // ─── Daily round: score-attack ranked on a shared daily leaderboard ───
     if (this._daily) {

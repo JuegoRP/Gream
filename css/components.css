@@ -1524,3 +1524,10 @@ canvas.aura, #greamSpriteCanvas.aura { filter:drop-shadow(0 0 6px #ffe27a) drop-
 /* Výzdoba v zahradě */
 .garden-decor { position:absolute; inset:0; pointer-events:none; z-index:1; }
 .garden-decor img { position:absolute; transform:translate(-50%,-100%); image-rendering:pixelated; filter:drop-shadow(0 3px 2px rgba(0,0,0,.18)); }
+
+/* Rodinný souboj – předání telefonu */
+.family-hand { position:absolute; inset:0; z-index:20; display:flex; align-items:center; justify-content:center; text-align:center; background:rgba(22,36,26,.97); color:#fff; padding:var(--space-5); }
+.family-hand .fh-title { font-size:var(--text-sm); font-weight:800; opacity:.85; margin-top:var(--space-2); }
+.family-hand .fh-name { font-size:var(--text-xl); font-weight:900; margin:var(--space-1) 0 var(--space-2); }
+.family-hand .btn-primary { min-width:220px; }
+.shop-item.on { border-color:#f5a623; }

@@ -101,6 +101,25 @@ await sleep(60);
 ok(!!document.getElementById('battleBoardOverlay'), 'daily leaderboard rendered');
 document.getElementById('battleBoardOverlay')?.remove();
 
+// ── Rodinný souboj: dva hráči, předávání telefonu ──
+Battle.familySetup();
+await sleep(50);
+ok(!!document.getElementById('famStart'), 'family setup rendered');
+document.getElementById('famStart').click();
+await sleep(600);
+let handovers = 0, fRounds = 0;
+for (let i = 0; i < 600; i++) {
+  if (document.getElementById('battleResult')) break;
+  const hand = document.querySelector('.family-hand button');
+  if (hand) { hand.click(); handovers++; await sleep(60); continue; }
+  const btns = [...document.querySelectorAll('#btChoices button')].filter(b => !b.disabled && !b.classList.contains('gone'));
+  if (btns.length) { btns[0].click(); fRounds++; }
+  await sleep(150);
+}
+ok(handovers >= 4, `family: phone handed over between players (${handovers})`);
+ok(!!document.getElementById('battleResult'), 'family: result shown');
+document.getElementById('battleResult')?.remove();
+
 ok(errors.length === 0, `no window errors (${errors.length}: ${errors.slice(0,2).join(' | ')})`);
 
 console.log(`\n${fail===0?'✓ ALL PASS':'✗ FAILURES'} — ${pass} passed, ${fail} failed`);
