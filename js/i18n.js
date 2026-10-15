@@ -3,6 +3,8 @@
 //  All translations EN / CZ
 // ═══════════════════════════════════
 
+import { EXTRA_CHALLENGES } from './challenges-extra.js';
+
 export const T = {
   en: {
     // App
@@ -189,6 +191,7 @@ export const T = {
     nav_back:     "Back",
     nav_close:    "Close",
     fact_title:   "Did you know?",
+    estimate_label: "Estimate",
     wrong_title:  "Not quite",
     wrong_correct:"Correct answer:",
     wrong_next:   "Next question",
@@ -202,7 +205,11 @@ export const T = {
     map_compass_hint: "Tap the arrow for the compass",
     open_stats:   "Statistics",
     points_unit:  "points",
-    ward_title:   "My Greams",
+    ward_title:   "Greams & shop",
+    shop_tab_greams: "Greams", shop_tab_acc: "Outfits", shop_tab_decor: "Garden", shop_tab_bg: "Scenery",
+    shop_tab_boosts: "Boosts", shop_tab_avatars: "Avatar", shop_tab_frames: "Frame",
+    shop_acc_hint: "Your Gream wears it in the garden and in battles.", shop_decor_hint: "Everything you buy appears in your garden. Tap again to hide it.",
+    shop_equipped: "Wearing", shop_owned: "Owned", shop_in_garden: "In garden", shop_hidden: "Hidden", shop_no_seeds: "Not enough seeds 🌱",
     history_empty_title: "Nothing here yet",
     history_empty_cta:   "Start a challenge",
     battles_empty_title: "No battles yet",
@@ -1555,6 +1562,7 @@ export const T = {
     nav_back:     "Zpět",
     nav_close:    "Zavřít",
     fact_title:   "Víš, že…?",
+    estimate_label: "Odhadni",
     wrong_title:  "Tentokrát ne",
     wrong_correct:"Správná odpověď:",
     wrong_next:   "Další otázka",
@@ -1568,7 +1576,11 @@ export const T = {
     map_compass_hint: "Klepni na šipku pro kompas",
     open_stats:   "Statistiky",
     points_unit:  "bodů",
-    ward_title:   "Moji Greamíci",
+    ward_title:   "Greamíci a obchůdek",
+    shop_tab_greams: "Greamíci", shop_tab_acc: "Doplňky", shop_tab_decor: "Zahrada", shop_tab_bg: "Pozadí",
+    shop_tab_boosts: "Posilovače", shop_tab_avatars: "Avatar", shop_tab_frames: "Rámeček",
+    shop_acc_hint: "Greamík ho nosí v zahradě i v soubojích.", shop_decor_hint: "Všechno, co koupíš, se objeví v zahradě. Dalším klepnutím schováš.",
+    shop_equipped: "Nasazeno", shop_owned: "Vlastním", shop_in_garden: "V zahradě", shop_hidden: "Schováno", shop_no_seeds: "Nedostatek semínek 🌱",
     history_empty_title: "Zatím tu nic není",
     history_empty_cta:   "Začít výzvu",
     battles_empty_title: "Zatím žádné souboje",
@@ -2742,6 +2754,16 @@ export const T = {
     ]
   }
 };
+
+// Otázky 1.1 (challenges-extra.js) – připojit za stávající (pořadí cs/en stejné, ID podle textu)
+for (const lang of ['cs', 'en']) {
+  for (const [w, byDiff] of Object.entries(EXTRA_CHALLENGES[lang] || {})) {
+    for (const [d, list] of Object.entries(byDiff)) {
+      const target = ((T[lang].challenges[w] ||= {})[d] ||= []);
+      target.push(...list);
+    }
+  }
+}
 
 export function getLang() {
   const stored = localStorage.getItem('gream_lang');

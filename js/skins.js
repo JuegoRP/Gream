@@ -13,6 +13,7 @@ const KEY_EQUIPPED      = 'gream_equipped';         // map { profileId: { avatar
 const KEY_OWNED_COSMETIC= 'gream_owned_cosmetics';  // map { profileId: [id,...] }
 const KEY_PENDING_BOOST = 'gream_pending_boost';    // map { profileId: boostId | null }
 const KEY_HINT_CHARGES  = 'gream_hint_charges';     // map { profileId: number }
+const KEY_DECOR         = 'gream_decor';            // map { profileId: { owned:[id], hidden:[id] } }
 
 // ─── Skin catalog: unlocked by milestones ───
 // Each skin specifies what it takes to unlock.
@@ -81,13 +82,29 @@ export const SKIN_CATALOG = {
     { id: 'boost_lucky', name: { cs: 'Šťastný úkol',   en: 'Lucky task' },       desc: { cs: 'Výběr obtížnosti dalšího úkolu',      en: 'Choose difficulty of next task' },   cost: 12, emoji: '🍀' },
   ],
 
-  // ─── GREAM ACCESSORIES — kosmetika pro Greamíka ───
+  // ─── GREAM ACCESSORIES — doplňky viditelné na greamíkovi (zahrada, aréna, výběr do souboje) ───
+  // slot: head = na hlavě, face = přes oči, neck = na krku, aura = záře kolem (bez obrázku)
   accessories: [
-    { id: 'acc_hat',    name: { cs: 'Čepička',     en: 'Hat' },         emoji: '🎩', cost: 40 },
-    { id: 'acc_bow',    name: { cs: 'Mašlička',    en: 'Bow' },         emoji: '🎀', cost: 25 },
-    { id: 'acc_crown',  name: { cs: 'Korunka',     en: 'Crown' },       emoji: '👑', cost: 80 },
-    { id: 'acc_glasses',name: { cs: 'Brýle',       en: 'Glasses' },     emoji: '🕶️', cost: 35 },
-    { id: 'acc_star',   name: { cs: 'Hvězdička',   en: 'Star aura' },   emoji: '⭐', cost: 60 },
+    { id: 'acc_bow',     name: { cs: 'Mašlička',       en: 'Bow' },          emoji: '🎀', cost: 25,  slot: 'head', img: 'img/doplnky/acc_bow.png' },
+    { id: 'acc_cap',     name: { cs: 'Kšiltovka',      en: 'Cap' },          emoji: '🧢', cost: 30,  slot: 'head', img: 'img/doplnky/acc_cap.png' },
+    { id: 'acc_glasses', name: { cs: 'Brýle',          en: 'Glasses' },      emoji: '🕶️', cost: 35,  slot: 'face', img: 'img/doplnky/acc_glasses.png' },
+    { id: 'acc_scarf',   name: { cs: 'Šála',           en: 'Scarf' },        emoji: '🧣', cost: 35,  slot: 'neck', img: 'img/doplnky/acc_scarf.png' },
+    { id: 'acc_hat',     name: { cs: 'Cylindr',        en: 'Top hat' },      emoji: '🎩', cost: 40,  slot: 'head', img: 'img/doplnky/acc_hat.png' },
+    { id: 'acc_flowers', name: { cs: 'Věneček',        en: 'Flower crown' }, emoji: '🌸', cost: 45,  slot: 'head', img: 'img/doplnky/acc_flowers.png' },
+    { id: 'acc_wizard',  name: { cs: 'Kouzelnický klobouk', en: 'Wizard hat' }, emoji: '🧙', cost: 60, slot: 'head', img: 'img/doplnky/acc_wizard.png' },
+    { id: 'acc_star',    name: { cs: 'Hvězdná záře',   en: 'Star aura' },    emoji: '⭐', cost: 60,  slot: 'aura' },
+    { id: 'acc_crown',   name: { cs: 'Korunka',        en: 'Crown' },        emoji: '👑', cost: 80,  slot: 'head', img: 'img/doplnky/acc_crown.png' },
+  ],
+
+  // ─── VÝZDOBA ZAHRADY — vše koupené se ukáže v zahradě (jde vypnout); x/y = % scény, w = % šířky ───
+  decor: [
+    { id: 'deco_flowerbed', name: { cs: 'Záhonek',        en: 'Flower bed' },   cost: 20,  img: 'img/zahrada/deco_flowerbed.png', x: 14, y: 92, w: 22 },
+    { id: 'deco_bench',     name: { cs: 'Lavička',        en: 'Bench' },        cost: 30,  img: 'img/zahrada/deco_bench.png',     x: 80, y: 90, w: 24 },
+    { id: 'deco_birdhouse', name: { cs: 'Budka pro ptáčky', en: 'Birdhouse' },  cost: 35,  img: 'img/zahrada/deco_birdhouse.png', x: 90, y: 66, w: 10 },
+    { id: 'deco_lantern',   name: { cs: 'Lucernička',     en: 'Lantern' },      cost: 40,  img: 'img/zahrada/deco_lantern.png',   x: 32, y: 84, w: 10 },
+    { id: 'deco_pond',      name: { cs: 'Jezírko',        en: 'Pond' },         cost: 60,  img: 'img/zahrada/deco_pond.png',      x: 66, y: 97, w: 26 },
+    { id: 'deco_mushroom',  name: { cs: 'Hříbkový domeček', en: 'Mushroom house' }, cost: 90, img: 'img/zahrada/deco_mushroom.png', x: 10, y: 70, w: 16 },
+    { id: 'deco_rainbow',   name: { cs: 'Duha',           en: 'Rainbow' },      cost: 120, img: 'img/zahrada/deco_rainbow.png',   x: 70, y: 22, w: 30 },
   ],
 };
 
@@ -339,6 +356,35 @@ export const Skins = {
     saveMap(KEY_OWNED_COSMETIC, m);
     this.setEquippedAccessory(profileId, accId);
     return { ok: true, acc };
+  },
+
+  unequipAccessory(profileId) { this.setEquippedAccessory(profileId, null); },
+
+  // ─── VÝZDOBA ZAHRADY ───
+  getDecor(profileId) {
+    const m = loadMap(KEY_DECOR);
+    const d = m[profileId] || { owned: [], hidden: [] };
+    return { owned: d.owned || [], hidden: d.hidden || [] };
+  },
+  buyDecor(profileId, id) {
+    const it = SKIN_CATALOG.decor.find(x => x.id === id);
+    if (!it) return { ok: false, reason: 'not-found' };
+    const d = this.getDecor(profileId);
+    if (d.owned.includes(id)) return { ok: true, it };
+    if (!this.spendSeeds(profileId, it.cost)) return { ok: false, reason: 'not-enough-seeds' };
+    d.owned.push(id);
+    const m = loadMap(KEY_DECOR); m[profileId] = d; saveMap(KEY_DECOR, m);
+    return { ok: true, it };
+  },
+  toggleDecor(profileId, id) {
+    const d = this.getDecor(profileId);
+    if (!d.owned.includes(id)) return;
+    d.hidden = d.hidden.includes(id) ? d.hidden.filter(x => x !== id) : [...d.hidden, id];
+    const m = loadMap(KEY_DECOR); m[profileId] = d; saveMap(KEY_DECOR, m);
+  },
+  shownDecor(profileId) {
+    const d = this.getDecor(profileId);
+    return SKIN_CATALOG.decor.filter(x => d.owned.includes(x.id) && !d.hidden.includes(x.id));
   },
 
   getOwnedAccessories(profileId) {

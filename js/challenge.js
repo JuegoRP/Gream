@@ -312,7 +312,8 @@ export const Challenge = {
 
     const label = document.createElement('div');
     label.style.cssText = 'font-size:13px;font-weight:700;color:var(--green-mid);margin-bottom:8px;text-align:center';
-    label.textContent = lang === 'cs' ? 'Napiš číslo:' : 'Enter a number:';
+    const est = challenge?.check?.tolerancePct != null;
+    label.textContent = est ? `${tr().estimate_label} (±${challenge.check.tolerancePct} %)` : (lang === 'cs' ? 'Napiš číslo:' : 'Enter a number:');
 
     const input = document.createElement('input');
     input.type = 'text';
@@ -340,7 +341,11 @@ export const Challenge = {
     input.addEventListener('keypress', e => { if (e.key === 'Enter') btn.click(); });
 
     wrap.appendChild(label);
-    wrap.appendChild(input);
+    if (challenge?.check?.unit) {   // jednotka vedle pole (m, km, rok…)
+      const row = document.createElement('div'); row.style.cssText = 'display:flex;align-items:center;gap:8px';
+      const u = document.createElement('span'); u.textContent = challenge.check.unit; u.style.cssText = 'font-size:20px;font-weight:900;color:var(--green-dark)';
+      input.style.marginBottom = '0'; row.append(input, u); wrap.appendChild(row); row.style.marginBottom = '10px';
+    } else wrap.appendChild(input);
     wrap.appendChild(btn);
     container.appendChild(wrap);
     setTimeout(() => input.focus(), 300);

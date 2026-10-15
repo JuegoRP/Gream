@@ -87,7 +87,7 @@ function pickOpponent(diff, rating, pid) {
     pool.sort((a, b) => Math.abs(a.rating - rating) - Math.abs(b.rating - rating));
     const near = pool.slice(0, Math.min(8, pool.length));
     const o = near[Math.floor(Math.random() * near.length)];
-    return { name: o.name, score: o.score, rating: o.rating, bot: false, arch: o.arch, stage: o.stage, answers: o.answers };
+    return { name: o.name, score: o.score, rating: o.rating, bot: false, arch: o.arch, stage: o.stage, acc: o.acc || null, answers: o.answers };
   }
   // No real opponent yet → generated bot scaled by difficulty
   const acc = { easy:0.55, medium:0.65, hard:0.72, extreme:0.78 }[diff] || 0.65;
@@ -187,7 +187,7 @@ const server = http.createServer((req, res) => {
     // store this run as a future opponent
     const run = { pid: d.pid, name, score, rating: pl.rating, ts: Date.now() };
     const answers = cleanAnswers(d.answers);
-    if (answers && ARCHES.includes(d.arch)) Object.assign(run, { arch: d.arch, stage: Math.max(2, Math.min(4, Number(d.stage) || 2)), answers });
+    if (answers && ARCHES.includes(d.arch)) Object.assign(run, { arch: d.arch, stage: Math.max(2, Math.min(4, Number(d.stage) || 2)), answers, acc: /^acc_[a-z]{2,12}$/.test(d.acc || '') ? d.acc : null });
     (battle.runs[diff] = battle.runs[diff] || []).push(run);
     if (battle.runs[diff].length > RUNS_PER_DIFF) battle.runs[diff].splice(0, battle.runs[diff].length - RUNS_PER_DIFF);
     persist('battle', F('battle.json'), battle);

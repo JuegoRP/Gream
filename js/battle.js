@@ -17,6 +17,7 @@ import { Net, challengeId } from './net.js';
 import { RULES, SPECIALS, ARCH_WORLD, ARCHES, newFighter, useSpecial, canSpecial, aiWantsSpecial, resolveRound, winner } from './battle-rules.js';
 import { Arena, drawFighter } from './arena.js';
 import { factFor } from './facts.js';
+import { numTolerance } from './validator.js';
 const ARCHETYPE_NAME = (a) => ARCHETYPES[a]?.name?.[getLang() === 'cs' ? 'cs' : 'en'] || a;
 
 const WORLD_TO_ARCH = { nature:'lilek', language:'jiskra', logic:'kamen', feelings:'srodik', arts:'vlnka', world:'atlas' };
@@ -202,7 +203,7 @@ export const Battle = {
       b.innerHTML = `<canvas></canvas>${r.name || ARCHETYPE_NAME(r.arch)}${r.loan ? `<span class="loan">${tr().battle_loan}</span>` : ''}`;
       b.onclick = () => { pick = r; pickEl.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); showSkill(); try { localStorage.setItem('gream_battle_pick_' + p.id, r.id || r.arch); } catch {} };
       pickEl.appendChild(b);
-      requestAnimationFrame(() => drawFighter(b.querySelector('canvas'), r.arch, r.stage, { shiny: r.shiny }));
+      requestAnimationFrame(() => drawFighter(b.querySelector('canvas'), r.arch, r.stage, { shiny: r.shiny, acc: Skins.getAccessory(p.id) }));
     });
     showSkill();
 
@@ -310,8 +311,8 @@ export const Battle = {
       <button class="bt-report" id="btReport">🚩 ${cs ? 'Nahlásit otázku' : 'Report question'}</button>`;
     document.body.appendChild(scr);
     this._arena = new Arena(scr.querySelector('.ar-wrap'), {
-      me: { ...pick, name: `${t.battle_you} · ${pick.name || ARCHETYPE_NAME(pick.arch)}` },
-      op: { arch: rival.arch, stage: rival.stage, shiny: !!rival.shiny, name: `${rival.name} · ${ARCHETYPE_NAME(rival.arch)}` },
+      me: { ...pick, acc: Skins.getAccessory(p.id), name: `${t.battle_you} · ${pick.name || ARCHETYPE_NAME(pick.arch)}` },
+      op: { arch: rival.arch, stage: rival.stage, shiny: !!rival.shiny, acc: rival.acc || null, name: `${rival.name} · ${ARCHETYPE_NAME(rival.arch)}` },
       labels: { energy: t.battle_energy, superEffective: t.battle_super_eff, crit: t.battle_crit },
     });
     this._arena.update(this._f);
@@ -391,7 +392,7 @@ export const Battle = {
           input.type = 'text'; input.inputMode = 'decimal'; input.placeholder = cs ? 'Číslo…' : 'Number…';
           input.className = 'bt-choice'; input.style.textAlign = 'center';
           const ok = document.createElement('button'); ok.className = 'bt-choice'; ok.style.cssText = 'width:auto;text-align:center;background:#7ec44a'; ok.textContent = '✓';
-          const check = () => { const num = parseFloat(String(input.value).replace(',', '.')); done(!isNaN(num) && Math.abs(num - ch.check.answer) <= (ch.check.tolerance ?? 0), String(ch.check.answer)); };
+          const check = () => { const num = parseFloat(String(input.value).replace(',', '.')); done(!isNaN(num) && Math.abs(num - ch.check.answer) <= numTolerance(ch.check), String(ch.check.answer) + (ch.check.unit ? ' ' + ch.check.unit : '')); };
           ok.onclick = check; input.addEventListener('keypress', e => { if (e.key === 'Enter') check(); });
           wrap.append(input, ok); elC.appendChild(wrap); setTimeout(() => input.focus(), 150);
         } else {
@@ -500,7 +501,7 @@ export const Battle = {
     Net.battleResult({
       pid: p.id, name: p.name || 'Hráč', difficulty: this._diff,
       score: myCorrect, oppScore: this._correct[1], win, oppRating: rival.rating || 1000,
-      arch: this._me.arch, stage: this._me.stage || 2, answers: this._log.slice(0, ROUNDS),
+      arch: this._me.arch, stage: this._me.stage || 2, acc: Skins.getAccessory(p.id) || null, answers: this._log.slice(0, ROUNDS),
     }).then(r => { if (r && r.rating) { const st = loadStats(p.id); st.rating = r.rating; st.rank = r.rank; saveStats(p.id, st); } });
 
     const hpLeft = Math.max(0, Math.round(this._f[0].hp)), opLeft = Math.max(0, Math.round(this._f[1].hp));
@@ -523,7 +524,7 @@ export const Battle = {
         <button id="battleClose" style="width:100%;padding:11px;border:none;background:none;color:#999;font-family:inherit;font-weight:700;font-size:13px;cursor:pointer">${cs?'Zpět do zahrady':'Back to garden'}</button>
       </div>`;
     document.body.appendChild(ov);
-    drawFighter(ov.querySelector('#brSprite'), this._me.arch, this._me.stage, { mood: win ? 'happy' : 'sad', shiny: this._me.shiny });
+    drawFighter(ov.querySelector('#brSprite'), this._me.arch, this._me.stage, { mood: win ? 'happy' : 'sad', shiny: this._me.shiny, acc: Skins.getAccessory(p.id) });
     ov.querySelector('#battleAgain').onclick = () => { ov.remove(); this.intro({ outdoor: this._outdoor }); };
     ov.querySelector('#battleBoard').onclick = () => this.showLeaderboard();
     ov.querySelector('#battleClose').onclick = () => { ov.remove(); Audio.switchScene?.('menu'); try { window.App?.renderMap?.(); } catch {} };

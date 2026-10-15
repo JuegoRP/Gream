@@ -64,7 +64,7 @@ export const Validator = {
         const num = this._extractNumber(proof);
         if (num === null) return { passed: false, feedback: L.needNumber };
         if (check.answer !== null && check.answer !== undefined) {
-          const tol = check.tolerance ?? 0;
+          const tol = numTolerance(check);
           const ok  = Math.abs(num - check.answer) <= tol;
           return ok
             ? { passed: true,  feedback: '' }
@@ -153,7 +153,7 @@ export const Validator = {
         const num = this._extractNumber(proof);
         if (num === null) return 0;
         if (check.answer == null) return 80;
-        const tol = check.tolerance ?? 0;
+        const tol = numTolerance(check);
         const diff = Math.abs(num - check.answer);
         if (diff <= tol) return 100;
         if (diff <= tol * 2) return 60;
@@ -268,3 +268,10 @@ const FEEDBACK_CS = {
   needWords:   (min, got) => `Napiš alespoň ${min} slov — napsal/a jsi ${got}. Přidej trochu víc!`,
   tooShort:    (secs) => `Řekni trochu víc — alespoň ${secs} sekund!`,
 };
+
+// Tolerance číselné odpovědi: pevná (tolerance) nebo v procentech u odhadů (tolerancePct)
+export function numTolerance(check) {
+  if (!check) return 0;
+  if (check.tolerancePct != null) return Math.abs(Number(check.answer) || 0) * check.tolerancePct / 100;
+  return check.tolerance ?? 0;
+}

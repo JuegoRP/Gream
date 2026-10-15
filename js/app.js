@@ -23,6 +23,8 @@ import { Subscription, FREE_DAILY_INDOOR, PREMIUM_DAILY_INDOOR, INDOOR_MAX_TOTAL
 import { Ranking } from './ranking.js';
 import { Audio } from './audio.js';
 import { fillIcons } from './icons.js';
+import { drawAccessory, preloadAccessories } from './accessories.js';
+preloadAccessories();
 window.__greamLoaded = true; // modul hry se načetl (index.html pak neukáže „Failed to start“)
 
 // ─── Global error boundary ───
@@ -725,6 +727,7 @@ window.App = {
 
   // ─── MAP ───
   async renderMap() {
+    setTimeout(() => this._renderGardenDecor(), 0);
     const p = Profiles.active();
     if (!p) return Router.show('profiles');
     const streakResult = Profiles.checkStreak(p.id);
@@ -1093,7 +1096,7 @@ window.App = {
         const shW = Math.round(gSize * (isActive ? 0.62 : 0.5));
         slot.innerHTML = `
           <canvas data-sprite-sheet="img/greamici/${arch}_${stageN}.png"
-            data-sprite-mood="${g.mood || 'happy'}"
+            data-sprite-mood="${g.mood || 'happy'}" data-arch="${arch}" ${isActive ? `data-acc="${Skins.getAccessory(Profiles.active()?.id) || ''}"` : ''}
             width="${gSize}" height="${gSize}"
             style="width:${gSize}px;height:${gSize}px;image-rendering:pixelated;display:block;
               ${isActive ? 'animation:greamWalkBlock 1.1s ease-in-out infinite;' : ''}
@@ -1175,7 +1178,7 @@ window.App = {
   },
 
   // Draw sprite sheet cell onto canvas, cropped to content and centered
-  _drawSpriteCell(ctx, img, sx, sy, canvasW, canvasH) {
+  _drawSpriteCell(ctx, img, sx, sy, canvasW, canvasH, acc = null, arch = null) {
     // Use offscreen canvas to detect content bbox
     const off = document.createElement('canvas');
     off.width = 128; off.height = 128;
@@ -1219,6 +1222,9 @@ window.App = {
       sx + minX - PAD, sy + minY - PAD, cw, ch,  // source: content bbox + padding
       dx, dy, dw, dh                               // dest: centered on canvas
     );
+    // Doplněk (čepice, brýle…) přes greamíka
+    if (acc) drawAccessory(ctx, { x: dx + PAD * scale, y: dy + PAD * scale, w: dw - 2 * PAD * scale, h: dh - 2 * PAD * scale }, acc, arch,
+      () => this._drawSpriteCell(ctx, img, sx, sy, canvasW, canvasH, acc, arch));
   },
 
   _initSpriteCanvases(root) {
@@ -1236,9 +1242,11 @@ window.App = {
       canvas.style.height = cssH + 'px';
       const img = new Image();
       img.src = src;
+      const acc = canvas.dataset.acc || null;
+      canvas.classList.toggle('aura', acc === 'acc_star');
       const draw = () => {
         const ctx = canvas.getContext('2d');
-        this._drawSpriteCell(ctx, img, sx, sy, cssW * dpr, cssH * dpr);
+        this._drawSpriteCell(ctx, img, sx, sy, cssW * dpr, cssH * dpr, acc, canvas.dataset.arch || null);
       };
       if (img.complete) draw();
       else { img.onload = draw; img.onerror = () => {}; }
@@ -1310,13 +1318,16 @@ window.App = {
     if (canvas.width !== bufW) { canvas.width = bufW; canvas.height = bufW; }
     canvas.classList.toggle('shiny', spriteEl.classList.contains('shiny'));
 
-    const redraw = canvas.dataset.src !== src || canvas.dataset.mood !== mood;
+    const accId = Skins.getAccessory(Profiles.active()?.id) || '';
+    canvas.classList.toggle('aura', accId === 'acc_star');
+    const redraw = canvas.dataset.src !== src || canvas.dataset.mood !== mood || canvas.dataset.acc !== accId;
     if (redraw) {
       canvas.dataset.src  = src;
       canvas.dataset.mood = mood;
+      canvas.dataset.acc  = accId;
       const img = new Image();
       img.src = src;
-      const draw = () => this._drawSpriteCell(canvas.getContext('2d'), img, sx, sy, bufW, bufW);
+      const draw = () => this._drawSpriteCell(canvas.getContext('2d'), img, sx, sy, bufW, bufW, accId, pet.archetype);
       img.onerror = () => {
         // Stage 3/4 not uploaded yet — fall back to stage 2
         const fallback = new Image();
@@ -3381,10 +3392,10 @@ window.App = {
 
     this._setText('wardTitle',      tr().ward_title);
     this._setText('wardSeeds',      Skins.getSeeds(p.id));
-    // Tab emoji labels are static in HTML — only title needs updating
     this._setText('wardTitle', tr().ward_title);
+    document.querySelectorAll('.shop-tabs [data-l]').forEach(el => { el.textContent = t[el.dataset.l] || ''; });
 
-    const safeTab = ['greams','boosts','avatars','frames','bg'].includes(this._wardTab) ? this._wardTab : 'greams';
+    const safeTab = ['greams','acc','decor','boosts','avatars','frames','bg'].includes(this._wardTab) ? this._wardTab : 'greams';
     this.wardSwitchTab(safeTab);
   },
 
@@ -3466,6 +3477,10 @@ window.App = {
       this._renderWardrobeGreams();
     } else if (tab === 'boosts') {
       this._renderWardrobeBoosts();
+    } else if (tab === 'acc') {
+      this._renderWardrobeAccessories();
+    } else if (tab === 'decor') {
+      this._renderWardrobeDecor();
     } else if (tab === 'bg') {
       this.renderBgShop();
     } else {
@@ -3524,52 +3539,65 @@ window.App = {
   },
 
   _renderWardrobeAccessories() {
-    const p    = Profiles.active(); if (!p) return;
-    const lang = getLang();
-    const cs   = lang === 'cs';
+    const p = Profiles.active();
+    if (!p) return;
+    const t = tr(), lang = getLang();
     const grid = document.getElementById('wardGrid');
     if (!grid) return;
-    grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px;max-width:420px;margin:0 auto';
-    grid.innerHTML = '';
-
+    grid.style.cssText = 'display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:420px;margin:0 auto';
+    grid.innerHTML = `<div class="shop-hint" style="grid-column:1/-1">${t.shop_acc_hint}</div>`;
     const seeds = Skins.getSeeds(p.id);
-    const equipped   = Skins.getAccessory(p.id);
-
+    const equipped = Skins.getAccessory(p.id);
     SKIN_CATALOG.accessories.forEach(acc => {
-      const owned    = Skins.isAccessoryOwned(p.id, acc.id);
-      const isOn     = equipped === acc.id;
-      const canAfford = seeds >= acc.cost;
+      const owned = Skins.isAccessoryOwned(p.id, acc.id);
+      const isOn = equipped === acc.id;
       const card = document.createElement('button');
-      card.style.cssText = `
-        padding:14px 8px;border-radius:16px;border:2.5px solid ${isOn ? '#f5a623' : owned ? 'var(--green-mid)' : 'rgba(0,0,0,0.08)'};
-        background:${isOn ? '#fff9e6' : 'white'};cursor:pointer;font-family:inherit;
-        display:flex;flex-direction:column;align-items:center;gap:6px;
-        box-shadow:${isOn ? '0 4px 12px rgba(245,166,35,0.3)' : '0 2px 6px rgba(0,0,0,0.06)'};
-      `;
-      card.innerHTML = `
-        <span style="font-size:32px">${acc.emoji}</span>
-        <span style="font-size:12px;font-weight:800;color:var(--green-deep)">${acc.name[lang]||acc.name.cs}</span>
-        ${isOn ? `<span style="font-size:10px;font-weight:700;color:#f5a623">${cs?'Nasazeno':'Equipped'}</span>`
-               : owned ? `<span style="font-size:10px;font-weight:700;color:var(--green-mid)">${cs?'Vlastním':'Owned'}</span>`
-               : `<span style="font-size:10px;font-weight:700;color:#888">🌱 ${acc.cost}</span>`}
-      `;
+      card.className = 'shop-item' + (isOn ? ' on' : owned ? ' owned' : '') + (!owned && seeds < acc.cost ? ' poor' : '');
+      card.innerHTML = `${acc.img ? `<img src="${acc.img}" alt="">` : `<span class="shop-emoji">${acc.emoji}</span>`}
+        <span class="shop-name">${acc.name[lang] || acc.name.cs}</span>
+        <span class="shop-state">${isOn ? t.shop_equipped : owned ? t.shop_owned : '🌱 ' + acc.cost}</span>`;
       card.onclick = () => {
-        if (isOn) {
-          // Unequip
-          try { localStorage.removeItem('gream_acc_' + p.id); } catch {}
-          Feedback.tap();
-          this._renderWardrobeAccessories();
-          return;
-        }
-        const ok = Skins.equipAccessory(p.id, acc.id);
-        if (ok) {
-          Feedback.success();
-          this._setText('wardSeeds', Skins.getSeeds(p.id));
-          this._renderWardrobeAccessories();
-        } else {
-          Feedback.error();
-          this._showToast(cs ? 'Nedostatek semínek 🌱' : 'Not enough seeds 🌱');
-        }
+        if (isOn) { Skins.unequipAccessory(p.id); Feedback.tap(); this._renderWardrobeAccessories(); return; }
+        if (Skins.equipAccessory(p.id, acc.id)) {
+          Feedback.success(); this._setText('wardSeeds', Skins.getSeeds(p.id)); this._renderWardrobeAccessories();
+        } else { Feedback.error(); this._showToast(t.shop_no_seeds); }
+      };
+      grid.appendChild(card);
+    });
+  },
+
+  // ─── Výzdoba v zahradě (za greamíkem) ───
+  _renderGardenDecor() {
+    const p = Profiles.active();
+    const stage = document.getElementById('greamStage');
+    if (!p || !stage) return;
+    let layer = stage.querySelector('.garden-decor');
+    if (!layer) { layer = document.createElement('div'); layer.className = 'garden-decor'; (stage.querySelector('.gream-floor') || stage.firstChild)?.after(layer); }
+    layer.innerHTML = Skins.shownDecor(p.id).map(it => `<img src="${it.img}" alt="" style="left:${it.x}%;top:${it.y}%;width:${it.w}%">`).join('');
+  },
+
+  // ─── Výzdoba zahrady: koupit / ukázat-schovat ───
+  _renderWardrobeDecor() {
+    const p = Profiles.active();
+    if (!p) return;
+    const t = tr(), lang = getLang();
+    const grid = document.getElementById('wardGrid');
+    if (!grid) return;
+    grid.style.cssText = 'display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:420px;margin:0 auto';
+    grid.innerHTML = `<div class="shop-hint" style="grid-column:1/-1">${t.shop_decor_hint}</div>`;
+    const seeds = Skins.getSeeds(p.id);
+    const d = Skins.getDecor(p.id);
+    SKIN_CATALOG.decor.forEach(it => {
+      const owned = d.owned.includes(it.id), shown = owned && !d.hidden.includes(it.id);
+      const card = document.createElement('button');
+      card.className = 'shop-item' + (shown ? ' on' : owned ? ' owned' : '') + (!owned && seeds < it.cost ? ' poor' : '');
+      card.innerHTML = `<img src="${it.img}" alt=""><span class="shop-name">${it.name[lang] || it.name.cs}</span>
+        <span class="shop-state">${shown ? t.shop_in_garden : owned ? t.shop_hidden : '🌱 ' + it.cost}</span>`;
+      card.onclick = () => {
+        if (owned) { Skins.toggleDecor(p.id, it.id); Feedback.tap(); this._renderWardrobeDecor(); return; }
+        const r = Skins.buyDecor(p.id, it.id);
+        if (r.ok) { Feedback.success(); this._setText('wardSeeds', Skins.getSeeds(p.id)); this._renderWardrobeDecor(); }
+        else { Feedback.error(); this._showToast(t.shop_no_seeds); }
       };
       grid.appendChild(card);
     });
