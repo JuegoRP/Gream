@@ -5,6 +5,7 @@
 //  + Skin unlock check after task completion
 // ═══════════════════════════════════
 
+import { factCard } from './facts.js';
 import { tr } from './i18n.js';
 import { Profiles } from './profiles.js';
 import { Badges } from './badges.js';
@@ -586,9 +587,23 @@ export const Challenge = {
         ? penaltyApplied ? `❌ Špatně! −${WRONG_PENALTY} semínka (zbývá ${remaining}). Zkus jinou otázku.` : `❌ Špatně! Zkus jinou otázku.`
         : penaltyApplied ? `❌ Wrong! −${WRONG_PENALTY} seeds (${remaining} left). Try a different question.` : `❌ Wrong! Try a different question.`;
 
+      // Špatně: ukaž správnou odpověď a zajímavost (učí i chyba), pak domů
+      const ch = this._currentChallenge;
+      const right = (ch?.choices || []).find(c => String(c.value ?? c.text).toLowerCase() === String(check.correct).toLowerCase());
       setTimeout(() => {
         this._showToast(msg);
-        setTimeout(() => Router.show('home'), 1200);
+        const t = tr();
+        document.getElementById('wrongOverlay')?.remove();
+        const ov = document.createElement('div');
+        ov.id = 'wrongOverlay'; ov.className = 'wrong-overlay';
+        ov.innerHTML = `<div class="wrong-card anim-pop">
+          <div class="wrong-title">${t.wrong_title}</div>
+          ${right ? `<div class="wrong-answer">${t.wrong_correct} <b></b></div>` : ''}
+          ${factCard(this._world, this._difficulty || 'medium', ch)}
+          <button class="btn-primary">${t.wrong_next}</button></div>`;
+        if (right) ov.querySelector('.wrong-answer b').textContent = right.text;
+        ov.querySelector('button').onclick = () => { ov.remove(); Router.show('home'); };
+        document.body.appendChild(ov);
       }, 300);
       return;
     }
@@ -791,6 +806,7 @@ export const Challenge = {
   async _showStepDone(stepsDone, evolved, newlyUnlocked = [], greamResult = null) {
     const t = tr();
     await Router.show('step-done');
+    try { const el = document.getElementById('sdFact'); if (el) el.innerHTML = factCard(this._world, this._difficulty || 'medium', this._currentChallenge); } catch {}
 
     const icons = ['🌱','🌿','🌳'];
     this._set('sdIcon',     icons[stepsDone - 1] || '🌟');

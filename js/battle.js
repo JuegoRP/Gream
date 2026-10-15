@@ -16,6 +16,7 @@ import { Audio } from './audio.js';
 import { Net, challengeId } from './net.js';
 import { RULES, SPECIALS, ARCH_WORLD, ARCHES, newFighter, useSpecial, canSpecial, aiWantsSpecial, resolveRound, winner } from './battle-rules.js';
 import { Arena, drawFighter } from './arena.js';
+import { factFor } from './facts.js';
 const ARCHETYPE_NAME = (a) => ARCHETYPES[a]?.name?.[getLang() === 'cs' ? 'cs' : 'en'] || a;
 
 const WORLD_TO_ARCH = { nature:'lilek', language:'jiskra', logic:'kamen', feelings:'srodik', arts:'vlnka', world:'atlas' };
@@ -437,7 +438,7 @@ export const Battle = {
         const left = Math.max(0, 1 - (Date.now() - start - paused) / timeMs);
         const domain = world === ARCH_WORLD[me.arch] || me.ownWorldNext;
         me.fiftyNext = false; me.ownWorldNext = false;
-        if (ok) { this._correct[0]++; Feedback.success?.(); } else if (!ko) { Feedback.error?.(); this._missed.push({ q: ch.text, a: correctText }); }
+        if (ok) { this._correct[0]++; Feedback.success?.(); } else if (!ko) { Feedback.error?.(); this._missed.push({ q: ch.text, a: correctText, world, diff: this._daily ? 'medium' : this._diff, ch }); }
         this._log.push({ ok: !!ok, ms: Math.round(Date.now() - start - paused) });
         setTimeout(() => resolve({ ok: !!ok && !ko, domain, speedFrac: ok ? left : 0 }), ok ? 250 : 700);
       };
@@ -465,7 +466,7 @@ export const Battle = {
     document.getElementById('battleRound')?.remove();
     const myCorrect = this._correct[0];
     const review = this._missed.length ? `<div style="font-size:12px;font-weight:900;color:#888;margin-top:6px">${t.battle_review}</div>
-      <div class="bt-review">${this._missed.map(m => `<div>${escHtml(m.q)}${m.a ? `<br><b>${t.battle_correct_is}${escHtml(m.a)}</b>` : ''}</div>`).join('')}</div>` : '';
+      <div class="bt-review">${this._missed.map(m => `<div>${escHtml(m.q)}${m.a ? `<br><b>${t.battle_correct_is}${escHtml(m.a)}</b>` : ''}${(() => { const f = factFor(m.world, m.diff, m.ch); return f ? `<br><span style="color:#b07800">💡 ${escHtml(f.text)}</span>` : ''; })()}</div>`).join('')}</div>` : '';
 
     // ─── Daily round: score-attack ranked on a shared daily leaderboard ───
     if (this._daily) {

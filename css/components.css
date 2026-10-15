@@ -1486,3 +1486,15 @@ body.bg-starry { background:linear-gradient(180deg,#0d1b3d,#2c3e7a 50%,#4a5fa3);
 .bt-review div { padding:var(--space-2) 0; border-bottom:1px solid #eee; color:#555; }
 .bt-review b { color:var(--green-dark); }
 @media (prefers-reduced-motion: reduce) { .ar-mon.lunge, .ar-mon.hit, .ar-mon.victory, .bt-special, .st-stun { animation:none !important; } }
+
+/* „Víš, že…?“ a okno po špatné odpovědi */
+.fact-card { width:100%; max-width:420px; margin:0 auto var(--space-4); padding:var(--space-3) var(--space-4); background:#fff8e1; border:2px solid #f5d77a; border-radius:var(--radius-md); text-align:left; }
+.fact-title { font-size:var(--text-xs); font-weight:900; color:#b07800; text-transform:uppercase; letter-spacing:.5px; margin-bottom:var(--space-1); }
+.fact-text { font-size:var(--text-sm); font-weight:700; color:var(--ink); line-height:1.45; }
+.fact-src { font-size:var(--text-xs); color:var(--ink-muted); margin-top:var(--space-1); }
+.wrong-overlay { position:fixed; inset:0; z-index:950; background:rgba(20,30,15,.55); display:flex; align-items:center; justify-content:center; padding:var(--space-4); }
+.wrong-card { width:100%; max-width:380px; background:#fff; border-radius:var(--radius-lg); padding:var(--space-5) var(--space-4); box-shadow:var(--elev-2); text-align:center; }
+.wrong-title { font-size:var(--text-lg); font-weight:900; color:#b0402a; margin-bottom:var(--space-2); }
+.wrong-answer { font-size:var(--text-sm); font-weight:700; color:var(--ink-soft); margin-bottom:var(--space-3); }
+.wrong-answer b { color:var(--green-dark); }
+.wrong-card .btn-primary { width:100%; }
