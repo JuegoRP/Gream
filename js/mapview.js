@@ -9,6 +9,7 @@
 import { Geo, WORLD_COLORS, WORLD_EMOJIS, isBattleSpot } from './geo.js';
 import { Net } from './net.js';
 import { tr } from './i18n.js';
+import { Expedition } from './expedition.js';
 
 const TILES_URL = 'https://3rstudio.eu/api/gream/tiles/{z}/{x}/{y}.pbf';
 const ATTRIBUTION = '© <a href="https://openfreemap.org" target="_blank">OpenFreeMap</a> © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>';
@@ -114,6 +115,8 @@ function stylePoi(el, poi) {
   el.classList.toggle('near', near && !done);
   el.classList.toggle('dim', !!_filterWorld && poi.bonusWorld !== _filterWorld);
   el.querySelector('.gm-poi-icon').textContent = isBattleSpot(poi) && !done ? '⚔️' : (WORLD_EMOJIS[world] || '•');
+  el.classList.toggle('exp', !!poi._exp && !poi._expDone);
+  el.classList.toggle('rare', !!poi._rare && !poi._rareDone);
 }
 
 // ─── Území: sloučené „bubliny“ kolem splněných míst (stabilní tvar podle souřadnic) ───
@@ -215,13 +218,18 @@ function injectStyles() {
     .gm-poi.near{opacity:1;width:44px;height:44px;animation:poiBob 1.2s ease-in-out infinite;box-shadow:0 0 0 6px color-mix(in srgb,var(--c) 30%,transparent),0 4px 12px rgba(0,0,0,.3)}
     .gm-poi.near .gm-poi-icon{font-size:20px}
     .gm-poi.dim{opacity:.18}
+    .gm-poi.exp{opacity:1;box-shadow:0 0 0 3px #ffd84d,0 0 12px 3px rgba(255,216,77,.75)}
+    .gm-poi.exp::after{content:'★';position:absolute;top:-9px;left:-9px;width:18px;height:18px;border-radius:50%;background:#ffd84d;color:#7a4a00;font:900 12px/18px 'Nunito',sans-serif;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+    .gm-poi.rare{opacity:1;box-shadow:0 0 0 3px #e7b6ff,0 0 14px 4px rgba(190,120,255,.8);animation:rareGlow 1.6s ease-in-out infinite}
+    .gm-poi.rare::after{content:'✦';position:absolute;top:-10px;left:-10px;width:20px;height:20px;border-radius:50%;background:#b77cff;color:#fff;font:900 12px/20px 'Nunito',sans-serif;text-align:center}
+    @keyframes rareGlow{50%{box-shadow:0 0 0 4px #f2d6ff,0 0 22px 7px rgba(190,120,255,.9)}}
     .gm-poi-badge{position:absolute;top:-10px;right:-14px;background:#1a3d0a;color:#fff;border-radius:10px;font:800 10px 'Nunito',sans-serif;padding:1px 6px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.3)}
     .gm-dest{font-size:28px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.4));pointer-events:none}
     .gm-nav{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);z-index:600;background:rgba(26,61,10,.94);color:#fff;border-radius:16px;padding:12px 16px;display:flex;align-items:center;gap:14px;box-shadow:0 4px 18px rgba(0,0,0,.3);font-family:Nunito,sans-serif;max-width:88%}
     .gm-nav-arrow{font-size:30px;line-height:1;transition:transform .15s ease-out;cursor:pointer}
     .gm-nav-label{font-weight:900;font-size:14px}.gm-nav-dist{font-weight:800;font-size:13px;opacity:.9}.gm-nav-hint{font-size:11px;opacity:.75;display:none}
     .gm-nav-close{background:rgba(255,255,255,.18);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:15px;font-weight:900;cursor:pointer;flex:none}
-    @media (prefers-reduced-motion: reduce){.gm-pulse,.gm-poi.near{animation:none}}
+    @media (prefers-reduced-motion: reduce){.gm-pulse,.gm-poi.near,.gm-poi.rare{animation:none}}
   `;
   document.head.appendChild(s);
 }
@@ -269,6 +277,8 @@ export const MapView = {
     _map.touchZoomRotate.disableRotation();
     _map.keyboard.disable();
     _map.on('load', () => {
+      _map.addSource('explored', { type: 'geojson', data: Expedition.geojson() });
+      _map.addLayer({ id: 'explored', type: 'fill', source: 'explored', paint: { 'fill-color': '#ffe9a8', 'fill-opacity': 0.28 } }, 'building');
       _map.addSource('territory', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
       _map.addLayer({ id: 'territory', type: 'fill', source: 'territory', paint: { 'fill-color': TERRITORY_COLOR, 'fill-opacity': 0.18 } }, 'building');
       updateTerritory();
@@ -279,6 +289,7 @@ export const MapView = {
     _userMarker = new ml.Marker({ element: _userEl }).setLngLat([center.lon, center.lat]).addTo(_map);
 
     _allPois = [];
+    Expedition.record(center);
     this._loadPOI(null, center, opts);
     this._startWatch();
     return _map;
@@ -292,6 +303,7 @@ export const MapView = {
       const moved = _userPos ? distM(_userPos, next) : 999;
       _userPos = next;
       _userMarker.setLngLat([pos.lon, pos.lat]);
+      if (Expedition.record(next)) { try { _map.getSource('explored')?.setData(Expedition.geojson()); } catch {} }
       if (moved < 4) { _updateNav(); return; }
       if (_following) _map.easeTo({ center: [pos.lon, pos.lat], duration: 400 });
       this._refreshDotStyles();
@@ -374,6 +386,13 @@ export const MapView = {
   },
 
   _refreshDotStyles() { _poiLayers.forEach(({ poi, el }) => stylePoi(el, poi)); },
+  // Výprava dne / vzácné místo (z Expedition) → zvýraznit
+  markExpedition(st) {
+    if (!st) return;
+    _allPois.forEach(p => { p._exp = st.ids.includes(p.id); p._expDone = st.done.includes(p.id); p._rare = st.rare === p.id; p._rareDone = !!st.rareDone; });
+    this._refreshDotStyles();
+  },
+  userPos() { return _userPos; },
 
   // Zpětná kompatibilita (dřívější podpis s Leafletem)
   _onTap(poi, _dot, _L, info = {}) {

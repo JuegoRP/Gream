@@ -1540,3 +1540,14 @@ canvas.aura, #greamSpriteCanvas.aura { filter:drop-shadow(0 0 6px #ffe27a) drop-
 .lg-row.up { background:#eef9e4; } .lg-row.down { background:#fdeeea; } .lg-row.me { outline:2px solid var(--green-mid); }
 .lg-dot { display:inline-block; width:10px; height:10px; border-radius:3px; vertical-align:middle; }
 .lg-dot.up { background:#cfeebb; } .lg-dot.down { background:#f6cfc5; }
+
+/* Výprava dne na mapě */
+.exp-chip { position:absolute; left:50%; top:var(--space-2); transform:translateX(-50%); z-index:510; max-width:calc(100% - 24px); padding:var(--space-2) var(--space-3); border-radius:var(--radius-full); background:rgba(255,255,255,.96); border:2px solid #ffd84d; box-shadow:var(--elev-1); font-size:var(--text-xs); font-weight:800; color:#7a4a00; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.exp-sheet { position:absolute; inset:0; z-index:530; background:rgba(20,30,15,.35); display:flex; align-items:flex-end; }
+.exp-card { width:100%; background:#fff; border-radius:var(--radius-lg) var(--radius-lg) 0 0; padding:var(--space-4); box-shadow:var(--elev-2); max-height:80%; overflow-y:auto; }
+.exp-h { font-size:var(--text-md); font-weight:900; color:var(--ink); }
+.exp-sub { font-size:var(--text-xs); font-weight:700; color:var(--ink-soft); line-height:1.45; margin:var(--space-1) 0 var(--space-2); }
+.exp-row { width:100%; display:grid; grid-template-columns:28px 1fr auto; gap:var(--space-2); align-items:center; padding:var(--space-3); border-radius:var(--radius-md); border:2px solid var(--line); background:#fffdf3; margin-bottom:var(--space-2); text-align:left; }
+.exp-row b { font-size:var(--text-sm); color:var(--ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.exp-row small { font-size:var(--text-xs); font-weight:800; color:var(--ink-muted); }
+.exp-row.ok { background:#eef9e4; border-color:#bfe3a3; }

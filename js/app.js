@@ -24,8 +24,10 @@ import { Ranking } from './ranking.js';
 import { Audio } from './audio.js';
 import { fillIcons } from './icons.js';
 import { drawAccessory, preloadAccessories } from './accessories.js';
+import { Expedition, REWARD as EXP_REWARD } from './expedition.js';
 preloadAccessories();
-window.__greamLoaded = true; // modul hry se načetl (index.html pak neukáže „Failed to start“)
+window.__greamLoaded = true;
+const escAttr = (x) => String(x ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); // modul hry se načetl (index.html pak neukáže „Failed to start“)
 
 // ─── Global error boundary ───
 // Catches uncaught errors and shows a friendly recovery UI instead of white screen
@@ -3138,6 +3140,7 @@ window.App = {
         onPoisLoaded: pois => {
           const loading = document.getElementById('mapLoading');
           if (loading) loading.style.display = 'none';
+          try { const st = Expedition.ensure(p.id, pois, MapView.userPos() || pos); MapView.markExpedition(st); this._renderExpeditionChip(st, pois); } catch (e) { console.warn('[Expedition]', e); }
           const count = pois.length;
           this._setText('mapViewSub', count > 0
             ? (lang === 'cs' ? `${count} míst v okolí` : `${count} places nearby`)
@@ -3149,6 +3152,33 @@ window.App = {
       const loading = document.getElementById('mapLoading');
       if (loading) loading.querySelector('#mapLoadingMsg').textContent = lang === 'cs' ? 'Chyba načítání.' : 'Load error.';
     }
+  },
+
+  // ─── Výprava dne: štítek na mapě + seznam míst s navigací ───
+  _renderExpeditionChip(st, pois) {
+    const mapEl = document.getElementById('leafletMap');
+    if (!mapEl || !st) return;
+    const t = tr();
+    let chip = document.getElementById('expChip');
+    if (!chip) { chip = document.createElement('button'); chip.id = 'expChip'; chip.className = 'exp-chip'; mapEl.appendChild(chip); }
+    const done = st.done.length, n = st.ids.length;
+    chip.innerHTML = `⭐ ${t.exp_title} ${done}/${n}${st.rare && !st.rareDone ? ' · ✦' : ''} · ${t.exp_explored(Expedition.cells().length)}`;
+    chip.onclick = () => {
+      document.getElementById('expSheet')?.remove();
+      const me = MapView.userPos();
+      const d = (p) => { if (!me) return ''; const R = 6371000, r = Math.PI / 180; const x = Math.sin((p.lat - me.lat) * r / 2) ** 2 + Math.cos(me.lat * r) * Math.cos(p.lat * r) * Math.sin((p.lon - me.lon) * r / 2) ** 2; const m = Math.round(2 * R * Math.asin(Math.sqrt(x))); return m < 1000 ? `${m} m` : `${(m / 1000).toFixed(1)} km`; };
+      const row = (id, rare) => { const p = pois.find(x => x.id === id); if (!p) return ''; const ok = rare ? st.rareDone : st.done.includes(id);
+        return `<button class="exp-row${ok ? ' ok' : ''}" data-id="${id}"><span>${rare ? '✦' : ok ? '✅' : this._poiIcon(p.kind)}</span><b>${escAttr(p.name || t.poi_kind?.[p.kind] || t.exp_place)}</b><small>${ok ? t.exp_done : d(p)}</small></button>`; };
+      const sh = document.createElement('div'); sh.id = 'expSheet'; sh.className = 'exp-sheet';
+      sh.innerHTML = `<div class="exp-card"><div class="exp-h">⭐ ${t.exp_title}</div><div class="exp-sub">${t.exp_how(EXP_REWARD.place, EXP_REWARD.all, EXP_REWARD.rare)}</div>
+        ${st.ids.map(id => row(id, false)).join('')}${st.rare ? `<div class="exp-sub" style="margin-top:8px">✦ ${t.exp_rare}</div>${row(st.rare, true)}` : ''}
+        <div class="exp-sub" style="margin-top:8px">🗺️ ${t.exp_explored_long(Expedition.cells().length)}</div>
+        <button class="btn-primary" style="width:100%;margin-top:10px">${t.nav_close}</button></div>`;
+      sh.querySelector('.btn-primary').onclick = () => sh.remove();
+      sh.onclick = (e) => { if (e.target === sh) sh.remove(); };
+      sh.querySelectorAll('.exp-row').forEach(b => b.onclick = () => { const p = pois.find(x => x.id === b.dataset.id); if (p) { MapView.setDestination(p.lat, p.lon, p.name || t.poi_kind?.[p.kind] || t.exp_place); sh.remove(); } });
+      mapEl.appendChild(sh);
+    };
   },
 
   // ─── Location-off notice on the map ───
@@ -3226,7 +3256,7 @@ window.App = {
       <div style="background:white;border-radius:24px;padding:20px;max-width:340px;width:100%">
         <div style="text-align:center;margin-bottom:14px">
           <span style="font-size:28px">${kindIcon}</span>
-          <div style="font-size:13px;font-weight:700;color:#888;margin-top:4px">${(poi.kind||'').replace(/_/g,' ')}</div>
+          <div style="font-size:13px;font-weight:700;color:#888;margin-top:4px">${tr().poi_kind?.[poi.kind] || (poi.kind||'').replace(/_/g,' ')}</div>
           ${bonusBadge}
         </div>
         ${tooFar ? `

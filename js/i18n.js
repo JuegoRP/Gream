@@ -164,6 +164,12 @@ export const T = {
     ss_data_info:       "Your data is stored only on this device. Tap below to permanently delete everything (GDPR right to erasure).",
     // Stats
     // Battles 1.1 — arena
+    poi_kind: {"arts_centre": "Arts centre", "artwork": "Artwork", "attraction": "Attraction", "bar": "Bar", "bench": "Bench", "board": "Info board", "boundary_stone": "Boundary stone", "cafe": "Café", "castle": "Castle", "cinema": "Cinema", "clock": "Clock", "fountain": "Fountain", "gallery": "Gallery", "geolocation": "Point", "hospital": "Hospital", "information": "Information", "library": "Library", "map": "Map", "memorial": "Memorial", "monument": "Monument", "museum": "Museum", "music_venue": "Music venue", "nature_reserve": "Nature reserve", "park": "Park", "peak": "Peak", "place_of_worship": "Church", "planetarium": "Planetarium", "playground": "Playground", "poi": "Place of interest", "post_office": "Post office", "pub": "Pub", "ruins": "Ruins", "school": "School", "social_centre": "Community centre", "sports_centre": "Sports centre", "spring": "Spring", "telephone": "Phone box", "theatre": "Theatre", "tower": "Tower", "tree": "Tree", "university": "University", "viewpoint": "Viewpoint", "water": "Water", "wayside_cross": "Wayside cross", "wood": "Woods", "garden": "Garden"},
+    exp_title: "Today's trip", exp_place: "Place", exp_done: "done",
+    exp_explored: (n) => `explored ${n}`, exp_explored_long: (n) => `You have explored ${n} ${n === 1 ? 'area' : 'areas'} (≈200 m). Only stored on this phone.`,
+    exp_how: (a, b, c) => `Visit today's 3 places and play there: +${a} 🌱 each, +${b} 🌱 for all three. Rare place +${c} 🌱. Tap a place to show the way.`,
+    exp_rare: "Rare place (today only)",
+    exp_place_done: (n) => `⭐ Trip place done! +${n} 🌱`, exp_all_done: (n) => `🏆 Today's trip complete! +${n} 🌱`, exp_rare_done: (n) => `✦ Rare place! +${n} 🌱`,
     league_name: { bronze: "Bronze league", silver: "Silver league", gold: "Gold league", diamond: "Diamond league" },
     league_pts: "pts", league_none: "play a battle to join", league_empty: "Nobody here yet this week – be first!",
     league_how: (d) => `Win 3 pts, loss 1 pt, knock-out +1. The best move up on Monday${d ? ` (in ${d} ${d === 1 ? 'day' : 'days'})` : ''}.`,
@@ -1552,6 +1558,12 @@ export const T = {
     ss_terms_lbl:       "Podmínky použití",
     ss_data_info:       "Tvá data jsou uložena pouze v tomto zařízení. Klepnutím níže je trvale smažeš (právo na výmaz dle GDPR).",
     // Souboje 1.1 — aréna
+    poi_kind: {"arts_centre": "Kulturní centrum", "artwork": "Umělecké dílo", "attraction": "Zajímavost", "bar": "Bar", "bench": "Lavička", "board": "Informační tabule", "boundary_stone": "Hraniční kámen", "cafe": "Kavárna", "castle": "Hrad", "cinema": "Kino", "clock": "Hodiny", "fountain": "Kašna", "gallery": "Galerie", "geolocation": "Bod", "hospital": "Nemocnice", "information": "Informace", "library": "Knihovna", "map": "Mapa", "memorial": "Památník", "monument": "Pomník", "museum": "Muzeum", "music_venue": "Hudební klub", "nature_reserve": "Přírodní rezervace", "park": "Park", "peak": "Vrchol", "place_of_worship": "Kostel", "planetarium": "Planetárium", "playground": "Hřiště", "poi": "Zajímavé místo", "post_office": "Pošta", "pub": "Hospoda", "ruins": "Zřícenina", "school": "Škola", "social_centre": "Komunitní centrum", "sports_centre": "Sportoviště", "spring": "Pramen", "telephone": "Telefonní budka", "theatre": "Divadlo", "tower": "Věž", "tree": "Strom", "university": "Univerzita", "viewpoint": "Vyhlídka", "water": "Vodní plocha", "wayside_cross": "Křížek", "wood": "Les", "garden": "Zahrada"},
+    exp_title: "Výprava dne", exp_place: "Místo", exp_done: "splněno",
+    exp_explored: (n) => `prozkoumáno ${n}`, exp_explored_long: (n) => `Prozkoumal(a) jsi ${n} ${n === 1 ? 'kousek' : n < 5 ? 'kousky' : 'kousků'} okolí (≈200 m). Ukládá se jen v tomhle telefonu.`,
+    exp_how: (a, b, c) => `Dojdi na 3 dnešní místa a zahraj si tam: +${a} 🌱 za každé, +${b} 🌱 za všechna tři. Vzácné místo +${c} 🌱. Klepni na místo a ukáže se cesta.`,
+    exp_rare: "Vzácné místo (jen dnes)",
+    exp_place_done: (n) => `⭐ Místo výpravy splněno! +${n} 🌱`, exp_all_done: (n) => `🏆 Výprava dne dokončena! +${n} 🌱`, exp_rare_done: (n) => `✦ Vzácné místo! +${n} 🌱`,
     league_name: { bronze: "Bronzová liga", silver: "Stříbrná liga", gold: "Zlatá liga", diamond: "Diamantová liga" },
     league_pts: "b.", league_none: "zahraj souboj a jsi v lize", league_empty: "Tento týden tu ještě nikdo není – buď první!",
     league_how: (d) => `Výhra 3 body, prohra 1 bod, vyřazení soupeře +1. Nejlepší v pondělí postupují${d ? ` (za ${d} ${d === 1 ? 'den' : d < 5 ? 'dny' : 'dní'})` : ''}.`,

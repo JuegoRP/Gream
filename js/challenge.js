@@ -6,6 +6,7 @@
 // ═══════════════════════════════════
 
 import { factCard } from './facts.js';
+import { Expedition } from './expedition.js';
 import { tr } from './i18n.js';
 import { Profiles } from './profiles.js';
 import { Badges } from './badges.js';
@@ -765,6 +766,15 @@ export const Challenge = {
         Skins.addSeeds(p.id, 5);   // ← actually credit it (was only a toast before)
         const lang = localStorage.getItem('gream_lang') || 'en';
         setTimeout(() => this._showToast(lang === 'cs' ? `🌟 +5 semínek za správné místo!` : `🌟 +5 bonus seeds for the right spot!`), 600);
+      }
+      // Výprava dne / vzácné místo
+      if (result.stepsComplete) {
+        const ex = Expedition.complete(p.id, this._targetPOI.id);
+        if (ex.seeds) {
+          Skins.addSeeds(p.id, ex.seeds);
+          const tt = tr();
+          setTimeout(() => this._showToast(ex.all ? tt.exp_all_done(ex.seeds) : ex.rare ? tt.exp_rare_done(ex.seeds) : tt.exp_place_done(ex.seeds)), 1400);
+        }
       }
       // Celebrate on map (glow animation)
       if (window.MapView && result.stepsComplete) {
