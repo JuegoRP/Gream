@@ -46,6 +46,9 @@ Battle.intro();
 const ov = document.getElementById('battleOverlay');
 ok(!!ov, 'intro overlay exists');
 ok(document.getElementById('battleDiffRow')?.querySelectorAll('button').length === 4, 'intro has 4 difficulty buttons');
+ok(document.getElementById('battlePackRow')?.querySelectorAll('button').length === 7, 'intro has 7 topic buttons (Vše + 6 balíčků)');
+{ const { packPool, PACKS } = await import(new URL('battle.js', base));
+  for (const k of PACKS) { const n = packPool(k, 'hard').length; ok(n >= 10, `balíček ${k} má aspoň 10 otázek do souboje (${n})`); } }
 const startBtn = document.getElementById('battleStartBtn');
 ok(!!startBtn, 'intro has start button');
 ok(!startBtn.disabled, 'start button enabled (has seeds + premium)');

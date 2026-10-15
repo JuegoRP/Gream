@@ -75,9 +75,26 @@ function seededRng(seedStr) {
 
 // Pick ROUNDS questions from random worlds at the given difficulty. `rng` optional
 // (deterministic for daily round).
-function pickQuestions(difficulty, rng) {
+// Tematický balíček (pole `pack` u otázky): všechny světy, nejdřív zvolená obtížnost, pak sousední
+export const PACKS = ['film_hudba', 'sport', 'historie', 'cesko', 'veda', 'jidlo'];
+const DIFF_NEAR = { easy: ['easy', 'medium', 'hard', 'extreme'], medium: ['medium', 'hard', 'easy', 'extreme'], hard: ['hard', 'medium', 'extreme', 'easy'], extreme: ['extreme', 'hard', 'medium', 'easy'] };
+export function packPool(pack, difficulty) {
+  const t = tr(), out = [];
+  for (const d of DIFF_NEAR[difficulty] || DIFF_NEAR.medium)
+    for (const [world, byD] of Object.entries(t.challenges || {}))
+      for (const c of byD?.[d] || []) if (c.pack === pack && battleUsable(c)) out.push({ world, ch: c, d });
+  return out;
+}
+
+function pickQuestions(difficulty, rng, pack) {
   const t = tr();
   const rand = rng || Math.random;
+  if (pack) {
+    const pool = packPool(pack, difficulty);
+    const exact = pool.filter(x => x.d === difficulty).sort(() => rand() - 0.5);
+    const rest = pool.filter(x => x.d !== difficulty);   // už seřazené podle blízkosti obtížnosti
+    return [...exact, ...rest].slice(0, ROUNDS).map(({ world, ch }) => ({ world, ch }));
+  }
   const out = [];
   const worldBag = [...WORLDS, ...WORLDS.slice(0, ROUNDS - WORLDS.length)].slice(0, ROUNDS);
   worldBag.sort(() => rand() - 0.5);
@@ -141,6 +158,8 @@ export const Battle = {
         ${hatched.length ? '' : `<div style="font-size:11px;color:#999;margin-bottom:6px">${tr().battle_loan_note}</div>`}
         <div class="bt-pick" id="battlePick"></div>
         <div class="bt-skill" id="battleSkill"></div>
+        <div style="font-size:12px;font-weight:800;color:#888;margin-bottom:6px">${tr().pack_title}</div>
+        <div id="battlePackRow" class="bt-packs"></div>
         <div style="font-size:12px;font-weight:800;color:#888;margin-bottom:6px">${cs?'Obtížnost':'Difficulty'}</div>
         <div id="battleDiffRow" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px"></div>
 
@@ -156,6 +175,23 @@ export const Battle = {
     document.body.appendChild(ov);
 
     let sel = ['medium'];
+    // Téma (balíček) – pamatuje se pro profil
+    const packKey = 'gream_battle_pack_' + p.id;
+    let pack = ''; try { pack = localStorage.getItem(packKey) || ''; } catch {}
+    if (pack && !PACKS.includes(pack)) pack = '';
+    const packRow = ov.querySelector('#battlePackRow');
+    const paintPacks = () => {
+      packRow.innerHTML = '';
+      ['', ...PACKS].forEach(k => {
+        const b = document.createElement('button');
+        b.className = 'bt-pack' + (k === pack ? ' on' : '');
+        b.textContent = tr().pack_names[k || 'all'];
+        b.onclick = () => { pack = k; try { localStorage.setItem(packKey, k); } catch {} paintPacks(); };
+        packRow.appendChild(b);
+      });
+    };
+    paintPacks();
+    this._packSel = () => pack;
     const row = ov.querySelector('#battleDiffRow');
     const econ = ov.querySelector('#battleEconInfo');
     const daily = ov.querySelector('#battleDailyInfo');
@@ -243,7 +279,8 @@ export const Battle = {
     }
     this._daily = false;
     this._diff = diff; this._outdoor = outdoor; this._entry = entry; this._reward = reward;
-    this._q = pickQuestions(diff);
+    this._pack = this._packSel?.() || '';
+    this._q = pickQuestions(diff, null, this._pack);
     document.getElementById('battleOverlay')?.remove();
     // Hned lokální soupeř (hra nikdy nečeká na síť); skutečný nahraný hráč ze serveru ho nahradí, pokud dorazí do 1,5 s
     this._rival = this._localRival(diff);
@@ -276,7 +313,7 @@ export const Battle = {
       return;
     }
     localStorage.setItem(key, date);
-    this._daily = true; this._diff = 'medium'; this._outdoor = false; this._reward = 0;
+    this._daily = true; this._diff = 'medium'; this._outdoor = false; this._reward = 0; this._pack = '';
     const rng = seededRng('gream-daily-' + date);
     this._q = pickQuestions('medium', rng);
     // Denní strážce: pro všechny stejný (stejný greamík i odpovědi)
@@ -347,7 +384,8 @@ export const Battle = {
       const f2 = fighterOf(p2?.id);
       this._family = { names: [p.name || t.battle_you, name2], pids: [p.id, p2?.id || null], acc: [Skins.getAccessory(p.id), p2 ? Skins.getAccessory(p2.id) : null] };
       this._daily = false; this._diff = diff === 'extreme' && !Subscription.get(p.id).isPremium ? 'hard' : diff; this._outdoor = false; this._reward = 0; this._entry = 0;
-      this._q = pickQuestions(this._diff);
+      this._pack = this._packSel?.() || '';
+      this._q = pickQuestions(this._diff, null, this._pack);
       this._rival = { ...f2, name: name2, acc: this._family.acc[1], bot: false, family: true };
       ov.remove();
       this._run(pick1 || fighterOf(p.id));
@@ -507,7 +545,9 @@ export const Battle = {
         const pauseStart = Date.now();
         const ev = useSpecial(me, foe);
         Audio.playCry?.(me.arch, side === 0 ? this._me.stage : this._rival.stage);
-        if (me.ownWorldNext && world !== ARCH_WORLD[me.arch]) {   // Kompas: otázka z mého světa
+        if (me.ownWorldNext && world !== ARCH_WORLD[me.arch] && this._pack) {   // Kompas v balíčku: otázka zůstává (téma), bonus „svůj svět“ platí
+          world = ARCH_WORLD[me.arch];
+        } else if (me.ownWorldNext && world !== ARCH_WORLD[me.arch]) {   // Kompas: otázka z mého světa
           const alt = pickQuestions(this._daily ? 'medium' : this._diff).find(x => x.world === ARCH_WORLD[me.arch]);
           const pool = (tr().challenges?.[ARCH_WORLD[me.arch]]?.[this._daily ? 'medium' : this._diff] || []).filter(battleUsable);
           const c = alt?.ch || pool[Math.floor(Math.random() * pool.length)];
