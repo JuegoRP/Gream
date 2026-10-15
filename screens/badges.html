@@ -1,8 +1,8 @@
-<div class="bc-header max-w">
-  <button class="btn-back" onclick="App.back()">‹</button>
-  <div style="font-size:20px;font-weight:900;color:var(--green-dark);flex:1" id="bc-title"></div>
-  <button class="btn-ghost" onclick="App.goTo('stats')">📊</button>
-</div>
+<header class="scr-header">
+  <div class="scr-left"><button class="btn-back" onclick="App.back()" data-icon="back"></button></div>
+  <h1 class="scr-title" id="bc-title"></h1>
+  <div class="scr-right"><button class="icon-btn" id="bcStatsBtn" onclick="App.goTo('stats')" data-icon="chart"></button></div>
+</header>
 
 <!-- Streak badges -->
 <div class="streak-section card-sm" style="margin-bottom:14px">

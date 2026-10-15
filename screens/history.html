@@ -1,15 +1,15 @@
-<div class="map-bar">
-  <button class="btn-back" onclick="App.goTo('home')">←</button>
-  <div style="flex:1;text-align:center">
-    <div style="font-size:18px;font-weight:900;color:var(--green-deep)" id="histTitle">📜</div>
-  </div>
-  <div style="width:46px"></div>
-</div>
+<header class="scr-header">
+  <div class="scr-left"><button class="btn-back" onclick="App.back()" data-icon="back"></button></div>
+  <h1 class="scr-title" id="histTitle"></h1>
+  <div class="scr-right"></div>
+</header>
 
 <div id="histList" style="display:flex;flex-direction:column;gap:8px;margin-top:12px;max-width:480px;margin:12px auto 0">
 </div>
 
-<div id="histEmpty" style="display:none;text-align:center;color:var(--green-mid);font-weight:700;padding:48px 24px">
-  <div style="font-size:48px;margin-bottom:12px">🌱</div>
-  <div id="histEmptyMsg"></div>
+<div id="histEmpty" class="empty-state" style="display:none">
+  <img src="img/greamici/seed_1.png" alt="">
+  <div class="es-title" id="histEmptyTitle"></div>
+  <div class="es-text" id="histEmptyMsg"></div>
+  <button class="btn-primary" id="histEmptyCta" onclick="App.startIndoor()"></button>
 </div>

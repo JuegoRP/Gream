@@ -1360,3 +1360,27 @@ body.bg-starry { background:linear-gradient(180deg,#0d1b3d,#2c3e7a 50%,#4a5fa3);
 .empty-state.compact img { width:64px; height:64px; }
 @keyframes emptyFloat { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-6px); } }
 @media (prefers-reduced-motion: reduce) { .empty-state img { animation:none; } }
+
+/* Přepínač (segmenty) – žebříček Zařízení / Svět apod. */
+.seg {
+  width:100%; max-width:420px; margin:0 auto var(--space-3);
+  display:flex; gap:var(--space-1); padding:var(--space-1);
+  background:var(--surface); border-radius:var(--radius-full); box-shadow:var(--elev-1);
+}
+.seg-btn {
+  flex:1; min-height:40px; border-radius:var(--radius-full);
+  font-size:var(--text-sm); font-weight:800; color:var(--ink-soft);
+  transition:background var(--t-fast), color var(--t-fast);
+}
+.seg-btn.active { background:var(--green-mid); color:#fff; }
+
+/* Zahrada: scéna vyplní volnou výšku (žádné prázdné místo pod tlačítky), hlavní akce výrazná */
+#screen-map .gream-stage, #screen-home .gream-stage {
+  flex:1 1 auto; height:auto; min-height:260px; max-height:560px; max-width:480px;
+}
+.home-actions {
+  width:100%; max-width:480px; flex-shrink:0;
+  padding:var(--space-2) 0 0; display:flex; flex-direction:column; gap:var(--space-2);
+}
+.home-actions .home-choice-indoor { min-height:56px; padding:var(--space-3) var(--space-5); font-size:var(--text-lg); }
+.home-actions .btn-ghost { min-height:48px; }

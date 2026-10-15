@@ -22,6 +22,7 @@ import { Gream, ARCHETYPES, spritePath, smartSpritePath } from './gream.js';
 import { Subscription, FREE_DAILY_INDOOR, PREMIUM_DAILY_INDOOR, INDOOR_MAX_TOTAL, FREE_DAILY_OUTDOOR, SEED_COST_EXTRA_TASK } from './subscription.js';
 import { Ranking } from './ranking.js';
 import { Audio } from './audio.js';
+import { fillIcons } from './icons.js';
 
 // ─── Global error boundary ───
 // Catches uncaught errors and shows a friendly recovery UI instead of white screen
@@ -376,16 +377,19 @@ window.App = {
       Audio.switchScene('menu');
       Router.show('hub');
     }
-    // Update tab labels with current lang
-    const labels = {
-      garden: lang === 'cs' ? 'Zahrada' : 'Garden',
-      map:    lang === 'cs' ? 'Svět'    : 'World',
-      hub:    lang === 'cs' ? 'Já'      : 'Me',
-    };
-    for (const [k, v] of Object.entries(labels)) {
-      const el = document.getElementById('tabLbl' + k.charAt(0).toUpperCase() + k.slice(1));
-      if (el) el.textContent = v;
-    }
+    this._decorate();
+  },
+
+  // ─── Sdílené prvky: ikony, popisky lišty a přístupnost tlačítek (po každé obrazovce i změně jazyka) ───
+  _decorate() {
+    const t = tr();
+    fillIcons(document);
+    this._setText('tabLblGarden', t.tab_garden);
+    this._setText('tabLblMap',    t.tab_map);
+    this._setText('tabLblHub',    t.tab_hub);
+    document.querySelectorAll('.btn-back').forEach(b => b.setAttribute('aria-label', t.nav_back));
+    const aria = { bcStatsBtn: t.open_stats, mapLocateBtn: t.map_locate, mapWorldsBtn: t.map_worlds };
+    for (const [id, lbl] of Object.entries(aria)) document.getElementById(id)?.setAttribute('aria-label', lbl);
   },
 
   // ─── Hub screen ───
@@ -1395,8 +1399,10 @@ window.App = {
     const lang = getLang();
     const p = Profiles.active();
     if (!p) return;
-    this._setText('histTitle', '📜 ' + t.history_title);
+    this._setText('histTitle', t.history_title);
+    this._setText('histEmptyTitle', t.history_empty_title);
     this._setText('histEmptyMsg', t.history_empty);
+    this._setText('histEmptyCta', t.history_empty_cta);
 
     const items = Profiles.getHistory(p.id, 50);
     const list  = document.getElementById('histList');
@@ -1406,7 +1412,7 @@ window.App = {
     list.innerHTML = '';
 
     if (items.length === 0) {
-      if (empty) empty.style.display = 'block';
+      if (empty) empty.style.display = 'flex';
       return;
     }
     if (empty) empty.style.display = 'none';
@@ -2556,6 +2562,10 @@ window.App = {
     if (!p) return;
     const lang = getLang();
     const cs   = lang === 'cs';
+    const t    = tr();
+    this._setText('rankTitle', t.rank_title);
+    this._setText('rankTabLocal', t.rank_tab_local);
+    this._setText('rankTabGlobal', t.rank_tab_global);
 
     // Update own ranking entry
     const pet    = Gream.active(p.id);
@@ -2582,7 +2592,7 @@ window.App = {
           <div style="flex:1">
             <div style="font-size:11px;font-weight:700;opacity:0.7;margin-bottom:2px">${cs?'Tvůj profil':'Your profile'}</div>
             <div style="font-size:18px;font-weight:900">${own.name}</div>
-            <div style="font-size:12px;opacity:0.85">${title} · ${own.score.toLocaleString()} ${cs?'bodů':'pts'}</div>
+            <div style="font-size:12px;opacity:0.85">${title} · ${own.score.toLocaleString()} ${tr().points_unit}</div>
           </div>
           <div style="text-align:right">
             <div style="font-size:11px;opacity:0.7">${cs?'Úkoly':'Tasks'}</div>
@@ -2634,13 +2644,13 @@ window.App = {
           <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap">
             <span style="font-size:11px;color:var(--green-mid);font-weight:700">✅ ${entry.tasks} ${cs?'úkolů':'tasks'}</span>
             <span style="font-size:11px;color:#f5a623;font-weight:700">🔥 ${entry.streak}</span>
-            <span style="font-size:11px;color:#7a4abc;font-weight:700">🏅 ${entry.badges} ${cs?'odznaků':'badges'}</span>
+            <span style="font-size:11px;color:#7a4abc;font-weight:700">🏅 ${tr().badges_n(entry.badges)}</span>
             <span style="font-size:11px;color:#2d7abf;font-weight:700">🥚 ${cs?['','Vajíčko','Mládě','Dospívající','Dospělý'][entry.greamStage]||'?':['','Egg','Baby','Teen','Adult'][entry.greamStage]||'?'}</span>
           </div>
         </div>
         <div style="text-align:right;flex-shrink:0">
           <div style="font-size:16px;font-weight:900;color:var(--green-deep)">${entry.score.toLocaleString()}</div>
-          <div style="font-size:10px;color:#aaa">${cs?'bodů':'pts'}</div>
+          <div style="font-size:10px;color:#aaa">${tr().points_unit}</div>
         </div>`;
       list.appendChild(card);
     });
@@ -2683,7 +2693,7 @@ window.App = {
         </div>
         <div style="text-align:right;flex-shrink:0">
           <div style="font-size:16px;font-weight:900;color:var(--green-deep)">${(entry.score||0).toLocaleString()}</div>
-          <div style="font-size:10px;color:#aaa">${cs?'bodů':'pts'}</div>
+          <div style="font-size:10px;color:#aaa">${tr().points_unit}</div>
         </div>`;
       list.appendChild(card);
     });
@@ -2701,7 +2711,7 @@ window.App = {
     if (row) {
       row.innerHTML = '';
       (t.streakBadges || []).forEach(sb => {
-        const earned = (p.streak || 0) >= sb.days;
+        const earned = Badges.streakEarned(p, sb);
         const el = document.createElement('div');
         el.className = 'sbi' + (earned ? ' earned' : '');
         el.innerHTML = `<div class="sbi-ring">${earned ? sb.e : '🔒'}</div><div class="sbi-lbl">${sb.desc}</div>`;
@@ -3001,7 +3011,12 @@ window.App = {
         <div class="stat-card"><div class="stat-num">${winRate}%</div><div class="stat-label">${cs ? 'Úspěšnost' : 'Win rate'}</div></div>
         <div class="stat-card"><div class="stat-num">${s.bestStreak || 0} 🔥</div><div class="stat-label">${cs ? 'Nejdelší série' : 'Best streak'}</div></div>
       </div>` : `
-      <div style="font-size:13px;color:#888;font-weight:600;margin-bottom:12px;line-height:1.4">${cs ? '⚔️ Zatím žádné souboje — vyzkoušej je a získej odznaky!' : '⚔️ No battles yet — try one and earn badges!'}</div>`}
+      <div class="empty-state compact" style="margin-bottom:12px">
+        <img src="img/greamici/jiskra_1.png" alt="">
+        <div class="es-title">${tr().battles_empty_title}</div>
+        <div class="es-text">${tr().battles_empty_text}</div>
+        <button class="btn-primary" onclick="App.openBattleIntro()">${tr().battles_empty_cta}</button>
+      </div>`}
       <div style="font-size:11px;font-weight:800;color:#999;margin-bottom:7px;text-transform:uppercase;letter-spacing:.5px">${cs ? 'Odznaky' : 'Badges'} ${earnedCount}/4</div>
       <div style="display:flex;flex-wrap:wrap;gap:6px">${badgeChips}</div>
       <button onclick="App.showBattleLeaderboard()" style="width:100%;margin-top:14px;padding:11px;border:none;border-radius:12px;background:#f0f0f0;color:#555;font-family:inherit;font-weight:800;font-size:14px;cursor:pointer">🏆 ${cs ? 'Žebříček soubojů' : 'Battle leaderboard'}</button>`;
@@ -3023,7 +3038,7 @@ window.App = {
     this._currentPoi      = null;
     this._currentPoiWorld = null;
 
-    this._setText('mapViewTitle', lang === 'cs' ? 'Mapa' : 'Map');
+    this._setText('mapViewTitle', t.map_title);
     this._setText('mapViewSub',   lang === 'cs' ? 'Hledám zajímavá místa…' : 'Finding places nearby…');
     this._setText('mapLoadingMsg', lang === 'cs' ? 'Hledám zajímavá místa…' : 'Finding places nearby…');
 
@@ -3342,10 +3357,10 @@ window.App = {
     const t    = tr();
     const lang = getLang();
 
-    this._setText('wardTitle',      lang === 'cs' ? '🥚 Moji Greamíci' : '🥚 My Greams');
+    this._setText('wardTitle',      tr().ward_title);
     this._setText('wardSeeds',      Skins.getSeeds(p.id));
     // Tab emoji labels are static in HTML — only title needs updating
-    this._setText('wardTitle', lang === 'cs' ? '🥚 Greamíci' : '🥚 My Greams');
+    this._setText('wardTitle', tr().ward_title);
 
     const safeTab = ['greams','boosts','avatars','frames','bg'].includes(this._wardTab) ? this._wardTab : 'greams';
     this.wardSwitchTab(safeTab);
@@ -4173,6 +4188,7 @@ window.App = {
 
 // ─── Screen lifecycle events ───
 document.addEventListener('screen:ready', ({ detail: { screenId } }) => {
+  App._decorate();
   switch (screenId) {
     case 'onboarding':
       App.renderOnboarding();

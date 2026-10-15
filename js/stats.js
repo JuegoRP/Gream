@@ -6,6 +6,9 @@
 
 import { Profiles } from './profiles.js';
 import { tr } from './i18n.js';
+import { Ranking } from './ranking.js';
+import { Gream } from './gream.js';
+import { fillIcons } from './icons.js';
 
 export const Stats = {
 
@@ -15,13 +18,17 @@ export const Stats = {
     if (!p) return;
     const t = tr();
     const stats = Profiles.getStats(p.id);
-    const lb    = Profiles.getLeaderboard();
+    // Body = stejný výpočet jako v Žebříčku (Ranking.summary) pro všechny profily v zařízení
+    const lb = Profiles.all()
+      .map(x => ({ id: x.id, name: x.name, avatar: x.avatar, score: Ranking.summary(x, Gream.active(x.id)).score }))
+      .sort((a, b) => b.score - a.score);
 
     container.innerHTML = `
-      <div class="bc-header max-w">
-        <button class="btn-back" onclick="App.goTo('map')">‹</button>
-        <div style="font-size:20px;font-weight:900;color:var(--green-dark);flex:1">${t.stats_title}</div>
-      </div>
+      <header class="scr-header">
+        <div class="scr-left"><button class="btn-back" onclick="App.back()" data-icon="back" aria-label="${t.nav_back}"></button></div>
+        <h1 class="scr-title">${t.stats_title}</h1>
+        <div class="scr-right"></div>
+      </header>
 
       <div class="stats-grid max-w" style="margin-bottom:14px">
         <div class="stat-card">
@@ -29,7 +36,7 @@ export const Stats = {
           <div class="stat-label">${t.stats_total}</div>
         </div>
         <div class="stat-card">
-          <div class="stat-num">${stats.currentStreak} 🔥</div>
+          <div class="stat-num">${stats.bestStreak} 🔥</div>
           <div class="stat-label">${t.stats_streak}</div>
         </div>
         <div class="stat-card">
@@ -64,11 +71,12 @@ export const Stats = {
           <div class="lb-rank ${rankClass}">${rankIcon}</div>
           <div class="lb-av">${entry.avatar || '🧒'}</div>
           <div class="lb-name">${entry.name}${isSelf ? ' ★' : ''}</div>
-          <div class="lb-score">${entry.score} pts</div>
+          <div class="lb-score">${entry.score.toLocaleString()} ${t.points_unit}</div>
         `;
         lbList.appendChild(row);
       });
     }
+    fillIcons(container);
   },
 
   // ─── FUTURE: sync to backend ───

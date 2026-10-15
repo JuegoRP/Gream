@@ -8,6 +8,7 @@
 
 import { Geo, WORLD_COLORS, WORLD_EMOJIS, isBattleSpot } from './geo.js';
 import { Net } from './net.js';
+import { tr } from './i18n.js';
 
 const TILES_URL = 'https://3rstudio.eu/api/gream/tiles/{z}/{x}/{y}.pbf';
 const ATTRIBUTION = '© <a href="https://openfreemap.org" target="_blank">OpenFreeMap</a> © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>';
@@ -174,8 +175,8 @@ function _renderNavOverlay() {
     ov.id = 'navOverlay';
     ov.className = 'gm-nav';
     ov.innerHTML = `<div id="navArrow" class="gm-nav-arrow">⬆️</div>
-      <div style="line-height:1.25;min-width:0"><div id="navLabel" class="gm-nav-label"></div><div id="navDist" class="gm-nav-dist"></div><div id="navHint" class="gm-nav-hint">Klepni na šipku pro kompas</div></div>
-      <button id="navClose" class="gm-nav-close" aria-label="Zavřít">✕</button>`;
+      <div style="line-height:1.25;min-width:0"><div id="navLabel" class="gm-nav-label"></div><div id="navDist" class="gm-nav-dist"></div><div id="navHint" class="gm-nav-hint">${tr().map_compass_hint}</div></div>
+      <button id="navClose" class="gm-nav-close" aria-label="${tr().nav_close}">✕</button>`;
     MapView._container.appendChild(ov);
     ov.querySelector('#navClose').onclick = () => MapView.clearDestination();
     ov.querySelector('#navArrow').onclick = () => MapView.enableHeading();
