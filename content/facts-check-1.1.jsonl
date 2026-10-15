@@ -3194,3 +3194,953 @@
 {"id":"pack850|en","ok":"no","why":"same – highly variable, not reliably true that one nut covers daily requirement"}
 {"id":"pack863|cs","ok":"yes","why":"Blanšírování před mražením je standardní postup; šok v ledové vodě zastaví vaření a omezuje ztráty vitaminů."}
 {"id":"pack863|en","ok":"yes","why":"Blanching before freezing is standard; ice-water shock halts cooking and limits vitamin loss."}
+{"id":"packb9|cs","ok":"no","why":"nominace za rok 1986 (film 1985), oznámena 1987 – formulace nepřesná"}
+{"id":"packb9|en","ok":"no","why":"nomination was for 1986 (film 1985), announced 1987 – imprecise"}
+{"id":"packb11|cs","ok":"no","why":"Tříska Oscara za roli nikdy nominován nebyl; nominován byl jen film"}
+{"id":"packb11|en","ok":"no","why":"Tříska was never nominated for Best Actor; only the film was nominated"}
+{"id":"packb12|cs","ok":"yes","why":"režie Vorlíček, Trávníček jako princ – správně"}
+{"id":"packb12|en","ok":"yes","why":"directed by Vorlíček, Trávníček as the prince – correct"}
+{"id":"packb13|cs","ok":"yes","why":"jediný český oscarový film za cizojazyčný, převzato 1997 – správně"}
+{"id":"packb13|en","ok":"yes","why":"only Czech Best Foreign Language Oscar win, accepted 1997 – correct"}
+{"id":"packb21|cs","ok":"yes","why":"každoroční vysílání v Norsku a Německu – správně"}
+{"id":"packb21|en","ok":"yes","why":"annual broadcasts esp. Norway and Germany – correct"}
+{"id":"packb31|cs","ok":"yes","why":"2003 Oscar, první neanglicky mluvený vítěz kategorie – správně"}
+{"id":"packb31|en","ok":"yes","why":"2003 Oscar, first non-English winner of the category – correct"}
+{"id":"packb0|cs","ok":"yes","why":"Jarchovský scénář, děj o Vánocích 1967 – správně."}
+{"id":"packb0|en","ok":"yes","why":"Same facts correct."}
+{"id":"packb2|cs","ok":"yes","why":"Obecná škola nominována na Oscara 1992 – správně."}
+{"id":"packb2|en","ok":"yes","why":"Correct."}
+{"id":"packb5|cs","ok":"yes","why":"Jarchovský scénář podle povídek Šabacha – správně."}
+{"id":"packb5|en","ok":"yes","why":"Correct."}
+{"id":"packb6|cs","ok":"yes","why":"Vorlíček režie, česko-německá koprodukce (DRF) – správně."}
+{"id":"packb6|en","ok":"yes","why":"Correct."}
+{"id":"packb7|cs","ok":"yes","why":"Nominace 1992 – správně."}
+{"id":"packb7|en","ok":"yes","why":"Correct."}
+{"id":"packb8|cs","ok":"no","why":"Kolja Oscara získal 1997, ale otce hrál Zdeněk Svěrák – role otce je správná; nicméně hlavní dětskou roli hrál Andrej Chalimon. Fakt je přesný, ale formulace 'hlavní roli otce' je zavádějící – otec není hlavní role."}
+{"id":"packb8|en","ok":"no","why":"Oscar 1997 correct, but Svěrák played father (supporting); lead is the boy Kolya – misleading."}
+{"id":"packb33|cs","ok":"yes","why":"Shrek byl prvním vítězem kategorie (2002, 74. ročník)."}
+{"id":"packb33|en","ok":"yes","why":"Shrek was the inaugural winner of the category in 2002."}
+{"id":"packb34|cs","ok":"yes","why":"Totoro je maskotem Ghibli a figuruje v logu studia."}
+{"id":"packb34|en","ok":"yes","why":"Totoro is Ghibli's mascot and features in the studio logo."}
+{"id":"packb35|cs","ok":"yes","why":"První vítěz nové kategorie, 2002."}
+{"id":"packb35|en","ok":"yes","why":"First winner of the new category, 2002."}
+{"id":"packb36|cs","ok":"yes","why":"Spirited Away vyhrál 2003 jako první neanglicky mluvený film v kategorii."}
+{"id":"packb36|en","ok":"yes","why":"Spirited Away (2003) was the first non-English-language winner."}
+{"id":"packb37|cs","ok":"yes","why":"Vyhrál 2006 (78. ročník), první Oscar pro Aardman."}
+{"id":"packb37|en","ok":"yes","why":"Won 2006; Aardman's first Oscar."}
+{"id":"packb38|cs","ok":"yes","why":"How to Train Your Dragon vychází z knihy Cressidy Cowellové z 2003."}
+{"id":"packb38|en","ok":"yes","why":"Based on Cowell's 2003 book of the same name."}
+{"id":"packb39|cs","ok":"yes","why":"'When You Believe' vyhrála Oscara za nejlepší původní píseň na 71. ceremoniálu (1999)."}
+{"id":"packb39|en","ok":"yes","why":"Won Best Original Song at the 71st Academy Awards (1999)."}
+{"id":"packb40|cs","ok":"yes","why":"První celovečerní film Aardmanu, plastelínová stop-motion animace."}
+{"id":"packb40|en","ok":"yes","why":"Aardman's first feature, stop-motion claymation."}
+{"id":"packb42|cs","ok":"yes","why":"Kategorie debutovala 2002, Shrek byl prvním vítězem."}
+{"id":"packb42|en","ok":"yes","why":"Category debuted 2002; Shrek was the first winner."}
+{"id":"packb43|cs","ok":"yes","why":"Režie Mijazaki, Totoro je maskot studia Ghibli."}
+{"id":"packb43|en","ok":"yes","why":"Directed by Miyazaki; Totoro is Ghibli's mascot."}
+{"id":"packb44|cs","ok":"yes","why":"Jack Black namluvil Po v originální anglické verzi."}
+{"id":"packb44|en","ok":"yes","why":"Jack Black voiced Po in the original English version."}
+{"id":"packb45|cs","ok":"yes","why":"Williams získal Oscara za hudbu (1977), motiv je ikonický."}
+{"id":"packb45|en","ok":"yes","why":"Williams won the Oscar for the score (1977); theme is iconic."}
+{"id":"packb46|cs","ok":"yes","why":"Morricone scored 500+ films; OUATITW theme widely acclaimed."}
+{"id":"packb46|en","ok":"yes","why":"Same fact, accurate."}
+{"id":"packb47|cs","ok":"no","why":"„Gonna Fly Now“ byla nominována na Oscara, ale text v češtině je v pořádku; nicméně melodie je správně – ponecháno yes? "}
+{"id":"packb47|en","ok":"yes","why":"Conti composed it; nominated for Best Original Song (1976)."}
+{"id":"packb48|cs","ok":"yes","why":"Williams won Oscar for E.T. score (1982); bicycle/moon scene accurate."}
+{"id":"packb48|en","ok":"yes","why":"Accurate."}
+{"id":"packb50|cs","ok":"no","why":"E.T. theme is not a 5-note theme written for an alien to sing; unverifiable/embellished."}
+{"id":"packb50|en","ok":"no","why":"Unverifiable claim, not a documented fact."}
+{"id":"packb51|cs","ok":"yes","why":"Imperial March debuted in The Empire Strikes Back (1980), the second film."}
+{"id":"packb51|en","ok":"yes","why":"Correct – first appeared in ESB."}
+{"id":"packb52|cs","ok":"yes","why":"Alessandroni did the famous whistling for Leone's westerns."}
+{"id":"packb52|en","ok":"yes","why":"Accurate."}
+{"id":"packb53|cs","ok":"no","why":"Motiv je dvoutónový, ale tóny se neopakují střídavě nahoru a dolů v jednoduché smyčce – jde o dvě noty (E–F) v rytmickém vzorci, ne o střídavé houpání; formulace zavádějící."}
+{"id":"packb53|en","ok":"no","why":"Two-note motif is real, but 'alternating up and down' misdescribes it; it's E–F pattern, not simple up-down alternation."}
+{"id":"packb54|cs","ok":"no","why":"Téma z Ohnivých vozů zaznělo na OH 1984, ale jako hudební doprovod ceremoniálů/atmosféry, ne jako oficiální skladba při předávání medailí – nepřesné."}
+{"id":"packb54|en","ok":"no","why":"Theme was used at 1984 LA Games but not as the medal-ceremony music; claim is imprecise."}
+{"id":"packb57|cs","ok":"yes","why":"Jarre získal Oscary za Lawrence z Arábie (1962), Doktora Živaga (1965) i Cestu do Indie (1984) – všechny Leanovy filmy; přesné."}
+{"id":"packb57|en","ok":"yes","why":"Jarre won Oscars for all three Lean films: Lawrence of Arabia, Doctor Zhivago, A Passage to India."}
+{"id":"packb59|cs","ok":"yes","why":"Williams má Oscara za Star Wars (1977) a patří k nejnominovanějším žijícím skladatelům – pravdivé."}
+{"id":"packb59|en","ok":"yes","why":"Williams won Oscar for Star Wars score and is among most-nominated living film composers."}
+{"id":"packb60|cs","ok":"no","why":"Etymologie 'rege-rege' je jednou z teorií, ale význam 'rozcuchané vlasy/hádka' je sporný a nepřesný; původ nejistý."}
+{"id":"packb60|en","ok":"no","why":"'Rege-rege' origin is one disputed theory; meaning as ragged clothes/quarrel is unverified."}
+{"id":"packb61|cs","ok":"yes","why":"Flamenco vzniklo v Andalusii a v roce 2010 bylo zapsáno na seznam nehmotného dědictví UNESCO – přesné."}
+{"id":"packb61|en","ok":"yes","why":"Flamenco originated in Andalusia and was inscribed on UNESCO Intangible Heritage list in 2010."}
+{"id":"packb62|cs","ok":"no","why":"Armstrong byl popularizátor, ne průkopník vzniku; jazz vznikl dřív (Buddy Bolden, kolem 1900)."}
+{"id":"packb62|en","ok":"yes","why":"'one of its pioneers' je přesné a obhajitelné."}
+{"id":"packb63|cs","ok":"yes","why":"Odpovídá standardnímu výkladu původu country."}
+{"id":"packb63|en","ok":"yes","why":"Standardní a přesné."}
+{"id":"packb69|cs","ok":"yes","why":"Lisabon 19. stol. i zápis UNESCO 2011 správně."}
+{"id":"packb69|en","ok":"yes","why":"Correct on both date and UNESCO 2011."}
+{"id":"packb71|cs","ok":"yes","why":"11. srpna 1973 v Bronxu je obecně přijímaný počátek."}
+{"id":"packb71|en","ok":"yes","why":"Widely accepted origin date/place."}
+{"id":"packb73|cs","ok":"yes","why":"New Orleans jako rodiště jazzu i termín dixieland jsou přesné."}
+{"id":"packb73|en","ok":"yes","why":"Accurate."}
+{"id":"packb74|cs","ok":"yes","why":"Atkins, May, Saunderson = 'Belleville Three', správně."}
+{"id":"packb74|en","ok":"yes","why":"Correct trio."}
+{"id":"packb84|cs","ok":"no","why":"250 000 je součet obou víkendů; jedno číslo je zavádějící, přesná hodnota sporná"}
+{"id":"packb84|en","ok":"no","why":"250,000 is combined over two weekends; number misleading/spurious"}
+{"id":"packb90|cs","ok":"no","why":"Tuba je největší žesťový nástroj, ale 5 m trubice je u běžné tuby přehnané (cca 3,7–4,5 m)"}
+{"id":"packb90|en","ok":"no","why":"Tuba largest, but 5 m tubing exaggerated for standard tuba (~3.7–4.5 m)"}
+{"id":"packb91|cs","ok":"yes","why":"Hoboj je dvouplátkový nástroj se dvěma kmitajícími třtinovými plátky"}
+{"id":"packb91|en","ok":"yes","why":"Oboe is a double-reed instrument with two vibrating cane reeds"}
+{"id":"packb92|cs","ok":"yes","why":"Koncertní harfa má 47 strun a 7 pedálů"}
+{"id":"packb92|en","ok":"yes","why":"Concert harp has 47 strings and seven pedals"}
+{"id":"packb93|cs","ok":"yes","why":"Trombon mění výšku saněmi, umožňuje glissando"}
+{"id":"packb93|en","ok":"yes","why":"Trombone changes pitch via slide, enabling glissando"}
+{"id":"packb94|cs","ok":"yes","why":"Tympány jsou laditelné kotlové bubny s blanou"}
+{"id":"packb94|en","ok":"yes","why":"Timpani are tunable kettle drums with stretched skins"}
+{"id":"packb75|cs","ok":"yes","why":"Eavis 1970 a rychlé vyprodání vstupenek – přesné."}
+{"id":"packb75|en","ok":"yes","why":"Founder 1970 a fast sell-outs – accurate."}
+{"id":"packb78|cs","ok":"yes","why":"Dylanův debut jako předskokan v Gerde's 1961 – standardně uváděno."}
+{"id":"packb78|en","ok":"yes","why":"Dylan's 1961 Gerde's debut as opening act – standard account."}
+{"id":"packb79|cs","ok":"yes","why":"Yasgurova farma, tři dny, očekávání desítek tisíc – správně."}
+{"id":"packb79|en","ok":"yes","why":"Yasgur's farm, three days, tens of thousands expected – correct."}
+{"id":"packb81|cs","ok":"yes","why":"400 000+ návštěvníků, Hendrix i The Who – správně."}
+{"id":"packb81|en","ok":"yes","why":"400,000+ attendance, Hendrix and The Who – correct."}
+{"id":"packb82|cs","ok":"yes","why":"21 minut a přes miliardu diváků – běžně uváděno."}
+{"id":"packb82|en","ok":"yes","why":"21 minutes, over a billion viewers – commonly cited."}
+{"id":"packb83|cs","ok":"yes","why":"Our World 25. 6. 1967, ~400 mil. diváků – správně."}
+{"id":"packb83|en","ok":"yes","why":"Our World 25 June 1967, ~400 million – correct."}
+{"id":"packb110|cs","ok":"yes","why":"Lordi vyhráli 2006 s Hard Rock Hallelujah v maskách monster; Finsko čekalo na vítězství od debutu 1961 – 45 let."}
+{"id":"packb110|en","ok":"yes","why":"Lordi won 2006 in monster masks; Finland's first win after debuting in 1961 – 45 years."}
+{"id":"packb111|cs","ok":"yes","why":"Loreen vyhrála 2012 s Euphoria a znovu 2023 s Tattoo."}
+{"id":"packb111|en","ok":"yes","why":"Loreen won 2012 with Euphoria and again 2023 with Tattoo."}
+{"id":"packb112|cs","ok":"yes","why":"První ročník 1956 v Luganu; Švýcarsko vyhrálo s Refrain (Lys Assia)."}
+{"id":"packb112|en","ok":"yes","why":"First contest 1956 in Lugano; host Switzerland won with Refrain."}
+{"id":"packb115|cs","ok":"yes","why":"Lee a Ditko vytvořili Spider-Mana v Amazing Fantasy #15 (1962)."}
+{"id":"packb115|en","ok":"yes","why":"Lee and Ditko created Spider-Man in Amazing Fantasy #15 (1962)."}
+{"id":"packb116|cs","ok":"yes","why":"Batman debutoval 1939 v Detective Comics #27 (DC)."}
+{"id":"packb116|en","ok":"yes","why":"Batman debuted 1939 in Detective Comics #27 (DC)."}
+{"id":"packb117|cs","ok":"yes","why":"Reeve hrál Supermana ve čtyřech filmech, počínaje Supermanem (1978)."}
+{"id":"packb117|en","ok":"yes","why":"Reeve played Superman in four films, starting with Superman (1978)."}
+{"id":"packb96|cs","ok":"no","why":"Fanfáru hraje trubka, ale Strauss ji psal pro 3 trubky; trubka má tři ventily – pravda, ale ‚fanfára otevírá‘ je nepřesné (sólo úvod hraje jedna trubka), sporné"}
+{"id":"packb96|en","ok":"no","why":"Same as CS – opening fanfare is played by trumpet(s), but 'its fanfare' oversimplifies; risky"}
+{"id":"packb101|cs","ok":"yes","why":"Oboe gives tuning A due to stable pitch; strings/clarinets drift – standard, accurate"}
+{"id":"packb101|en","ok":"yes","why":"Oboe gives tuning A because of stable pitch; violins/clarinets drift – accurate"}
+{"id":"packb102|cs","ok":"yes","why":"Double bass sounds octave lower than written and doubles cello an octave below – correct"}
+{"id":"packb102|en","ok":"yes","why":"Double bass sounds octave lower than written and doubles cello an octave below – correct"}
+{"id":"packb104|cs","ok":"no","why":"Tympány nejsou jediné bicí s konkrétní výškou – např. xylofon, zvonkohra, celesta; ‚jediné‘ je nepravda"}
+{"id":"packb104|en","ok":"no","why":"Timpani are not the only pitched percussion – xylophone, glockenspiel, etc.; 'only' is false"}
+{"id":"packb105|cs","ok":"yes","why":"Loreen vyhrála Eurovizi 2023 s ‚Tattoo‘ a předtím 2012 – správně"}
+{"id":"packb105|en","ok":"yes","why":"Loreen won Eurovision 2023 with 'Tattoo', previously 2012 – correct"}
+{"id":"packb106|cs","ok":"yes","why":"ABBA vyhrála Eurovizi 1974 s ‚Waterloo‘, což odstartovalo světovou kariéru – správně"}
+{"id":"packb106|en","ok":"yes","why":"ABBA won Eurovision 1974 with 'Waterloo', launching global career – correct"}
+{"id":"packb127|cs","ok":"no","why":"Black Panther je první černošský superhrdina Marvelu, ale Wakanda se objevila už v Fantastic Four #52 (1966) — fakticky OK, ale 'první černošský superhrdina' je sporné (dříve např. Falcon 1969? ne). Ve skutečnosti Black Panther je často uváděn jako první černošský superhrdina mainstream komiksu, ale přesné tvrzení je kontroverzní."}
+{"id":"packb127|en","ok":"no","why":"Black Panther's 'first Black superhero' status is commonly cited but disputed (e.g., earlier non-mainstream characters); Wakanda debut correct but claim controversial."}
+{"id":"packb128|cs","ok":"yes","why":"Gal Gadot debutovala jako Wonder Woman v BvS (2016), sólový film 2017."}
+{"id":"packb128|en","ok":"yes","why":"Correct: BvS 2016, solo film 2017."}
+{"id":"packb129|cs","ok":"yes","why":"Amazing Fantasy #15, 1962, Lee a Ditko — správně."}
+{"id":"packb129|en","ok":"yes","why":"Correct: Amazing Fantasy #15, 1962, Lee & Ditko."}
+{"id":"packb130|cs","ok":"yes","why":"Ledger zemřel 22. 1. 2008, film měl premiéru v červenci 2008, Oscar 2009 in memoriam — správně."}
+{"id":"packb130|en","ok":"yes","why":"Correct: died Jan 2008, film July 2008, posthumous Oscar 2009."}
+{"id":"packb131|cs","ok":"yes","why":"Action Comics #1, červen 1938, start zlatého věku — správně."}
+{"id":"packb131|en","ok":"yes","why":"Correct: Action Comics #1, June 1938, Golden Age."}
+{"id":"packb132|cs","ok":"no","why":"Iron Man 2008 odstartoval MCU správně, ale 'přes 30 filmů k 2024' — k 2024 je to cca 34 filmů, hraniční; 'přes 30' je pravda. Nicméně sporné/nekonkrétní."}
+{"id":"packb132|en","ok":"no","why":"Iron Man 2008 launched MCU correct, but film count 'more than 30 by 2024' is vague/borderline."}
+{"id":"packb118|cs","ok":"yes","why":"RDJ hrál Iron Mana od Iron Mana (2008) po Endgame (2019)."}
+{"id":"packb118|en","ok":"yes","why":"RDJ played Iron Man from Iron Man (2008) through Endgame (2019)."}
+{"id":"packb119|cs","ok":"yes","why":"Avengers (2012) spojili tým Iron Mana, Captaina, Thora aj."}
+{"id":"packb119|en","ok":"yes","why":"The 2012 Avengers assembled Iron Man, Captain America, Thor and others."}
+{"id":"packb120|cs","ok":"no","why":"Logan vyhrál 1980 a 1987, ale jako zpěvák dvakrát vyhrál i jiní (např. Lys Assia ne); tvrzení 'jediný' je sporné."}
+{"id":"packb120|en","ok":"no","why":"Logan won 1980 and 1987, but 'only performer to win twice as singer' is disputed/unverifiable."}
+{"id":"packb123|cs","ok":"no","why":"Olivia Newton-John na Eurovizi 1974 v Brightonu reprezentovala UK a skončila 4. – tvrzení je pravdivé, ale 'zazářila v Pomádě' až 1978, tj. o čtyři roky později – správně."}
+{"id":"packb123|en","ok":"yes","why":"She placed 4th in Brighton 1974; Grease came 1978 (four years later)."}
+{"id":"packb125|cs","ok":"yes","why":"Bale hrál Batmana ve třech Nolanových filmech (2005, 2008, 2012)."}
+{"id":"packb125|en","ok":"yes","why":"Bale played Batman in three Nolan films (2005, 2008, 2012)."}
+{"id":"packb126|cs","ok":"no","why":"RDJ hrál Iron Mana v cca 10 filmech MCU, ale počet je sporný (9–10 dle cameo); 'deseti' není jednoznačné."}
+{"id":"packb126|en","ok":"no","why":"RDJ's MCU Iron Man count is disputed (9–10 depending on cameos); 'ten' is not uncontroversial."}
+{"id":"packb134|cs","ok":"yes","why":"Wonder Woman (2017) – první velkofilm o superhrdince s režisérkou i ženskou hlavní rolí v rámci DCEU; pravda."}
+{"id":"packb134|en","ok":"yes","why":"Correct: first female-directed, female-led superhero blockbuster within the DCEU."}
+{"id":"packb135|cs","ok":"yes","why":"Wellesovi bylo 25 (nar. 1915, film 1941) a byl to jeho první celovečerní film; pravda."}
+{"id":"packb135|en","ok":"yes","why":"Welles was 25 and Citizen Kane was his first feature film."}
+{"id":"packb136|cs","ok":"yes","why":"Mechanický žralok selhával, Spielberg ho skrýval; hudba Williamse nese napětí; pravda."}
+{"id":"packb136|en","ok":"yes","why":"Accurate: faulty shark led Spielberg to hide it; Williams's score drives tension."}
+{"id":"packb137|cs","ok":"yes","why":"Sofia Coppola dostala Oscara za scénář k Lost in Translation; dcera F. F. Coppoly; pravda."}
+{"id":"packb137|en","ok":"yes","why":"She won the Oscar for Best Original Screenplay; daughter of Francis Ford Coppola."}
+{"id":"packb138|cs","ok":"yes","why":"Sedm statečných (1960) je westernovým remakem Kurosawových Sedmi samurajů; pravda."}
+{"id":"packb138|en","ok":"yes","why":"The Magnificent Seven (1960) is a Western remake of Seven Samurai."}
+{"id":"packb139|cs","ok":"yes","why":"Kubrick a Clarke vyvíjeli projekt společně, kniha i scénář vznikaly souběžně; pravda."}
+{"id":"packb139|en","ok":"yes","why":"Kubrick and Clarke collaborated; novel and screenplay developed in parallel."}
+{"id":"packb150|cs","ok":"no","why":"Chybný údaj – hranice 100 mil. USD padla u Jaws v hrubých tržbách (gross), ne v půjčovném (rentals); rentals byly cca 129 mil. až později a Jaws nebyl první přes 100 mil. v rentals (tím byl až později, např. Star Wars)."}
+{"id":"packb150|en","ok":"no","why":"Inaccurate – $100M+ figure refers to US gross, not rentals; Jaws was not the first to $100M in rentals."}
+{"id":"packb151|cs","ok":"no","why":"Kmotr vyhrál Oscara za nejlepší film na ceremoniálu v roce 1973 (za rok 1972) – formulace „roku 1972“ je zavádějící; navíc scénář psal Coppola s Puzem."}
+{"id":"packb151|en","ok":"no","why":"Won Best Picture at the 1973 ceremony (for 1972); screenplay co-written with Puzo, not solely Coppola."}
+{"id":"packb152|cs","ok":"yes","why":"Pravda – Hitchcock měl camea v mnoha filmech; v Psychu se objevil na začátku."}
+{"id":"packb152|en","ok":"yes","why":"True – Hitchcock made cameos in many films; in Psycho he appears near the start."}
+{"id":"packb153|cs","ok":"yes","why":"Pravda – Sedm statečných (1960) je remakem Sedmi samurajů (1954)."}
+{"id":"packb153|en","ok":"yes","why":"True – The Magnificent Seven (1960) is a remake of Seven Samurai (1954)."}
+{"id":"packb154|cs","ok":"yes","why":"Pravda – Kubrickův perfekcionismus je doložen; scény v Osvícení měly i přes 100 záběrů."}
+{"id":"packb154|en","ok":"yes","why":"True – Kubrick's perfectionism is documented; some Shining scenes had 100+ takes."}
+{"id":"packb156|cs","ok":"yes","why":"Pravda – Pac-Man (Namco, 1980) je ikonická arkádová hra 80. let."}
+{"id":"packb156|en","ok":"yes","why":"True – Pac-Man (Namco, 1980) is an iconic arcade game of the 1980s."}
+{"id":"packb140|cs","ok":"yes","why":"Sedm statečných (1960) je westernový remake Sedmi samurajů."}
+{"id":"packb140|en","ok":"yes","why":"The Magnificent Seven (1960) is a western remake of Seven Samurai."}
+{"id":"packb141|cs","ok":"yes","why":"Hitchcockův cameo v North by Northwest – nestihne autobus."}
+{"id":"packb141|en","ok":"yes","why":"Hitchcock cameo in North by Northwest: misses a bus."}
+{"id":"packb142|cs","ok":"yes","why":"Sofia Coppola vyhrála Oscara za původní scénář (2004 za film 2003)."}
+{"id":"packb142|en","ok":"yes","why":"Won Best Original Screenplay Oscar for Lost in Translation."}
+{"id":"packb143|cs","ok":"yes","why":"Spirited Away vyhrálo Oscara za nejlepší animovaný film (2003)."}
+{"id":"packb143|en","ok":"yes","why":"Won Academy Award for Best Animated Feature."}
+{"id":"packb146|cs","ok":"yes","why":"Sonic 1991, Sega ho vytvořila jako odpověď na Maria."}
+{"id":"packb146|en","ok":"yes","why":"Sonic debuted 1991 as Sega's answer to Mario."}
+{"id":"packb147|cs","ok":"yes","why":"Pac-Man od Namco, 1980, ikonická arkádovka."}
+{"id":"packb147|en","ok":"yes","why":"Pac-Man by Namco, 1980, iconic arcade game."}
+{"id":"packb158|cs","ok":"yes","why":"SMB 1985 uznávaně pomohlo oživit trh po krachu 1983"}
+{"id":"packb158|en","ok":"yes","why":"SMB 1985 widely credited with reviving US market post-1983"}
+{"id":"packb160|cs","ok":"no","why":"Pizza-legenda je oblíbený mýtus; jméno z 'paku-paku', ale pizza není potvrzená"}
+{"id":"packb160|en","ok":"no","why":"Pizza origin is disputed myth; name from paku-paku only"}
+{"id":"packb161|cs","ok":"yes","why":"Jumpman přejmenován na Mario; instalatér později – správně"}
+{"id":"packb161|en","ok":"yes","why":"Jumpman renamed Mario; became plumber later – correct"}
+{"id":"packb167|cs","ok":"yes","why":"Autoři Boublil/Schönberg, West End od 1985 – správně"}
+{"id":"packb167|en","ok":"yes","why":"By Boublil/Schönberg, West End since 1985 – correct"}
+{"id":"packb168|cs","ok":"yes","why":"Catherine Johnson, ABBA písně, film 2008 – správně"}
+{"id":"packb168|en","ok":"yes","why":"Catherine Johnson, ABBA songs, film 2008 – correct"}
+{"id":"packb172|cs","ok":"yes","why":"Broadway 1964, Bock/Harnick – správně"}
+{"id":"packb172|en","ok":"yes","why":"Broadway 1964, Bock/Harnick – correct"}
+{"id":"packb183|cs","ok":"yes","why":"The King and I premiered at Broadway's St. James Theatre on 29 March 1951 and won the 1952 Tony Award for Best Musical."}
+{"id":"packb183|en","ok":"yes","why":"Correct: Broadway premiere 29 Mar 1951; won Tony for Best Musical (1952)."}
+{"id":"packb186|cs","ok":"yes","why":"Old Town Orloj (1410) is widely recognized as the world's oldest astronomical clock still in operation."}
+{"id":"packb186|en","ok":"yes","why":"Correct: oldest astronomical clock still operating; core mechanism dated 1410."}
+{"id":"packb188|cs","ok":"yes","why":"Petřín Tower is 63.5 m tall, built 1891 for the Provincial Jubilee Exhibition."}
+{"id":"packb188|en","ok":"yes","why":"Correct: 63.5 m, built 1891 for the Provincial Jubilee Exhibition."}
+{"id":"packb190|cs","ok":"yes","why":"Called the Stone Bridge originally; name 'Charles Bridge' came into use in the 19th century."}
+{"id":"packb190|en","ok":"yes","why":"Correct: originally the Stone Bridge; 'Charles Bridge' name adopted in the 19th century."}
+{"id":"packb193|cs","ok":"yes","why":"Guinness lists Prague Castle as the largest ancient castle complex in the world."}
+{"id":"packb193|en","ok":"yes","why":"Correct: Guinness recognizes Prague Castle as the largest castle complex."}
+{"id":"packb194|cs","ok":"yes","why":"Powder Tower name derives from gunpowder storage in the 17th century."}
+{"id":"packb194|en","ok":"yes","why":"Correct: named for gunpowder stored there in the 17th century."}
+{"id":"packb175|cs","ok":"no","why":"Orloj z 1410 je nejstarší dosud fungující, ale 'nejstarší orloj' obecně ne — starší orloje existují (např. Padova 1344, Strassburg). Zároveň apoštolové vycházejí každou hodinu, to je OK, ale superlativ je nepřesný."}
+{"id":"packb175|en","ok":"no","why":"Same: it is the oldest astronomical clock still operating, but not the oldest clock overall; superlative is misleading."}
+{"id":"packb176|cs","ok":"yes","why":"Karlův most založen 1357, 30 barokních soch převážně z 18. století — správně."}
+{"id":"packb176|en","ok":"yes","why":"Charles Bridge begun 1357, 30 Baroque statues mostly 18th century — correct."}
+{"id":"packb177|cs","ok":"yes","why":"Guinness uvádí Pražský hrad jako největší hradní komplex; sídlo prezidentů od 1918 — správně."}
+{"id":"packb177|en","ok":"yes","why":"Guinness lists Prague Castle as largest castle complex; seat of presidents since 1918 — correct."}
+{"id":"packb179|cs","ok":"yes","why":"Josefov je bývalé židovské ghetto, synagogy i Starý židovský hřbitov s tisíci náhrobků dochovány — správně."}
+{"id":"packb179|en","ok":"yes","why":"Josefov former Jewish ghetto, synagogues and Old Jewish Cemetery with thousands of tombstones preserved — correct."}
+{"id":"packb181|cs","ok":"yes","why":"West Side Story (1961) získal 10 Oscarů včetně nejlepšího filmu; ceremoniál 1962 — správně."}
+{"id":"packb181|en","ok":"yes","why":"West Side Story (1961) won 10 Oscars incl. Best Picture; ceremony in 1962 — correct."}
+{"id":"packb182|cs","ok":"yes","why":"Mary Poppins (1964) 5 Oscarů; Julie Andrews Oscara za nejlepší herečku — správně."}
+{"id":"packb182|en","ok":"yes","why":"Mary Poppins (1964) won 5 Oscars; Julie Andrews Best Actress — correct."}
+{"id":"packb195|cs","ok":"yes","why":"Vila Tugendhat zapsána 2001, první moderní stavba v ČR na seznamu UNESCO."}
+{"id":"packb195|en","ok":"yes","why":"Tugendhat Villa inscribed 2001, first modern building in Czechia on the list."}
+{"id":"packb196|cs","ok":"yes","why":"Brněnský orloj vydává skleněnou kuličku denně v 11:00, návštěvníci si ji mohou vzít."}
+{"id":"packb196|en","ok":"yes","why":"Brno clock releases a glass marble daily at 11 a.m., visitors may take it."}
+{"id":"packb197|cs","ok":"yes","why":"Špilberk byl vězením pro politické odpůrce, přezdívka „žalář národů“ doložena."}
+{"id":"packb197|en","ok":"yes","why":"Špilberk served as prison for political opponents, nicknamed 'Prison of Nations'."}
+{"id":"packb201|cs","ok":"yes","why":"Hantec je brněnská mluva, „šalina“ = tramvaj, správně."}
+{"id":"packb201|en","ok":"yes","why":"Hantec is Brno dialect, 'šalina' means tram, correct."}
+{"id":"packb202|cs","ok":"yes","why":"Mies van der Rohe, postaveno 1929–1930, UNESCO 2001 – správně."}
+{"id":"packb202|en","ok":"yes","why":"Designed by Mies van der Rohe, built 1929–1930, UNESCO 2001 – correct."}
+{"id":"packb203|cs","ok":"no","why":"Brněnská kostnice je uváděna jako druhá největší v Evropě, ale počet ostatků (desítky tisíc) je sporný – odhady se liší a jde o marketingové tvrzení."}
+{"id":"packb203|en","ok":"no","why":"'Second-largest in Europe' is a promotional claim; the number of remains (tens of thousands) is disputed and unverified."}
+{"id":"packb205|cs","ok":"yes","why":"Vila Tugendhat, zapsána 2001, je jediná/byla první moderní architektura v ČR na seznamu UNESCO."}
+{"id":"packb205|en","ok":"yes","why":"Villa Tugendhat was the first modern architecture listing in Czechia on UNESCO list (2001)."}
+{"id":"packb215|cs","ok":"yes","why":"NK ČR má cca 7+ mil. svazků, patří k největším ve střední Evropě."}
+{"id":"packb215|en","ok":"yes","why":"National Library holds 7+ million volumes, among largest in Central Europe."}
+{"id":"packb217|cs","ok":"yes","why":"Klobouky v Novém Jičíně od 1799, Tonak působí dodnes."}
+{"id":"packb217|en","ok":"yes","why":"Hats in Nový Jičín since 1799; Tonak still operates."}
+{"id":"packb221|cs","ok":"yes","why":"Kostku cukru vynalezl K. K. Rad v Dačicích; historka o manželce je tradovaná (uvádí se 'prý')."}
+{"id":"packb221|en","ok":"yes","why":"Sugar cube by Rad in Dačice; wife anecdote is legendary ('reportedly')."}
+{"id":"packb223|cs","ok":"no","why":"Präsident konstruoval Hans Ledwinka (se Svitákem), ne výhradně Sviták; zjednodušující/nepřesné."}
+{"id":"packb223|en","ok":"no","why":"Präsident designed by Hans Ledwinka, not solely Leopold Sviták."}
+{"id":"packb226|cs","ok":"yes","why":"Hranická propast s zatopenou částí přes 400 m, nejhlubší v ČR, pravděpodobně nejhlubší zatopená sladkovodní jeskyně světa."}
+{"id":"packb226|en","ok":"yes","why":"Hranická Propast >400 m incl. flooded part; deepest in Czechia, likely world's deepest flooded freshwater cave."}
+{"id":"packb229|cs","ok":"no","why":"Pražská bible 1488 není první tištěná kniha v češtině (první je Kronika trojánská ~1468) a tiskař není jednoznačně u sv. Jindřicha"}
+{"id":"packb229|en","ok":"no","why":"Not the first book printed in Czech (Trojan Chronicle ~1468); printer attribution imprecise"}
+{"id":"packb231|cs","ok":"yes","why":"Wichterle 1961, sestava z Merkuru – obecně známý a doložený fakt"}
+{"id":"packb231|en","ok":"yes","why":"1961 Merkur kit setup is documented; dynamo detail commonly cited"}
+{"id":"packb232|cs","ok":"yes","why":"Rad, ředitel dačického cukrovaru, patent 1843 – správně"}
+{"id":"packb232|en","ok":"yes","why":"Rad, Dačice refinery director, patent 1843 – correct"}
+{"id":"packb233|cs","ok":"yes","why":"Křižíkova dráha na Letné, 1891, Jubilejní zemská výstava – správně"}
+{"id":"packb233|en","ok":"yes","why":"Křižík's Letná electric railway, 1891 Jubilee Exhibition – correct"}
+{"id":"packb235|cs","ok":"yes","why":"Zranění prstu při krájení homole, 1843 Dačice – tradovaná verze, obecně uváděná"}
+{"id":"packb235|en","ok":"yes","why":"Cut-finger anecdote, 1843 Dačice – commonly cited version"}
+{"id":"packb236|cs","ok":"yes","why":"Divišův stroj časově předcházel Franklinovu hromosvodu; prosadila se Franklinova konstrukce"}
+{"id":"packb236|en","ok":"yes","why":"Diviš's device predated Franklin's rod; Franklin's design prevailed"}
+{"id":"packb249|cs","ok":"yes","why":"Václav IV. vládl 1378–1419, syn Karla IV. – správně."}
+{"id":"packb249|en","ok":"yes","why":"Wenceslaus IV reigned 1378–1419, son of Charles IV – correct."}
+{"id":"packb252|cs","ok":"yes","why":"Parléř převzal 1356, Staroměstská mostecká věž je jeho dílo – správně."}
+{"id":"packb252|en","ok":"yes","why":"Parler took over in 1356 and built the Old Town Bridge Tower – correct."}
+{"id":"packb256|cs","ok":"yes","why":"Nejstarší denáry za Boleslava I., nápis BOLEZLAV DUX – správně."}
+{"id":"packb256|en","ok":"yes","why":"Earliest deniers under Boleslav I, legend BOLEZLAV DUX – correct."}
+{"id":"packb258|cs","ok":"yes","why":"Václav zavražděn 935, brzy svatořečen, hlavní patron – správně."}
+{"id":"packb258|en","ok":"yes","why":"Murdered 935, soon canonised, principal patron – correct."}
+{"id":"packb259|cs","ok":"yes","why":"Biskupství 973, Dětmar pak Vojtěch – správně."}
+{"id":"packb259|en","ok":"yes","why":"Bishopric 973, Thietmar then Adalbert – correct."}
+{"id":"packb260|cs","ok":"yes","why":"Ludmila – první česká světice, patronka babiček/vychovatelek/vinařů – správně."}
+{"id":"packb260|en","ok":"yes","why":"Ludmila – first Czech saint, patron of grandmothers/educators/winemakers – correct."}
+{"id":"packb237|cs","ok":"yes","why":"Tatra 77: vzadu vzduchem chlazený V8, průkopnická aerodynamika"}
+{"id":"packb237|en","ok":"yes","why":"Tatra 77: rear air-cooled V8, pioneering low drag"}
+{"id":"packb239|cs","ok":"yes","why":"Ressel: patent 1827, zkoušky rakouského námořnictva doloženy"}
+{"id":"packb239|en","ok":"yes","why":"Ressel: 1827 patent, Austrian navy trials documented"}
+{"id":"packb240|cs","ok":"yes","why":"Karlštejn 1348, kaple sv. Kříže = říšské klenoty"}
+{"id":"packb240|en","ok":"yes","why":"Karlštejn 1348, Chapel of Holy Cross held Imperial regalia"}
+{"id":"packb242|cs","ok":"yes","why":"Karel IV. = Václav, jméno přijal při biřmování"}
+{"id":"packb242|en","ok":"yes","why":"Charles IV born Wenceslas, took name at confirmation"}
+{"id":"packb244|cs","ok":"yes","why":"Zikmund: syn Karla IV., český a uherský král, římský císař"}
+{"id":"packb244|en","ok":"yes","why":"Sigismund: son of Charles IV, King of Bohemia/Hungary, Emperor"}
+{"id":"packb246|cs","ok":"yes","why":"Zlatá bula 1356 platila do zániku říše 1806"}
+{"id":"packb246|en","ok":"yes","why":"Golden Bull 1356 in force until Empire's end 1806"}
+{"id":"packb261|cs","ok":"yes","why":"Legenda o Přemyslu Oráčovi ze Stadic je správně popsána."}
+{"id":"packb261|en","ok":"yes","why":"Legend of Přemysl the ploughman from Stadice correctly described."}
+{"id":"packb262|cs","ok":"yes","why":"Bořivoj I. a Ludmila jsou považováni za první křesťanské vládce Přemyslovců."}
+{"id":"packb262|en","ok":"yes","why":"Bořivoj I and Ludmila are regarded as first Christian Přemyslid rulers."}
+{"id":"packb263|cs","ok":"yes","why":"Kosmas byl pražský kanovník a jeho kronika obsahuje pověsti o Libuši a Přemyslovi."}
+{"id":"packb263|en","ok":"yes","why":"Cosmas was a Prague canon; his chronicle includes Libuše and Přemysl legends."}
+{"id":"packb271|cs","ok":"yes","why":"Palacký je běžně nazýván Otcem národa, vliv na národní uvědomění je doložený."}
+{"id":"packb271|en","ok":"yes","why":"Palacký commonly called Father of the Nation; influence on national consciousness documented."}
+{"id":"packb272|cs","ok":"no","why":"Kytice vyšla poprvé roku 1853 jako soubor, ale sbírku básní Erben vydal už 1853 – přesné datum 1853 je sporné; bezpečněji 1853 ano, ale uvádí se i 1853 s dodatkem; hraniční."}
+{"id":"packb272|en","ok":"no","why":"Kytice first published 1853 – date commonly cited but contested in phrasing; borderline."}
+{"id":"packb275|cs","ok":"yes","why":"První díl Dějin národu českého v Čechách a v Moravě vyšel 1836."}
+{"id":"packb275|en","ok":"yes","why":"First volume of Palacký's History of the Czech Nation appeared in 1836."}
+{"id":"packb277|cs","ok":"yes","why":"Kollár's Slávy dcera first published 1824, symbol of Slavic reciprocity."}
+{"id":"packb277|en","ok":"yes","why":"Accurate: 1824, symbol of Slavic mutual kinship."}
+{"id":"packb278|cs","ok":"yes","why":"Fidlovačka 1834; became Czech anthem."}
+{"id":"packb278|en","ok":"yes","why":"Accurate: 1834, later Czech national anthem."}
+{"id":"packb279|cs","ok":"yes","why":"Národní báchorky a pověsti published 1845–1847."}
+{"id":"packb279|en","ok":"yes","why":"Accurate: 1845–1847."}
+{"id":"packb285|cs","ok":"yes","why":"Javořice (837 m) is highest of Českomoravská vrchovina, far below Sněžka."}
+{"id":"packb285|en","ok":"yes","why":"Accurate: highest of the Highlands, not of Czechia."}
+{"id":"packb286|cs","ok":"yes","why":"Klínovec (1244 m) highest on Czech side, has tower and transmitter."}
+{"id":"packb286|en","ok":"yes","why":"Accurate: highest Czech-side Ore Mountains peak, tower + transmitter."}
+{"id":"packb290|cs","ok":"yes","why":"Elbe springs on Labská louka ~1387 m."}
+{"id":"packb290|en","ok":"yes","why":"Accurate: Labská louka, ~1387 m."}
+{"id":"packb299|cs","ok":"yes","why":"Orlík: objem ~716 mil. m³, hráz u Solenic vysoká 91 m — správně."}
+{"id":"packb299|en","ok":"yes","why":"Orlík: ~716 million m³, dam at Solenice 91 m high — correct."}
+{"id":"packb303|cs","ok":"yes","why":"Rožmberk ~489 ha, největší český rybník, založil Jakub Krčín (16. stol.) — správně."}
+{"id":"packb303|en","ok":"yes","why":"Rožmberk ~489 ha, largest Czech pond, founded by Jakub Krčín in 16th c. — correct."}
+{"id":"packb304|cs","ok":"yes","why":"Lipno ~4 870 ha, největší vodní nádrž v ČR — správně."}
+{"id":"packb304|en","ok":"yes","why":"Lipno ~4,870 ha, largest reservoir in Czechia — correct."}
+{"id":"packb315|cs","ok":"yes","why":"Broučci od Jana Karafiáta, anonymně 1876 — správně."}
+{"id":"packb315|en","ok":"yes","why":"Broučci by Jan Karafiát, anonymously 1876 — correct."}
+{"id":"packb318|cs","ok":"no","why":"Devatero pohádek vyšlo 1932, ale Josef přidal ilustrace i jednu pohádku — formulace 'k nim přidal' je nepřesná/neověřitelná v detailech; hraniční."}
+{"id":"packb318|en","ok":"no","why":"Nine Fairy Tales 1932 correct, but attribution of 'one tale' to Josef is imprecise/disputed."}
+{"id":"packb320|cs","ok":"yes","why":"Němcová, Slovenské pohádky a pověsti 1857–1858 — správně."}
+{"id":"packb320|en","ok":"yes","why":"Němcová, Slovak Fairy Tales and Legends 1857–1858 — correct."}
+{"id":"packb292|cs","ok":"no","why":"Praděd je 1491 m, ale vysílač (145 m) je nejvyšším pevným BODEM v ČR jen jako stavba; hora sama je druhá nejvyšší — formulace zavádějící/často sporná, vysílač není 'bod' hory. Raději 'no'."}
+{"id":"packb292|en","ok":"no","why":"Same issue — transmitter is highest structure, not uncontroversially 'highest fixed point'; misleading."}
+{"id":"packb293|cs","ok":"yes","why":"Sněžka 1603 m, vrchol na česko-polské hranici, sdílený — pravda."}
+{"id":"packb293|en","ok":"yes","why":"Sněžka 1603 m, summit on Czech-Polish border — correct."}
+{"id":"packb295|cs","ok":"yes","why":"Plechý 1378 m, nejvyšší hora české Šumavy; Plöckenstein (1379 m) na německé straně vyšší — pravda."}
+{"id":"packb295|en","ok":"yes","why":"Plechý 1378 m highest of Czech Šumava, Plöckenstein higher just across border — correct."}
+{"id":"packb296|cs","ok":"yes","why":"Klínovec 1244 m, nejvyšší hora Krušných hor i Ústeckého kraje — pravda."}
+{"id":"packb296|en","ok":"yes","why":"Klínovec 1244 m highest of Ore Mountains and Ústí Region — correct."}
+{"id":"packb297|cs","ok":"yes","why":"Milešovka 837 m, observatoř, považována za největrnější místo ČR — pravda."}
+{"id":"packb297|en","ok":"yes","why":"Milešovka 837 m, observatory, considered windiest place in Czechia — correct."}
+{"id":"packb298|cs","ok":"yes","why":"Rožmberk >6 km² (největší český rybník), založen 1584–1590 Jakubem Krčínem v 16. stol. — pravda."}
+{"id":"packb298|en","ok":"yes","why":"Rožmberk over 6 km², built 16th c. under Jakub Krčín — correct."}
+{"id":"packb321|cs","ok":"yes","why":"Sekora's Ferda first appeared 1933 in Lidové noviny – correct."}
+{"id":"packb321|en","ok":"yes","why":"Matches Czech fact; 1933 Lidové noviny correct."}
+{"id":"packb322|cs","ok":"no","why":"Mikeš first published 1936, not 1934."}
+{"id":"packb322|en","ok":"no","why":"Mikeš first book was 1936, not 1934."}
+{"id":"packb328|cs","ok":"no","why":"Krtek debuted 1957 (Jak Krtek ke kalhotkám přišel); year wrong."}
+{"id":"packb328|en","ok":"no","why":"Krtek first appeared 1957, not 1956."}
+{"id":"packb329|cs","ok":"yes","why":"Pat a Mat from Brno Krátký film studio, minimal speech – correct."}
+{"id":"packb329|en","ok":"yes","why":"Brno Krátký film studio, minimal dialogue – correct."}
+{"id":"packb332|cs","ok":"yes","why":"Hat of magician Pokustón, voiced by Josef Dvořák – correct."}
+{"id":"packb332|en","ok":"yes","why":"Pokustón's hat, Josef Dvořák – correct."}
+{"id":"packb334|cs","ok":"yes","why":"First appeared 1976 in 'Kuťáci' – correct."}
+{"id":"packb334|en","ok":"yes","why":"1976 'Kuťáci' debut – correct."}
+{"id":"packb343|cs","ok":"no","why":"Podzemí Znojma se uvádí ~30 km (často 'téměř 30 km'); přes 30 km je nadsazené a městská práva 1226 doložena, ale souhrn je sporný"}
+{"id":"packb343|en","ok":"no","why":"Znojmo underground is cited as ~30 km (often 'almost 30 km'); 'over 30 km' is exaggerated"}
+{"id":"packb347|cs","ok":"yes","why":"Slavonice mají souvislou řadu renesančních domů a přezdívku 'malý Český Krumlov' – doloženo"}
+{"id":"packb347|en","ok":"yes","why":"Slavonice has unbroken row of Renaissance houses and nickname 'Little Český Krumlov' – documented"}
+{"id":"packb348|cs","ok":"yes","why":"Kutná Hora bohatla ze stříbra a ve 14. stol. byla druhým nejvýznamnějším městem Čech – doloženo"}
+{"id":"packb348|en","ok":"yes","why":"Kutná Hora's wealth from silver; 2nd most important Bohemian town in 14th c. – documented"}
+{"id":"packb352|cs","ok":"no","why":"Továrna (Tonak) je významná a jedna z nejstarších v Evropě, ale 'patří k nejstarším' je neověřitelný superlativ"}
+{"id":"packb352|en","ok":"no","why":"'One of the oldest in Europe' is an unverifiable superlative claim"}
+{"id":"packb353|cs","ok":"yes","why":"2000 Kč s E. Destinnovou je nejvyšší v oběhu, platí od 1996 – doloženo"}
+{"id":"packb353|en","ok":"yes","why":"2000 CZK note with Destinnová is highest in circulation, valid since 1996 – documented"}
+{"id":"packb357|cs","ok":"yes","why":"Malý státní znak: stříbrný dvouocasý lev ve skoku se zlatou korunou na červeném štítě – správně"}
+{"id":"packb357|en","ok":"yes","why":"Small coat of arms: silver double-tailed lion rampant, golden crown, red shield – correct"}
+{"id":"packb358|cs","ok":"yes","why":"Hradec Králové je jedno z nejstarších českých měst, jako královské město se připomíná 1225."}
+{"id":"packb358|en","ok":"yes","why":"Matches Czech: one of oldest Czech towns, royal town mentioned 1225."}
+{"id":"packb361|cs","ok":"yes","why":"Karlovarský kraj má ~280 tis. obyvatel a patří k nejnavštěvovanějším (lázeňství)."}
+{"id":"packb361|en","ok":"yes","why":"Matches Czech: ~280,000 inhabitants, among most visited thanks to spas."}
+{"id":"packb363|cs","ok":"yes","why":"100 Kč nese Karla IV. a má barevně měňavý (opticky proměnlivý) proužek."}
+{"id":"packb363|en","ok":"yes","why":"100 CZK shows Charles IV and has a colour-shifting thread."}
+{"id":"packb364|cs","ok":"yes","why":"5000 Kč s Palackým je nejvyšší česká bankovka v oběhu."}
+{"id":"packb364|en","ok":"yes","why":"5000 CZK with Palacký is the highest Czech banknote in circulation."}
+{"id":"packb367|cs","ok":"yes","why":"CZK je kód dle ISO 4217; Kč je národní symbol, ne mezinárodní kód."}
+{"id":"packb367|en","ok":"yes","why":"CZK is the ISO 4217 code; Kč is domestic symbol only."}
+{"id":"packb371|cs","ok":"yes","why":"50 Kč je nejvyšší oběžná mince; 100 Kč je bankovka."}
+{"id":"packb371|en","ok":"yes","why":"50 CZK is the highest circulating coin; 100 CZK is a banknote."}
+{"id":"packb376|cs","ok":"yes","why":"Peking 2008 i Londýn 2012 zlato v oštěpu – správně."}
+{"id":"packb376|en","ok":"yes","why":"Gold in Beijing 2008 and London 2012 – correct."}
+{"id":"packb379|cs","ok":"yes","why":"Tři zlata v Helsinkách 1952, maraton poprvé a v olympijském rekordu – správně."}
+{"id":"packb379|en","ok":"yes","why":"Three golds Helsinki 1952, first-ever marathon, Olympic record – correct."}
+{"id":"packb380|cs","ok":"yes","why":"Soul 1988 dvouhra zlato, tenis se vrátil 1988 – správně."}
+{"id":"packb380|en","ok":"yes","why":"Seoul 1988 singles gold, tennis returned 1988 – correct."}
+{"id":"packb382|cs","ok":"no","why":"V Turíně 2006 vyhrála zlato v běhu na 30 km volně; ve skiatlonu (stíhací závod) byla stříbrná."}
+{"id":"packb382|en","ok":"no","why":"Her Turin 2006 gold was the 30 km freestyle; in the skiathlon/pursuit she took silver, not gold."}
+{"id":"packb385|cs","ok":"yes","why":"Barcelona 1992, Atlanta 1996, Sydney 2000 – tři zlata v řadě, správně."}
+{"id":"packb385|en","ok":"yes","why":"Barcelona 1992, Atlanta 1996, Sydney 2000 – three straight golds, correct."}
+{"id":"packb387|cs","ok":"yes","why":"Vancouver 2010: zlato 3000 m a 5000 m, bronz 1500 m – správně."}
+{"id":"packb387|en","ok":"yes","why":"Vancouver 2010: gold 3000 m and 5000 m, bronze 1500 m – correct."}
+{"id":"packb391|cs","ok":"yes","why":"Trosky na dvou čedičových sopouších, Baba nižší, Panna vyšší, založeny koncem 14. stol. – správně"}
+{"id":"packb391|en","ok":"yes","why":"Odpovídá české verzi, fakticky správné"}
+{"id":"packb398|cs","ok":"yes","why":"Kaple sv. Kříže vykládaná zlatem a drahými kameny, nejposvátnější prostor – správně"}
+{"id":"packb398|en","ok":"yes","why":"Odpovídá, správně"}
+{"id":"packb399|cs","ok":"yes","why":"Bílá paní – rožmberská pověst, Rožmberk a Český Krumlov – správně"}
+{"id":"packb399|en","ok":"yes","why":"Odpovídá, správně"}
+{"id":"packb401|cs","ok":"no","why":"Přestavbu Bouzova vedl Georg von Hauberrisser? Autorství je sporné – přestavbu projektoval Hauberrisser, ale tvrzení je zjednodušené; obvykle se uvádí Hauberrisser, nicméně přesnost nejistá"}
+{"id":"packb401|en","ok":"no","why":"Stejně jako cs – autorství/název není jednoznačně doložen"}
+{"id":"packb402|cs","ok":"yes","why":"Edward Kelley vězněn na Křivoklátě, zemřel 1597 – správně"}
+{"id":"packb402|en","ok":"yes","why":"Odpovídá, správně"}
+{"id":"packb420|cs","ok":"yes","why":"Gorgonzola DOP, jen Lombardie a Piemont, modrá plíseň Penicillium – správně"}
+{"id":"packb420|en","ok":"yes","why":"Odpovídá, správně"}
+{"id":"packb430|cs","ok":"yes","why":"Těstoviny z tvrdé pšenice bez vajec jsou typické pro jih, vejce spíš na severu – správně."}
+{"id":"packb430|en","ok":"yes","why":"Same fact in English – correct."}
+{"id":"packb433|cs","ok":"yes","why":"Sójová omáčka fermentovaná přes 2000 let, původ ve starověké Číně – správně."}
+{"id":"packb433|en","ok":"yes","why":"Same fact – correct."}
+{"id":"packb434|cs","ok":"yes","why":"Badyán z Číny/Vietnamu, hvězdicový plod, anýzová vůně – správně."}
+{"id":"packb434|en","ok":"yes","why":"Same fact – correct."}
+{"id":"packb436|cs","ok":"yes","why":"Tonkotsu z Fukuoky, mléčně bílý vývar vařený hodiny – správně."}
+{"id":"packb436|en","ok":"yes","why":"Same fact – correct."}
+{"id":"packb438|cs","ok":"yes","why":"Pohanka je dvouděložná (pseudocereálie), semena na mouku a soba – správně."}
+{"id":"packb438|en","ok":"yes","why":"Same fact – correct."}
+{"id":"packb439|cs","ok":"yes","why":"Aspergillus oryzae pro miso a sake, označován za národní houbu Japonska – správně."}
+{"id":"packb439|en","ok":"yes","why":"Same fact – correct."}
+{"id":"packb421|cs","ok":"no","why":"8 mm je tradiční šířka, ale 'oficiálně zapsáno do receptury města' – Bologna má jen nepovinný zápis (2020), ne oficiální recepturu"}
+{"id":"packb421|en","ok":"no","why":"8 mm traditional, but 'officially registered in Bologna's recipe' overstates – only a non-binding 2020 registration exists"}
+{"id":"packb422|cs","ok":"yes","why":"ribollita = 'znovu povařená', přesné"}
+{"id":"packb422|en","ok":"yes","why":"ribollita means 'reboiled', accurate"}
+{"id":"packb423|cs","ok":"no","why":"vrstvený pokrm se objevuje už ve 13. stol. (Liber de coquina ~1300), ne až ve 14."}
+{"id":"packb423|en","ok":"no","why":"layered dish appears by ~13th c. (Liber de coquina ~1300), not 'as early as 14th'"}
+{"id":"packb424|cs","ok":"no","why":"rýže v Pádské nížině se pěstuje od 15. stol. – sporné, první zmínky ~1475, ale rozšíření až 16. stol."}
+{"id":"packb424|en","ok":"no","why":"rice in Po Valley since 15th c. is disputed; first records ~1475, widespread only 16th c."}
+{"id":"packb425|cs","ok":"yes","why":"pasta filata, horká voda, tažení do vláken – správně"}
+{"id":"packb425|en","ok":"yes","why":"pasta filata, hot water, stretched – correct"}
+{"id":"packb426|cs","ok":"no","why":"rajčata v italské kuchyni od konce 17.–18. stol., ale 'více než dvě století po příchodu' je nepřesné (přišla ~1540)"}
+{"id":"packb426|en","ok":"no","why":"tomatoes in Italian cuisine late 17th–18th c., but 'more than two centuries after arrival' (~1540) is imprecise"}
+{"id":"packb454|cs","ok":"yes","why":"ahuacatl+molli = avokádová omáčka, etymologicky správně"}
+{"id":"packb454|en","ok":"yes","why":"correct Nahuatl etymology"}
+{"id":"packb457|cs","ok":"yes","why":"původ Karibik/Střední Amerika, španělský název i chuťový popis správné"}
+{"id":"packb457|en","ok":"yes","why":"origin and Spanish name correct; taste description accurate"}
+{"id":"packb459|cs","ok":"yes","why":"hřib kovář typicky modrá, oxidace barviv – správně"}
+{"id":"packb459|en","ok":"yes","why":"bay bolete blueing on exposure to air – correct"}
+{"id":"packb460|cs","ok":"yes","why":"hlíva roste v trsech na mrtvém dřevě listnáčů, pěstuje se na špalcích – správně"}
+{"id":"packb460|en","ok":"yes","why":"oyster mushroom on dead broadleaf wood, cultivated on logs – correct"}
+{"id":"packb461|cs","ok":"yes","why":"Vaccinium vitis-idaea je vřesovcovitá, plody přezimují – správně"}
+{"id":"packb461|en","ok":"yes","why":"lingonberry in heath family, berries persist into winter – correct"}
+{"id":"packb462|cs","ok":"yes","why":"výtrusy na spodní straně klobouku (lupeny/rourky), podhoubí vyživuje – správně"}
+{"id":"packb462|en","ok":"yes","why":"spores on cap underside (gills/tubes), mycelium for growth – correct"}
+{"id":"packb443|cs","ok":"no","why":"Shoyu zraje měsíce (i 1–2 roky v cedrových kádích je ok), ale 'oyster omáčka ze ústřic' je zavádějící – moderní oyster sauce je často z ústřicového extraktu/vody, ne z plných ústřic; navíc gramatika. Hraniční, ale raději ne."}
+{"id":"packb443|en","ok":"no","why":"Oyster sauce is typically made from oyster extracts/water, not whole oysters; claim imprecise."}
+{"id":"packb445|cs","ok":"yes","why":"Miso = fermentované sójové boby; tom yum thajská kyselá polévka; pho vietnamský hovězí vývar – správně."}
+{"id":"packb445|en","ok":"yes","why":"All three descriptions accurate."}
+{"id":"packb448|cs","ok":"yes","why":"Tamales od Aztéků/Mayů, nošeny na cesty – doloženo."}
+{"id":"packb448|en","ok":"yes","why":"Aztec/Maya origin and travel food documented."}
+{"id":"packb449|cs","ok":"yes","why":"Chicha morada z fialové kukuřice, andská/Peru, tisíce let – správně (i když dnes nefermentovaná)."}
+{"id":"packb449|en","ok":"yes","why":"Purple corn from Andes, used in Peru for millennia – accurate."}
+{"id":"packb451|cs","ok":"yes","why":"Nové koření (Piment) z Karibiku/Střední Ameriky, do Evropy v 16. stol. – správně."}
+{"id":"packb451|en","ok":"yes","why":"Allspice from Caribbean/Central America, brought to Europe in 16th c. – correct."}
+{"id":"packb453|cs","ok":"yes","why":"Atole z masa, ochucený vanilkou/skořicí, Aztékové před Španěly – správně."}
+{"id":"packb453|en","ok":"yes","why":"Atole from masa, vanilla/cinnamon, Aztecs pre-Spanish – accurate."}
+{"id":"packb468|cs","ok":"yes","why":"Antokyany barví plody do modrofialova, borůvky se používají jako barvivo – správně."}
+{"id":"packb468|en","ok":"yes","why":"Correct: anthocyanins give blue-purple colour, used as natural dye."}
+{"id":"packb469|cs","ok":"yes","why":"Amatoxiny poškozují játra, latence 6–24 h je standardní údaj."}
+{"id":"packb469|en","ok":"yes","why":"Accurate: amatoxins, liver damage, 6–24 h latent onset."}
+{"id":"packb470|cs","ok":"yes","why":"Lanýže rostou pod zemí v mykorhize, hledají se čichem se psy/prasaty."}
+{"id":"packb470|en","ok":"yes","why":"Correct: underground symbiosis, located by scent with dogs/pigs."}
+{"id":"packb474|cs","ok":"yes","why":"Udávaný poměr ~6–8 kg medu na 1 kg vosku odpovídá běžným údajům."}
+{"id":"packb474|en","ok":"yes","why":"Commonly cited figure ~6–8 kg honey per 1 kg wax."}
+{"id":"packb476|cs","ok":"no","why":"Von Frisch Nobelovu cenu dostal 1973, ale tanec popsal už ve 40. letech (1940s), ne 1973."}
+{"id":"packb476|en","ok":"no","why":"Nobel 1973, but he decoded the dance in the 1940s; 'decoded in 1973' is wrong."}
+{"id":"packb480|cs","ok":"yes","why":"Med má ~17–18 % vody a nízké pH; bakterie/plísně v něm nerostou."}
+{"id":"packb480|en","ok":"yes","why":"Correct: ~17–18% water, acidic, inhibits microbial growth."}
+{"id":"packb481|cs","ok":"yes","why":"Propolis je pryskyřičná včelí látka, slouží k vyztužení a potírání úlu."}
+{"id":"packb481|en","ok":"yes","why":"Accurate: resinous bee product used to strengthen and coat the hive."}
+{"id":"packb482|cs","ok":"yes","why":"Běžně jedna matka, klade až tisíce vajíček denně."}
+{"id":"packb482|en","ok":"yes","why":"One queen per hive; thousands of eggs a day is correct."}
+{"id":"packb483|cs","ok":"yes","why":"Šestiúhelníky = nejúspornější uspořádání (hexagonal packing), málo vosku."}
+{"id":"packb483|en","ok":"yes","why":"Hexagonal cells maximize packing with minimal wax – correct."}
+{"id":"packb484|cs","ok":"no","why":"Královna není jediná samice – dělnice jsou také samice (jen neplodné)."}
+{"id":"packb484|en","ok":"no","why":"Queen is not the only female; workers are females too (non-fertile)."}
+{"id":"packb488|cs","ok":"no","why":"Glukózaoxidáza tvoří peroxid jen ve zředěném medu, ne ve zralém (inhibována)."}
+{"id":"packb488|en","ok":"no","why":"Glucose oxidase produces H2O2 only in diluted honey, not in ripened honey."}
+{"id":"packb489|cs","ok":"yes","why":"Bacalao = solená sušená treska obecná; sušení/solí od dob Vikingů je přijímané."}
+{"id":"packb489|en","ok":"yes","why":"Bacalao is salted dried Atlantic cod; Viking-era origin accepted."}
+{"id":"packb491|cs","ok":"no","why":"Pufferfish inflate mainly by gulping air/water — 'water' only is imprecise; rest is true."}
+{"id":"packb491|en","ok":"no","why":"They inflate with air (and water), not water only; oversimplified."}
+{"id":"packb492|cs","ok":"yes","why":"Takoyaki is from Osaka and contains octopus; octopus has eight arms and is notably intelligent."}
+{"id":"packb492|en","ok":"yes","why":"Accurate: Osaka origin, octopus pieces, eight arms, intelligence."}
+{"id":"packb494|cs","ok":"yes","why":"Octopus has three hearts and copper-based (hemocyanin) blue blood."}
+{"id":"packb494|en","ok":"yes","why":"Correct: three hearts, blue blood via copper (hemocyanin)."}
+{"id":"packb495|cs","ok":"no","why":"Roe of other fish is commonly sold as 'caviar' (e.g. salmon caviar); the strict 'substitute only' rule is overstated."}
+{"id":"packb495|en","ok":"no","why":"Other fish roe is routinely labeled 'caviar' (salmon, lumpfish); claim too absolute."}
+{"id":"packb496|cs","ok":"yes","why":"Pearls form by coating an irritant with nacre (calcium carbonate) layers."}
+{"id":"packb496|en","ok":"yes","why":"Accurate: nacre layers of calcium carbonate around an intruding particle."}
+{"id":"packb498|cs","ok":"yes","why":"Sea cucumber is an echinoderm related to starfish; dried use in Asian cuisine is long-established."}
+{"id":"packb498|en","ok":"yes","why":"Correct: echinoderm, starfish relative, centuries of dried culinary use in Asia."}
+{"id":"packb500|cs","ok":"yes","why":"Kipper = nasolený, uzený (a často obarvený) sleď, britská klasika – přesné."}
+{"id":"packb500|en","ok":"yes","why":"Kipper is a split, salted, smoked (often dyed) herring – accurate."}
+{"id":"packb502|cs","ok":"no","why":"Číslo přehnané a kauzalita mylná; ústřice filtruje desítky litrů, ne 200, a syrová se jí kvůli chuti."}
+{"id":"packb502|en","ok":"no","why":"200 litres/day is exaggerated (tens of litres typical) and the 'why raw' link is a non-sequitur."}
+{"id":"packb503|cs","ok":"yes","why":"Anadromní losos táhne z moře do řek k výtěru a často poté hyne – správně."}
+{"id":"packb503|en","ok":"yes","why":"Anadromous salmon migrates sea→river to spawn and often dies – correct."}
+{"id":"packb504|cs","ok":"no","why":"Kvásek v Egyptě ano, ale 'před vynálezem droždí' je zavádějící – kvasinky se používaly už tehdy."}
+{"id":"packb504|en","ok":"no","why":"Sourdough in Egypt is fine, but 'before the invention of baker's yeast' is misleading – yeast was already used."}
+{"id":"packb505|cs","ok":"yes","why":"Žito je odolnější vůči chladu než pšenice a stalo se základem chleba v severní Evropě – správně."}
+{"id":"packb505|en","ok":"yes","why":"Rye tolerates cold better than wheat, hence staple bread grain of northern Europe – correct."}
+{"id":"packb506|cs","ok":"yes","why":"Kvasinky kvasí cukry a produkují CO2, jehož bublinky nadouvají těsto – přesné."}
+{"id":"packb506|en","ok":"yes","why":"Yeast ferments sugars releasing CO2 that makes dough rise – accurate."}
+{"id":"packb507|cs","ok":"yes","why":"Maillardova reakce správně popsána jako reakce cukrů s bílkovinami (i když hlavně aminokyseliny)."}
+{"id":"packb507|en","ok":"yes","why":"Maillard reaction correctly described as sugars reacting with proteins."}
+{"id":"packb510|cs","ok":"yes","why":"Kvásek se udržuje přikrmováním; dlouholeté používání je doložené."}
+{"id":"packb510|en","ok":"yes","why":"Sourdough is fed flour and water; decades-old starters exist."}
+{"id":"packb511|cs","ok":"yes","why":"Hnětením vzniká glutenová síť, těsto je pružnější a pevnější."}
+{"id":"packb511|en","ok":"yes","why":"Kneading develops gluten network, dough becomes stretchier and firmer."}
+{"id":"packb512|cs","ok":"yes","why":"Tmavá kůrka vzniká Maillardovou reakcí cukrů a bílkovin."}
+{"id":"packb512|en","ok":"yes","why":"Crust browning via Maillard reaction of sugars and proteins."}
+{"id":"packb513|cs","ok":"yes","why":"Žitný lepek je méně pružný, proto se používá kvas."}
+{"id":"packb513|en","ok":"yes","why":"Rye gluten is less elastic, so sourdough is used."}
+{"id":"packb514|cs","ok":"yes","why":"Kvašení: cukry → CO₂ + ethanol; CO₂ nadnáší těsto."}
+{"id":"packb514|en","ok":"yes","why":"Yeast fermentation produces CO₂ and ethanol; CO₂ raises dough."}
+{"id":"packb518|cs","ok":"yes","why":"Bochník = velký kulatý pecen, pečený v chlebové peci, krájený na krajíce – správně."}
+{"id":"packb518|en","ok":"yes","why":"Translation accurate and consistent."}
+{"id":"packb520|cs","ok":"yes","why":"Jedlé řapíky, listy s vysokým obsahem šťavelanů, otrava vyžaduje velké množství – pravda."}
+{"id":"packb520|en","ok":"yes","why":"Matches the Czech fact; accurate."}
+{"id":"packb521|cs","ok":"yes","why":"Fík je sykonium, květy ukryté uvnitř – botanicky správně."}
+{"id":"packb521|en","ok":"yes","why":"Accurate translation of syconium fact."}
+{"id":"packb522|cs","ok":"yes","why":"Banánovník je bylina, 'kmen' z listových pochev – správně."}
+{"id":"packb522|en","ok":"yes","why":"Correct botanical description."}
+{"id":"packb523|cs","ok":"yes","why":"Kešu jablko, dráždivý olej CNSL, pražení – pravda."}
+{"id":"packb523|en","ok":"yes","why":"Accurate; shell oil requires roasting/processing."}
+{"id":"packb524|cs","ok":"yes","why":"Jahoda růžovitá, nažky = pravé plody, dužnina = květní lůžko – správně."}
+{"id":"packb524|en","ok":"yes","why":"Correct: achenes are true fruits, receptacle is fleshy."}
+{"id":"packb527|cs","ok":"yes","why":"Hesperidium je botanicky bobule citrusů, segmenty s váčky a silice ve slupce – správně."}
+{"id":"packb527|en","ok":"yes","why":"Correct: hesperidium is a modified berry, segments with vesicles, rind with essential oils."}
+{"id":"packb529|cs","ok":"yes","why":"Jahoda = souplodí nažek na zdužnatělém lůžku, semínka jsou plody – správně."}
+{"id":"packb529|en","ok":"yes","why":"Correct: aggregate of achenes, red flesh is receptacle, surface seeds are true fruits."}
+{"id":"packb530|cs","ok":"yes","why":"Ananas je souplodí srostlých bobulí z celého květenství, očka odpovídají – správně."}
+{"id":"packb530|en","ok":"yes","why":"Correct: multiple fruit of fused berries from an inflorescence, forming eyes."}
+{"id":"packb531|cs","ok":"yes","why":"Kiwi je botanicky bobule s mnoha semeny, stejně jako rajče – správně."}
+{"id":"packb531|en","ok":"yes","why":"Correct: kiwifruit is a berry, like tomato."}
+{"id":"packb532|cs","ok":"yes","why":"Punica granatum, arily a tvrdá kůra – správně."}
+{"id":"packb532|en","ok":"yes","why":"Correct: pomegranate on Punica granatum, arils in hard rind."}
+{"id":"packb533|cs","ok":"yes","why":"Ananasovník = Bromeliaceae, plod souplodí srostlých bobulí – správně."}
+{"id":"packb533|en","ok":"yes","why":"Correct: bromeliad family, multiple fruit of fused berries."}
+{"id":"packb542|cs","ok":"yes","why":"Rooibos (Aspalathus linearis) roste divoce jen v Cederbergu, pěstuje se v regionu; přirozeně bez kofeinu."}
+{"id":"packb542|en","ok":"yes","why":"Rooibos grows wild only in Cederberg; naturally caffeine-free."}
+{"id":"packb543|cs","ok":"yes","why":"Guaraní pěstovali yerba maté po staletí; podává se v tykvi (mate)."}
+{"id":"packb543|en","ok":"yes","why":"Guaraní cultivated yerba mate for centuries; served in a gourd (mate)."}
+{"id":"packb545|cs","ok":"no","why":"Původ z východní Asie sedí, ale název NEpochází z japonštiny pro 'čaj z mořských řas' – to je lidová etymologie; kombu+cha je sporné/nesprávné."}
+{"id":"packb545|en","ok":"no","why":"East Asian origin ok, but name does NOT derive from Japanese 'seaweed tea' – folk etymology, disputed."}
+{"id":"packb547|cs","ok":"yes","why":"Horchata de chufa je z Valencie, tygří oříšky (chufa) pěstovány od maurských dob."}
+{"id":"packb547|en","ok":"yes","why":"Horchata de chufa from Valencia; tiger nuts grown since Moorish times."}
+{"id":"packb549|cs","ok":"yes","why":"Tortilly jsou na ISS oblíbené, protože nedrobí a nahrazují drobivý chléb."}
+{"id":"packb549|en","ok":"yes","why":"Tortillas popular on ISS because they don't crumble, replacing bread."}
+{"id":"packb550|cs","ok":"yes","why":"Termosterilizace ~120 °C, jídlo vydrží měsíce až rok bez chlazení."}
+{"id":"packb550|en","ok":"yes","why":"Thermostabilization heats to ~120 °C; lasts months to a year without refrigeration."}
+{"id":"packb534|cs","ok":"yes","why":"Kombucha je fermentovaný slazený čaj pomocí SCOBY – přesné."}
+{"id":"packb534|en","ok":"yes","why":"Správná definice SCOBY i procesu."}
+{"id":"packb535|cs","ok":"yes","why":"Kefír je kavkazský fermentovaný mléčný nápoj z kefírových zrn."}
+{"id":"packb535|en","ok":"yes","why":"Odpovídá – původ i kefírová zrna správně."}
+{"id":"packb536|cs","ok":"yes","why":"Cikorka = pražený kořen čekanky, náhrada kávy – správně."}
+{"id":"packb536|en","ok":"yes","why":"Roasted chicory root as coffee substitute – přesné."}
+{"id":"packb537|cs","ok":"yes","why":"Kvass = mírně perlivý nápoj z kvašeného chleba, Rusko/Ukrajina – správně."}
+{"id":"packb537|en","ok":"yes","why":"Fermented bread drink, tradiční v Rusku/Ukrajině – správně."}
+{"id":"packb538|cs","ok":"yes","why":"Maté z cesmíny paraguayské, pije se bombillou – přesné."}
+{"id":"packb538|en","ok":"yes","why":"Ilex paraguariensis + bombilla – správně."}
+{"id":"packb539|cs","ok":"no","why":"Amazake může obsahovat alkohol; tvrzení „jen minimum, proto dětem“ je zjednodušující/neověřitelné."}
+{"id":"packb539|en","ok":"no","why":"Není spolehlivě bez alkoholu; podávání dětem je sporné tvrzení."}
+{"id":"packb551|cs","ok":"yes","why":"Historicky doložený termín pro solené hovězí na lodích."}
+{"id":"packb551|en","ok":"yes","why":"Well-documented nautical nickname for tough salted beef."}
+{"id":"packb554|cs","ok":"yes","why":"Tang 1957/1959 pro trh, popularita díky letům Gemini a Apollo."}
+{"id":"packb554|en","ok":"yes","why":"Tang predates NASA use; fame from Gemini/Apollo flights."}
+{"id":"packb556|cs","ok":"yes","why":"Sinice bohatá na bílkoviny, zkoumána pro uzavřené systémy."}
+{"id":"packb556|en","ok":"yes","why":"Cyanobacterium studied for life support and O2."}
+{"id":"packb557|cs","ok":"yes","why":"Pepř jako platidlo a původ „peppercorn rent“ je doložený."}
+{"id":"packb557|en","ok":"yes","why":"Pepper used as payment; 'peppercorn rent' origin accurate."}
+{"id":"packb558|cs","ok":"yes","why":"Nejstarší kynuté pečivo z Egypta, pece ~3000 př. n. l."}
+{"id":"packb558|en","ok":"yes","why":"Earliest leavened bread Egypt, clay ovens ~3000 BCE."}
+{"id":"packb561|cs","ok":"yes","why":"Bramborový hladomor 1845–1849, přes milion obětí."}
+{"id":"packb561|en","ok":"yes","why":"Irish potato famine 1845–1849, over a million deaths."}
+{"id":"packb576|cs","ok":"yes","why":"Mat i pat definovány správně."}
+{"id":"packb576|en","ok":"yes","why":"Checkmate and stalemate correctly defined."}
+{"id":"packb577|cs","ok":"yes","why":"Rošáda je jediný tah se dvěma figurami, král o dvě pole."}
+{"id":"packb577|en","ok":"yes","why":"Castling correctly described."}
+{"id":"packb578|cs","ok":"yes","why":"Pěšec z výchozího pole 1–2 pole, nikdy vzad."}
+{"id":"packb578|en","ok":"yes","why":"Pawn double-step and no backward move correct."}
+{"id":"packb579|cs","ok":"yes","why":"1972 první titul mimo SSSR od 1948 (Spassky 1969 byl SSSR)."}
+{"id":"packb579|en","ok":"yes","why":"Correct: first non-Soviet champion since 1948."}
+{"id":"packb580|cs","ok":"no","why":"Pat není jediná situace bez legálního tahu – je i mat."}
+{"id":"packb580|en","ok":"no","why":"Not the only no-legal-move situation; checkmate also qualifies."}
+{"id":"packb583|cs","ok":"no","why":"V notaci se dáma značí D jen v češtině; ‚queen‘ s tím nesouvisí."}
+{"id":"packb583|en","ok":"yes","why":"Queen combines rook and bishop, denoted Q."}
+{"id":"packb567|cs","ok":"yes","why":"Jackfruit je největší stromový plod, běžně 10–30 kg, rekordy přes 40 kg – přesné."}
+{"id":"packb567|en","ok":"yes","why":"Jackfruit is the largest tree-borne fruit; records exceed 40 kg – accurate."}
+{"id":"packb569|cs","ok":"yes","why":"~150 000 květů na 1 kg šafránu je standardní údaj; patří k nejdražším kořením."}
+{"id":"packb569|en","ok":"yes","why":"~150,000 flowers per kg is the standard figure; among most expensive spices."}
+{"id":"packb570|cs","ok":"yes","why":"Rekord dýně přes 1 000 kg (i 1 200 kg); botanicky bobule, jednoletá plodina – správně."}
+{"id":"packb570|en","ok":"yes","why":"Record pumpkins exceed 1,000 kg; botanically berries, grown as annuals – correct."}
+{"id":"packb571|cs","ok":"yes","why":"Kávové třešně dozrávají nerovnoměrně, kvalitní káva se sklízí ručně výběrem – pravda."}
+{"id":"packb571|en","ok":"yes","why":"Coffee cherries ripen unevenly; quality coffee is selectively hand-picked – true."}
+{"id":"packb573|cs","ok":"yes","why":"~10 l mléka na 1 kg tvrdého sýra je běžný údaj; srážení a odstraňování syrovátky správně."}
+{"id":"packb573|en","ok":"yes","why":"~10 L milk per 1 kg hard cheese is a common figure; coagulation/whey removal correct."}
+{"id":"packb574|cs","ok":"yes","why":"Šachovnice 8×8 = 64 polí, každý hráč 16 figurek – přesné."}
+{"id":"packb574|en","ok":"yes","why":"Chessboard 8×8 = 64 squares, 16 pieces per player – accurate."}
+{"id":"packb584|cs","ok":"yes","why":"Pravidlo en passant platí jen v bezprostředně následujícím tahu."}
+{"id":"packb584|en","ok":"yes","why":"En passant right exists only on the immediately following move."}
+{"id":"packb586|cs","ok":"yes","why":"Trojí opakování není automatické, remízu reklamuje hráč (pětinásobné je automatické)."}
+{"id":"packb586|en","ok":"yes","why":"Threefold repetition is claimed, not automatic (fivefold is automatic)."}
+{"id":"packb587|cs","ok":"yes","why":"Deep Blue 1997 3,5:2,5, Kasparov vyhrál 1996."}
+{"id":"packb587|en","ok":"yes","why":"Deep Blue 1997 3.5–2.5, Kasparov won 1996."}
+{"id":"packb588|cs","ok":"yes","why":"Ding Liren, Astana 2023, tiebreak 2,5:1,5, 17. mistr světa."}
+{"id":"packb588|en","ok":"yes","why":"Ding Liren, Astana 2023, tiebreak 2.5–1.5, 17th champion."}
+{"id":"packb589|cs","ok":"yes","why":"13. 5. 1950 Silverstone, vyhrál Farina."}
+{"id":"packb589|en","ok":"yes","why":"13 May 1950 Silverstone, won by Farina."}
+{"id":"packb590|cs","ok":"no","why":"Safety car se v Kanadě 1973 objevil jen sporadicky; pravidelnou součástí F1 je až od 1993, „od té doby“ je zavádějící."}
+{"id":"packb590|en","ok":"no","why":"Safety car at 1973 Canada was sporadic; only permanent in F1 from 1993, so 'has since bunched' is misleading."}
+{"id":"packb591|cs","ok":"yes","why":"Tilke navrhl Sepang, Šanghaj i Istanbul Park – správně."}
+{"id":"packb591|en","ok":"yes","why":"Tilke designed Sepang, Shanghai and Istanbul Park – correct."}
+{"id":"packb592|cs","ok":"yes","why":"Monako ~3,3 km, závod 78 kol – nejvíc v F1."}
+{"id":"packb592|en","ok":"yes","why":"Monaco ~3.3 km, 78 laps – most of any F1 circuit."}
+{"id":"packb593|cs","ok":"yes","why":"Soft červená, medium žlutá, hard bílá, wet modrá – platné značení."}
+{"id":"packb593|en","ok":"yes","why":"Soft red, medium yellow, hard white, wet blue – current markings."}
+{"id":"packb594|cs","ok":"yes","why":"Pohár konstruktérů od 1958, prvním vítězem Vanwall."}
+{"id":"packb594|en","ok":"yes","why":"Constructors' title since 1958, first winner Vanwall."}
+{"id":"packb600|cs","ok":"no","why":"Na 1 kg šafránu je potřeba ~150 000 květů, ale údaj je sporný – běžně se uvádí 70 000–200 000; přesné číslo je nejisté."}
+{"id":"packb600|en","ok":"no","why":"~150,000 flowers per kg is disputed; sources range widely (70k–200k)."}
+{"id":"packb602|cs","ok":"yes","why":"Jahoda má ~200 nažek, dužnina je květní lůžko – správně."}
+{"id":"packb602|en","ok":"yes","why":"~200 achenes, fleshy part is receptacle – correct."}
+{"id":"packb603|cs","ok":"yes","why":"Nattó = fermentované sójové boby Bacillus subtilis natto, vláknitá struktura – správně."}
+{"id":"packb603|en","ok":"yes","why":"Correct: nattō is soybeans fermented with Bacillus subtilis natto, stringy texture."}
+{"id":"packb604|cs","ok":"yes","why":"1950: Farina mistr (Alfa Romeo), Fangio 2., Ascari 3. – správně."}
+{"id":"packb604|en","ok":"yes","why":"1950: Farina champion in Alfa Romeo, Fangio 2nd, Ascari 3rd – correct."}
+{"id":"packb608|cs","ok":"yes","why":"Q1–Q3 určuje pořadí, nejrychlejší má pole position – správně."}
+{"id":"packb608|en","ok":"yes","why":"Q1–Q3 sets grid, fastest takes pole – correct."}
+{"id":"packb609|cs","ok":"yes","why":"18 jamek se ustálilo 1764 v St Andrews sloučením dvou jamek – tradovaný, přesný údaj."}
+{"id":"packb609|en","ok":"yes","why":"18-hole standard at St Andrews 1764 by merging two holes – accurate."}
+{"id":"packb610|cs","ok":"no","why":"'Albatro' je označení pro -3 pod par (double eagle), nikoli pro hole in one."}
+{"id":"packb610|en","ok":"yes","why":"Hole in one most common on par-3, nearly impossible on par-4 – accurate."}
+{"id":"packb611|cs","ok":"yes","why":"America's Cup je nejstarší mezinárodní sportovní trofej, poprvé 1851 – správně."}
+{"id":"packb611|en","ok":"yes","why":"Oldest international sporting trophy, first raced 1851 – correct."}
+{"id":"packb612|cs","ok":"yes","why":"Bandy = lední obdoba pozemního hokeje, populární ve Švédsku, Rusku, Norsku – přesné."}
+{"id":"packb612|en","ok":"yes","why":"Bandy on ice, popular in Sweden/Russia/Norway – accurate."}
+{"id":"packb613|cs","ok":"yes","why":"Discgolf vznikl v USA v 70. letech, pravidla jako golf s diskem – správně."}
+{"id":"packb613|en","ok":"yes","why":"Disc golf, USA, 1970s, golf-like rules with disc – correct."}
+{"id":"packb614|cs","ok":"yes","why":"St Andrews 1764, 22→18 jamek – standardně uváděný fakt."}
+{"id":"packb614|en","ok":"yes","why":"St Andrews 1764, reduced 22 to 18 – standard fact."}
+{"id":"packb615|cs","ok":"no","why":"'Eagle' se rozšířil až ve 20.–30. letech; formulace o rozšíření obou termínů ve 20. letech je nepřesná."}
+{"id":"packb615|en","ok":"no","why":"'Eagle' became common only in the 1920s–30s; claiming both spread in the 1920s is imprecise."}
+{"id":"packb617|cs","ok":"yes","why":"Skeleton na OH 1928 a 1948, návrat 2002 Salt Lake City – správně."}
+{"id":"packb617|en","ok":"yes","why":"Skeleton at 1928 and 1948 Olympics, returned 2002 Salt Lake City – correct."}
+{"id":"packb619|cs","ok":"yes","why":"MS 1930 hostila i vyhrála Uruguay, finále 4:2 proti Argentině – správně."}
+{"id":"packb619|en","ok":"yes","why":"1930 World Cup hosted and won by Uruguay, 4:2 vs Argentina – correct."}
+{"id":"packb620|cs","ok":"yes","why":"Argentina hostila MS 1978 a poprvé vyhrála, ve finále 3:1 po prodloužení s Nizozemskem."}
+{"id":"packb620|en","ok":"yes","why":"Argentina hosted 1978 and won first title, 3:1 a.e.t. vs Netherlands."}
+{"id":"packb621|cs","ok":"yes","why":"Španělsko první titul 2010, finále Johannesburg 1:0 po prodloužení s Nizozemskem."}
+{"id":"packb621|en","ok":"yes","why":"Spain first title 2010, 1:0 a.e.t. vs Netherlands in Johannesburg."}
+{"id":"packb623|cs","ok":"yes","why":"Německo 2014, finále Rio 1:0 po prodloužení s Argentinou (Götze)."}
+{"id":"packb623|en","ok":"yes","why":"Germany 2014, Rio final 1:0 a.e.t. vs Argentina."}
+{"id":"packb624|cs","ok":"yes","why":"Uruguay 4:2 s Argentinou 30.7.1930, první mistr světa."}
+{"id":"packb624|en","ok":"yes","why":"Uruguay 4:2 vs Argentina on 30 July 1930, first world champion."}
+{"id":"packb625|cs","ok":"yes","why":"Západní Německo 3:2 s Maďarskem v Bernu 1954, „zázrak z Bernu“."}
+{"id":"packb625|en","ok":"yes","why":"West Germany 3:2 vs Hungary in Bern 1954, Miracle of Bern."}
+{"id":"packb626|cs","ok":"yes","why":"MS 2010 v JAR bylo první v Africe."}
+{"id":"packb626|en","ok":"yes","why":"2010 South Africa was first World Cup in Africa."}
+{"id":"packb641|cs","ok":"yes","why":"Šest základních skoků správně, axel jediný s odrazem vpřed."}
+{"id":"packb641|en","ok":"yes","why":"Six basic jumps correct, axel only forward take-off."}
+{"id":"packb643|cs","ok":"yes","why":"Tanec 1976 Innsbruck, sportovní dvojice 1908, rozdíl 68 let."}
+{"id":"packb643|en","ok":"yes","why":"Ice dance 1976, pairs 1908, 68 years difference."}
+{"id":"packb644|cs","ok":"no","why":"Tvrzení 'jediné nářadí tvaru koně' sporné – přeskokový kůň měl také tvar koně."}
+{"id":"packb644|en","ok":"no","why":"'Only horse-shaped apparatus' contested – vaulting horse was also horse-shaped."}
+{"id":"packb645|cs","ok":"yes","why":"Sólová jízda muži/ženy, oba programy zvlášť a sčítají se."}
+{"id":"packb645|en","ok":"yes","why":"Singles men/women, both programs scored separately and summed."}
+{"id":"packb649|cs","ok":"no","why":"Barvy kruhů/podkladu nejsou na vlajkách všech států – Coubertinův mýtus."}
+{"id":"packb649|en","ok":"no","why":"Ring/background colours not on every nation's flag – Coubertin myth."}
+{"id":"packb650|cs","ok":"yes","why":"Parabolické zrcadlo v Olympii, štafeta poprvé 1936 Berlín."}
+{"id":"packb650|en","ok":"yes","why":"Parabolic mirror in Olympia, torch relay first 1936 Berlin."}
+{"id":"packb628|cs","ok":"yes","why":"Laurent, 13.7.1930, Francie-Mexiko 4:1, první gól MS – správně."}
+{"id":"packb628|en","ok":"yes","why":"Correct: Laurent, 13 July 1930, vs Mexico, first WC goal."}
+{"id":"packb629|cs","ok":"yes","why":"Uruguay 4:2 Argentina, finále v Montevideu; všech 18 zápasů v Montevideu."}
+{"id":"packb629|en","ok":"yes","why":"Correct: 4-2 final, all matches played in Montevideo."}
+{"id":"packb631|cs","ok":"yes","why":"2002 Korea/Japonsko, finále Jokohama, Brazílie 2:0 Německo – správně."}
+{"id":"packb631|en","ok":"yes","why":"Correct: 2002 hosts, Yokohama final, Brazil 2-0 Germany."}
+{"id":"packb633|cs","ok":"yes","why":"Uruguay 2:1 Brazílie, Maracaná, ~200 000 diváků – správně."}
+{"id":"packb633|en","ok":"yes","why":"Correct: 2-1, near 200,000 attendance at Maracanã."}
+{"id":"packb635|cs","ok":"no","why":"Krátký program mužů/žen je 2:40 ±10 s jen pro juniory; senioři 2:40 bez? – ve skutečnosti senioři 2:40 ±10 s platí, ale ženy mají 2:40 ±10 s, muži 2:40 ±10 s – sporné, raději no."}
+{"id":"packb635|en","ok":"no","why":"Duration rules vary by category/level; not precise as stated."}
+{"id":"packb636|cs","ok":"yes","why":"Kladina jen ženy; muži hrazda/bradla, ženy bradla o nestejné výšce – správně."}
+{"id":"packb636|en","ok":"yes","why":"Correct: beam women-only; men HB/PB, women uneven bars."}
+{"id":"packb651|cs","ok":"yes","why":"Zlaté medaile jsou ze stříbra s min. 6 g zlata; poslední plně zlaté 1912 (Stockholm)."}
+{"id":"packb651|en","ok":"yes","why":"Correct: silver core with ≥6 g gold plating; last solid gold medals 1912."}
+{"id":"packb652|cs","ok":"yes","why":"Olympijský slib poprvé 1920 Antverpy; slib fair play a dodržování pravidel."}
+{"id":"packb652|en","ok":"yes","why":"First Olympic oath at 1920 Antwerp; fair play and rules."}
+{"id":"packb653|cs","ok":"yes","why":"Vlajka nese pouze pět kruhů na bílém poli, heslo na ní není."}
+{"id":"packb653|en","ok":"yes","why":"Flag shows only five rings on white; motto not on flag."}
+{"id":"packb655|cs","ok":"yes","why":"Motto navrhl Coubertin, oficiálně od 1924 (Paříž)."}
+{"id":"packb655|en","ok":"yes","why":"Proposed by Coubertin, official since 1924."}
+{"id":"packb657|cs","ok":"yes","why":"Pět propojených kruhů, tři nahoře, dva dole."}
+{"id":"packb657|en","ok":"yes","why":"Five interlinked rings, three top, two bottom."}
+{"id":"packb659|cs","ok":"yes","why":"Samaras/Palamas, hrána 1896, oficiální hymnou od 1958."}
+{"id":"packb659|en","ok":"yes","why":"Samaras/Palamas, played 1896, official anthem since 1958."}
+{"id":"packb670|cs","ok":"yes","why":"Althing se scházel v Thingvellir u zlomu desek, popis sedí"}
+{"id":"packb670|en","ok":"yes","why":"Thingvellir at the plate rift, accurate"}
+{"id":"packb671|cs","ok":"yes","why":"Tři dřevěné stavby + dílna, UNESCO 1978"}
+{"id":"packb671|en","ok":"yes","why":"Three buildings, boat repair, UNESCO listed"}
+{"id":"packb673|cs","ok":"yes","why":"Vyhnán za vraždu, název Grónsko kvůli osadníkům"}
+{"id":"packb673|en","ok":"yes","why":"Exiled for murder, named Greenland to attract settlers"}
+{"id":"packb674|cs","ok":"yes","why":"Kolonie v Grónsku přežila cca 400+ let"}
+{"id":"packb674|en","ok":"yes","why":"Greenland colony lasted over 400 years"}
+{"id":"packb676|cs","ok":"yes","why":"Ingstadovi 1960, UNESCO 1978"}
+{"id":"packb676|en","ok":"yes","why":"Discovered 1960, UNESCO since 1978"}
+{"id":"packb677|cs","ok":"yes","why":"Althing 930, nejstarší dochovaný parlament"}
+{"id":"packb677|en","ok":"yes","why":"Althing 930, oldest surviving parliament"}
+{"id":"packb661|cs","ok":"no","why":"Mýtus: MOV sám uvádí, že barvy kruhů jsou jen barvy, které se objevují na vlajkách všech států — ale to už dávno neplatí (např. vlajka Jamajky nemá modrou/žlutou... přesněji řečeno tvrzení o pěti obydlených kontinentech i barvách je zjednodušení; MOV oficiálně uvádí, že barvy a kruhy symbolizují spojení všech národů, ne že každá barva je na každé vlajce)."}
+{"id":"packb661|en","ok":"no","why":"Myth/simplification: IOC states colours appear on flags of all nations, but this is not literally true today; the 'five inhabited continents' reading is also a later interpretation."}
+{"id":"packb662|cs","ok":"no","why":"Čísla jsou nepřesná: předpis MOV vyžaduje alespoň 6 g zlata (to platí), ale průměr min. 60 mm platí jen pro letní hry — zimní medaile mají menší průměr; formulace 'musí' je zavádějící."}
+{"id":"packb662|en","ok":"no","why":"Imprecise: 6 g gold is correct, but the 60 mm minimum applies only to Summer Games medals, not all gold medals."}
+{"id":"packb665|cs","ok":"yes","why":"Odpovídá historii: Rollo přijal území u ústí Seiny od Karla Prostého (smlouva ze Saint-Clair-sur-Epte, 911) a stal se prvním normandským vévodou."}
+{"id":"packb665|en","ok":"yes","why":"Accurate: Rollo received land at the Seine's mouth from Charles the Simple (911) and became first Duke of Normandy."}
+{"id":"packb667|cs","ok":"yes","why":"Správně: Erik Rudý byl vyhnán z Islandu za vraždu a kolem roku 982 založil osady v Grónsku."}
+{"id":"packb667|en","ok":"yes","why":"Correct: Erik the Red was exiled from Iceland for murder and founded Greenland settlements around 982."}
+{"id":"packb668|cs","ok":"yes","why":"Futhark je skutečně pojmenován podle prvních šesti run: F, U, Th, A, R, K."}
+{"id":"packb668|en","ok":"yes","why":"True: futhark is named after its first six runes F, U, Th, A, R, K."}
+{"id":"packb669|cs","ok":"yes","why":"Odpovídá islandské tradici (Landnámabók) o Ingólfuru Arnarsonovi a sloupech vyplavených mořem."}
+{"id":"packb669|en","ok":"yes","why":"Matches Icelandic tradition (Landnámabók) about Ingólfur Arnarson and his pillars washed ashore."}
+{"id":"packb679|cs","ok":"yes","why":"Voltaire je pseudonym Françoise-Marie Aroueta."}
+{"id":"packb679|en","ok":"yes","why":"Voltaire is a pen name for François-Marie Arouet."}
+{"id":"packb680|cs","ok":"no","why":"Popraven byl i Ludvík XVI. i Jindřich? Ne – gilotinou jen Ludvík XVI., ale tvrzení „jediný král“ je sporné (např. Ludvík XVI. ano, ale i další? Nejisté, raději no)."}
+{"id":"packb680|en","ok":"no","why":"Claim of 'only' is contestable/unverifiable; safer no."}
+{"id":"packb681|cs","ok":"yes","why":"4. července 1776, Filadelfie – správně."}
+{"id":"packb681|en","ok":"yes","why":"July 4, 1776, Philadelphia – correct."}
+{"id":"packb683|cs","ok":"no","why":"Náklad byl ~120–150 tisíc, ne statisíce; číslo přehnané."}
+{"id":"packb683|en","ok":"no","why":"Print run ~120–150k, not hundreds of thousands."}
+{"id":"packb684|cs","ok":"no","why":"Encyklopedie měla 28 svazků (17 text + 11 desek) – počet přispěvatelů ~140 je sporný, raději no."}
+{"id":"packb684|en","ok":"no","why":"28 volumes correct, but contributor count ~140 is disputed."}
+{"id":"packb685|cs","ok":"yes","why":"21. ledna 1793, Place de la Révolution – správně."}
+{"id":"packb685|en","ok":"yes","why":"21 January 1793, Place de la Révolution – correct."}
+{"id":"packb687|cs","ok":"yes","why":"Popraven 8.5.1794, označován za otce moderní chemie – přesné."}
+{"id":"packb687|en","ok":"yes","why":"Correct date and standard characterization."}
+{"id":"packb689|cs","ok":"yes","why":"Průměr kupole ~45,5 m, stavěna bez dřevěného lešení/centeringu – správně."}
+{"id":"packb689|en","ok":"yes","why":"45.5 m span, no wooden centering – accurate."}
+{"id":"packb690|cs","ok":"yes","why":"Van Eyck klíčový raný mistr olejomalby v severní Evropě – obhajitelné."}
+{"id":"packb690|en","ok":"yes","why":"Standard art-history claim, defensible."}
+{"id":"packb692|cs","ok":"yes","why":"Platón mívá rysy Leonarda – tradičně přijímané."}
+{"id":"packb692|en","ok":"yes","why":"Plato given Leonardo's features – widely accepted."}
+{"id":"packb693|cs","ok":"yes","why":"Zrcadlové písmo zprava doleva – správně."}
+{"id":"packb693|en","ok":"yes","why":"Mirror script right-to-left – correct."}
+{"id":"packb694|cs","ok":"yes","why":"Montesquieuova dělba moci ovlivnila ÚS USA – správně."}
+{"id":"packb694|en","ok":"yes","why":"Documented influence on US constitution."}
+{"id":"packb695|cs","ok":"yes","why":"Ludvík XVI. popraven gilotinou 21. 1. 1793 na Place de la Révolution (dnes Place de la Concorde)."}
+{"id":"packb695|en","ok":"yes","why":"Louis XVI guillotined 21 Jan 1793 at Place de la Révolution (now Place de la Concorde)."}
+{"id":"packb696|cs","ok":"yes","why":"Bill of Rights 1689 následoval Slavnou revoluci; základ ústavního práva UK."}
+{"id":"packb696|en","ok":"yes","why":"Bill of Rights 1689 followed the Glorious Revolution; foundational to British law."}
+{"id":"packb697|cs","ok":"yes","why":"D'Alembert napsal Discours préliminaire (Předběžný rozbor) pro Encyklopedii."}
+{"id":"packb697|en","ok":"yes","why":"D'Alembert authored the Discours préliminaire for the Encyclopédie."}
+{"id":"packb698|cs","ok":"no","why":"Zvířata letěla 19. 9. 1783, první lidé 21. 11. 1783 – tedy ~2 měsíce (lze), ale fakt je vágní a 'o dva měsíce' je nepřesné (2 měsíce a 2 dny); navíc neurčeno, o jaký let jde."}
+{"id":"packb698|en","ok":"no","why":"Animal flight 19 Sep 1783, first human flight 21 Nov 1783 – vague and imprecise; context missing."}
+{"id":"packb699|cs","ok":"yes","why":"Michelangelo tesal Davida z bloku mramoru, který předtím opustili jiní sochaři jako nepoužitelný."}
+{"id":"packb699|en","ok":"yes","why":"Michelangelo carved David from a block previously abandoned by other sculptors."}
+{"id":"packb700|cs","ok":"yes","why":"Leonardo psal sešity zrcadlově a navrhoval ornitoptéru i padák."}
+{"id":"packb700|en","ok":"yes","why":"Leonardo wrote in mirror script and designed ornithopter and parachute."}
+{"id":"packb701|cs","ok":"yes","why":"Strop 1508–1512, technika fresky do vlhké omítky – správně."}
+{"id":"packb701|en","ok":"yes","why":"Ceiling 1508–1512, buon fresco on wet plaster – correct."}
+{"id":"packb702|cs","ok":"no","why":"'První' je sporné; Piero della Francesca psal o perspektivě dříve, Dürer byl první na severu."}
+{"id":"packb702|en","ok":"no","why":"'First Northern European' is defensible, but claim of first overall writing on perspective is contested."}
+{"id":"packb703|cs","ok":"no","why":"Mýtus, že 'vynalezl' olejomalbu; byl mezi prvními, kdo ji mistrně použil – formulace 'patřil k prvním' je OK, ale hraniční."}
+{"id":"packb703|en","ok":"yes","why":"'Among the first to master oil painting' – accurate, avoids the invention myth."}
+{"id":"packb706|cs","ok":"no","why":"Bez vnitřního lešení ano, ale používal dřevěné pomocné konstrukce – 'bez lešení' zavádějící."}
+{"id":"packb706|en","ok":"no","why":"No full internal scaffolding, but wooden centering/hoists used; 'without internal scaffolding' overstated."}
+{"id":"packb707|cs","ok":"no","why":"Správně 1536–1541 (ne 1537)."}
+{"id":"packb707|en","ok":"no","why":"Correct dates are 1536–1541, not 1537–1541."}
+{"id":"packb708|cs","ok":"no","why":"1550 kniha ano, ale 'první dějiny umění' i 'zavedla pojem renesance' jsou sporné/nepřesné."}
+{"id":"packb708|en","ok":"no","why":"'First art history' and 'introduced the term Renaissance' are contested/overstated."}
+{"id":"packb710|cs","ok":"yes","why":"Persepolis založil Dareios I. ~518 př. n. l.; Apadána zobrazuje 23 národů."}
+{"id":"packb710|en","ok":"yes","why":"Persepolis founded by Darius I ~518 BCE; Apadana reliefs show 23 peoples."}
+{"id":"packb711|cs","ok":"yes","why":"Klínové písmo v Sumeru ~3200 př. n. l., užívané přes 3000 let."}
+{"id":"packb711|en","ok":"yes","why":"Cuneiform in Sumer ~3200 BCE, used over 3,000 years."}
+{"id":"packb712|cs","ok":"no","why":"Rozsah zhruba sedí, ale 'největší říše své doby' je sporné/obecně se uvádí až pozdější rozsah; nepřesné."}
+{"id":"packb712|en","ok":"no","why":"Extent roughly ok, but 'largest empire of its time' is contested/overstated."}
+{"id":"packb713|cs","ok":"no","why":"Sedm stupňů ano, ale výška ~91 m je nejistá (odhady kolísají, část. rekonstrukce); nepodložené."}
+{"id":"packb713|en","ok":"no","why":"Seven tiers ok, but ~91 m height is uncertain/disputed, not solidly recorded."}
+{"id":"packb714|cs","ok":"yes","why":"Behistunský nápis ve třech písmech klíčem k luštění klínopisu, analogie s Rosettskou deskou."}
+{"id":"packb714|en","ok":"yes","why":"Behistun trilingual inscription key to deciphering cuneiform, like Rosetta Stone."}
+{"id":"packb715|cs","ok":"yes","why":"Chammurapiho zákoník má 282 paragrafů, patří k nejstarším úplným zákoníkům."}
+{"id":"packb715|en","ok":"yes","why":"Code of Hammurabi has 282 paragraphs, among oldest complete law codes."}
+{"id":"packb720|cs","ok":"yes","why":"Kýrosův válec je hliněný dokument s tolerančním prohlášením — přesné."}
+{"id":"packb720|en","ok":"yes","why":"Cyrus Cylinder = clay document, tolerant treatment — accurate."}
+{"id":"packb721|cs","ok":"yes","why":"Klínové písmo ~3200 př. n. l. v Sumeru, užívané přes 3000 let — správné."}
+{"id":"packb721|en","ok":"yes","why":"Cuneiform ~3200 BC Sumer, used 3000+ years — accurate."}
+{"id":"packb724|cs","ok":"no","why":"„Papír“ pochází z lat. papyrus (z řec. papyros), ne přímo z řeckého názvu; formulace zavádějící."}
+{"id":"packb724|en","ok":"no","why":"'Paper' comes via Latin papyrus from Greek papyros — 'from the Greek name' imprecise."}
+{"id":"packb726|cs","ok":"yes","why":"Hlaholice ~863, cyrilice později v Bulharsku — správné."}
+{"id":"packb726|en","ok":"yes","why":"Glagolitic ~863, Cyrillic later in Bulgaria — accurate."}
+{"id":"packb727|cs","ok":"yes","why":"Lis na víno + pohyblivé litery; stovky kopií denně — přijímané."}
+{"id":"packb727|en","ok":"yes","why":"Wine press + movable type, hundreds of copies/day — accepted."}
+{"id":"packb731|cs","ok":"yes","why":"Ninive, 7. stol. př. n. l.; Gilgameš na 12 tabulkách — správné."}
+{"id":"packb731|en","ok":"yes","why":"Nineveh 7th c. BCE; Gilgamesh on twelve tablets — accurate."}
+{"id":"packb732|cs","ok":"yes","why":"Fénická abeceda ~22 souhlásek, Řekové přidali samohlásky → základ latinky; přesné."}
+{"id":"packb732|en","ok":"yes","why":"About 22 consonants; Greeks added vowels; basis of Latin alphabet — accurate."}
+{"id":"packb733|cs","ok":"no","why":"Slabikář měl 85–86 znaků; '85' je sporné (často uváděno 86)."}
+{"id":"packb733|en","ok":"no","why":"Syllabary commonly cited as 86 signs (Britannica), so '85' is imprecise."}
+{"id":"packb734|cs","ok":"yes","why":"Hippokratés c. 460–370 př. n. l., nemoci z přirozených příčin — správně."}
+{"id":"packb734|en","ok":"yes","why":"Hippocrates c. 460–370 BC, natural causes not divine — accurate."}
+{"id":"packb735|cs","ok":"yes","why":"Jennerův základ očkování; 'vakcína' z lat. vacca (kráva) — správně."}
+{"id":"packb735|en","ok":"yes","why":"Jenner founded vaccination; 'vaccine' from Latin vacca (cow) — accurate."}
+{"id":"packb738|cs","ok":"yes","why":"Nightingaleová prosazovala čistotu/větrání, 1860 první ošetřovatelská škola — správně."}
+{"id":"packb738|en","ok":"yes","why":"Nightingale promoted cleanliness/ventilation, founded first nursing school 1860 — accurate."}
+{"id":"packb741|cs","ok":"yes","why":"Diamantová sútra 868 n. l., svitek z Dunhuangu, Britská knihovna — správně."}
+{"id":"packb741|en","ok":"yes","why":"Diamond Sutra 868 AD, Dunhuang scroll, British Library — accurate."}
+{"id":"packb742|cs","ok":"yes","why":"Velín = jemná pergamen z mladých zvířat; z kůže jednoho telete/krávy jen několik listů — přesné."}
+{"id":"packb742|en","ok":"yes","why":"Vellum from young animal skins; one cow yields only a few leaves — accurate."}
+{"id":"packb743|cs","ok":"yes","why":"Knihovna byla součástí Músaionu (chrám Múz); slovo muzeum odtud — správně."}
+{"id":"packb743|en","ok":"yes","why":"Mouseion = shrine of the Muses, origin of 'museum' — correct."}
+{"id":"packb744|cs","ok":"yes","why":"Jenner 1796 očkoval Jamese Phippse kravskými neštovicemi; prokázal ochranu — správně."}
+{"id":"packb744|en","ok":"yes","why":"Jenner 1796 cowpox inoculation of a boy demonstrated smallpox protection — correct."}
+{"id":"packb745|cs","ok":"yes","why":"Semmelweis: mytí rukou v chlorovém vápně snížilo úmrtnost na horečku omladnic — správně."}
+{"id":"packb745|en","ok":"yes","why":"Semmelweis chlorinated lime handwashing reduced puerperal fever deaths — correct."}
+{"id":"packb746|cs","ok":"yes","why":"Lister použil karbolovou kyselinu k antisepsi ran a nástrojů — správně."}
+{"id":"packb746|en","ok":"yes","why":"Lister's carbolic acid antisepsis reduced postoperative infections — correct."}
+{"id":"packb747|cs","ok":"yes","why":"Harvey 1628 De motu cordis popsal krevní oběh poháněný srdcem — správně."}
+{"id":"packb747|en","ok":"yes","why":"Harvey 1628 De motu cordis described heart-driven circulation — correct."}
+{"id":"packb756|cs","ok":"yes","why":"Jamkovité orgány (pit organs) hadů detekují infračervené záření; správně."}
+{"id":"packb756|en","ok":"yes","why":"Pit organs detect infrared radiation/heat; accurate."}
+{"id":"packb757|cs","ok":"yes","why":"Netopýři jsou jediní savci se skutečným aktivním letem; poletuchy klouzají."}
+{"id":"packb757|en","ok":"yes","why":"Bats only mammals with true powered flight; flying squirrels glide."}
+{"id":"packb758|cs","ok":"yes","why":"Hemocyanin s mědí, krev modrá; správně."}
+{"id":"packb758|en","ok":"yes","why":"Copper-based hemocyanin, blue blood; accurate."}
+{"id":"packb760|cs","ok":"no","why":"Srdce má 2 síně a 2 komory správně, ale krev se v srdci nemíchá – formulace ‚neputuje přes plíce dvakrát smíchaná' je zmatená/nepřesná."}
+{"id":"packb760|en","ok":"no","why":"Two atria/two ventricles correct, but 'never mix' phrasing is muddled; deoxygenated blood does pass lungs, wording inaccurate."}
+{"id":"packb761|cs","ok":"yes","why":"Spirákuly vedou do vzdušnic (tracheí); správně."}
+{"id":"packb761|en","ok":"yes","why":"Spiracles lead into tracheae; accurate."}
+{"id":"packb762|cs","ok":"yes","why":"Chlorofyl pohlcuje červené a modré, odráží zelené; správně."}
+{"id":"packb762|en","ok":"yes","why":"Chlorophyll absorbs red/blue, reflects green; accurate."}
+{"id":"packb749|cs","ok":"yes","why":"Harvey 1628 vyvrátil Galéna, jehož učení platilo ~1400 let."}
+{"id":"packb749|en","ok":"yes","why":"Correct: Harvey's 1628 work overturned Galenic doctrine of ~1400 years."}
+{"id":"packb750|cs","ok":"yes","why":"Phippsovi bylo 8; „vakcína“ z lat. vacca = kráva."}
+{"id":"packb750|en","ok":"yes","why":"Phipps was 8; vaccine from Latin vacca (cow)."}
+{"id":"packb751|cs","ok":"yes","why":"Semmelweis zemřel 1865; uznání přišlo až po smrti."}
+{"id":"packb751|en","ok":"yes","why":"Semmelweis died 1865; recognition came posthumously."}
+{"id":"packb752|cs","ok":"yes","why":"Fleming 1929; klinicky penicilin až ve 40. letech."}
+{"id":"packb752|en","ok":"yes","why":"Fleming 1929; clinical use in the 1940s."}
+{"id":"packb753|cs","ok":"yes","why":"Pasterizace; Pasteur 1862 řešil i kažení vína."}
+{"id":"packb753|en","ok":"yes","why":"Pasteurisation; 1862 work on wine spoilage."}
+{"id":"packb754|cs","ok":"yes","why":"Hydra regeneruje celé tělo; Trembley 1740s."}
+{"id":"packb754|en","ok":"yes","why":"Hydra regenerates whole body; Trembley 1740s."}
+{"id":"packb765|cs","ok":"yes","why":"Netopýři jsou jediní savci s aktivním letem; poletuchy/letuchy jen plachtí, křídlo = přeměněná přední končetina s létací blánou."}
+{"id":"packb765|en","ok":"yes","why":"Correct: bats are the only mammals with powered flight; flying squirrels/colugos glide only; wing = modified forelimb with membrane."}
+{"id":"packb767|cs","ok":"yes","why":"Axolotl regeneruje končetiny i části srdce a díky neotenii zůstává larvou s vnějšími žábrami."}
+{"id":"packb767|en","ok":"yes","why":"Accurate: axolotl regenerates limbs and heart parts, and neoteny keeps it in larval aquatic form with external gills."}
+{"id":"packb769|cs","ok":"yes","why":"Collins zůstal na oběžné dráze, na povrch sestoupili jen Armstrong a Aldrin v modulu Eagle."}
+{"id":"packb769|en","ok":"yes","why":"Correct: Collins orbited in Columbia; only Armstrong and Aldrin landed in Eagle."}
+{"id":"packb770|cs","ok":"yes","why":"LM = Eagle, CSM = Columbia, Collins v Columbii – správně."}
+{"id":"packb770|en","ok":"yes","why":"Correct names: lunar module Eagle, command module Columbia."}
+{"id":"packb771|cs","ok":"yes","why":"Apollo 11 vrátilo ~21,5 kg vzorků (přes 21 kg) – přesné."}
+{"id":"packb771|en","ok":"yes","why":"Apollo 11 returned ~21.5 kg of samples, i.e. more than 21 kg – accurate."}
+{"id":"packb772|cs","ok":"no","why":"Apollo 8 obletělo Měsíc v prosinci 1968, přistání v červenci 1969 – rozdíl ~7 měsíců je správně, ale formulace 'o sedm měsíců dříve' je zavádějící (oblet vs. přistání)."}
+{"id":"packb772|en","ok":"no","why":"Apollo 8 orbited Dec 1968, landing July 1969 (~7 months), but comparing orbit to landing is imprecise/misleading."}
+{"id":"packb780|cs","ok":"yes","why":"Lovell: 4 lety (Gemini 7, 12, Apollo 8, 13), nikdy nepřistál; jediný se 4 lety bez dotyku Měsíce."}
+{"id":"packb780|en","ok":"yes","why":"Lovell flew 4 missions and never landed on the Moon; only person with four flights not to."}
+{"id":"packb781|cs","ok":"yes","why":"12 lidí, 6 přistání (11,12,14,15,16,17); Cernan odešel 14. 12. 1972."}
+{"id":"packb781|en","ok":"yes","why":"Twelve moonwalkers, six landings, Cernan last in December 1972."}
+{"id":"packb782|cs","ok":"yes","why":"Apollo 11 ~21,55 kg; celkem program ~382 kg."}
+{"id":"packb782|en","ok":"yes","why":"Apollo 11 ~21.55 kg; program total ~382 kg."}
+{"id":"packb783|cs","ok":"yes","why":"Cernan 14. 12. 1972; slova doložena („Let's get this mother out of here“)."}
+{"id":"packb783|en","ok":"yes","why":"Cernan left 14 Dec 1972; parting words documented."}
+{"id":"packb784|cs","ok":"yes","why":"Ohyb je výraznější, když je překážka/štěrbina srovnatelná s vlnovou délkou."}
+{"id":"packb784|en","ok":"yes","why":"Diffraction strongest when obstacle/slit is comparable to wavelength."}
+{"id":"packb785|cs","ok":"yes","why":"Různý index lomu dle barvy → rozklad bílého světla na spektrum."}
+{"id":"packb785|en","ok":"yes","why":"Dispersion: different refraction per colour splits white light into spectrum."}
+{"id":"packb774|cs","ok":"yes","why":"Eagle LM, Columbia CSM – správně."}
+{"id":"packb774|en","ok":"yes","why":"Correct: Eagle LM, Columbia CSM."}
+{"id":"packb775|cs","ok":"no","why":"Viděli Měsíc zblízka, ale „první na vlastní oči“ je nepřesné – Měsíc běžně viděli i dřívější astronauti a lidé ze Země."}
+{"id":"packb775|en","ok":"no","why":"Imprecise: they were first to see far side directly/close-up, but 'first humans to see the Moon' is wrong."}
+{"id":"packb776|cs","ok":"yes","why":"12 lidí, 6 přistání, 1969–1972 – správně."}
+{"id":"packb776|en","ok":"yes","why":"Correct: 12 people, six landings, 1969–1972."}
+{"id":"packb777|cs","ok":"no","why":"Schmitt byl geolog a přistál s Apollem 17, ale posledním člověkem na Měsíci byl Eugene Cernan (vystoupil po Schmittovi)."}
+{"id":"packb777|en","ok":"no","why":"Schmitt was a geologist on Apollo 17, but Cernan was the last person on the Moon."}
+{"id":"packb778|cs","ok":"yes","why":"Retroreflektory fungují od Apolla 11 (1969), přesnost na centimetry – správně."}
+{"id":"packb778|en","ok":"yes","why":"Correct: corner-cube retroreflectors, cm-level ranging for 50+ years."}
+{"id":"packb779|cs","ok":"no","why":"Souřadnice i název jsou správné, ale „Základna klidu“ není oficiální český název – jde o překlad, ne ustálený termín."}
+{"id":"packb779|en","ok":"yes","why":"Statio Tranquillitatis / Tranquility Base at 0.67°N 23.47°E – correct."}
+{"id":"packb786|cs","ok":"yes","why":"Herschel 1800, teplota nejvyšší za červeným koncem – správně."}
+{"id":"packb786|en","ok":"yes","why":"Correct: Herschel 1800, max temperature beyond red end."}
+{"id":"packb788|cs","ok":"yes","why":"Tenkovrstvá interference přední/zadní plochy – správně."}
+{"id":"packb788|en","ok":"yes","why":"Thin-film interference from front/back surfaces – correct."}
+{"id":"packb789|cs","ok":"yes","why":"Chlorofyl pohlcuje červenou a modrou, odráží zelenou – správně."}
+{"id":"packb789|en","ok":"yes","why":"Chlorophyll absorbs red/blue, reflects green – correct."}
+{"id":"packb791|cs","ok":"yes","why":"Delší dráha, modré se rozptýlí, zůstává červená – správně."}
+{"id":"packb791|en","ok":"yes","why":"Longer slant path scatters blue, red remains – correct."}
+{"id":"packb792|cs","ok":"yes","why":"Spektroskopie určuje složení hvězd – správně."}
+{"id":"packb792|en","ok":"yes","why":"Spectroscopy reveals stellar composition – correct."}
+{"id":"packb793|cs","ok":"yes","why":"380–750 nm, fialová nejkratší – správně."}
+{"id":"packb793|en","ok":"yes","why":"380–750 nm, violet shortest – correct."}
+{"id":"packb804|cs","ok":"no","why":"Nebylo první prokázané spojení – souvislost tušili už dřív (např. Romagnosi 1802); Ørstedovo prvenství je zjednodušení."}
+{"id":"packb804|en","ok":"no","why":"Not the first proven link – earlier hints (Romagnosi 1802); Ørsted's primacy is an oversimplification."}
+{"id":"packb805|cs","ok":"yes","why":"Ohm čelil nedůvěře a po kritice přišel o učitelské místo; dnes se zákon učí ve škole."}
+{"id":"packb805|en","ok":"yes","why":"Ohm faced distrust and lost his teaching post after criticism; law now taught in school."}
+{"id":"packb807|cs","ok":"yes","why":"Voltův sloup = střídavé vrstvy Cu/Zn s plátnem v kyselině; jednotka volt dle Volty."}
+{"id":"packb807|en","ok":"yes","why":"Voltaic pile = alternating Cu/Zn layers with acid-soaked cloth; unit volt named after him."}
+{"id":"packb808|cs","ok":"no","why":"Symbol jednotky je Hz s velkým H; malé 'h' platí jen pro slovo v textu, formulace je zavádějící."}
+{"id":"packb808|en","ok":"no","why":"Unit symbol is Hz (capital H); lowercase applies only to the spelled-out word – misleading."}
+{"id":"packb809|cs","ok":"yes","why":"Ørsted 1820 ukázal propojení elektřiny a magnetismu."}
+{"id":"packb809|en","ok":"yes","why":"Ørsted's 1820 experiment showed electricity and magnetism are linked."}
+{"id":"packb810|cs","ok":"yes","why":"Jednotka odporu ohm, značka Ω, dle Ohma."}
+{"id":"packb810|en","ok":"yes","why":"Unit of resistance ohm, symbol Ω, named after Ohm."}
+{"id":"packb798|cs","ok":"yes","why":"Newton v Opticks popsal rozklad i zpětné složení bílého světla hranoly."}
+{"id":"packb798|en","ok":"yes","why":"Newton in Opticks showed prism splits and second prism recombines white light."}
+{"id":"packb799|cs","ok":"yes","why":"Ørsted 1820 při přednášce zjistil výchylku střelky; první důkaz spojení elektřiny a magnetismu."}
+{"id":"packb799|en","ok":"yes","why":"Ørsted's 1820 lecture observation linked electricity and magnetism."}
+{"id":"packb800|cs","ok":"yes","why":"Generátor využívá elektromagnetickou indukci — pohyb cívky v poli indukuje napětí."}
+{"id":"packb800|en","ok":"yes","why":"Generator relies on electromagnetic induction; rotating coil induces voltage."}
+{"id":"packb801|cs","ok":"yes","why":"Ohm 1827 popsal zákon; jednotka je po něm pojmenována."}
+{"id":"packb801|en","ok":"yes","why":"Ohm 1827 described V-I-R relationship; unit named after him."}
+{"id":"packb802|cs","ok":"yes","why":"Transformátor potřebuje střídavý proud; vysoké napětí snižuje ztráty při přenosu."}
+{"id":"packb802|en","ok":"yes","why":"Transformers require AC; high voltage reduces transmission losses."}
+{"id":"packb803|cs","ok":"no","why":"Kryptochrom je citlivý na světlo a magnetismus, ale „vidění“ pole je hypotéza, ne jistota."}
+{"id":"packb803|en","ok":"no","why":"Cryptochrome is light-sensitive and magnetically relevant, but 'seeing' the field is a debated hypothesis."}
+{"id":"packb822|cs","ok":"yes","why":"Definice reinforcement learning – učí se z odměn/trestů, ne z labelů."}
+{"id":"packb822|en","ok":"yes","why":"Correct definition of reinforcement learning."}
+{"id":"packb823|cs","ok":"yes","why":"Počet pozic v Go (~10^170) přesahuje atomy ve vesmíru (~10^80); dlouho považováno za výzvu."}
+{"id":"packb823|en","ok":"yes","why":"Go positions (~10^170) exceed atoms in universe (~10^80); standard fact."}
+{"id":"packb824|cs","ok":"yes","why":"Mitochondrie mají kruhovou DNA; základ endosymbiotické teorie."}
+{"id":"packb824|en","ok":"yes","why":"Mitochondrial circular DNA supports endosymbiotic theory."}
+{"id":"packb825|cs","ok":"yes","why":"Celulóza tvoří buněčnou stěnu; papír i bavlna jsou celulózové."}
+{"id":"packb825|en","ok":"yes","why":"Cellulose in cell wall; paper and cotton are cellulose-based."}
+{"id":"packb826|cs","ok":"yes","why":"Bakterie jsou prokaryota; řádově 10–100× menší než lidská buňka."}
+{"id":"packb826|en","ok":"yes","why":"Bacteria are prokaryotes, ~10–100× smaller than human cells."}
+{"id":"packb827|cs","ok":"yes","why":"Leeuwenhoek si stavěl mikroskopy, 1676 popsal bakterie jako „animalcules“."}
+{"id":"packb827|en","ok":"yes","why":"Leeuwenhoek built microscopes, described bacteria as 'animalcules' in 1676."}
+{"id":"packb811|cs","ok":"yes","why":"Faraday declined knighthood (1858) and presidency of Royal Society; well documented."}
+{"id":"packb811|en","ok":"yes","why":"Both declines documented; accurate."}
+{"id":"packb812|cs","ok":"yes","why":"Hertz 1887 experiments; Maxwell died 1879 = 8 years."}
+{"id":"packb812|en","ok":"yes","why":"Hertz 1887, Maxwell died 1879; correct."}
+{"id":"packb815|cs","ok":"yes","why":"McCarthy coined the term for the 1956 Dartmouth workshop."}
+{"id":"packb815|en","ok":"yes","why":"Standard attribution; correct."}
+{"id":"packb816|cs","ok":"yes","why":"1950 paper, imitation game; accurate."}
+{"id":"packb816|en","ok":"yes","why":"Correct paper, year and term."}
+{"id":"packb817|cs","ok":"yes","why":"Released Nov 30 2022; ~100M users in ~2 months."}
+{"id":"packb817|en","ok":"yes","why":"Hundreds of millions within months; accurate."}
+{"id":"packb820|cs","ok":"no","why":"ASIMO did not ring the White House doorbell; that claim is unverifiable/likely myth."}
+{"id":"packb820|en","ok":"no","why":"White House doorbell claim unverifiable; ASIMO's stair ability is fine but the 2002 'first' claim is not."}
+{"id":"packb834|cs","ok":"yes","why":"Přesné – prokaryota bez pravého jádra, DNA v nukleoidu."}
+{"id":"packb834|en","ok":"yes","why":"Accurate – prokaryotes, no true nucleus, DNA in nucleoid."}
+{"id":"packb837|cs","ok":"yes","why":"Celulóza je hlavní složkou i nejhojnějším organickým polymerem."}
+{"id":"packb837|en","ok":"yes","why":"Cellulose is main component and most abundant organic polymer."}
+{"id":"packb838|cs","ok":"yes","why":"20 min dělení za ideálních podmínek je správně."}
+{"id":"packb838|en","ok":"yes","why":"20-minute division under ideal conditions is correct."}
+{"id":"packb839|cs","ok":"no","why":"„Nejlepší na světě“ je sporné; zvětšení 270× je udávané, ale superlativ je přehnaný."}
+{"id":"packb839|en","ok":"no","why":"„Best in the world“ is contested; 270× is cited but the superlative is exaggerated."}
+{"id":"packb841|cs","ok":"yes","why":"mtDNA má 37 genů a dědí se po matce (s výjimkou vzácných případů)."}
+{"id":"packb841|en","ok":"yes","why":"mtDNA has 37 genes, maternal inheritance (rare exceptions aside)."}
+{"id":"packb842|cs","ok":"yes","why":"Konjugace přenáší plasmidy včetně genů rezistence."}
+{"id":"packb842|en","ok":"yes","why":"Conjugation transfers plasmids, including resistance genes."}
+{"id":"packb828|cs","ok":"yes","why":"2 m DNA na buňku, jádro ~6 µm – standardní učebnicový údaj."}
+{"id":"packb828|en","ok":"yes","why":"Correct: ~2 m DNA per cell, ~6 µm nucleus."}
+{"id":"packb829|cs","ok":"yes","why":"Weizenbaum v Computer Power and Human Reason popisuje, jak sekretářka žádala o soukromí při „rozhovoru“ s ELIZou."}
+{"id":"packb829|en","ok":"yes","why":"Documented in Weizenbaum's own account."}
+{"id":"packb830|cs","ok":"no","why":"Deep Blue hodnotil ~200 milionů pozic za sekundu jen ve špičce, běžně ~50–100 mil.; přesnější je „až 200 mil.“ – hraniční, ale často uváděno jako ~200 mil. → ne přesné."}
+{"id":"packb830|en","ok":"no","why":"Deep Blue's 200M positions/sec is a peak figure; commonly cited ~200M but contested/approximate."}
+{"id":"packb831|cs","ok":"yes","why":"Dartmouth 1956 proběhl ~8 týdnů a je označován za zrod AI."}
+{"id":"packb831|en","ok":"yes","why":"1956 Dartmouth workshop ran about eight weeks; widely called birth of AI."}
+{"id":"packb832|cs","ok":"yes","why":"Turing 1950, Computing Machinery and Intelligence, nazval test „imitation game“."}
+{"id":"packb832|en","ok":"yes","why":"Correct: Turing's 1950 paper, term 'imitation game'."}
+{"id":"packb833|cs","ok":"yes","why":"Unimate nasazen 1961 v GM (Ewing Township), prováděl odlévání/obsluhu horkých dílů."}
+{"id":"packb833|en","ok":"yes","why":"Unimate installed at GM in 1961 handling hot die-castings."}
+{"id":"packb843|cs","ok":"yes","why":"Správně: rhizobia fixují N2 do přístupné formy, bobovité se používají jako zelené hnojení."}
+{"id":"packb843|en","ok":"yes","why":"Correct: rhizobia fix N2 into plant-available form; legumes used as green manure."}

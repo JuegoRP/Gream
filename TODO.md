@@ -18,7 +18,9 @@
 - [x] OPRAVA: správná odpověď byla na obrazovce výzvy vždy první (2026-10-15)
 - [x] Nastavení: obtížnost zpět v nastavení, přeskupení (2026-10-15)
 - [x] Zásady na webu: ligy a bitevní místa – PR 3Rstudio.eu#3 (čeká na schválení) (2026-10-15)
-- [ ] Balíčky: zatím rozptýlené v běžných otázkách (pole `pack`); samostatný výběr balíčku + doplnit na 150 otázek/balíček
+- [x] Balíčky: výběr tématu v souboji (i rodinném); film a hudba 160, věda 163, sport 151, historie 151, jídlo 162, Česko 132 otázek (2026-10-15)
+- [ ] Balíček Česko doplnit na 150+
+- [x] Mapa: body drží na místě při zoomu (oprava i ve větvích 1.0) (2026-10-15)
 - [x] Vzácné „zářivé“ greamíky – už existují (1 : 100, zlatá záře v zahradě i aréně), ponecháno (2026-10-15)
 
 ## Před vydáním (cíl Q4 2026 — Google Play + App Store)
