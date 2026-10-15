@@ -16,6 +16,31 @@
   </div>
 </div>
 
+<!-- Difficulty (ruční přepnutí – hráč si volí sám, extrémní = Premium) -->
+<div class="card-section">
+  <div class="section-title" id="ss-diff-title"></div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">
+    <button class="diff-btn" data-diff="easy" onclick="App.setDifficulty('easy')" style="padding:10px 4px;border-radius:12px;border:2px solid rgba(74,138,46,0.25);font-family:inherit;font-weight:800;font-size:12px;cursor:pointer"><div>🌱</div><span id="diffLblEasy"></span></button>
+    <button class="diff-btn" data-diff="medium" onclick="App.setDifficulty('medium')" style="padding:10px 4px;border-radius:12px;border:2px solid rgba(74,138,46,0.25);font-family:inherit;font-weight:800;font-size:12px;cursor:pointer"><div>🌿</div><span id="diffLblMedium"></span></button>
+    <button class="diff-btn" data-diff="hard" onclick="App.setDifficulty('hard')" style="padding:10px 4px;border-radius:12px;border:2px solid rgba(74,138,46,0.25);font-family:inherit;font-weight:800;font-size:12px;cursor:pointer"><div>🌳</div><span id="diffLblHard"></span></button>
+    <button class="diff-btn" data-diff="extreme" onclick="App.setDifficulty('extreme')" style="padding:10px 4px;border-radius:12px;border:2px solid rgba(74,138,46,0.25);font-family:inherit;font-weight:800;font-size:12px;cursor:pointer"><div>⚡</div><span id="diffLblExtreme"></span></button>
+  </div>
+  <div id="ss-diff-hint" style="font-size:11px;color:var(--green-mid);font-weight:600;margin-top:8px;line-height:1.4"></div>
+</div>
+
+<!-- Sound -->
+<div class="card-section">
+  <div class="section-title" id="ss-sound-title"></div>
+  <div class="set-row">
+    <div class="set-row-label" id="ss-sound-lbl"></div>
+    <label class="switch">
+      <input type="checkbox" id="ssSoundToggle" onchange="App.toggleSound(this.checked)">
+      <span class="slider"></span>
+    </label>
+  </div>
+  <div id="ssMenuMusic" style="margin-top:10px"></div>
+</div>
+
 <!-- Profile -->
 <div class="card-section" id="ss-profile-sec">
   <div class="section-title" id="ss-profile-title"></div>
@@ -37,19 +62,6 @@
     <input id="ssNameInput" class="input-field"
       style="width:140px;padding:8px 10px;font-size:14px;margin:0">
   </div>
-</div>
-
-<!-- Sound -->
-<div class="card-section">
-  <div class="section-title" id="ss-sound-title"></div>
-  <div class="set-row">
-    <div class="set-row-label" id="ss-sound-lbl"></div>
-    <label class="switch">
-      <input type="checkbox" id="ssSoundToggle" onchange="App.toggleSound(this.checked)">
-      <span class="slider"></span>
-    </label>
-  </div>
-  <div id="ssMenuMusic" style="margin-top:10px"></div>
 </div>
 
 <!-- Location / Home pin -->

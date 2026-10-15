@@ -346,8 +346,9 @@ export const Challenge = {
 
     const label = document.createElement('div');
     label.style.cssText = 'font-size:13px;font-weight:700;color:var(--green-mid);margin-bottom:8px;text-align:center';
-    const est = challenge?.check?.tolerancePct != null;
-    label.textContent = est ? `${tr().estimate_label} (±${challenge.check.tolerancePct} %)` : (lang === 'cs' ? 'Napiš číslo:' : 'Enter a number:');
+    const c = challenge?.check || {}, est = c.tolerancePct != null || challenge?.estimate;
+    const tolTxt = c.tolerancePct != null ? `±${c.tolerancePct} %` : c.tolerance ? `±${c.tolerance}` : '';
+    label.textContent = est ? `${tr().estimate_label}${tolTxt ? ` (${tolTxt})` : ''}` : (lang === 'cs' ? 'Napiš číslo:' : 'Enter a number:');
 
     const input = document.createElement('input');
     input.type = 'text';

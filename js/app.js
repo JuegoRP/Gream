@@ -2853,6 +2853,7 @@ window.App = {
     if (p) {
       this._setText('ss-profile-title', t.ss_profile);
       this._setText('ss-name-label',    t.ss_name);
+      this._setText('ss-avatar',        t.ss_avatar);
       const prev = document.getElementById('ssAvatarPreview');
       if (prev) {
         if (p.hasPhoto) {

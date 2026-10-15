@@ -12,9 +12,12 @@ import { getLang, tr } from './i18n.js';
 export function factFor(world, difficulty, ch) {
   if (!ch) return null;
   const lang = getLang() === 'cs' ? 'cs' : 'en';
-  const f = FACTS[challengeId(world, difficulty, ch.text)];
+  const f = ch.fact || FACTS[challengeId(world, difficulty, ch.text)];   // nové otázky 1.1 nesou zajímavost s sebou
   if (!f || !f[lang]) return null;
-  return { text: f[lang], src: f.src || '' };
+  // „Víš, že…?“ je v nadpisu karty – úvodní frázi z textu vynechat
+  let text = String(f[lang]).replace(/^\s*(did you know\??\s*[,:…-]*\s*(that\s+)?|víš,?\s*že\s*[…?.]*\s*)/i, '').trim();
+  text = text.charAt(0).toUpperCase() + text.slice(1);
+  return { text, src: f.src || '' };
 }
 
 // Karta zajímavosti (HTML), prázdný řetězec když není

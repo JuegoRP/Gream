@@ -24,8 +24,7 @@ const ok = (cond, msg) => { if (cond) pass++; else { fail++; console.log('  ✗ 
     const e = T.en.challenges[w][d].length, c = T.cs.challenges[w]?.[d]?.length || 0;
     if (e !== c) mismatch++;
     total += e;
-    const seen = new Set();
-    for (const ch of T.en.challenges[w][d]) { if (seen.has(ch.text)) dups++; seen.add(ch.text); }
+    for (const lang of ['en', 'cs']) { const seen = new Set(); for (const ch of T[lang].challenges[w]?.[d] || []) { if (seen.has(ch.text)) dups++; seen.add(ch.text); } }
   }
   ok(mismatch === 0, `EN/CZ pool alignment (${mismatch} mismatches)`);
   ok(dups === 0, `no within-difficulty duplicates (${dups})`);

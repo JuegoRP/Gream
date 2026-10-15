@@ -55,7 +55,7 @@ for (const lang of ['en', 'cs']) {
 }
 
 // ── Ověření, že VALIDATOR reálně přijme správnou a odmítne špatnou odpověď ──
-const { Validator } = await import(new URL('validator.js', base));
+const { Validator, numTolerance } = await import(new URL('validator.js', base));
 let behav = [];
 for (const lang of ['en', 'cs']) {
   const C = T[lang].challenges;
@@ -71,7 +71,7 @@ for (const lang of ['en', 'cs']) {
         if (wrong && Validator.validate(ch.check, wrong.value ?? wrong.text, 'choice', lang).passed) behav.push(`${at} choice ACCEPTS wrong answer`);
       }
       else if (t === 'number' && ch.check.answer != null) {
-        const tol = ch.check.tolerance ?? 0;
+        const tol = numTolerance(ch.check);   // i odhad v % (tolerancePct)
         if (!Validator.validate(ch.check, String(ch.check.answer), 'number', lang).passed) behav.push(`${at} number REJECTS correct`);
         if (Validator.validate(ch.check, String(Number(ch.check.answer) + tol + 100), 'number', lang).passed) behav.push(`${at} number ACCEPTS far-wrong`);
       }

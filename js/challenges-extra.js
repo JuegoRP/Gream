@@ -59,12 +59,13 @@ for (const [d, scope, lat, lon, cs, en] of MAP) {
 const VAL = (i) => ['correct', 'wrong1', 'wrong2', 'wrong3'][i] || 'wrong' + i;
 function toChallenge(q, lang) {
   const L = q[lang];
-  const base = { text: L.text, mode: 'indoor_ok', ...(q.pack ? { pack: q.pack } : {}) };
+  const base = { text: L.text, mode: 'indoor_ok', ...(q.pack ? { pack: q.pack } : {}), ...(q.fact?.[lang] ? { fact: { [lang]: q.fact[lang], src: q.fact.src } } : {}) };
   if (q.kind === 'tf') {
     const yes = lang === 'cs' ? '✅ Pravda' : '✅ True', no = lang === 'cs' ? '❌ Mýtus' : '❌ Myth';
     return { ...base, action: 'choice', keepOrder: true, choices: [{ text: yes, value: 'pravda' }, { text: no, value: 'mytus' }], check: { type: 'choice', correct: q.correct } };
   }
-  if (q.kind === 'estimate') return { ...base, action: 'number', unit: L.unit || '', check: { type: 'number', answer: q.answer, tolerancePct: q.tol } };
+  if (q.kind === 'estimate') return { ...base, action: 'number', estimate: true,
+    check: { type: 'number', answer: q.answer, unit: L.unit || '', ...(q.tolAbs != null ? { tolerance: q.tolAbs } : { tolerancePct: q.tol }) } };
   if (q.kind === 'timeline') return { ...base, action: 'sort', items: [...L.items], check: { type: 'sort', correct: L.items } };
   // odd + choice: správná je choices[correct_index]
   return { ...base, action: 'choice', choices: L.choices.map((t, i) => ({ text: t, value: i === q.correct_index ? 'correct' : VAL(i + 1) })), check: { type: 'choice', correct: 'correct' } };
