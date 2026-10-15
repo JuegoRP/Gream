@@ -29,11 +29,12 @@ const QUIZ_STYLE = {
   ],
 };
 
+// Prvek markeru posouvá mapa vlastním transformem – otočení špendlíku jen ve vnitřním prvku (jinak „ujíždí“ při zoomu)
 const pinEl = (color, emoji) => {
-  const el = document.createElement('div');
-  el.style.cssText = `width:30px;height:30px;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:${color};border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center`;
-  el.innerHTML = `<span style="transform:rotate(45deg);font-size:14px">${emoji}</span>`;
-  return el;
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'width:30px;height:30px';
+  wrap.innerHTML = `<div style="width:30px;height:30px;box-sizing:border-box;border-radius:50% 50% 50% 0;transform:rotate(-45deg);background:${color};border:3px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center"><span style="transform:rotate(45deg);font-size:14px">${emoji}</span></div>`;
+  return wrap;
 };
 
 export const MapQuiz = {
