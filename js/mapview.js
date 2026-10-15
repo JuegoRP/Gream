@@ -11,8 +11,8 @@ import { Net } from './net.js';
 import { tr } from './i18n.js';
 import { Expedition } from './expedition.js';
 
-const TILES_URL = 'https://3rstudio.eu/api/gream/tiles/{z}/{x}/{y}.pbf';
-const ATTRIBUTION = '© <a href="https://openfreemap.org" target="_blank">OpenFreeMap</a> © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>';
+export const TILES_URL = 'https://3rstudio.eu/api/gream/tiles/{z}/{x}/{y}.pbf';
+export const ATTRIBUTION = '© <a href="https://openfreemap.org" target="_blank">OpenFreeMap</a> © <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>';
 const ML_JS  = 'vendor/maplibre/maplibre-gl.js';
 const ML_CSS = 'vendor/maplibre/maplibre-gl.css';
 
@@ -55,7 +55,7 @@ let _watchId = null, _onPoiTap = null, _activePoi = null, _allPois = [];
 let _heading = null, _headingOn = false, _destination = null, _destMarker = null;
 let _following = true, _lastFetchCenter = null, _lastOpts = null, _filterWorld = null;
 
-function loadMapLibre() {
+export function loadMapLibre() {
   if (_mlReady) return _mlReady;
   _mlReady = new Promise((resolve, reject) => {
     if (window.maplibregl) return resolve(window.maplibregl);

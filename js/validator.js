@@ -46,6 +46,12 @@ export const Validator = {
           : { passed: false, feedback: lang === 'cs' ? `Správná odpověď: ${correct}` : `Correct answer: ${correct}` };
       }
 
+      case 'map_pin': {   // proof = "lat,lon" ťuknutí na mapě
+        const d = mapDist(check, proof);
+        if (d == null) return { passed: false, feedback: L.needText };
+        return { passed: d <= (check.km || 500), feedback: '' };
+      }
+
       case 'sort':
         return { passed: true, feedback: '' }; // sort scores via score()
 
@@ -149,6 +155,11 @@ export const Validator = {
 
       case 'exists':
         return proof ? 100 : 0;
+
+      case 'map_pin': {
+        const d = mapDist(check, proof);
+        return d == null ? 0 : mapScore(d, check.km || 500);
+      }
 
       case 'number': {
         const num = this._extractNumber(proof);
@@ -275,4 +286,29 @@ export function numTolerance(check) {
   if (!check) return 0;
   if (check.tolerancePct != null) return Math.abs(Number(check.answer) || 0) * check.tolerancePct / 100;
   return check.tolerance ?? 0;
+}
+
+// ─── Otázka „Kde to je?“ (mapquiz.js) ───
+// Vzdálenost dvou bodů v km (haversine)
+export function distanceKm(a, b) {
+  const R = 6371, rad = (x) => x * Math.PI / 180;
+  const dLat = rad(b.lat - a.lat), dLon = rad(b.lon - a.lon);
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.min(1, Math.sqrt(h)));
+}
+
+// Skóre podle vzdálenosti od cíle (km = tolerance pro „správně“)
+export function mapScore(distKm, km) {
+  if (distKm <= km / 3) return 100;
+  if (distKm <= km) return 80;
+  if (distKm <= km * 2) return 50;
+  if (distKm <= km * 4) return 30;
+  return 20;
+}
+
+// Vzdálenost ťuknutí („lat,lon“) od cíle otázky v km
+export function mapDist(check, proof) {
+  const [lat, lon] = String(proof || '').split(',').map(Number);
+  if (!isFinite(lat) || !isFinite(lon) || check?.lat == null) return null;
+  return distanceKm({ lat, lon }, { lat: check.lat, lon: check.lon });
 }

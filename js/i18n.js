@@ -222,6 +222,10 @@ export const T = {
     nav_close:    "Close",
     fact_title:   "Did you know?",
     estimate_label: "Estimate",
+    mapq_label: "Tap the map where it is:",
+    mapq_confirm: "📍 This is my guess",
+    mapq_result: (km) => `You were ${km} km away`,
+    mapq_spot_on: "Great guess! 🎯",
     wrong_title:  "Not quite",
     wrong_correct:"Correct answer:",
     wrong_next:   "Next question",
@@ -1623,6 +1627,10 @@ export const T = {
     nav_close:    "Zavřít",
     fact_title:   "Víš, že…?",
     estimate_label: "Odhadni",
+    mapq_label: "Ťukni na mapu, kde to je:",
+    mapq_confirm: "📍 Tady to je",
+    mapq_result: (km) => `Byl jsi ${km} km od cíle`,
+    mapq_spot_on: "Výborně! 🎯",
     wrong_title:  "Tentokrát ne",
     wrong_correct:"Správná odpověď:",
     wrong_next:   "Další otázka",
@@ -2815,12 +2823,14 @@ export const T = {
   }
 };
 
-// Otázky 1.1 (challenges-extra.js) – připojit za stávající (pořadí cs/en stejné, ID podle textu)
+// Otázky 1.1 (challenges-extra.js) – vložit mezi stávající (pořadí cs/en stejné, ID podle textu)
 for (const lang of ['cs', 'en']) {
   for (const [w, byDiff] of Object.entries(EXTRA_CHALLENGES[lang] || {})) {
     for (const [d, list] of Object.entries(byDiff)) {
+      // rozptýlit rovnoměrně mezi stávající (výzvy jdou dokola podle pořadí – na konci by je hráč viděl až po celém kole)
       const target = ((T[lang].challenges[w] ||= {})[d] ||= []);
-      target.push(...list);
+      const n = target.length, m = list.length;
+      list.forEach((ch, j) => target.splice(Math.round((j + 1) * n / (m + 1)) + j, 0, ch));
     }
   }
 }

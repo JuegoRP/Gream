@@ -1,22 +1,20 @@
 // ═══════════════════════════════════
 //  GREAM — facts.js  („Víš, že…?“ ke každé otázce)
 //  Data: js/facts-data.js (generuje scripts/qa-questions.mjs po ověření pravdivosti).
-//  Klíč = challengeId(svět, obtížnost, český text otázky) z net.js.
+//  Klíč = challengeId(svět, obtížnost, text otázky v jazyce hráče) z net.js.
 // ═══════════════════════════════════
 import { FACTS } from './facts-data.js';
 import { challengeId } from './net.js';
-import { getLang, tr, T } from './i18n.js';
+import { getLang, tr } from './i18n.js';
 
-// Najde zajímavost k otázce (podle české verze textu – id je stejné pro oba jazyky)
+// Najde zajímavost k otázce. České a anglické otázky jsou samostatné sady (ne překlady),
+// proto má každý jazyk vlastní ověřené zajímavosti: klíč = id z textu otázky v jazyce hráče.
 export function factFor(world, difficulty, ch) {
   if (!ch) return null;
-  // id je podle ČESKÉHO textu → u angličtiny najdi českou otázku na stejném místě
-  let csText = ch._csText || ch.text;
-  const en = T.en?.challenges?.[world]?.[difficulty], cs = T.cs?.challenges?.[world]?.[difficulty];
-  if (en && cs) { const i = en.findIndex(q => q.text === ch.text); if (i >= 0 && cs[i]) csText = cs[i].text; }
-  const f = FACTS[challengeId(world, difficulty, csText)] || FACTS[challengeId(world, difficulty, ch.text)];
-  if (!f) return null;
-  return { text: getLang() === 'cs' ? f.cs : (f.en || f.cs), src: f.src || '' };
+  const lang = getLang() === 'cs' ? 'cs' : 'en';
+  const f = FACTS[challengeId(world, difficulty, ch.text)];
+  if (!f || !f[lang]) return null;
+  return { text: f[lang], src: f.src || '' };
 }
 
 // Karta zajímavosti (HTML), prázdný řetězec když není

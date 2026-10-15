@@ -12,7 +12,8 @@ import { tr } from './i18n.js';
 import { Profiles } from './profiles.js';
 import { Badges } from './badges.js';
 import { Router } from './router.js';
-import { Validator } from './validator.js';
+import { Validator, mapDist } from './validator.js';
+import { MapQuiz } from './mapquiz.js';
 import { Feedback } from './feedback.js';
 import { Geo } from './geo.js';
 import { Skins } from './skins.js';
@@ -216,6 +217,7 @@ export const Challenge = {
       fill_blank: { icon: '✍️', cs: 'Doplň',    en: 'Fill in' },
       sort:       { icon: '↕️', cs: 'Seřaď',    en: 'Sort' },
       match:      { icon: '🔗', cs: 'Přiřaď',   en: 'Match' },
+      map_pin:    { icon: '📍', cs: 'Kde to je?', en: 'Where is it?' },
     };
     const curType = TYPE_LABEL[challenge.check?.type];
 
@@ -264,6 +266,7 @@ export const Challenge = {
     const container = document.getElementById('action-btns');
     if (!container) return;
     container.innerHTML = '';
+    this._mapQuiz?.destroy(); this._mapQuiz = null;   // mapa z minulé otázky „Kde to je?“
 
     const typeMap = { photo: 'choice', draw: 'choice', voice: 'choice' };
     const type = typeMap[actionType] || actionType;
@@ -274,6 +277,7 @@ export const Challenge = {
     else if (type === 'fill_blank' && challenge?.blank)     this._renderFillBlankUI(container, challenge, t);
     else if (type === 'sort'       && challenge?.items)     this._renderSortUI(container, challenge, t);
     else if (type === 'match'      && challenge?.pairs)     this._renderMatchUI(container, challenge, t);
+    else if (type === 'map_pin'    && challenge?.check?.lat != null) this._renderMapPinUI(container, challenge, t);
     else if (challenge?.choices)                            this._renderChoiceUI(container, challenge, t);
     else                                                    this._renderNumberUI(container, challenge, t);
   },
@@ -285,7 +289,9 @@ export const Challenge = {
     label.textContent = lang === 'cs' ? 'Vyber správnou odpověď:' : 'Choose the right answer:';
     container.appendChild(label);
 
-    challenge.choices.forEach(choice => {
+    // Zamíchat možnosti – v datech je správná odpověď vždy první (keepOrder: Pravda/Mýtus apod.)
+    const choices = challenge.keepOrder ? challenge.choices : [...challenge.choices].sort(() => Math.random() - 0.5);
+    choices.forEach(choice => {
       const btn = document.createElement('button');
       btn.className = 'btn-action btn-choice';
       btn.style.cssText = 'width:100%;max-width:420px;text-align:left;padding:14px 18px;font-size:15px';
@@ -306,6 +312,31 @@ export const Challenge = {
       };
       container.appendChild(btn);
     });
+  },
+
+  // „Kde to je?“ – ťukni na mapu bez popisků, pak se ukáže skutečné místo a vzdálenost
+  _renderMapPinUI(container, challenge, t) {
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'width:100%;max-width:420px';
+    wrap.innerHTML = `<div style="font-size:13px;font-weight:700;color:var(--green-mid);margin-bottom:8px;text-align:center">${t.mapq_label}</div>
+      <div class="mapq-box" style="position:relative;width:100%;height:300px;border-radius:16px;overflow:hidden;border:2px solid rgba(74,138,46,0.3);background:#a9dcf1;margin-bottom:10px"></div>
+      <div class="mapq-res" style="text-align:center;font-weight:800;color:var(--green-deep);min-height:20px;margin-bottom:6px"></div>
+      <button class="btn-primary" style="width:100%" disabled>${t.mapq_confirm}</button>`;
+    container.appendChild(wrap);
+    const btn = wrap.querySelector('button'), res = wrap.querySelector('.mapq-res');
+    let quiz = null, revealed = false;
+    MapQuiz.mount(wrap.querySelector('.mapq-box'), challenge.scope || 'world', () => { if (!revealed) btn.disabled = false; })
+      .then(q => { quiz = q; this._mapQuiz = q; })
+      .catch(() => { res.textContent = '⚠️'; });
+    btn.onclick = () => {
+      const g = quiz?.guess; if (!g || revealed) return;
+      revealed = true; btn.disabled = true;
+      const check = challenge.check, proof = `${g.lat.toFixed(4)},${g.lon.toFixed(4)}`;
+      const km = Math.round(mapDist(check, proof));
+      quiz.reveal({ lat: check.lat, lon: check.lon });
+      res.textContent = km <= (check.km || 500) / 3 ? `${t.mapq_spot_on} ${t.mapq_result(km)}` : t.mapq_result(km);
+      setTimeout(() => this._validateAndProceed(proof, 'map_pin'), 1800);
+    };
   },
 
   _renderNumberUI(container, challenge, t) {

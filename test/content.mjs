@@ -44,6 +44,11 @@ for (const lang of ['en', 'cs']) {
         if (new Set(as).size !== as.length) issues.push(`${at} match duplicate a — "${short}"`);
         if (ch.pairs.some(p => p.a == null || p.b == null)) issues.push(`${at} match null pair — "${short}"`);
       }
+      else if (t === 'map_pin') {
+        const { lat, lon, km } = ch.check;
+        if (!(Math.abs(lat) <= 85 && Math.abs(lon) <= 180 && km > 0)) issues.push(`${at} map_pin bad lat/lon/km — "${short}"`);
+        if (!['world', 'europe', 'cz'].includes(ch.scope)) issues.push(`${at} map_pin bad scope '${ch.scope}' — "${short}"`);
+      }
       else issues.push(`${at} unknown type '${t}' — "${short}"`);
     });
   }
@@ -74,6 +79,11 @@ for (const lang of ['en', 'cs']) {
         if (!Validator.validate(ch.check, ch.check.correct, 'text', lang).passed) behav.push(`${at} fill_blank REJECTS correct`);
         if (Validator.validate(ch.check, 'zzz-nope-'+i, 'text', lang).passed) behav.push(`${at} fill_blank ACCEPTS wrong`);
       }
+      else if (t === 'map_pin') {
+        const { lat, lon, km } = ch.check;
+        if (!Validator.validate(ch.check, `${lat},${lon}`, 'map_pin', lang).passed || Validator.score(ch.check, `${lat},${lon}`, 'map_pin') !== 100) behav.push(`${at} map_pin REJECTS exact spot`);
+        if (Validator.validate(ch.check, `${-lat},${lon > 0 ? lon - 150 : lon + 150}`, 'map_pin', lang).passed) behav.push(`${at} map_pin ACCEPTS far-wrong`);
+      }
       else if (t === 'sort') {
         // score() must give 100 for correct order, less for reversed
         const right = ch.check.correct.join('→');
@@ -83,6 +93,12 @@ for (const lang of ['en', 'cs']) {
       }
     });
   }
+}
+
+for (const w of Object.keys(T.cs.challenges)) for (const d of Object.keys(T.cs.challenges[w])) {
+  const a = T.cs.challenges[w][d], b = T.en.challenges[w]?.[d] || [];
+  if (a.length !== b.length) issues.push(`${w}|${d} počet cs=${a.length} ≠ en=${b.length}`);
+  a.forEach((ch, i) => { if (b[i] && ch.action === 'map_pin' && (b[i].check?.lat !== ch.check.lat)) issues.push(`${w}|${d}[${i}] map_pin cs/en jiné místo`); });
 }
 
 let total = 0; for (const w of Object.keys(T.en.challenges)) for (const d of Object.keys(T.en.challenges[w])) total += T.en.challenges[w][d].length;
