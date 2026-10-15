@@ -26,6 +26,7 @@ const F = (n) => path.join(DATA_DIR, n);
 function loadJSON(file, fallback) { try { return JSON.parse(fs.readFileSync(file, 'utf8')); } catch { return fallback; } }
 const reports = loadJSON(F('reports.json'), []);
 const battle  = loadJSON(F('battle.json'), { players: {}, runs: {} });     // runs: {diff: [{pid,name,score,rating,ts}]}
+const league  = loadJSON(F('league.json'), { week: null, tier: {}, pts: {}, last: {} });   // týdenní ligy (1.1)
 const poi     = loadJSON(F('poi.json'), {});
 const daily   = loadJSON(F('daily.json'), {});                             // { 'YYYY-MM-DD': { pid: {name,score,ts} } }
 const rank    = loadJSON(F('rank.json'), {});                              // { pid: {name,avatar,score,tasks,badges,streak,greamStage,ts} }
@@ -95,6 +96,63 @@ function pickOpponent(diff, rating, pid) {
   return { name: 'Gream Bot', score, rating: 1000, bot: true };
 }
 
+// ─── Týdenní ligy: body za souboje, na konci týdne postup / sestup ───
+const TIERS = ['bronze', 'silver', 'gold', 'diamond'];
+const PROMOTE = 0.3, DEMOTE = 0.2;
+function isoWeek(d = new Date()) {
+  const t = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+  const day = t.getUTCDay() || 7; t.setUTCDate(t.getUTCDate() + 4 - day);
+  const y = t.getUTCFullYear(), w = Math.ceil(((t - Date.UTC(y, 0, 1)) / 864e5 + 1) / 7);
+  return `${y}-W${String(w).padStart(2, '0')}`;
+}
+function weekEnds() {   // pondělí 00:00 UTC příštího týdne
+  const d = new Date(); const day = d.getUTCDay() || 7;
+  return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() + 8 - day);
+}
+function rollLeague() {
+  const wk = isoWeek();
+  if (league.week === wk) return;
+  if (league.week) {   // vyhodnotit uplynulý týden po ligách
+    league.last = {};
+    const before = { ...league.tier };   // vyhodnotit podle lig na začátku týdne (postoupivší se nepočítají dvakrát)
+    for (const tier of TIERS) {
+      const rows = Object.entries(league.pts).filter(([pid]) => (before[pid] || 'bronze') === tier).sort((a, b) => b[1].pts - a[1].pts);
+      const n = rows.length, up = Math.floor(n * PROMOTE), down = Math.floor(n * DEMOTE);
+      rows.forEach(([pid], i) => {
+        const ti = TIERS.indexOf(tier);
+        let to = tier;
+        if (i < up && ti < TIERS.length - 1) to = TIERS[ti + 1];
+        else if (i >= n - down && ti > 0 && n >= 5) to = TIERS[ti - 1];
+        league.tier[pid] = to;
+        league.last[pid] = { week: league.week, from: tier, to, rank: i + 1, of: n };
+      });
+    }
+  }
+  league.week = wk; league.pts = {};
+  persist('league', F('league.json'), league);
+}
+function leagueAdd(pid, name, add) {
+  rollLeague();
+  const row = league.pts[pid] || { name, pts: 0, games: 0 };
+  row.name = name; row.pts += add; row.games++;
+  league.pts[pid] = row;
+  persist('league', F('league.json'), league);
+}
+function leagueView(pid) {
+  rollLeague();
+  const tier = league.tier[pid] || 'bronze';
+  const rows = Object.entries(league.pts).filter(([id]) => (league.tier[id] || 'bronze') === tier).sort((a, b) => b[1].pts - a[1].pts);
+  const n = rows.length;
+  const me = rows.findIndex(([id]) => id === pid);
+  return {
+    week: league.week, endsAt: weekEnds(), tier, players: n,
+    promote: Math.floor(n * PROMOTE), demote: n >= 5 ? Math.floor(n * DEMOTE) : 0,
+    top: rows.slice(0, 20).map(([id, r], i) => ({ rank: i + 1, name: r.name, pts: r.pts, me: id === pid })),
+    me: me >= 0 ? { rank: me + 1, pts: rows[me][1].pts } : null,
+    last: league.last[pid] || null,
+  };
+}
+
 function updateRating(cur, oppRating, win) {
   const K = 28;
   const expected = 1 / (1 + Math.pow(10, (oppRating - cur) / 400));
@@ -117,7 +175,7 @@ const server = http.createServer((req, res) => {
   // Rate limit writes (anti-spam / anti-inflation).
   if (req.method === 'POST') {
     const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket.remoteAddress || 'x';
-    if (rateLimited(ip)) return send(res, 429, { error: 'rate-limited' });
+    if (!process.env.GREAM_RL_OFF && rateLimited(ip)) return send(res, 429, { error: 'rate-limited' });   // GREAM_RL_OFF jen pro lokální testy
   }
 
   // ─── Daily round: everyone plays the same date-seeded set; ranked per day ───
@@ -191,11 +249,17 @@ const server = http.createServer((req, res) => {
     (battle.runs[diff] = battle.runs[diff] || []).push(run);
     if (battle.runs[diff].length > RUNS_PER_DIFF) battle.runs[diff].splice(0, battle.runs[diff].length - RUNS_PER_DIFF);
     persist('battle', F('battle.json'), battle);
+    leagueAdd(String(d.pid).slice(0, 40), name, (win ? 3 : 1) + (d.ko ? 1 : 0));
     // rank by rating
     const board = Object.values(battle.players).sort((a, b) => b.rating - a.rating);
     const rank = board.findIndex(x => x.name === name && x.rating === pl.rating) + 1;
     return send(res, 200, { rating: pl.rating, rank: rank || board.length, wins: pl.wins });
   });
+
+  if (req.method === 'GET' && p === '/league') {
+    const pid = String(u.searchParams.get('pid') || '').slice(0, 40);
+    return send(res, 200, leagueView(pid));
+  }
 
   if (req.method === 'GET' && p === '/battle/leaderboard') {
     const board = Object.values(battle.players)

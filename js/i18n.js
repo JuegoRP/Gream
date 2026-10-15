@@ -164,6 +164,12 @@ export const T = {
     ss_data_info:       "Your data is stored only on this device. Tap below to permanently delete everything (GDPR right to erasure).",
     // Stats
     // Battles 1.1 — arena
+    league_name: { bronze: "Bronze league", silver: "Silver league", gold: "Gold league", diamond: "Diamond league" },
+    league_pts: "pts", league_none: "play a battle to join", league_empty: "Nobody here yet this week – be first!",
+    league_how: (d) => `Win 3 pts, loss 1 pt, knock-out +1. The best move up on Monday${d ? ` (in ${d} ${d === 1 ? 'day' : 'days'})` : ''}.`,
+    league_zone_up: "moves up", league_zone_down: "moves down",
+    league_up: (n) => `You moved up to the ${n}!`, league_down: (n) => `Back to the ${n} – go again!`, league_stay: (n) => `You stay in the ${n}.`,
+    league_gain: (n) => `+${n} league ${n === 1 ? 'point' : 'points'}`,
     family_btn:      "Family battle (one phone)",
     family_title:    "Family battle",
     family_how:      "Two players on one phone. You take turns on the same questions – pass the phone when asked.",
@@ -1546,6 +1552,12 @@ export const T = {
     ss_terms_lbl:       "Podmínky použití",
     ss_data_info:       "Tvá data jsou uložena pouze v tomto zařízení. Klepnutím níže je trvale smažeš (právo na výmaz dle GDPR).",
     // Souboje 1.1 — aréna
+    league_name: { bronze: "Bronzová liga", silver: "Stříbrná liga", gold: "Zlatá liga", diamond: "Diamantová liga" },
+    league_pts: "b.", league_none: "zahraj souboj a jsi v lize", league_empty: "Tento týden tu ještě nikdo není – buď první!",
+    league_how: (d) => `Výhra 3 body, prohra 1 bod, vyřazení soupeře +1. Nejlepší v pondělí postupují${d ? ` (za ${d} ${d === 1 ? 'den' : d < 5 ? 'dny' : 'dní'})` : ''}.`,
+    league_zone_up: "postupují", league_zone_down: "sestupují",
+    league_up: (n) => `Postup: ${n}!`, league_down: (n) => `Zpátky do: ${n} – zkus to znovu!`, league_stay: (n) => `Zůstáváš: ${n}.`,
+    league_gain: (n) => `+${n} ${n === 1 ? 'bod' : n < 5 ? 'body' : 'bodů'} do ligy`,
     family_btn:      "Rodinný souboj (jeden telefon)",
     family_title:    "Rodinný souboj",
     family_how:      "Dva hráči na jednom telefonu. Střídáte se u stejných otázek – když hra řekne, předej telefon.",

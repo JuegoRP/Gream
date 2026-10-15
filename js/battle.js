@@ -93,6 +93,8 @@ function pickQuestions(difficulty, rng) {
 }
 
 const todayISO = () => new Date().toISOString().slice(0, 10);
+const LEAGUE_ICON = { bronze: '🥉', silver: '🥈', gold: '🥇', diamond: '💎' };
+const TIERS_ORDER = ['bronze', 'silver', 'gold', 'diamond'];
 const escHtml = (x) => String(x ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
 export const Battle = {
@@ -132,6 +134,7 @@ export const Battle = {
           <div style="font-size:11px;font-weight:600;color:#888;margin-top:3px">${cs?'Za greamíka z daného světa dostaneš víc času na jeho otázky.':'A Gream from a question\'s world gives you more time on it.'}</div>
         </div>
 
+        <button id="battleLeague" class="league-chip" hidden></button>
         <div style="font-size:12px;font-weight:800;color:#888;margin-bottom:6px">${tr().battle_pick}</div>
         ${hatched.length ? '' : `<div style="font-size:11px;color:#999;margin-bottom:6px">${tr().battle_loan_note}</div>`}
         <div class="bt-pick" id="battlePick"></div>
@@ -214,6 +217,15 @@ export const Battle = {
     };
     ov.querySelector('#battleDailyBtn').onclick = () => this.daily(pick);
     ov.querySelector('#battleFamilyBtn').onclick = () => this.familySetup(pick, sel[0]);
+    // Liga: štítek + po novém týdnu oznámení o postupu/sestupu (jednou)
+    Net.league(p.id).then(L => {
+      if (!L || !document.getElementById('battleLeague')) return;
+      const chip = ov.querySelector('#battleLeague'), t = tr();
+      chip.hidden = false;
+      chip.innerHTML = `${LEAGUE_ICON[L.tier]} <b>${t.league_name[L.tier]}</b> · ${L.me ? `${L.me.pts} ${t.league_pts} · ${L.me.rank}.` : t.league_none}`;
+      chip.onclick = () => this.showLeague(L);
+      this._leagueNews(L);
+    });
   },
 
   _start(diff, outdoor, entry, reward, pick) {
@@ -597,7 +609,7 @@ export const Battle = {
     Net.battleResult({
       pid: p.id, name: p.name || 'Hráč', difficulty: this._diff,
       score: myCorrect, oppScore: this._correct[1], win, oppRating: rival.rating || 1000,
-      arch: this._me.arch, stage: this._me.stage || 2, acc: Skins.getAccessory(p.id) || null, answers: this._log.slice(0, ROUNDS),
+      arch: this._me.arch, stage: this._me.stage || 2, acc: Skins.getAccessory(p.id) || null, answers: this._log.slice(0, ROUNDS), ko: win && this._f[1].hp <= 0,
     }).then(r => { if (r && r.rating) { const st = loadStats(p.id); st.rating = r.rating; st.rank = r.rank; saveStats(p.id, st); } });
 
     const hpLeft = Math.max(0, Math.round(this._f[0].hp)), opLeft = Math.max(0, Math.round(this._f[1].hp));
@@ -610,6 +622,7 @@ export const Battle = {
         <div style="font-size:22px;font-weight:900;color:${win?'#2d7a2d':'#b0402a'}">${win?(cs?'Výhra!':'You win!'):(cs?'Prohra':'You lost')}</div>
         <div style="font-size:14px;font-weight:800;color:#555;margin:6px 0 2px">❤️ ${hpLeft} — ${opLeft} ❤️ · ✓ ${myCorrect} — ${this._correct[1]}</div>
         <div style="font-size:11px;color:#bbb;margin-bottom:12px">${rival.name} · ${rival.bot?(cs?'bot':'bot'):(cs?'nahraný souboj skutečného hráče':'recorded battle of a real player')}</div>
+        <div style="font-size:12px;font-weight:800;color:#8a5a00;margin-bottom:8px">${tr().league_gain((win ? 3 : 1) + (win && this._f[1].hp <= 0 ? 1 : 0))}</div>
         ${win?`<div style="background:#f0fbe8;border-radius:12px;padding:10px;font-weight:900;color:#2d7a2d;margin-bottom:12px">+${reward} 🌱</div>`
              :`<div style="font-size:13px;color:#999;margin-bottom:12px">${cs?'Vstupné propadlo. Zkus to znovu!':'Entry lost. Try again!'}</div>`}
         ${newBadges.length?`<div style="font-size:13px;font-weight:800;color:#c8860a;margin-bottom:12px">🏅 ${newBadges.join(' · ')}</div>`:''}
@@ -624,6 +637,41 @@ export const Battle = {
     ov.querySelector('#battleAgain').onclick = () => { ov.remove(); this.intro({ outdoor: this._outdoor }); };
     ov.querySelector('#battleBoard').onclick = () => this.showLeaderboard();
     ov.querySelector('#battleClose').onclick = () => { ov.remove(); Audio.switchScene?.('menu'); try { window.App?.renderMap?.(); } catch {} };
+  },
+
+  // ─── Týdenní liga ───
+  showLeague(L) {
+    const t = tr();
+    document.getElementById('battleBoardOverlay')?.remove();
+    const ov = document.createElement('div');
+    ov.id = 'battleBoardOverlay';
+    ov.style.cssText = 'position:fixed;inset:0;background:rgba(10,10,15,0.8);display:flex;align-items:center;justify-content:center;z-index:1004;padding:18px';
+    ov.onclick = e => { if (e.target === ov) ov.remove(); };
+    const days = Math.max(0, Math.ceil((L.endsAt - Date.now()) / 864e5));
+    const rows = (L.top || []).map(r => {
+      const zone = r.rank <= L.promote ? 'up' : (L.demote && r.rank > L.players - L.demote ? 'down' : '');
+      return `<div class="lg-row ${zone}${r.me ? ' me' : ''}"><span>${r.rank}.</span><b>${escHtml(r.name)}</b><span>${r.pts} ${t.league_pts}</span></div>`;
+    }).join('') || `<div style="color:#999;text-align:center;padding:10px">${t.league_empty}</div>`;
+    ov.innerHTML = `<div style="background:#fff;border-radius:20px;max-width:340px;width:100%;padding:20px;max-height:82vh;overflow-y:auto">
+      <div style="text-align:center;font-size:30px">${LEAGUE_ICON[L.tier]}</div>
+      <div style="text-align:center;font-size:18px;font-weight:900;color:var(--green-deep)">${t.league_name[L.tier]}</div>
+      <div style="text-align:center;font-size:12px;color:#888;margin:4px 0 12px;line-height:1.4">${t.league_how(days)}</div>
+      ${rows}
+      <div style="font-size:11px;color:#999;margin-top:10px;line-height:1.5"><span class="lg-dot up"></span> ${t.league_zone_up} &nbsp; <span class="lg-dot down"></span> ${t.league_zone_down}</div>
+      <button onclick="document.getElementById('battleBoardOverlay').remove()" class="btn-primary" style="width:100%;margin-top:14px">${getLang() === 'cs' ? 'Zavřít' : 'Close'}</button></div>`;
+    document.body.appendChild(ov);
+  },
+
+  // Jednou za týden: výsledek minulé ligy + odměna za postup
+  _leagueNews(L) {
+    const p = Profiles.active(); if (!p || !L?.last) return;
+    const key = 'gream_league_seen_' + p.id;
+    if (localStorage.getItem(key) === L.last.week) return;
+    try { localStorage.setItem(key, L.last.week); } catch {}
+    const t = tr(), up = TIERS_ORDER.indexOf(L.last.to) > TIERS_ORDER.indexOf(L.last.from), down = TIERS_ORDER.indexOf(L.last.to) < TIERS_ORDER.indexOf(L.last.from);
+    const reward = up ? 20 : 5;
+    Skins.addSeeds(p.id, reward);
+    window.App?._showToast?.(`${LEAGUE_ICON[L.last.to]} ${up ? t.league_up(t.league_name[L.last.to]) : down ? t.league_down(t.league_name[L.last.to]) : t.league_stay(t.league_name[L.last.to])} +${reward} 🌱`);
   },
 
   // ─── Battle leaderboard overlay (server) ───

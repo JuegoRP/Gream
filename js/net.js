@@ -37,6 +37,7 @@ export const Net = {
   report:         (data)              => req('POST', '/report', data),
   battleOpponent: (difficulty, rating, pid) => req('POST', '/battle/opponent', { difficulty, rating, pid }),
   battleResult:   (data)              => req('POST', '/battle/result', data),
+  league:         (pid)               => req('GET', '/league?pid=' + encodeURIComponent(pid || '')),
   leaderboard:    (difficulty)        => req('GET', '/battle/leaderboard' + (difficulty ? `?difficulty=${encodeURIComponent(difficulty)}` : '')),
   dailyResult:      (data)            => req('POST', '/battle/daily/result', data),
   dailyLeaderboard: (date)            => req('GET', '/battle/daily/leaderboard?date=' + encodeURIComponent(date)),

@@ -2,7 +2,8 @@
   "scripts": {
     "test": "node test/content.mjs && node test/sim.mjs && node test/ui.mjs && node test/battle-balance.mjs",
     "build:www": "node scripts/build-www.mjs",
-    "build:android": "node scripts/build-www.mjs && npx cap sync android"
+    "build:android": "node scripts/build-www.mjs && npx cap sync android",
+    "test:server": "node test/server.mjs"
   },
   "devDependencies": {
     "@capacitor/cli": "^8.5.3",
