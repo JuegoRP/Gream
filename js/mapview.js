@@ -78,8 +78,11 @@ function distM(a, b) {
 
 // ─── Hráč: greamík (od stádia 2), jinak semínko ───
 function userMarkerEl(gream) {
+  const wrap = document.createElement('div');
+  wrap.className = 'gm-marker';
   const el = document.createElement('div');
   el.className = 'gm-user';
+  wrap.appendChild(el);
   const COLORS = { nature: '#4a8a2e', language: '#5a4a8a', logic: '#2d7abf', feelings: '#d46d94', arts: '#c87030', world: '#a8743c' };
   if (gream && gream.stage >= 2 && gream.archetype) {
     const stage = Math.min(gream.stage, 4);
@@ -92,20 +95,26 @@ function userMarkerEl(gream) {
     el.style.setProperty('--ring', '#4a8a2e');
     el.innerHTML = `<div class="gm-heading"></div><div class="gm-pulse"></div><div class="gm-avatar">🌱</div>`;
   }
-  return el;
+  return wrap;
 }
 
 // ─── Místo: kulatý odznak v barvě světa ───
+// Pozn.: prvek předaný do maplibregl.Marker si mapa posouvá vlastním transformem a position:absolute –
+// vzhled (velikost, animace, transform) proto jen ve vnitřním prvku, jinak body při zoomu „ujíždějí“.
 function poiEl(poi) {
+  const wrap = document.createElement('div');
+  wrap.className = 'gm-marker';
   const el = document.createElement('button');
   el.type = 'button';
   el.className = 'gm-poi';
   el.setAttribute('aria-label', poi.kind || 'místo');
   el.innerHTML = `<span class="gm-poi-icon"></span><span class="gm-poi-badge" hidden></span>`;
-  stylePoi(el, poi);
-  return el;
+  wrap.appendChild(el);
+  stylePoi(wrap, poi);
+  return wrap;
 }
-function stylePoi(el, poi) {
+function stylePoi(wrap, poi) {
+  const el = wrap.querySelector('.gm-poi') || wrap;
   const done = (poi.worldsDone || []).length > 0;
   const near = _userPos ? distM(_userPos, poi) <= PROXIMITY_M : false;
   const world = done ? poi.worldsDone[poi.worldsDone.length - 1] : poi.bonusWorld;
@@ -203,6 +212,8 @@ function injectStyles() {
     @keyframes poiBob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
     .maplibregl-map{font-family:'Nunito',sans-serif}
     .maplibregl-ctrl-attrib{font-size:9px;opacity:.55;background:rgba(255,255,255,.7)!important}
+    .gm-marker{width:0;height:0;display:flex;align-items:center;justify-content:center}
+    .gm-marker>*{flex:none}
     .gm-user{position:relative;width:52px;height:52px;pointer-events:none}
     .gm-pulse{position:absolute;inset:-8px;border-radius:50%;background:var(--ring);opacity:.18;animation:greamPulse 2.2s ease-in-out infinite}
     .gm-avatar{position:absolute;inset:8px;border-radius:50%;background:var(--ring);border:3px solid #fff;box-shadow:0 3px 10px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;font-size:16px}
