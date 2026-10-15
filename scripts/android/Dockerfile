@@ -17,4 +17,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends unzip git ca-ce
  && yes | sdkmanager --licenses >/dev/null \
  && sdkmanager --install "platform-tools" "platforms;android-36" "build-tools;36.0.0" >/dev/null \
  && node --version && java -version
+# Android Gradle Plugin si sám bere build-tools 35 → přibalit, ať se nestahují při každém sestavení
+RUN sdkmanager --install "build-tools;35.0.0" >/dev/null
 WORKDIR /src

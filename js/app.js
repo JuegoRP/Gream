@@ -239,6 +239,7 @@ window.App = {
 
   async init() {
     console.log('[Gream] Init starting...');
+    this._initNativeBack();
     // Ask the OS not to evict our data (profiles, pet, progress live in
     // localStorage). iOS/Safari can clear WebView storage under space pressure;
     // losing a child's Gream is the worst possible bug. Best-effort, non-blocking.
@@ -379,6 +380,25 @@ window.App = {
       Router.show('hub');
     }
     this._decorate();
+  },
+
+  // ─── Systémové tlačítko Zpět na Androidu (hra nemá historii prohlížeče → bez tohohle by Zpět zavřel aplikaci) ───
+  _initNativeBack() {
+    const CapApp = window.Capacitor?.isNativePlatform?.() && window.Capacitor.Plugins?.App;
+    if (!CapApp) return;
+    CapApp.addListener('backButton', () => {
+      // Souboj a průvodce: Zpět nic nedělá (žádný omylem přerušený souboj)
+      if (document.getElementById('battleOverlay') || document.getElementById('battleBoardOverlay') || document.getElementById('tutOverlay')) return;
+      // Otevřené okno → zavřít
+      const modal = ['poiModalOverlay', 'infoModalOverlay', 'reportOverlay', 'outdoorSuggestionOverlay', 'resetConfirmOverlay']
+        .map(id => document.getElementById(id)).find(Boolean);
+      if (modal) { modal.remove(); return; }
+      const cur = Router.current();
+      if (!cur || ['map', 'home', 'onboarding', 'profiles'].includes(cur)) { CapApp.minimizeApp(); return; }
+      if (['map-view', 'hub'].includes(cur)) { this.showTab('garden'); return; }
+      if (cur === 'challenge') { Router.show('home'); return; }
+      this.back();
+    });
   },
 
   // ─── Sdílené prvky: ikony, popisky lišty a přístupnost tlačítek (po každé obrazovce i změně jazyka) ───
