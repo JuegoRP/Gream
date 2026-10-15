@@ -9,7 +9,7 @@ Kvízová hra pro celou rodinu (kids-first), venku i doma (vanilla JS PWA + Capa
 - Logika obrazovek v `js/app.js`, navigace přes `js/router.js` (úklid MapView při změně obrazovky)
 - Geo funkce v `js/geo.js` — pozor na cache invalidation a iOS DeviceMotion permission flow
 - **Soukromí je feature (Google Play Families policy):** přesné GPS souřadnice a fotky NIKDY neposílat nikam. Mapa i místa jdou jen přes náš server a jen s polohou zaokrouhlenou na ≈ 500 m (`Geo.roundPos`). Aplikace se nesmí spojit s žádnou cizí doménou (kontrola: audit `checks/poi_leak.mjs`, `ui_smoke.mjs`). Každá změna sběru dat = aktualizovat zásady (3rstudio.eu/gream-privacy.html), text v aplikaci (`showPrivacy` v app.js, `ob_v4_legal_*` v i18n) a STORE_LISTING §4.
-- Store build: postup v `CAPACITOR.md`
+- Store build (Android): server `/opt/roman-storage/android/build.sh gream JuegoRP/Gream <větev>` – postup v `CAPACITOR.md`; podpisový klíč nikdy do repa
 
 ## Testování
 

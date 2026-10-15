@@ -16,10 +16,10 @@
 - [~] Vlastní artworky — greamíci + vejce + pozadí + ikony hotové (2026-07-01), zbývá: Kenney placeholdery na mapě, barevnější vlnka, stage-varianty gramíků
 
 ### Build a distribuce
-- [ ] Capacitor build iOS + Android (postup: CAPACITOR.md)
+- [x] Capacitor build Android (2026-10-15) – Capacitor 8, API 36, AAB na GDrive Gream/vydani/1.0.0; iOS čeká
 - [ ] Google Play testing track (interní testování)
-- [ ] Store assety: screenshoty, popisky (EN texty hotové v i18n.js — využít)
-- [ ] **Privacy policy URL** — Google Play i App Store ji u dětských aplikací vyžadují povinně; obsah je vlastně hotový v onboarding v4 textech, stačí publikovat stránku (např. 3rstudio.eu/gream-privacy)
+- [x] Store assety (2026-10-15): ikona 512, úvodní grafika, snímky CZ/EN v store/ a na GDrive; popisky v STORE_LISTING.md
+- [x] Hotovo (2026-10-15, PR 3Rstudio.eu#2) **Privacy policy URL** — Google Play i App Store ji u dětských aplikací vyžadují povinně; obsah je vlastně hotový v onboarding v4 textech, stačí publikovat stránku (např. 3rstudio.eu/gream-privacy)
 - [ ] Ověřit „Kenney placeholdery na mapě" — v kódu (js/mapview.js) žádná reference na Kenney není; buď už vyřešeno a položka je zastaralá, nebo se assety jmenují jinak
 
 ---
