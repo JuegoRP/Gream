@@ -73,14 +73,21 @@ function corsHeaders(res) {
 }
 function send(res, code, obj) { res.writeHead(code); res.end(JSON.stringify(obj)); }
 
-function pickOpponent(diff, rating) {
-  const pool = (battle.runs[diff] || []).filter(r => r.rating != null);
+const ARCHES = ['lilek', 'jiskra', 'kamen', 'srodik', 'vlnka', 'atlas'];
+// Nahrávka souboje (1.1): greamík + odpovědi a časy po kolech → přehraje se soupeři
+function cleanAnswers(a) {
+  if (!Array.isArray(a)) return null;
+  const out = a.slice(0, 10).map(x => ({ ok: !!(x && x.ok), ms: Math.max(300, Math.min(30000, Math.round(Number(x && x.ms) || 0))) }));
+  return out.length >= 5 ? out : null;
+}
+function pickOpponent(diff, rating, pid) {
+  const pool = (battle.runs[diff] || []).filter(r => r.rating != null && (!pid || r.pid !== pid));
   if (pool.length) {
     // closest by rating, small randomness so it's not always the same
     pool.sort((a, b) => Math.abs(a.rating - rating) - Math.abs(b.rating - rating));
     const near = pool.slice(0, Math.min(8, pool.length));
     const o = near[Math.floor(Math.random() * near.length)];
-    return { name: o.name, score: o.score, rating: o.rating, bot: false };
+    return { name: o.name, score: o.score, rating: o.rating, bot: false, arch: o.arch, stage: o.stage, answers: o.answers };
   }
   // No real opponent yet → generated bot scaled by difficulty
   const acc = { easy:0.55, medium:0.65, hard:0.72, extreme:0.78 }[diff] || 0.65;
@@ -162,7 +169,7 @@ const server = http.createServer((req, res) => {
     if (!d) return send(res, 400, { error: 'bad-json' });
     const diff = DIFFS.includes(d.difficulty) ? d.difficulty : 'medium';
     const rating = Number(d.rating) || 1000;
-    return send(res, 200, pickOpponent(diff, rating));
+    return send(res, 200, pickOpponent(diff, rating, d.pid ? String(d.pid).slice(0, 40) : null));
   });
 
   if (req.method === 'POST' && p === '/battle/result') return readBody(req, (d) => {
@@ -178,7 +185,10 @@ const server = http.createServer((req, res) => {
     if (win) pl.wins++; else pl.losses++;
     battle.players[d.pid] = pl;
     // store this run as a future opponent
-    (battle.runs[diff] = battle.runs[diff] || []).push({ pid: d.pid, name, score, rating: pl.rating, ts: Date.now() });
+    const run = { pid: d.pid, name, score, rating: pl.rating, ts: Date.now() };
+    const answers = cleanAnswers(d.answers);
+    if (answers && ARCHES.includes(d.arch)) Object.assign(run, { arch: d.arch, stage: Math.max(2, Math.min(4, Number(d.stage) || 2)), answers });
+    (battle.runs[diff] = battle.runs[diff] || []).push(run);
     if (battle.runs[diff].length > RUNS_PER_DIFF) battle.runs[diff].splice(0, battle.runs[diff].length - RUNS_PER_DIFF);
     persist('battle', F('battle.json'), battle);
     // rank by rating

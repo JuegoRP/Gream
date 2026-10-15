@@ -35,7 +35,7 @@ export function challengeId(world, difficulty, enText) {
 export const Net = {
   base: BASE,
   report:         (data)              => req('POST', '/report', data),
-  battleOpponent: (difficulty, rating) => req('POST', '/battle/opponent', { difficulty, rating }),
+  battleOpponent: (difficulty, rating, pid) => req('POST', '/battle/opponent', { difficulty, rating, pid }),
   battleResult:   (data)              => req('POST', '/battle/result', data),
   leaderboard:    (difficulty)        => req('GET', '/battle/leaderboard' + (difficulty ? `?difficulty=${encodeURIComponent(difficulty)}` : '')),
   dailyResult:      (data)            => req('POST', '/battle/daily/result', data),

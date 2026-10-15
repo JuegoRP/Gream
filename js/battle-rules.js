@@ -22,12 +22,12 @@ export const SPECIALS = {
   lilek:  { id: 'leafstorm', mult: 2, dmg: 2 },            // Listová smršť: 2 poškození hned + příští zásah 2×
   jiskra: { id: 'bolt', dmg: 10, stun: 0.8 },              // Blesk: 10 poškození + soupeřův příští útok −20 %
   kamen:  { id: 'wall', block: 0.25, hits: 2, dmg: 7 },    // Kamenná zeď: 7 poškození + další 2 zásahy soupeře −25 %
-  srdik:  { id: 'hug', heal: 13, energy: 0 },              // Objetí: vyléčí 13
+  srodik:  { id: 'hug', heal: 13, energy: 0 },              // Objetí: vyléčí 13
   vlnka:  { id: 'wave', dmg: 1, mult: 2 },                 // Barevná vlna: 1 poškození + příští otázka bez jedné špatné možnosti + příští zásah 2×
   atlas:  { id: 'compass', dmg: 10 },                      // Kompas: 10 poškození + příští otázka z mého světa (jistý „Super účinné!“)
 };
 
-export const ARCH_WORLD = { lilek: 'nature', jiskra: 'language', kamen: 'logic', srdik: 'feelings', vlnka: 'arts', atlas: 'world' };
+export const ARCH_WORLD = { lilek: 'nature', jiskra: 'language', kamen: 'logic', srodik: 'feelings', vlnka: 'arts', atlas: 'world' };
 export const ARCHES = Object.keys(ARCH_WORLD);
 
 export function newFighter(arch, extra = {}) {
@@ -46,7 +46,7 @@ export function useSpecial(me, op) {
     case 'lilek':  me.mult = s.mult; if (s.dmg) { op.hp -= s.dmg; ev.dmg = s.dmg; } break;
     case 'jiskra': op.hp -= s.dmg; ev.dmg = s.dmg; op.stun = s.stun; break;
     case 'kamen':  me.wall = s.hits; if (s.dmg) { op.hp -= s.dmg; ev.dmg = s.dmg; } break;
-    case 'srdik':  { const h = Math.min(RULES.HP - me.hp, s.heal); me.hp += h; ev.heal = h; me.energy += s.energy; break; }
+    case 'srodik':  { const h = Math.min(RULES.HP - me.hp, s.heal); me.hp += h; ev.heal = h; me.energy += s.energy; break; }
     case 'vlnka':  op.hp -= s.dmg; ev.dmg = s.dmg; me.fiftyNext = true; me.mult = s.mult; break;
     case 'atlas':  op.hp -= s.dmg; ev.dmg = s.dmg; me.ownWorldNext = true; break;
   }
@@ -56,7 +56,7 @@ export function useSpecial(me, op) {
 // Jednoduchá AI soupeře/bota: použij speciál hned, Srdík až když léčení nepropadne.
 export function aiWantsSpecial(me) {
   if (!canSpecial(me)) return false;
-  if (me.arch === 'srdik') return me.hp <= RULES.HP - SPECIALS.srdik.heal * 0.8;
+  if (me.arch === 'srodik') return me.hp <= RULES.HP - SPECIALS.srodik.heal * 0.8;
   return true;
 }
 

@@ -11,6 +11,8 @@ def('document', window.document);
 def('navigator', window.navigator);
 def('localStorage', window.localStorage);
 def('requestAnimationFrame', cb => setTimeout(cb, 0));
+def('cancelAnimationFrame', id => clearTimeout(id));
+window.matchMedia = () => ({ matches: true, addEventListener() {}, removeEventListener() {} });   // „omezit pohyb“ → aréna bez částic, rychlejší test
 // stub audio so Feedback/Audio never throw in jsdom
 class FakeAudio { constructor(){ this.play=()=>Promise.resolve(); } play(){ return Promise.resolve(); } }
 window.Audio = FakeAudio; globalThis.Audio = FakeAudio;
@@ -50,22 +52,28 @@ ok(!startBtn.disabled, 'start button enabled (has seeds + premium)');
 
 // ── Start battle ──
 const seedsBefore = Skins.getSeeds(p.id);
+ok(document.querySelectorAll('#battlePick button').length >= 1, 'intro has greamík picker');
+ok(!!document.getElementById('battleSkill')?.textContent, 'intro shows the special of the picked greamík');
 startBtn.click();
 await sleep(30);
 ok(!document.getElementById('battleOverlay'), 'intro overlay closed after start');
 ok(Skins.getSeeds(p.id) < seedsBefore, 'entry deducted on start');
+await sleep(2000);   // soupeř ze serveru (max 1,5 s) + nástup arény
 ok(!!document.getElementById('battleRound'), 'first round rendered');
+ok(!!document.querySelector('.ar-stage .ar-me .ar-hp'), 'arena shows HP bars');
 
 // ── Auto-play 10 rounds (click first choice each round) ──
 let rounds = 0;
-for (let i = 0; i < 14; i++) {
+let usedSpecial = false;
+for (let i = 0; i < 400; i++) {
   if (document.getElementById('battleResult')) break;
-  const choices = document.querySelectorAll('#battleChoices button');
+  const sp = document.getElementById('btSpecial');
+  if (sp && !sp.hidden && !usedSpecial) { sp.click(); usedSpecial = true; await sleep(1200); continue; }
+  const choices = [...document.querySelectorAll('#btChoices button')].filter(b => !b.disabled && !b.classList.contains('gone'));
   if (choices.length) { choices[0].click(); rounds++; }
-  await sleep(120);   // let the 550ms inter-round timeout + render happen
-  await sleep(500);
+  await sleep(150);
 }
-ok(rounds >= 10, `played ~10 rounds (${rounds})`);
+ok(rounds >= 3, `played rounds until KO or 10 (${rounds})`);
 const result = document.getElementById('battleResult');
 ok(!!result, 'result screen rendered after 10 rounds');
 const stats = Battle.getStats(p.id);
@@ -79,16 +87,16 @@ ok(!document.getElementById('battleResult'), 'result closes cleanly');
 
 // ── Daily round: seeded set, plays to daily board ──
 Battle.daily();
-await sleep(30);
+await sleep(500);
 ok(!!document.getElementById('battleRound'), 'daily round rendered');
 let dRounds = 0;
-for (let i = 0; i < 14; i++) {
+for (let i = 0; i < 400; i++) {
   if (document.getElementById('battleBoardOverlay')) break;
-  const btns = document.querySelectorAll('#battleChoices button');
+  const btns = [...document.querySelectorAll('#btChoices button')].filter(b => !b.disabled && !b.classList.contains('gone'));
   if (btns.length) { btns[0].click(); dRounds++; }
-  await sleep(120); await sleep(500);
+  await sleep(150);
 }
-ok(dRounds >= 10, `daily played ~10 rounds (${dRounds})`);
+ok(dRounds >= 3, `daily played rounds (${dRounds})`);
 await sleep(60);
 ok(!!document.getElementById('battleBoardOverlay'), 'daily leaderboard rendered');
 document.getElementById('battleBoardOverlay')?.remove();

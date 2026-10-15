@@ -1,18 +1,22 @@
 // ═══════════════════════════════════
-//  GREAM — battle.js  (Souboje / Battles — Fáze 1: vs bot, client-side)
-//  10 časově omezených výzev z různých světů. Kdo má víc správných, vyhrává.
+//  GREAM — battle.js  (Souboje 1.1: aréna greamíků)
+//  10 časově omezených otázek. Správná odpověď = útok tvého greamíka (životy 100),
+//  energie za správné odpovědi → speciál. Pravidla: battle-rules.js, vzhled: arena.js.
+//  Soupeř = nahraný souboj jiného hráče (server přehraje jeho odpovědi a časy) nebo bot.
 //  Greamík z odpovídajícího světa → delší čas. Vstup stojí 1/4 výhry (venku 1/8).
-//  Multiplayer / leaderboard / místa na mapě = Fáze 2 (server).
 // ═══════════════════════════════════
 
 import { tr, getLang } from './i18n.js';
 import { Profiles } from './profiles.js';
-import { Gream } from './gream.js';
+import { Gream, ARCHETYPES } from './gream.js';
 import { Skins } from './skins.js';
 import { Subscription } from './subscription.js';
 import { Feedback } from './feedback.js';
 import { Audio } from './audio.js';
 import { Net, challengeId } from './net.js';
+import { RULES, SPECIALS, ARCH_WORLD, ARCHES, newFighter, useSpecial, canSpecial, aiWantsSpecial, resolveRound, winner } from './battle-rules.js';
+import { Arena, drawFighter } from './arena.js';
+const ARCHETYPE_NAME = (a) => ARCHETYPES[a]?.name?.[getLang() === 'cs' ? 'cs' : 'en'] || a;
 
 const WORLD_TO_ARCH = { nature:'lilek', language:'jiskra', logic:'kamen', feelings:'srodik', arts:'vlnka', world:'atlas' };
 const WORLDS = ['nature','language','logic','feelings','arts','world'];
@@ -87,6 +91,7 @@ function pickQuestions(difficulty, rng) {
 }
 
 const todayISO = () => new Date().toISOString().slice(0, 10);
+const escHtml = (x) => String(x ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
 export const Battle = {
   _q: [], _i: 0, _pScore: 0, _bScore: 0, _diff: 'medium', _outdoor: false, _timer: null, _entry: 0, _reward: 0,
@@ -118,13 +123,17 @@ export const Battle = {
       <div style="background:#fff;border-radius:22px;max-width:360px;width:100%;padding:22px 20px;max-height:86vh;overflow-y:auto">
         <div style="text-align:center;margin-bottom:6px"><span style="font-size:34px">⚔️</span></div>
         <div style="text-align:center;font-size:20px;font-weight:900;color:var(--green-deep)">${cs?'Souboj':'Battle'}</div>
-        <div style="text-align:center;font-size:12px;color:#888;margin-bottom:14px">${cs?`10 výzev na čas · kdo má víc správných, vyhrává`:`10 timed challenges · most correct wins`}</div>
+        <div style="text-align:center;font-size:12px;color:#888;margin-bottom:14px;line-height:1.4">${tr().battle_how}</div>
 
         <div style="background:#f6faf2;border-radius:14px;padding:12px;margin-bottom:12px;font-size:13px;font-weight:700;color:var(--green-deep)">
-          🐣 ${cs?'Tvá výhoda':'Your edge'}: ${hatched.length} ${cs?'greamíků':'Greams'} ${advList!=='—'?`(${advList})`:''}
+          🐣 ${cs?'Tvá výhoda':'Your edge'}: ${hatched.length} ${cs?(hatched.length===1?'greamík':hatched.length>=2&&hatched.length<=4?'greamíci':'greamíků'):(hatched.length===1?'Gream':'Greams')} ${advList!=='—'?`(${advList})`:''}
           <div style="font-size:11px;font-weight:600;color:#888;margin-top:3px">${cs?'Za greamíka z daného světa dostaneš víc času na jeho otázky.':'A Gream from a question\'s world gives you more time on it.'}</div>
         </div>
 
+        <div style="font-size:12px;font-weight:800;color:#888;margin-bottom:6px">${tr().battle_pick}</div>
+        ${hatched.length ? '' : `<div style="font-size:11px;color:#999;margin-bottom:6px">${tr().battle_loan_note}</div>`}
+        <div class="bt-pick" id="battlePick"></div>
+        <div class="bt-skill" id="battleSkill"></div>
         <div style="font-size:12px;font-weight:800;color:#888;margin-bottom:6px">${cs?'Obtížnost':'Difficulty'}</div>
         <div id="battleDiffRow" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px"></div>
 
@@ -174,14 +183,36 @@ export const Battle = {
       row.appendChild(b);
     });
     refresh();
+
+    // Výběr greamíka: vylíhnutí (stádium ≥ 2), jinak všech šest „na zkoušku“
+    const roster = hatched.length
+      ? hatched.map(g => ({ arch: g.archetype, stage: g.stage, shiny: !!g.isShiny, id: g.id, name: g.name }))
+      : ARCHES.map(a => ({ arch: a, stage: 2, loan: true }));
+    const prev = localStorage.getItem('gream_battle_pick_' + p.id);
+    let pick = roster.find(r => (r.id || r.arch) === prev) || roster[0];
+    const pickEl = ov.querySelector('#battlePick'), skillEl = ov.querySelector('#battleSkill');
+    const showSkill = () => {
+      const sp = tr().battle_special[SPECIALS[pick.arch].id];
+      skillEl.innerHTML = `<b>✨ ${sp.name}</b>${sp.desc}`;
+    };
+    roster.forEach(r => {
+      const b = document.createElement('button');
+      b.className = r === pick ? 'on' : '';
+      b.innerHTML = `<canvas></canvas>${r.name || ARCHETYPE_NAME(r.arch)}${r.loan ? `<span class="loan">${tr().battle_loan}</span>` : ''}`;
+      b.onclick = () => { pick = r; pickEl.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); showSkill(); try { localStorage.setItem('gream_battle_pick_' + p.id, r.id || r.arch); } catch {} };
+      pickEl.appendChild(b);
+      requestAnimationFrame(() => drawFighter(b.querySelector('canvas'), r.arch, r.stage, { shiny: r.shiny }));
+    });
+    showSkill();
+
     startBtn.onclick = () => {
       if (startBtn.disabled) return;
-      this._start(startBtn._diff, outdoor, startBtn._entry, startBtn._reward);
+      this._start(startBtn._diff, outdoor, startBtn._entry, startBtn._reward, pick);
     };
-    ov.querySelector('#battleDailyBtn').onclick = () => this.daily();
+    ov.querySelector('#battleDailyBtn').onclick = () => this.daily(pick);
   },
 
-  _start(diff, outdoor, entry, reward) {
+  _start(diff, outdoor, entry, reward, pick) {
     const p = Profiles.active(); if (!p) return;
     if (!Skins.spendSeeds(p.id, entry)) return;
     // count a home battle
@@ -194,25 +225,28 @@ export const Battle = {
     this._daily = false;
     this._diff = diff; this._outdoor = outdoor; this._entry = entry; this._reward = reward;
     this._q = pickQuestions(diff);
-    this._i = 0; this._pScore = 0;
     document.getElementById('battleOverlay')?.remove();
-    Audio.switchScene?.('challenge');
-    // Instant local rival so the game never waits on the network; the real server
-    // opponent swaps in when it arrives (well before the ~30s of 10 rounds finish).
+    // Hned lokální soupeř (hra nikdy nečeká na síť); skutečný nahraný hráč ze serveru ho nahradí, pokud dorazí do 1,5 s
     this._rival = this._localRival(diff);
     const myRating = loadStats(p.id).rating || 1000;
-    Net.battleOpponent(diff, myRating).then(o => { if (o) this._rival = o; });
-    this._renderRound();
+    const fromServer = Net.battleOpponent(diff, myRating, p.id).then(o => { if (o && !o.bot && Array.isArray(o.answers) && o.answers.length >= 5 && ARCHES.includes(o.arch)) this._rival = { ...o, stage: o.stage || 2 }; });   // bez nahrávky (starší souboj) zůstává bot – nepřebírat jméno skutečného hráče
+    Promise.race([fromServer, new Promise(r => setTimeout(r, 1500))]).then(() => this._run(pick));
   },
 
-  _localRival(diff) {
+  // Bot: přesnost podle obtížnosti, časy odpovědí náhodně (rychlejší, když ví)
+  _localRival(diff, rng = Math.random) {
     const acc = BOT_ACC[diff] || 0.65;
-    let score = 0; for (let i = 0; i < ROUNDS; i++) if (Math.random() < acc) score++;
-    return { name: 'Gream Bot', score, rating: 1000, bot: true };
+    const answers = Array.from({ length: ROUNDS }, () => {
+      const knows = rng() < acc;
+      const ok = knows || rng() < 1 / 3;
+      return { ok, ms: Math.round(ok && knows ? 1800 + rng() * 5500 : 5000 + rng() * 5500) };
+    });
+    const arch = ARCHES[Math.floor(rng() * ARCHES.length)];
+    return { name: 'Gream Bot', arch, stage: 2 + Math.floor(rng() * 3), answers, rating: 1000, bot: true };
   },
 
   // ─── Daily round: same date-seeded questions for everyone, ranked per day, 1×/den, free ───
-  daily() {
+  daily(pick) {
     const p = Profiles.active(); if (!p) return;
     const cs = getLang() === 'cs';
     const date = todayISO();
@@ -224,11 +258,12 @@ export const Battle = {
     }
     localStorage.setItem(key, date);
     this._daily = true; this._diff = 'medium'; this._outdoor = false; this._reward = 0;
-    this._q = pickQuestions('medium', seededRng('gream-daily-' + date));
-    this._i = 0; this._pScore = 0; this._rival = null;
+    const rng = seededRng('gream-daily-' + date);
+    this._q = pickQuestions('medium', rng);
+    // Denní strážce: pro všechny stejný (stejný greamík i odpovědi)
+    this._rival = { ...this._localRival('medium', seededRng('gream-daily-bot-' + date)), name: cs ? 'Denní strážce' : 'Daily guardian', bot: true };
     document.getElementById('battleOverlay')?.remove();
-    Audio.switchScene?.('challenge');
-    this._renderRound();
+    this._run(pick);
   },
 
   async _showDailyBoard(date, note) {
@@ -251,123 +286,203 @@ export const Battle = {
     else list.innerHTML = board.map((x, i) => `<div style="display:flex;align-items:center;gap:10px;padding:8px 6px;border-bottom:1px solid #f0f0f0"><span style="width:26px;font-weight:900;color:${i<3?'#c8860a':'#bbb'}">${i+1}.</span><span style="flex:1;font-weight:800;color:var(--green-deep);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${x.name}</span><span style="font-weight:900;color:#2d7a2d">${x.score}/10</span></div>`).join('');
   },
 
-  _renderRound() {
-    const p = Profiles.active();
-    const cs = getLang() === 'cs';
-    if (this._i >= this._q.length) return this._finish();
-    const { world, ch } = this._q[this._i];
-    const timeMs = BASE_TIME_MS + timeBonusForWorld(p.id, world);
-    const bonus = timeMs - BASE_TIME_MS;
+  // ─── Souboj v aréně ───
+  async _run(pick) {
+    const p = Profiles.active(); if (!p) return;
+    const t = tr(), cs = getLang() === 'cs';
+    if (!pick) { const g = Gream.all(p.id).find(x => x.stage >= 2 && x.archetype); pick = g ? { arch: g.archetype, stage: g.stage, shiny: !!g.isShiny } : { arch: 'lilek', stage: 2, loan: true }; }
+    this._me = pick;
+    const rival = this._rival;
+    this._f = [newFighter(pick.arch), newFighter(rival.arch)];
+    this._correct = [0, 0]; this._missed = []; this._log = [];
+    Audio.switchScene?.('challenge');
 
     document.getElementById('battleRound')?.remove();
-    const ov = document.createElement('div');
-    ov.id = 'battleRound';
-    ov.style.cssText = 'position:fixed;inset:0;background:linear-gradient(180deg,#2a1512,#1a0f14);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;z-index:1001;padding:calc(var(--sat,0px) + 20px) 18px 24px;color:#fff';
-    const rivalLabel = this._daily ? `📅 ${cs?'Denní kolo':'Daily round'}` : `🆚 ${this._rival?.name || (cs?'Sok':'Rival')}`;
-    ov.innerHTML = `
-      <div style="width:100%;max-width:420px;display:flex;justify-content:space-between;align-items:center;font-weight:900;font-size:14px;margin-bottom:8px">
-        <span>⚔️ ${this._i+1}/${ROUNDS}</span>
-        <span>${cs?'Ty':'You'} <span style="color:#7ec44a">${this._pScore}</span> · ${rivalLabel}</span>
-      </div>
-      <div style="width:100%;max-width:420px;height:10px;background:rgba(255,255,255,0.15);border-radius:6px;overflow:hidden;margin-bottom:14px">
-        <div id="battleTimeBar" style="height:100%;width:100%;background:linear-gradient(90deg,#7ec44a,#f5c842)"></div>
-      </div>
-      <div style="font-size:13px;font-weight:800;color:${bonus>0?'#7ec44a':'#bbb'};margin-bottom:10px">${WORLD_ICONS[world]} ${cs?'Svět':'World'}: ${tr().worlds?.[world]||world}${bonus>0?` · +${Math.round(bonus/1000)}s 🐣`:''}</div>
-      <div style="font-size:18px;font-weight:900;text-align:center;line-height:1.35;max-width:420px;margin-bottom:16px">${ch.text}</div>
-      <div id="battleChoices" style="width:100%;max-width:420px;display:flex;flex-direction:column;gap:9px"></div>
-      <button id="battleReport" style="margin-top:14px;background:none;border:none;color:rgba(255,255,255,0.4);font-family:inherit;font-size:12px;font-weight:700;cursor:pointer">🚩 ${cs?'Nahlásit otázku':'Report question'}</button>`;
-    document.body.appendChild(ov);
+    const scr = document.createElement('div');
+    scr.id = 'battleRound'; scr.className = 'battle-screen';
+    scr.innerHTML = `<div class="ar-wrap"></div>
+      <div class="bt-top"><span id="btRound"></span><span class="bt-world" id="btWorld"></span></div>
+      <div class="bt-time"><i id="btTime"></i></div>
+      <button class="bt-special" id="btSpecial" hidden></button>
+      <div class="bt-q" id="btQ"></div>
+      <div class="bt-choices" id="btChoices"></div>
+      <button class="bt-report" id="btReport">🚩 ${cs ? 'Nahlásit otázku' : 'Report question'}</button>`;
+    document.body.appendChild(scr);
+    this._arena = new Arena(scr.querySelector('.ar-wrap'), {
+      me: { ...pick, name: `${t.battle_you} · ${pick.name || ARCHETYPE_NAME(pick.arch)}` },
+      op: { arch: rival.arch, stage: rival.stage, shiny: !!rival.shiny, name: `${rival.name} · ${ARCHETYPE_NAME(rival.arch)}` },
+      labels: { energy: t.battle_energy, superEffective: t.battle_super_eff, crit: t.battle_crit },
+    });
+    this._arena.update(this._f);
+    await new Promise(r => setTimeout(r, 400));
 
-    // Report the current battle question
-    ov.querySelector('#battleReport').onclick = () => {
-      const d = this._daily ? 'medium' : this._diff;
-      try { window.App?.reportChallenge({ world, difficulty: d, text: ch.text, enText: ch.text, id: challengeId(world, d, ch.text) }); } catch {}
-    };
-
-    const choicesEl = ov.querySelector('#battleChoices');
-    let answered = false;
-    const done = (correct) => {
-      if (answered) return; answered = true;
-      clearInterval(this._timer);
-      if (correct) { this._pScore++; Feedback.success?.(); } else { Feedback.error?.(); }
-      setTimeout(() => { this._i++; this._renderRound(); }, 550);
-    };
-
-    if (ch.check?.type === 'number') {
-      // Quick number input
-      const wrap = document.createElement('div');
-      wrap.style.cssText = 'width:100%;display:flex;gap:8px';
-      const input = document.createElement('input');
-      input.type = 'text'; input.inputMode = 'decimal';
-      input.placeholder = cs ? 'Číslo…' : 'Number…';
-      input.style.cssText = 'flex:1;padding:14px;border-radius:14px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.1);color:#fff;font-family:inherit;font-weight:900;font-size:18px;text-align:center;outline:none';
-      const submit = document.createElement('button');
-      submit.textContent = '✓';
-      submit.style.cssText = 'padding:14px 20px;border-radius:14px;border:none;background:#7ec44a;color:#fff;font-family:inherit;font-weight:900;font-size:18px;cursor:pointer';
-      const check = () => {
-        if (answered) return;
-        const num = parseFloat(String(input.value).replace(',', '.'));
-        const tol = ch.check.tolerance ?? 0;
-        const correct = !isNaN(num) && Math.abs(num - ch.check.answer) <= tol;
-        input.style.borderColor = correct ? '#7ec44a' : '#e0705a';
-        done(correct);
-      };
-      submit.onclick = check;
-      input.addEventListener('keypress', e => { if (e.key === 'Enter') check(); });
-      wrap.appendChild(input); wrap.appendChild(submit);
-      choicesEl.appendChild(wrap);
-      setTimeout(() => input.focus(), 200);
-    } else {
-      const shuffled = [...ch.choices].sort(() => Math.random() - 0.5);
-      shuffled.forEach(c => {
-        const b = document.createElement('button');
-        b.style.cssText = 'width:100%;padding:14px 16px;border-radius:14px;border:2px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.08);color:#fff;font-family:inherit;font-weight:800;font-size:15px;cursor:pointer;text-align:left';
-        b.textContent = c.text;
-        b.onclick = () => {
-          if (answered) return;
-          const correct = String(c.value ?? c.text).toLowerCase() === String(ch.check.correct).toLowerCase();
-          b.style.background = correct ? 'rgba(126,196,74,0.4)' : 'rgba(224,112,90,0.4)';
-          b.style.borderColor = correct ? '#7ec44a' : '#e0705a';
-          done(correct);
-        };
-        choicesEl.appendChild(b);
-      });
+    for (let round = 0; round < ROUNDS && round < this._q.length; round++) {
+      const f = this._f;
+      // Soupeř se rozhodne pro speciál na začátku kola
+      if (aiWantsSpecial(f[1])) {
+        const ev = useSpecial(f[1], f[0]);
+        await this._arena.special(1, ev, t.battle_special[ev.id].name);
+        this._arena.update(f);
+        if (f[0].hp <= 0) break;
+      }
+      const mine = await this._askQuestion(round);
+      const opp = this._oppAnswer(round);
+      const hits = resolveRound(f, mine, opp);
+      // Animace: zásahy po sobě, životy se odečítají postupně
+      const disp = f.map(x => ({ ...x }));
+      hits.forEach(h => { disp[1 - h.from].hp += h.dmg; });
+      for (const h of hits) {
+        await this._arena.attack(h);
+        disp[1 - h.from].hp -= h.dmg;
+        this._arena.update(disp.map((d, i) => ({ ...f[i], hp: d.hp })));
+      }
+      this._arena.update(f);
+      if (!hits.length) await new Promise(r => setTimeout(r, 350));
+      if (f[0].hp <= 0 || f[1].hp <= 0) break;
     }
-
-    // Timer
-    const bar = ov.querySelector('#battleTimeBar');
-    const start = Date.now();
     clearInterval(this._timer);
-    this._timer = setInterval(() => {
-      const frac = Math.max(0, 1 - (Date.now() - start) / timeMs);
-      bar.style.width = (frac * 100) + '%';
-      if (frac <= 0) { choicesEl.querySelectorAll('button').forEach(b => b.disabled = true); done(false); }
-    }, 60);
+    let w = winner(this._f);
+    if (w === -1) w = this._correct[0] >= this._correct[1] ? 0 : 1;   // remíza: rozhodnou správné odpovědi, pak hráč
+    if (this._f[w === 0 ? 1 : 0].hp <= 0) this._arena.banner(t.battle_ko, 'sp');
+    await this._arena.finish(w);
+    this._arena.destroy();
+    this._finish(w === 0);
   },
 
-  _finish() {
+  // Odpověď soupeře v kole (nahraný hráč nebo bot); během otázky „živě“ ukáže, že už odpověděl
+  _oppAnswer(round) {
+    const a = this._rival.answers?.[round] || { ok: false, ms: BASE_TIME_MS };
+    const f1 = this._f[1];
+    const qWorld = this._curWorld;
+    const domain = f1.ownWorldNext || qWorld === ARCH_WORLD[f1.arch];
+    const ok = a.ok || (f1.fiftyNext && !a.ok && Math.random() < 0.25);   // 50:50 pomůže i soupeři
+    f1.fiftyNext = false; f1.ownWorldNext = false;
+    if (ok) this._correct[1]++;
+    return { ok, domain, speedFrac: ok ? Math.max(0, 1 - a.ms / BASE_TIME_MS) : 0 };
+  },
+
+  // Otázka kola: vrací { ok, domain, speedFrac }. Hráč může před odpovědí použít speciál.
+  _askQuestion(round) {
     const p = Profiles.active();
-    const cs = getLang() === 'cs';
+    const t = tr(), cs = getLang() === 'cs';
+    const scr = document.getElementById('battleRound');
+    let { world, ch } = this._q[round];
+    const me = this._f[0];
+    return new Promise((resolve) => {
+      let answered = false, start = Date.now(), timeMs = BASE_TIME_MS + timeBonusForWorld(p.id, world), paused = 0;
+      const elQ = scr.querySelector('#btQ'), elC = scr.querySelector('#btChoices'), bar = scr.querySelector('#btTime');
+      const spBtn = scr.querySelector('#btSpecial');
+      scr.querySelector('#btRound').textContent = `⚔️ ${t.battle_round} ${round + 1}/${ROUNDS}`;
+      const opCard = scr.querySelector('.ar-op .ar-card'); opCard?.classList.remove('answered');
+      const oppMs = this._rival.answers?.[round]?.ms;
+      const oppTimer = oppMs ? setTimeout(() => opCard?.classList.add('answered'), oppMs) : null;
+
+      const render = () => {
+        this._curWorld = world;
+        const bonus = timeMs - BASE_TIME_MS;
+        const dom = world === ARCH_WORLD[me.arch] || me.ownWorldNext;
+        scr.querySelector('#btWorld').textContent = `${WORLD_ICONS[world]} ${t.worlds?.[world] || world}${bonus > 0 ? ` · +${Math.round(bonus / 1000)} s` : ''}${dom ? ` · ${t.battle_super_eff}` : ''}`;
+        elQ.textContent = ch.text;
+        elC.innerHTML = '';
+        if (ch.check?.type === 'number') {
+          const wrap = document.createElement('div'); wrap.style.cssText = 'display:flex;gap:8px';
+          const input = document.createElement('input');
+          input.type = 'text'; input.inputMode = 'decimal'; input.placeholder = cs ? 'Číslo…' : 'Number…';
+          input.className = 'bt-choice'; input.style.textAlign = 'center';
+          const ok = document.createElement('button'); ok.className = 'bt-choice'; ok.style.cssText = 'width:auto;text-align:center;background:#7ec44a'; ok.textContent = '✓';
+          const check = () => { const num = parseFloat(String(input.value).replace(',', '.')); done(!isNaN(num) && Math.abs(num - ch.check.answer) <= (ch.check.tolerance ?? 0), String(ch.check.answer)); };
+          ok.onclick = check; input.addEventListener('keypress', e => { if (e.key === 'Enter') check(); });
+          wrap.append(input, ok); elC.appendChild(wrap); setTimeout(() => input.focus(), 150);
+        } else {
+          const correctVal = String(ch.check.correct).toLowerCase();
+          const shuffled = [...ch.choices].sort(() => Math.random() - 0.5);
+          let removed = 0;
+          shuffled.forEach(c => {
+            const b = document.createElement('button'); b.className = 'bt-choice'; b.textContent = c.text;
+            const right = String(c.value ?? c.text).toLowerCase() === correctVal;
+            if (me.fiftyNext && !right && !removed && shuffled.length >= 3) { b.classList.add('gone'); removed++; }
+            b.dataset.right = right ? '1' : '';
+            b.onclick = () => { if (answered) return; b.classList.add(right ? 'ok' : 'bad'); done(right, (shuffled.find(x => String(x.value ?? x.text).toLowerCase() === correctVal) || {}).text); };
+            elC.appendChild(b);
+          });
+        }
+        spBtn.hidden = !canSpecial(me);
+        if (!spBtn.hidden) { const sp = t.battle_special[SPECIALS[me.arch].id]; spBtn.innerHTML = `✨ ${sp.name}<small>${sp.desc}</small>`; }
+      };
+
+      spBtn.onclick = async () => {
+        if (answered || !canSpecial(me)) return;
+        spBtn.hidden = true;
+        const pauseStart = Date.now();
+        const ev = useSpecial(me, this._f[1]);
+        Audio.playCry?.(me.arch, this._me.stage);
+        if (me.ownWorldNext && world !== ARCH_WORLD[me.arch]) {   // Kompas: otázka z mého světa
+          const alt = pickQuestions(this._daily ? 'medium' : this._diff).find(x => x.world === ARCH_WORLD[me.arch]);
+          const pool = (tr().challenges?.[ARCH_WORLD[me.arch]]?.[this._daily ? 'medium' : this._diff] || []).filter(battleUsable);
+          const c = alt?.ch || pool[Math.floor(Math.random() * pool.length)];
+          if (c) { world = ARCH_WORLD[me.arch]; ch = c; this._q[round] = { world, ch }; }
+        }
+        await this._arena.special(0, ev, t.battle_special[ev.id].name);
+        this._arena.update(this._f);
+        paused += Date.now() - pauseStart;
+        if (!answered) render();
+        if (this._f[1].hp <= 0) done(false, null, true);
+      };
+
+      const done = (ok, correctText, ko = false) => {
+        if (answered) return; answered = true;
+        clearInterval(this._timer); clearTimeout(oppTimer);
+        spBtn.hidden = true;
+        elC.querySelectorAll('button').forEach(b => { b.disabled = true; if (!ok && b.dataset.right) b.classList.add('ok'); });
+        const left = Math.max(0, 1 - (Date.now() - start - paused) / timeMs);
+        const domain = world === ARCH_WORLD[me.arch] || me.ownWorldNext;
+        me.fiftyNext = false; me.ownWorldNext = false;
+        if (ok) { this._correct[0]++; Feedback.success?.(); } else if (!ko) { Feedback.error?.(); this._missed.push({ q: ch.text, a: correctText }); }
+        this._log.push({ ok: !!ok, ms: Math.round(Date.now() - start - paused) });
+        setTimeout(() => resolve({ ok: !!ok && !ko, domain, speedFrac: ok ? left : 0 }), ok ? 250 : 700);
+      };
+
+      scr.querySelector('#btReport').onclick = () => {
+        const d = this._daily ? 'medium' : this._diff;
+        try { window.App?.reportChallenge({ world, difficulty: d, text: ch.text, enText: ch.text, id: challengeId(world, d, ch.text) }); } catch {}
+      };
+
+      render();
+      clearInterval(this._timer);
+      this._timer = setInterval(() => {
+        if (spBtn.dataset.busy) return;
+        const frac = Math.max(0, 1 - (Date.now() - start - paused) / timeMs);
+        bar.style.width = (frac * 100) + '%';
+        if (frac <= 0) done(false, ch.check?.type === 'number' ? String(ch.check.answer) : (ch.choices || []).find(x => String(x.value ?? x.text).toLowerCase() === String(ch.check.correct).toLowerCase())?.text);
+      }, 60);
+    });
+  },
+
+  _finish(win) {
+    const p = Profiles.active();
+    const t = tr(), cs = getLang() === 'cs';
     clearInterval(this._timer);
     document.getElementById('battleRound')?.remove();
+    const myCorrect = this._correct[0];
+    const review = this._missed.length ? `<div style="font-size:12px;font-weight:900;color:#888;margin-top:6px">${t.battle_review}</div>
+      <div class="bt-review">${this._missed.map(m => `<div>${escHtml(m.q)}${m.a ? `<br><b>${t.battle_correct_is}${escHtml(m.a)}</b>` : ''}</div>`).join('')}</div>` : '';
 
     // ─── Daily round: score-attack ranked on a shared daily leaderboard ───
     if (this._daily) {
       const date = todayISO();
-      const reward = this._pScore;   // modest: 1 🌱 per correct answer
+      const reward = myCorrect;   // 1 🌱 per correct answer
       if (reward > 0) Skins.addSeeds(p.id, reward);
       Feedback.celebrate?.();
-      Net.dailyResult({ pid: p.id, name: p.name || 'Hráč', date, score: this._pScore }).then(r => {
+      Net.dailyResult({ pid: p.id, name: p.name || 'Hráč', date, score: myCorrect }).then(r => {
         this._showDailyBoard(date, cs
-          ? `Tvé skóre: ${this._pScore}/10 · +${reward} 🌱${r && r.rank ? ` · ${r.rank}. místo` : ''}`
-          : `Your score: ${this._pScore}/10 · +${reward} 🌱${r && r.rank ? ` · rank ${r.rank}` : ''}`);
+          ? `${win ? 'Výhra nad strážcem! ' : ''}Tvé skóre: ${myCorrect}/10 · +${reward} 🌱${r && r.rank ? ` · ${r.rank}. místo` : ''}`
+          : `${win ? 'You beat the guardian! ' : ''}Your score: ${myCorrect}/10 · +${reward} 🌱${r && r.rank ? ` · rank ${r.rank}` : ''}`);
       });
       this._daily = false;
       return;
     }
 
-    const rival = this._rival || this._localRival(this._diff);
-    const win = this._pScore >= rival.score;   // ties favour the player
+    const rival = this._rival;
     const s = loadStats(p.id);
     s.wins = (s.wins || 0) + (win ? 1 : 0);
     s.losses = (s.losses || 0) + (win ? 0 : 1);
@@ -380,30 +495,34 @@ export const Battle = {
     else Feedback.error?.();
     const newBadges = this._checkBadges(p.id, s, win, this._diff);
 
-    // Submit to server (async PvP rating + leaderboard) — offline-safe.
+    // Server: rating + nahrávka souboje (odpovědi a časy), aby ji mohli hrát ostatní jako soupeře
     Net.battleResult({
       pid: p.id, name: p.name || 'Hráč', difficulty: this._diff,
-      score: this._pScore, oppScore: rival.score, win, oppRating: rival.rating || 1000,
+      score: myCorrect, oppScore: this._correct[1], win, oppRating: rival.rating || 1000,
+      arch: this._me.arch, stage: this._me.stage || 2, answers: this._log.slice(0, ROUNDS),
     }).then(r => { if (r && r.rating) { const st = loadStats(p.id); st.rating = r.rating; st.rank = r.rank; saveStats(p.id, st); } });
 
+    const hpLeft = Math.max(0, Math.round(this._f[0].hp)), opLeft = Math.max(0, Math.round(this._f[1].hp));
     const ov = document.createElement('div');
     ov.id = 'battleResult';
     ov.style.cssText = 'position:fixed;inset:0;background:rgba(10,10,15,0.85);display:flex;align-items:center;justify-content:center;z-index:1002;padding:18px';
     ov.innerHTML = `
-      <div style="background:#fff;border-radius:22px;max-width:340px;width:100%;padding:26px 20px;text-align:center">
-        <div style="font-size:44px;margin-bottom:6px">${win?'🏆':'💪'}</div>
+      <div style="background:#fff;border-radius:22px;max-width:360px;width:100%;padding:22px 20px;text-align:center;max-height:90vh;overflow-y:auto">
+        <canvas id="brSprite" style="width:110px;height:110px;image-rendering:pixelated;display:block;margin:0 auto 4px"></canvas>
         <div style="font-size:22px;font-weight:900;color:${win?'#2d7a2d':'#b0402a'}">${win?(cs?'Výhra!':'You win!'):(cs?'Prohra':'You lost')}</div>
-        <div style="font-size:15px;font-weight:800;color:#555;margin:6px 0 4px">${cs?'Ty':'You'} ${this._pScore} — ${rival.score} ${rival.name}</div>
-        <div style="font-size:11px;color:#bbb;margin-bottom:12px">${rival.bot?(cs?'(bot — zatím nikdo online)':'(bot — no one online yet)'):(cs?'skutečný hráč':'real player')}</div>
+        <div style="font-size:14px;font-weight:800;color:#555;margin:6px 0 2px">❤️ ${hpLeft} — ${opLeft} ❤️ · ✓ ${myCorrect} — ${this._correct[1]}</div>
+        <div style="font-size:11px;color:#bbb;margin-bottom:12px">${rival.name} · ${rival.bot?(cs?'bot':'bot'):(cs?'nahraný souboj skutečného hráče':'recorded battle of a real player')}</div>
         ${win?`<div style="background:#f0fbe8;border-radius:12px;padding:10px;font-weight:900;color:#2d7a2d;margin-bottom:12px">+${reward} 🌱</div>`
              :`<div style="font-size:13px;color:#999;margin-bottom:12px">${cs?'Vstupné propadlo. Zkus to znovu!':'Entry lost. Try again!'}</div>`}
         ${newBadges.length?`<div style="font-size:13px;font-weight:800;color:#c8860a;margin-bottom:12px">🏅 ${newBadges.join(' · ')}</div>`:''}
+        ${review}
         <div style="font-size:12px;color:#999;margin-bottom:14px">🏆 ${s.wins} · ${cs?'série':'streak'} ${s.streak} (${cs?'nej':'best'} ${s.bestStreak})</div>
         <button id="battleAgain" style="width:100%;padding:13px;border:none;border-radius:14px;background:linear-gradient(135deg,#d2603a,#b0402a);color:#fff;font-family:inherit;font-weight:900;font-size:15px;cursor:pointer;margin-bottom:8px">${cs?'Znovu ⚔️':'Again ⚔️'}</button>
         <button id="battleBoard" style="width:100%;padding:11px;border:none;border-radius:14px;background:#f0f0f0;color:#555;font-family:inherit;font-weight:800;font-size:14px;cursor:pointer;margin-bottom:8px">🏆 ${cs?'Žebříček':'Leaderboard'}</button>
         <button id="battleClose" style="width:100%;padding:11px;border:none;background:none;color:#999;font-family:inherit;font-weight:700;font-size:13px;cursor:pointer">${cs?'Zpět do zahrady':'Back to garden'}</button>
       </div>`;
     document.body.appendChild(ov);
+    drawFighter(ov.querySelector('#brSprite'), this._me.arch, this._me.stage, { mood: win ? 'happy' : 'sad', shiny: this._me.shiny });
     ov.querySelector('#battleAgain').onclick = () => { ov.remove(); this.intro({ outdoor: this._outdoor }); };
     ov.querySelector('#battleBoard').onclick = () => this.showLeaderboard();
     ov.querySelector('#battleClose').onclick = () => { ov.remove(); Audio.switchScene?.('menu'); try { window.App?.renderMap?.(); } catch {} };
