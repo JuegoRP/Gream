@@ -79,7 +79,8 @@ function showErrorBoundary(msg) {
 // ─── Service worker ───
 // Enabled by default for offline support.
 // Disable via URL: ?sw=off  → unregisters SW (for development)
-if ('serviceWorker' in navigator) {
+// V aplikaci (Capacitor) jsou soubory přibalené → service worker nepotřebujeme
+if ('serviceWorker' in navigator && !window.Capacitor?.isNativePlatform?.()) {
   const params = new URLSearchParams(location.search);
   if (params.get('sw') === 'off') {
     navigator.serviceWorker.getRegistrations().then(regs => {

@@ -1,8 +1,7 @@
 {
   "appId": "com.gream.app",
   "appName": "Gream",
-  "webDir": ".",
-  "bundledWebRuntime": false,
+  "webDir": "www",
   "server": {
     "androidScheme": "https",
     "iosScheme": "gream",
@@ -31,7 +30,10 @@
       "splashImmersive": true
     },
     "Geolocation": {
-      "permissions": ["coarseLocation", "fineLocation"]
+      "permissions": [
+        "coarseLocation",
+        "fineLocation"
+      ]
     }
   }
 }
