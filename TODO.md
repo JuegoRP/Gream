@@ -17,7 +17,7 @@
 - [x] „Víš, že…?“ zajímavosti (ověřené) po odpovědi i po chybě (2026-10-15)
 - [x] OPRAVA: správná odpověď byla na obrazovce výzvy vždy první (2026-10-15)
 - [x] Nastavení: obtížnost zpět v nastavení, přeskupení (2026-10-15)
-- [ ] Zásady na webu (3rstudio.eu/gream-privacy.html): doplnit ligy a bitevní místa – PR do 3Rstudio.eu
+- [x] Zásady na webu: ligy a bitevní místa – PR 3Rstudio.eu#3 (čeká na schválení) (2026-10-15)
 - [ ] Balíčky: zatím rozptýlené v běžných otázkách (pole `pack`); samostatný výběr balíčku + doplnit na 150 otázek/balíček
 - [x] Vzácné „zářivé“ greamíky – už existují (1 : 100, zlatá záře v zahradě i aréně), ponecháno (2026-10-15)
 
