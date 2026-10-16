@@ -2368,7 +2368,7 @@ window.App = {
     };
     const delay = 6000 + Math.random() * 8000;
     this._chatTimer = setTimeout(() => {
-      const slots = document.querySelectorAll('.garden-gream-slot');
+      const slots = [...document.querySelectorAll('.garden-gream-slot')].filter(el => el.querySelector('canvas'));   // jen vylíhnutí (ne vejce v košíčku)
       if (slots.length < 2) return;
       const lines = chatLines[lang] || chatLines.en;
       const pair = lines[Math.floor(Math.random() * lines.length)];
@@ -2383,6 +2383,14 @@ window.App = {
           slot.appendChild(bubble);
         }
         bubble.textContent = pair[idx] || '...';
+        // bublina nesmí přetéct přes okraj zahrady (greamík na kraji)
+        bubble.style.transform = 'translateX(-50%)';
+        const st = document.getElementById('greamStage')?.getBoundingClientRect(), br = bubble.getBoundingClientRect();
+        if (st && br.width) {
+          const scale = br.width / bubble.offsetWidth || 1;   // slot bývá zmenšený (scale)
+          const dx = br.left < st.left + 6 ? st.left + 6 - br.left : br.right > st.right - 6 ? st.right - 6 - br.right : 0;
+          if (dx) bubble.style.transform = `translateX(calc(-50% + ${Math.round(dx / scale)}px))`;
+        }
         bubble.style.opacity = '1';
         setTimeout(() => { bubble.style.opacity = '0'; }, 2800);
       });
