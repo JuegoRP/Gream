@@ -808,7 +808,7 @@ window.App = {
       const remaining = Math.max(0, 12 - tasksDone);
       let stageInfo = '';
       if (remaining > 0) {
-        stageInfo = lang === 'cs' ? `Ještě ${remaining} úkolů do vylíhnutí` : `${remaining} more tasks to hatch`;
+        stageInfo = lang === 'cs' ? `Ještě ${remaining} úkolů do vylíhnutí (venku 2×)` : `${remaining} more tasks to hatch (2× outdoors)`;
         if (tasksDone >= 4 && pet.taskByWorld) {
           const entries = Object.entries(pet.taskByWorld).sort((a,b) => b[1]-a[1]);
           const topWorld = entries[0]?.[0];
@@ -3289,7 +3289,13 @@ window.App = {
         onPoisLoaded: pois => {
           const loading = document.getElementById('mapLoading');
           if (loading) loading.style.display = 'none';
-          try { const st = Expedition.ensure(p.id, pois, MapView.userPos() || pos); MapView.markExpedition(st); this._renderExpeditionChip(st, pois); } catch (e) { console.warn('[Expedition]', e); }
+          try {
+            const here = MapView.userPos() || pos;
+            const st = Expedition.ensure(p.id, pois, here);
+            const basketEmpty = !Gream.all(p.id).some(g => !g.archived && (g.stage < 2 || !g.archetype)) && Gream.all(p.id).filter(g => !g.archived).length < 6;
+            Expedition.eggSpot(p.id, pois, here, basketEmpty);
+            MapView.markExpedition(Expedition.get(p.id) || st); this._renderExpeditionChip(Expedition.get(p.id) || st, pois);
+          } catch (e) { console.warn('[Expedition]', e); }
           const count = pois.length;
           this._setText('mapViewSub', count > 0
             ? (lang === 'cs' ? `${count} míst v okolí` : `${count} places nearby`)
@@ -3355,7 +3361,7 @@ window.App = {
     let chip = document.getElementById('expChip');
     if (!chip) { chip = document.createElement('button'); chip.id = 'expChip'; chip.className = 'exp-chip'; mapEl.appendChild(chip); }
     const done = st.done.length, n = st.ids.length;
-    chip.innerHTML = `⭐ ${t.exp_title} ${done}/${n}${st.rare && !st.rareDone ? ' · ✦' : ''} · ${t.exp_explored(Expedition.cells().length)}`;
+    chip.innerHTML = `${st.egg ? '🥚 · ' : ''}⭐ ${t.exp_title} ${done}/${n}${st.rare && !st.rareDone ? ' · ✦' : ''} · ${t.exp_explored(Expedition.cells().length)}`;
     chip.onclick = () => {
       document.getElementById('expSheet')?.remove();
       const me = MapView.userPos();
@@ -3364,6 +3370,7 @@ window.App = {
         return `<button class="exp-row${ok ? ' ok' : ''}" data-id="${id}"><span>${rare ? '✦' : ok ? '✅' : this._poiIcon(p.kind)}</span><b>${escAttr(p.name || t.poi_kind?.[p.kind] || t.exp_place)}</b><small>${ok ? t.exp_done : d(p)}</small></button>`; };
       const sh = document.createElement('div'); sh.id = 'expSheet'; sh.className = 'exp-sheet';
       sh.innerHTML = `<div class="exp-card"><div class="exp-h">⭐ ${t.exp_title}</div><div class="exp-sub">${t.exp_how(EXP_REWARD.place, EXP_REWARD.all, EXP_REWARD.rare)}</div>
+        ${st.egg ? `<div class="exp-sub" style="margin-top:4px">${t.exp_egg}</div>${row(st.egg, false).replace(/<span>[^<]*<\/span>/, '<span>🥚</span>')}` : ''}
         ${st.ids.map(id => row(id, false)).join('')}${st.rare ? `<div class="exp-sub" style="margin-top:8px">✦ ${t.exp_rare}</div>${row(st.rare, true)}` : ''}
         <div class="exp-sub" style="margin-top:8px">🗺️ ${t.exp_explored_long(Expedition.cells().length)}</div>
         <button class="btn-primary" style="width:100%;margin-top:10px">${t.nav_close}</button></div>`;

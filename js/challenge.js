@@ -820,6 +820,11 @@ export const Challenge = {
         const lang = localStorage.getItem('gream_lang') || 'en';
         setTimeout(() => this._showToast(lang === 'cs' ? `🌟 +5 semínek za správné místo!` : `🌟 +5 bonus seeds for the right spot!`), 600);
       }
+      // Vajíčko na mapě: stačí splnit jednu výzvu na místě s vajíčkem
+      if (Expedition.takeEgg(p.id, this._targetPOI.id)) {
+        const egg = Gream.dropEgg(p.id);
+        if (egg) setTimeout(() => this._showToast(tr().egg_found), 1800);
+      }
       // Výprava dne / vzácné místo
       if (result.stepsComplete) {
         const ex = Expedition.complete(p.id, this._targetPOI.id);
@@ -838,17 +843,7 @@ export const Challenge = {
     // ─── Check skin unlocks ───
     const newlyUnlocked = Skins.checkUnlocks(p.id);
 
-    // Nové vajíčko: 8 % po bezchybně splněném odznaku, jen když je košíček prázdný (dropEgg to hlídá)
-    if (result.stepsComplete && (this._wrongCount || 0) === 0 && Math.random() < 0.08) {
-      const { Gream: G } = await import('./gream.js');
-      const newEgg = G.dropEgg(p.id);
-      if (newEgg) {
-        const lang = localStorage.getItem('gream_lang') || 'cs';
-        setTimeout(() => this._showToast(
-          lang === 'cs' ? '🥚 Záhadné vajíčko se přidalo do tvé zahrady!' : '🥚 A mystery egg appeared in your garden!'
-        ), 2500);
-      }
-    }
+    // Nová vajíčka se od 2026-10 nachází jen venku na mapě (Expedition.eggSpot) – za odznak doma už nepadají
 
     if (result.stepsComplete) {
       Feedback.celebrate();

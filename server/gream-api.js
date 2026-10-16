@@ -366,9 +366,10 @@ const roundCoord = (v) => Math.round(v / 0.005) * 0.005;
 const POI_TAGS = ['leisure=park', 'leisure=garden', 'leisure=nature_reserve', 'leisure=playground', 'natural=tree', 'natural=spring', 'natural=peak', 'natural=wood', 'natural=water',
   'historic=monument', 'historic=memorial', 'historic=castle', 'historic=ruins', 'historic=wayside_cross', 'historic=boundary_stone', 'amenity=place_of_worship', 'tourism=attraction', 'tourism=viewpoint',
   'amenity=library', 'tourism=museum', 'amenity=planetarium', 'amenity=school', 'amenity=university', 'amenity=post_office', 'information=board', 'information=map',
-  'tourism=artwork', 'tourism=gallery', 'amenity=theatre', 'amenity=arts_centre', 'amenity=cinema', 'amenity=music_venue',
+  'tourism=artwork', 'tourism=gallery', 'amenity=theatre', 'amenity=arts_centre', 'amenity=cinema',
   'amenity=fountain', 'tourism=information', 'amenity=clock', 'amenity=telephone', 'man_made=tower',
-  'amenity=bench', 'amenity=social_centre', 'amenity=community_centre', 'amenity=cafe', 'leisure=sports_centre', 'amenity=hospital', 'amenity=pub', 'amenity=bar'];
+  'amenity=bench', 'amenity=social_centre', 'amenity=community_centre', 'leisure=sports_centre'];
+// Dětská hra: žádné hospody, bary, kavárny, kluby ani nemocnice (2026-10-16 – výprava dne posílala děti do baru)
 const OVERPASS = ['https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter', 'https://overpass.openstreetmap.fr/api/interpreter'];
 const poiCache = new Map(); // klíč buňky → { t, data }
 async function poiCell(lat, lon) {

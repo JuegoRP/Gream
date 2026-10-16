@@ -235,9 +235,11 @@ export const Gream = {
     if (isOutdoor) g.hp[need] = Math.min(100, g.hp[need] + 5);
 
     // Increment per-world counter
+    // Venku greamík roste dvakrát rychleji (výzva venku = 2 kroky růstu); téma vajíčka se počítá stejně
+    const growth = isOutdoor ? 2 : 1;
     g.taskByWorld[world] = (g.taskByWorld[world] || 0) + 1;
-    if (sub) { g.taskBySub = g.taskBySub || {}; g.taskBySub[sub] = (g.taskBySub[sub] || 0) + 1; }   // podkategorie otázky (líhnutí greamíků podkategorií)
-    g.tasksFor = (g.tasksFor || 0) + 1;
+    if (sub) { g.taskBySub = g.taskBySub || {}; g.taskBySub[sub] = (g.taskBySub[sub] || 0) + 1; }   // téma otázky → kdo se vylíhne
+    g.tasksFor = (g.tasksFor || 0) + growth;
     g.lastFedAt = Date.now();
     g.mood = 'happy';
 
@@ -263,7 +265,7 @@ export const Gream = {
         }
 
         // Shiny chance
-        if (!g.isShiny && Math.random() < SHINY_CHANCE) {
+        if (!g.isShiny && isOutdoor && Math.random() < SHINY_CHANCE) {   // zářivý jen při vývoji venku
           g.isShiny = true;
           evolvedShiny = true;
         }
