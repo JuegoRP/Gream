@@ -1646,3 +1646,47 @@ canvas.aura, #greamSpriteCanvas.aura { filter:drop-shadow(0 0 4px #ffd84d) drop-
 .garden-arrow { position:absolute; top:50%; z-index:9; width:30px; height:44px; margin-top:-22px; border:none; border-radius:14px; background:rgba(255,255,255,.72); color:var(--green-deep); font:900 26px/1 var(--font, sans-serif); box-shadow:0 2px 8px rgba(0,0,0,.15); opacity:0; pointer-events:none; transition:opacity .3s; cursor:pointer; }
 .garden-arrow.left { left:6px; } .garden-arrow.right { right:6px; }
 .garden-arrow.show { opacity:.9; pointer-events:auto; }
+
+/* ─── Záložka Já: jednotné dlaždice ─── */
+.hub-big, .hub-grid { width:100%; max-width:420px; display:grid; gap:10px; margin-bottom:10px; }
+.hub-big { grid-template-columns:1fr; }
+.hub-grid { grid-template-columns:1fr 1fr; }
+.hub-tile { display:flex; align-items:center; gap:12px; min-height:68px; padding:12px 14px; border-radius:16px; border:none; background:#fff; box-shadow:0 2px 12px rgba(0,0,0,0.08); cursor:pointer; text-align:left; font-family:inherit; color:var(--green-deep); }
+.hub-tile.big { min-height:78px; background:linear-gradient(135deg,#edfbe0,#c8f0a8); border:2px solid rgba(74,138,46,0.22); box-shadow:0 3px 14px rgba(74,138,46,0.18); }
+.hub-tile.big.shop { background:linear-gradient(135deg,#fff7e3,#ffe2a8); border-color:rgba(200,140,40,0.28); box-shadow:0 3px 14px rgba(200,140,40,0.18); }
+.hub-tile.wide { width:100%; max-width:420px; margin-bottom:10px; }
+.hub-ico { font-size:28px; flex-shrink:0; width:36px; text-align:center; }
+.hub-tile.big .hub-ico { font-size:34px; width:40px; }
+.hub-txt { flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
+.hub-txt b { font-size:15px; font-weight:900; }
+.hub-tile.big .hub-txt b { font-size:17px; }
+.hub-txt small { font-size:11px; font-weight:700; color:var(--green-mid); line-height:1.25; }
+.hub-arr { font-size:20px; color:var(--green-mid); flex-shrink:0; }
+
+/* ─── Obrazovka Greamíci: detail ─── */
+.gream-detail { background:#fff; border:2.5px solid; border-top:none; border-radius:0 0 18px 18px; margin-top:-16px; padding:22px 16px 14px; display:flex; flex-direction:column; gap:8px; box-shadow:0 4px 14px rgba(0,0,0,0.06); }
+.gd-hero { display:flex; justify-content:center; padding:4px 0 6px; background:radial-gradient(circle at 50% 70%, rgba(135,194,109,.25), transparent 65%); }
+.gd-hero canvas { width:132px; height:132px; image-rendering:pixelated; animation:greamBob 2.6s ease-in-out infinite; }
+.gd-hero canvas.shiny { animation:greamBob 2.6s ease-in-out infinite, greamShinyGlow 3s ease-in-out infinite; }
+.gd-shiny { text-align:center; font-size:12px; font-weight:800; color:#6a7fa8; }
+.gd-row { display:flex; gap:10px; font-size:12px; line-height:1.35; padding:6px 0; border-top:1px solid rgba(0,0,0,0.06); }
+.gd-row span { flex:0 0 34%; color:#8a9a80; font-weight:700; }
+.gd-row b { flex:1; color:var(--green-deep); font-weight:800; }
+.gd-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:6px; }
+.gd-actions button { flex:1; min-width:130px; padding:11px 12px; font-size:14px; }
+.gd-egg { width:72px; display:block; margin:0 auto; image-rendering:pixelated; animation:eggWobble 2.4s ease-in-out infinite; }
+.gd-hint { margin:0; text-align:center; font-size:13px; font-weight:700; color:var(--green-mid); }
+
+/* ─── Obchůdek: jednotná karta ve všech záložkách (stejná výška, obrázek, název, popis, stav) ─── */
+.shop-item { height:158px; justify-content:flex-start; font-family:inherit; cursor:pointer; overflow:hidden; }
+.shop-item .shop-thumb { width:100%; height:58px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.shop-item .shop-thumb canvas { width:56px; height:56px; image-rendering:pixelated; }
+.shop-item .shop-name { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; min-height:0; padding:0 4px; }
+.shop-item .shop-sub { font-size:10px; font-weight:700; color:var(--ink-soft); text-align:center; line-height:1.2; padding:0 4px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.shop-item .shop-state { margin-top:auto; }
+.shop-item.locked { opacity:.7; } .shop-item.locked .shop-thumb { filter:grayscale(.6); }
+.shop-lock { font-size:28px; width:56px; height:56px; border-radius:50%; background:rgba(0,0,0,.06); display:flex; align-items:center; justify-content:center; }
+.shop-bgthumb { width:92%; height:56px; border-radius:10px; background-size:cover; background-position:center 70%; box-shadow:inset 0 0 0 1px rgba(0,0,0,.08); }
+.shop-seg { grid-column:1/-1; display:flex; gap:4px; background:rgba(0,0,0,0.05); border-radius:14px; padding:4px; }
+.shop-seg button { flex:1; padding:9px; border-radius:11px; border:none; font-family:inherit; font-weight:800; font-size:13px; cursor:pointer; background:transparent; color:#999; }
+.shop-seg button.on { background:#fff; color:var(--green-deep); box-shadow:0 1px 4px rgba(0,0,0,0.12); }

@@ -6,7 +6,7 @@
 // ═══════════════════════════════════
 
 const SCREEN_DIR = 'screens/';
-const SCREEN_VER = 'v5.6'; // bump to bust per-session cache
+const SCREEN_VER = 'v5.7'; // bump to bust per-session cache
 let _history = [];
 let _screensCache = {};
 let _transitioning = false;

@@ -66,18 +66,20 @@ export const SKIN_CATALOG = {
   // (overrides the ones above)
 
   // ─── BACKGROUNDS — bought with seeds ───
-  backgrounds: [
-    { id: 'bg_default',      name: { cs: 'Výchozí louka',     en: 'Default meadow' },   file: null,                    cost: 0   },
-    { id: 'bg_rain_jungle',  name: { cs: 'Deštný les',        en: 'Rain jungle' },      file: 'bg_rain_jungle.png',    cost: 160  },
-    { id: 'bg_cyberpunk',    name: { cs: 'Kybernetické město',en: 'Cyberpunk city' },   file: 'bg_cyberpunk.png',      cost: 240 },
-    { id: 'bg_cave',         name: { cs: 'Krystalová jeskyně',en: 'Crystal cave' },     file: 'bg_cave.png',           cost: 300 },
-    { id: 'bg_ruins',        name: { cs: 'Záhadné ruiny',     en: 'Ancient ruins' },    file: 'bg_ruins.png',          cost: 400 },
-    { id: 'bg_town',         name: { cs: 'Středověké město',  en: 'Medieval town' },    file: 'bg_town.png',           cost: 500 },
+  backgrounds: [   // 2026-10: všechna pozadí jsou široká panoramata ve stylu zahrady (posouvají se, greamíci po nich chodí)
+    { id: 'bg_default',      name: { cs: 'Výchozí louka',      en: 'Meadow' },            file: null,                 cost: 0   },
+    { id: 'bg_rain_jungle',  name: { cs: 'Deštný prales',      en: 'Rainy jungle' },      file: 'bg_rain_jungle.jpg', cost: 160 },
+    { id: 'bg_winter',       name: { cs: 'Zimní zahrada',      en: 'Winter garden' },     file: 'bg_winter.jpg',      cost: 200 },
+    { id: 'bg_cyberpunk',    name: { cs: 'Večerní město',      en: 'City evening' },      file: 'bg_cyberpunk.jpg',   cost: 240 },
+    { id: 'bg_beach',        name: { cs: 'Zahrada u moře',     en: 'Seaside garden' },    file: 'bg_beach.jpg',       cost: 260 },
+    { id: 'bg_cave',         name: { cs: 'Krystalová jeskyně', en: 'Crystal cave' },      file: 'bg_cave.jpg',        cost: 300 },
+    { id: 'bg_ruins',        name: { cs: 'Hradní zřícenina',   en: 'Castle ruins' },      file: 'bg_ruins.jpg',       cost: 400 },
+    { id: 'bg_town',         name: { cs: 'Středověké městečko', en: 'Medieval town' },    file: 'bg_town.jpg',        cost: 500 },
   ],
 
   // ─── BOOSTS — jednorázové efekty za vajíčka ───
   boosts: [
-    { id: 'boost_2x',    name: { cs: '2× vajíčka',      en: '2× eggs' },        desc: { cs: 'Příští úkol dá 2× vajec',          en: 'Next task gives 2× eggs' },         cost: 15, emoji: '✨' },
+    { id: 'boost_2x',    name: { cs: '2× semínka',      en: '2× seeds' },       desc: { cs: 'Příští úkol dá 2× víc semínek',    en: 'Next task gives 2× seeds' },         cost: 15, emoji: '✨' },
     { id: 'boost_hint',  name: { cs: '3 nápovědy',      en: '3 hints' },          desc: { cs: '3 nápovědy zdarma',                  en: '3 free hints' },                     cost: 10, emoji: '💡' },
     { id: 'boost_skip',  name: { cs: 'Přeskočit krok',  en: 'Skip step' },        desc: { cs: 'Přeskoč jeden krok bez ztráty',       en: 'Skip one step without penalty' },    cost: 20, emoji: '⏭️' },
     { id: 'boost_lucky', name: { cs: 'Šťastný úkol',   en: 'Lucky task' },       desc: { cs: 'Výběr obtížnosti dalšího úkolu',      en: 'Choose difficulty of next task' },   cost: 12, emoji: '🍀' },

@@ -32,6 +32,9 @@
 - [x] Podkategorie otázek (32, jen klasifikace): content/subcats-*, js/subcats.js, kontrola v npm test (2026-10-16)
 - [x] Souboj „Účinné!“: poloviční bonus světa přes podkategorii, balanc ověřen (N=20000), Objetí 14 (2026-10-16)
 - [ ] Noví greamíci podle podkategorií
+- [x] Záložka Já přeskládaná: Greamíci (vlastní obrazovka s detailem) a Obchůdek zvlášť, Statistiky viditelně vedle Odznaků (2026-10-16)
+- [x] Obchůdek: jednotná karta ve všech záložkách; pozadí předělána na panoramata ve stylu zahrady (+ Zimní zahrada, Zahrada u moře) (2026-10-16)
+- [x] Vajíčko sedí v košíčku viditelně (2026-10-16)
 - [x] Zahrada 2D: posuvné panorama, greamíci chodí a používají předměty (lavička, jezírko, hříbek, budka, záhonek, lucerna, košíček), potkávají se; js/garden-life.js (2026-10-16)
 - [ ] Rodiště na mapě (špendlík), přihlášení Google Play Games (úspěchy) – po vydání 1.0
 
