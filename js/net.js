@@ -46,6 +46,7 @@ export const Net = {
   poiDone:        (poiId)             => req('POST', '/poi/done', { poiId }),
   poiCounts:      (ids)              => req('GET', '/poi/counts?ids=' + encodeURIComponent((ids || []).join(','))),
   rankSubmit:     (data)             => req('POST', '/rank/submit', data),
-  rankTop:        ()                 => req('GET', '/rank/top'),
+  rankTop:        (pid)              => req('GET', '/rank/top' + (pid ? '?pid=' + encodeURIComponent(pid) : '')),
   promo:          (code)             => req('POST', '/promo', { code }),
+  contentQuestions: (since)          => req('GET', '/content/questions?since=' + (Number(since) || 0), null, 15000),
 };

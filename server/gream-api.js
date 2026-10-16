@@ -55,6 +55,15 @@ function promoLimited(ip) {
   return arr.length > 6;
 }
 
+// Obsah (nové otázky): čte se podle času změny souboru, ať publikace z 3R Control platí hned bez restartu
+const CONTENT_FILE = process.env.GREAM_CONTENT_FILE || '/content/questions.json';
+let _content = { mtime: 0, data: { version: 0, items: [] } };
+function loadContent() {
+  try { const st = fs.statSync(CONTENT_FILE); if (st.mtimeMs !== _content.mtime) { const d = JSON.parse(fs.readFileSync(CONTENT_FILE, 'utf8')); _content = { mtime: st.mtimeMs, data: { version: Number(d.version) || 0, items: Array.isArray(d.items) ? d.items : [] } }; } }
+  catch { /* zatím žádný obsah */ }
+  return _content.data;
+}
+
 const timers = {};
 function persist(name, file, obj) {
   if (timers[name]) return;
@@ -188,6 +197,15 @@ const server = http.createServer((req, res) => {
   const p = u.pathname.replace(/\/+$/, '') || '/';
 
   if (req.method === 'GET' && (p === '/health' || p === '/')) return send(res, 200, { ok: true, service: 'gream-api' });
+
+  // ─── Nové otázky (1.1+): schválené v 3R Control, soubor zapisuje 3R Control (CONTENT_FILE, jen ke čtení) ───
+  //     { version, items: [{ id, v, sub, w, d, cs:{text,choices[správná první]}, en:{…}, fact? }] }; aplikace stahuje jen přírůstek (v > since)
+  if (req.method === 'GET' && p === '/content/questions') {
+    const c = loadContent(), since = Number(u.searchParams.get('since')) || 0;
+    res.setHeader('Cache-Control', 'public, max-age=300');
+    // jen přírůstek: otázky zveřejněné po verzi, kterou aplikace má (pole v = verze zveřejnění)
+    return send(res, 200, { version: c.version, items: c.version > since ? c.items.filter(q => (Number(q?.v) || 0) > since) : [] });
+  }
 
   // Rate limit writes (anti-spam / anti-inflation).
   if (req.method === 'POST') {
@@ -348,6 +366,7 @@ const server = http.createServer((req, res) => {
       badges:     Math.max(0, Math.min(1000, Number(d.badges) || 0)),
       streak:     Math.max(0, Math.min(1e5, Number(d.streak) || 0)),
       greamStage: Math.max(0, Math.min(4,   Number(d.greamStage) || 0)),
+      greams:     Math.max(0, Math.min(24,  Number(d.greams) || 0)),   // 1.1: různí greamíci ve sbírce
       ts: Date.now(),
     };
     // cap stored entries (keep the 500 highest scores)
@@ -363,8 +382,9 @@ const server = http.createServer((req, res) => {
   });
 
   if (req.method === 'GET' && p === '/rank/top') {
-    const board = Object.values(rank).sort((a, b) => b.score - a.score).slice(0, 50)
-      .map(x => ({ name: x.name, avatar: x.avatar, score: x.score, tasks: x.tasks, badges: x.badges, streak: x.streak, greamStage: x.greamStage }));
+    const me = String(u.searchParams.get('pid') || '').slice(0, 40);   // jen příznak „to jsi ty“, ID ostatních se neposílá
+    const board = Object.entries(rank).sort((a, b) => b[1].score - a[1].score).slice(0, 50)
+      .map(([id, x]) => ({ name: x.name, avatar: x.avatar, score: x.score, tasks: x.tasks, badges: x.badges, streak: x.streak, greamStage: x.greamStage, greams: x.greams || 0, ...(me && id === me ? { me: true } : {}) }));
     return send(res, 200, board);
   }
 

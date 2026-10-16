@@ -9,8 +9,9 @@
 
 <!-- Tabs -->
 <div class="seg" role="tablist">
-  <button id="rankTabLocal" onclick="App.rankSwitchTab('local')" class="seg-btn active" role="tab"></button>
-  <button id="rankTabGlobal" onclick="App.rankSwitchTab('global')" class="seg-btn" role="tab"></button>
+  <button id="rankTabLeague" onclick="App.rankSwitchTab('league')" class="seg-btn active" role="tab"></button>
+  <button id="rankTabDaily" onclick="App.rankSwitchTab('daily')" class="seg-btn" role="tab"></button>
+  <button id="rankTabCollection" onclick="App.rankSwitchTab('collection')" class="seg-btn" role="tab"></button>
 </div>
 
-<div id="rankList" style="max-width:420px;margin:0 auto;display:flex;flex-direction:column;gap:8px"></div>
+<div id="rankList" class="rk-list"></div>

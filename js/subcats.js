@@ -12,9 +12,12 @@ for (const [w, subs] of Object.entries(SUBCAT_TAXONOMY)) for (const id of Object
 export const subWorld = (id) => WORLD_OF[id] || null;
 
 // → { main, side, mainWorld, sideWorld } nebo null (otázka bez klasifikace)
+// Otázky stažené ze serveru (content.js) nesou podkategorii přímo → registr za běhu
+const RUNTIME = { cs: new Map(), en: new Map() };
+export function registerSub(world, difficulty, text, lang, sub) { if (WORLD_OF[sub]) RUNTIME[lang]?.set(challengeId(world, difficulty, text), sub); }
 export function subcatOf(world, difficulty, text, lang = 'cs') {
   const k = challengeId(world, difficulty, text), i = k.lastIndexOf(':#');
-  const v = SUBCAT_DATA[lang]?.[k.slice(0, i)]?.[k.slice(i + 2)];
+  const v = RUNTIME[lang]?.get(k) || SUBCAT_DATA[lang]?.[k.slice(0, i)]?.[k.slice(i + 2)];
   if (!v) return null;
   const [main, side = null] = v.split('|');
   return { main, side, mainWorld: WORLD_OF[main] || world, sideWorld: side ? WORLD_OF[side] : null };

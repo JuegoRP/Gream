@@ -7,6 +7,7 @@
 //   add <počet> [poznámka]   vytvoří nové kódy a vypíše je (např. add 20 "známí – test 1.1")
 //   list                     přehled: kód, použitý/volný, poznámka
 //   off <KÓD>                zneplatní kód
+//   --json                   strojový výstup (3R Control: tlačítka u projektu Gream)
 // Lokálně / v testu: PROMO_FILE=/tmp/promo.json node scripts/promo-codes.mjs add 3
 import fs from 'node:fs';
 import crypto from 'node:crypto';
@@ -17,14 +18,18 @@ const part = () => Array.from(crypto.randomBytes(4), b => ABC[b % ABC.length]).j
 const load = () => { try { return JSON.parse(fs.readFileSync(FILE, 'utf8')); } catch { return {}; } };
 const save = (o) => { const tmp = FILE + '.tmp'; fs.writeFileSync(tmp, JSON.stringify(o, null, 1)); fs.renameSync(tmp, FILE); try { fs.chmodSync(FILE, 0o600); } catch {} };
 
-const [cmd, a1, ...rest] = process.argv.slice(2);
+const argv = process.argv.slice(2), JSON_OUT = argv.includes('--json');   // --json: výstup pro 3R Control
+const [cmd, a1, ...rest] = argv.filter(x => x !== '--json');
 const codes = load();
 if (cmd === 'add') {
   const n = Math.max(1, Math.min(500, Number(a1) || 1)), note = rest.join(' ').slice(0, 80), day = new Date().toISOString().slice(0, 10);
   const out = [];
   while (out.length < n) { const c = `GREAM-${part()}-${part()}`; if (!codes[c]) { codes[c] = { max: 1, used: 0, note, created: day }; out.push(c); } }
   save(codes);
-  console.log(out.join('\n'));
+  console.log(JSON_OUT ? JSON.stringify({ codes: out }) : out.join('\n'));
+} else if (cmd === 'list' && JSON_OUT) {
+  const st = (v) => v.off ? 'off' : (v.used || 0) >= (v.max || 1) ? 'used' : 'free';
+  console.log(JSON.stringify({ codes: Object.entries(codes).map(([code, v]) => ({ code, status: st(v), note: v.note || '', created: v.created || '' })).reverse() }));
 } else if (cmd === 'list') {
   for (const [k, v] of Object.entries(codes)) console.log(`${k}\t${v.off ? 'zrušený' : (v.used || 0) >= (v.max || 1) ? 'použitý' : 'volný'}\t${v.note || ''}\t${v.created || ''}`);
 } else if (cmd === 'off' && a1) {

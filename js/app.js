@@ -15,7 +15,7 @@ import { Geo, WORLD_EMOJIS, isBattleSpot } from './geo.js';
 import { Skins, SKIN_CATALOG } from './skins.js';
 import { MapView } from './mapview.js';
 import { Dev } from './dev.js';
-import { Battle } from './battle.js';
+import { Battle, clearPoolCache } from './battle.js';
 import { Net } from './net.js';
 import { hasProfanity } from './profanity.js';
 import { shinySource } from './shiny.js';
@@ -39,7 +39,9 @@ const GARDEN_LAYOUT = {
 const DECOR_ASPECT = { nest: 46 / 78, deco_flowerbed: 0.67, deco_bench: 0.75, deco_lantern: 1.67, deco_birdhouse: 2.77, deco_pond: 0.64, deco_mushroom: 1.14 };
 import { Gream, ARCHETYPES, BASE_ARCHETYPES, eggLeaning, spritePath, smartSpritePath } from './gream.js';
 import { Subscription, FREE } from './subscription.js';
+const NAME_CHANGE_COST = 50;   // semínek za změnu jména (nejvýš jednou za 7 dní)
 import { Paywall } from './paywall.js';
+import { Content } from './content.js';
 import { Billing } from './billing.js';
 import { Ranking } from './ranking.js';
 import { Audio } from './audio.js';
@@ -284,6 +286,9 @@ window.App = {
     const active   = Profiles.active();
     console.log('[Gream] Profiles:', profiles.length, 'Active:', active?.name || 'none');
 
+    // Nové otázky ze serveru: uložená kopie hned, novější verze na pozadí (jen data, přísně ověřená)
+    try { Content.loadCached(); } catch {}
+    Content.refresh().then(n => { if (n) clearPoolCache(); }).catch(() => {});
     if (active) this.applyCosmetics();
     // Doplňky byly zrušeny (2026-10-16): kdo nějaký koupil, dostane semínka zpět
     try {
@@ -1074,6 +1079,9 @@ window.App = {
         this._gardenResize = () => this._sizeGardenWorld();
         window.addEventListener('resize', this._gardenResize);
       }
+      // Scéna mění výšku i bez změny okna (proužek týdne zdarma, načtení písma, flex) → přepočítat šířku panoramatu,
+      // jinak by obrázek byl užší než posuvná plocha a šipka by ujela za jeho konec
+      if (window.ResizeObserver) { stage._ro?.disconnect(); stage._ro = new ResizeObserver(() => this._sizeGardenWorld()); stage._ro.observe(stage); }
     }
     return scroll.querySelector('.garden-world');
   },
@@ -1609,7 +1617,7 @@ window.App = {
           <div style="font-size:11px;color:var(--green-mid);font-weight:700">
             ${dateLabel} · ${time}
             ${item.outdoor ? ' · 🌳' : ''}
-            ${item.poiName ? ' · 📍 ' + item.poiName : ''}
+            ${item.poiName ? ' · 🌳' : ''}
           </div>
         </div>
       `;
@@ -1631,7 +1639,7 @@ window.App = {
       bg.dataset.wide = '1';   // i kupovaná pozadí jsou panoramata 3 : 2 → posouvají se stejně jako louka
       this._sizeGardenWorld();
       bg.style.backgroundImage = `url('img/backgrounds/${equippedBg.file}')`;
-      bg.style.backgroundSize = 'auto 130%';
+      bg.style.backgroundSize = 'cover';   // vždy pokryje celou posuvnou plochu (svět je 3 : 2 jako obrázek, ukotveno dole)
       bg.style.backgroundPosition = 'left bottom';
       this._applyTodTint(bg);
       bg.querySelector('svg.scene-svg')?.remove();
@@ -1643,7 +1651,7 @@ window.App = {
     bg.dataset.wide = '1';
     this._sizeGardenWorld();
     bg.style.backgroundImage = "url('img/bg/garden_wide.jpg')";
-    bg.style.backgroundSize = 'auto 130%';
+    bg.style.backgroundSize = 'cover';
     bg.style.backgroundPosition = 'left bottom';
     this._applyTodTint(bg);
     bg.querySelector('svg.scene-svg')?.remove();
@@ -2615,147 +2623,82 @@ window.App = {
   },
 
   // ─── RANKING ───
+  // ─── Žebříček 1.1: Liga (týdenní souboje) · Dnes (denní kolo) · Sbírka (výzvy, greamíci, odznaky) ───
   async renderRanking() {
-    const p    = Profiles.active();
+    const p = Profiles.active();
     if (!p) return;
-    const lang = getLang();
-    const cs   = lang === 'cs';
-    const t    = tr();
+    const t = tr();
     this._setText('rankTitle', t.rank_title);
-    this._setText('rankTabLocal', t.rank_tab_local);
-    this._setText('rankTabGlobal', t.rank_tab_global);
-
-    // Update own ranking entry
-    const pet    = Gream.active(p.id);
-    const badges = Badges.getEarned(p.id);
-    Ranking.update(p.id, p, badges, pet);
-
+    this._setText('rankTabLeague', t.rank_tab_league);
+    this._setText('rankTabDaily', t.rank_tab_daily);
+    this._setText('rankTabCollection', t.rank_tab_collection);
+    Ranking.update(p.id, p, null, Gream.all(p.id));
     const own = Ranking.own(p.id);
-    // Submit our overall score to the global "Svět" leaderboard (offline-safe).
-    if (own) {
-      Net.rankSubmit({
-        pid: p.id, name: own.name, avatar: own.avatar,
-        score: own.score, tasks: own.tasks,
-        badges: own.badges ?? (badges?.length || 0),
-        streak: own.streak ?? (p.streak || 0),
-        greamStage: own.greamStage ?? (pet?.stage || 0),
-      });
-    }
+    if (own) Net.rankSubmit({ pid: p.id, name: own.name, avatar: own.avatar, score: own.score, tasks: own.tasks, badges: own.badges, streak: own.streak, greamStage: own.greamStage, greams: own.greams });
     const ownCard = document.getElementById('rankOwnCard');
     if (ownCard && own) {
-      const title = Ranking.rankTitle(own.score, lang);
-      ownCard.innerHTML = `
-        <div style="background:linear-gradient(135deg,#4a8a2e,#2d6518);border-radius:18px;padding:16px 18px;color:white;display:flex;align-items:center;gap:14px">
-          <div style="font-size:36px">${own.avatar}</div>
-          <div style="flex:1">
-            <div style="font-size:11px;font-weight:700;opacity:0.7;margin-bottom:2px">${cs?'Tvůj profil':'Your profile'}</div>
-            <div style="font-size:18px;font-weight:900">${own.name}</div>
-            <div style="font-size:12px;opacity:0.85">${title} · ${own.score.toLocaleString()} ${tr().points_unit}</div>
-          </div>
-          <div style="text-align:right">
-            <div style="font-size:11px;opacity:0.7">${cs?'Úkoly':'Tasks'}</div>
-            <div style="font-size:20px;font-weight:900">${own.tasks}</div>
-          </div>
-        </div>`;
+      ownCard.innerHTML = `<div class="rk-own">
+        <div class="rk-own-av">${escAttr(own.avatar)}</div>
+        <div style="flex:1;min-width:0"><div class="rk-own-name">${escAttr(own.name)}</div>
+          <div class="rk-own-sub">${Ranking.rankTitle(own.score, getLang())} · ${own.score.toLocaleString()} ${t.points_unit}</div></div>
+        <div class="rk-own-stats"><b>${own.greams}/24</b><small>${t.rank_greams}</small></div></div>`;
     }
-
-    this.rankSwitchTab('local');
+    this.rankSwitchTab(this._rankTab || 'league');
   },
 
   rankSwitchTab(tab) {
-    document.getElementById('rankTabLocal')?.classList.toggle('active', tab === 'local');
-    document.getElementById('rankTabGlobal')?.classList.toggle('active', tab === 'global');
+    this._rankTab = tab;
+    ['league', 'daily', 'collection'].forEach(k => document.getElementById('rankTab' + k[0].toUpperCase() + k.slice(1))?.classList.toggle('active', k === tab));
     const list = document.getElementById('rankList');
     if (!list) return;
-    const lang = getLang();
-    const cs   = lang === 'cs';
-    const p    = Profiles.active();
+    const t = tr(), p = Profiles.active();
+    const loading = `<div class="rk-empty">${t.rank_loading}</div>`;
+    const offline = `<div class="rk-empty">📡 ${t.rank_offline}</div>`;
+    const row = (rank, name, val, opts = {}) => `<div class="lg-row${opts.zone ? ' ' + opts.zone : ''}${opts.me ? ' me' : ''}"><span>${rank}.</span><b>${opts.av ? `<i class="rk-av">${escAttr(opts.av)}</i>` : ''}${escAttr(name)}</b><span>${val}</span></div>`;
+    list.innerHTML = loading;
 
-    if (tab === 'global') {
-      list.innerHTML = `<div style="text-align:center;padding:24px;color:#aaa"><div style="font-size:32px;margin-bottom:8px">🌍</div><div style="font-size:13px;font-weight:700">${cs?'Načítám svět…':'Loading world…'}</div></div>`;
-      this._renderGlobalRank(list, p);
+    if (tab === 'league') {
+      if (!Subscription.isPremium()) {
+        list.innerHTML = `<div class="rk-lock"><div style="font-size:30px">🏆</div><div>${t.plus_reason.league}</div><button class="btn-primary" onclick="App.openSubscription('league')">⭐ ${t.plus_title}</button></div>`;
+        return;
+      }
+      Net.league(p.id).then(L => {
+        if (this._rankTab !== 'league') return;
+        if (!L) { list.innerHTML = offline; return; }
+        const icon = { bronze: '🥉', silver: '🥈', gold: '🥇', diamond: '💎' }[L.tier] || '🏆';
+        const days = Math.max(0, Math.ceil((L.endsAt - Date.now()) / 864e5));
+        const rows = (L.top || []).map(r => row(r.rank, r.name, `${r.pts} ${t.league_pts}`, { me: r.me,
+          zone: r.rank <= L.promote ? 'up' : (L.demote && r.rank > L.players - L.demote ? 'down' : '') })).join('');
+        list.innerHTML = `<div class="rk-head">${icon} <b>${t.league_name[L.tier]}</b><small>${t.league_how(days)}</small></div>
+          ${rows || `<div class="rk-empty">${t.league_empty}</div>`}
+          <div class="rk-note"><span class="lg-dot up"></span> ${t.league_zone_up} &nbsp; <span class="lg-dot down"></span> ${t.league_zone_down}</div>`;
+      });
       return;
     }
-
-    // Local leaderboard
-    const entries = Ranking.local();
-    list.innerHTML = '';
-
-    if (entries.length === 0) {
-      list.innerHTML = `<div style="text-align:center;padding:20px;color:#aaa">${cs?'Zatím žádné záznamy':'No entries yet'}</div>`;
+    if (tab === 'daily') {
+      Net.dailyLeaderboard(new Date().toISOString().slice(0, 10)).then(board => {
+        if (this._rankTab !== 'daily') return;
+        if (!board) { list.innerHTML = offline; return; }
+        list.innerHTML = `<div class="rk-head">📅 <b>${t.rank_daily_title}</b><small>${t.rank_daily_how}</small></div>` +
+          (board.length ? board.map((x, i) => row(i + 1, x.name, `${x.score}/10`, { me: x.name === p.name })).join('') : `<div class="rk-empty">${t.rank_daily_empty}</div>`) +
+          `<button class="btn-primary rk-cta" onclick="App.openBattleIntro()">⚔️ ${t.rank_daily_play}</button>`;
+      });
       return;
     }
-
-    const medals = ['🥇','🥈','🥉'];
-    entries.forEach((entry, i) => {
-      const isOwn   = entry.id === p?.id;
-      const medal   = medals[i] || `${i+1}.`;
-      const title   = Ranking.rankTitle(entry.score, lang);
-      const card    = document.createElement('div');
-      card.style.cssText = `background:${isOwn?'rgba(74,138,46,0.08)':'white'};border-radius:14px;padding:12px 14px;border:${isOwn?'2px solid var(--green-mid)':'2px solid rgba(0,0,0,0.06)'};display:flex;align-items:center;gap:12px`;
-      card.innerHTML = `
-        <div style="font-size:22px;width:32px;text-align:center;flex-shrink:0">${medal}</div>
-        <div style="font-size:28px;flex-shrink:0">${entry.avatar}</div>
-        <div style="flex:1;min-width:0">
-          <div style="font-size:14px;font-weight:800;color:var(--green-deep)">${entry.name}</div>
-          <div style="font-size:11px;color:#888;font-weight:600">${title}</div>
-          <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap">
-            <span style="font-size:11px;color:var(--green-mid);font-weight:700">✅ ${entry.tasks} ${cs?'úkolů':'tasks'}</span>
-            <span style="font-size:11px;color:#f5a623;font-weight:700">🔥 ${entry.streak}</span>
-            <span style="font-size:11px;color:#7a4abc;font-weight:700">🏅 ${tr().badges_n(entry.badges)}</span>
-            <span style="font-size:11px;color:#2d7abf;font-weight:700">🥚 ${cs?['','Vajíčko','Mládě','Dospívající','Dospělý'][entry.greamStage]||'?':['','Egg','Baby','Teen','Adult'][entry.greamStage]||'?'}</span>
-          </div>
-        </div>
-        <div style="text-align:right;flex-shrink:0">
-          <div style="font-size:16px;font-weight:900;color:var(--green-deep)">${entry.score.toLocaleString()}</div>
-          <div style="font-size:10px;color:#aaa">${tr().points_unit}</div>
-        </div>`;
-      list.appendChild(card);
+    // Sbírka: rodina na tomhle zařízení + svět
+    Profiles.all().forEach(x => Ranking.update(x.id, x, null, Gream.all(x.id)));
+    const fam = Ranking.local().filter(e => Profiles.all().some(x => x.id === e.id));
+    const val = (e) => `${(e.score || 0).toLocaleString()} <small>🐣 ${e.greams ?? 0}/24</small>`;
+    const famHtml = fam.length > 1 ? `<div class="rk-sub">${t.rank_family}</div>` + fam.map((e, i) => row(i + 1, e.name, val(e), { me: e.id === p.id, av: e.avatar })).join('') : '';
+    list.innerHTML = `<div class="rk-head">🐣 <b>${t.rank_collection_title}</b><small>${t.rank_collection_how}</small></div>${famHtml}<div class="rk-sub">${t.rank_world}</div>${loading}`;
+    Net.rankTop(p.id).then(board => {
+      if (this._rankTab !== 'collection') return;
+      const w = !board ? offline : board.length ? board.slice(0, 20).map((e, i) => row(i + 1, e.name, val(e), { me: !!e.me, av: e.avatar })).join('') : `<div class="rk-empty">${t.rank_world_empty}</div>`;
+      list.innerHTML = `<div class="rk-head">🐣 <b>${t.rank_collection_title}</b><small>${t.rank_collection_how}</small></div>${famHtml}<div class="rk-sub">${t.rank_world}</div>${w}`;
     });
   },
 
-  // ─── Global "Svět" leaderboard (server) ───
-  async _renderGlobalRank(list, p) {
-    const cs = getLang() === 'cs';
-    const board = await Net.rankTop();
-    if (!list || !document.getElementById('rankTabGlobal')?.classList.contains('active')) return;
-    if (!board) {
-      list.innerHTML = `<div style="text-align:center;padding:24px;color:#aaa"><div style="font-size:32px;margin-bottom:8px">📡</div><div style="font-size:13px;font-weight:700">${cs?'Svět není dostupný (offline?)':'World unavailable (offline?)'}</div></div>`;
-      return;
-    }
-    if (!board.length) {
-      list.innerHTML = `<div style="text-align:center;padding:20px;color:#aaa">${cs?'Zatím žádní hráči 🌱':'No players yet 🌱'}</div>`;
-      return;
-    }
-    const medals = ['🥇','🥈','🥉'];
-    const stageNames = cs ? ['','Vajíčko','Mládě','Dospívající','Dospělý'] : ['','Egg','Baby','Teen','Adult'];
-    list.innerHTML = '';
-    board.forEach((entry, i) => {
-      const isOwn = entry.name === p?.name;
-      const medal = medals[i] || `${i+1}.`;
-      const title = Ranking.rankTitle(entry.score, getLang());
-      const card  = document.createElement('div');
-      card.style.cssText = `background:${isOwn?'rgba(74,138,46,0.08)':'white'};border-radius:14px;padding:12px 14px;border:${isOwn?'2px solid var(--green-mid)':'2px solid rgba(0,0,0,0.06)'};display:flex;align-items:center;gap:12px`;
-      card.innerHTML = `
-        <div style="font-size:22px;width:32px;text-align:center;flex-shrink:0">${medal}</div>
-        <div style="font-size:28px;flex-shrink:0">${entry.avatar||'🧒'}</div>
-        <div style="flex:1;min-width:0">
-          <div style="font-size:14px;font-weight:800;color:var(--green-deep)">${entry.name}</div>
-          <div style="font-size:11px;color:#888;font-weight:600">${title}</div>
-          <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap">
-            <span style="font-size:11px;color:var(--green-mid);font-weight:700">✅ ${entry.tasks||0} ${cs?'úkolů':'tasks'}</span>
-            <span style="font-size:11px;color:#f5a623;font-weight:700">🔥 ${entry.streak||0}</span>
-            <span style="font-size:11px;color:#7a4abc;font-weight:700">🏅 ${entry.badges||0}</span>
-            <span style="font-size:11px;color:#2d7abf;font-weight:700">🥚 ${stageNames[entry.greamStage]||'?'}</span>
-          </div>
-        </div>
-        <div style="text-align:right;flex-shrink:0">
-          <div style="font-size:16px;font-weight:900;color:var(--green-deep)">${(entry.score||0).toLocaleString()}</div>
-          <div style="font-size:10px;color:#aaa">${tr().points_unit}</div>
-        </div>`;
-      list.appendChild(card);
-    });
-  },
+
 
   async renderBadges() {
     const p = Profiles.active();
@@ -2901,20 +2844,43 @@ window.App = {
           prev.innerHTML = photo ? `<img src="${photo}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">` : p.avatar || '🧒';
         } else { prev.textContent = p.avatar || '🧒'; }
       }
-      const nameInput = document.getElementById('ssNameInput');
-      if (nameInput) {
-        nameInput.value = p.name;
-        nameInput.oninput = () => {
-          const v = nameInput.value.trim();
-          if (v && hasProfanity(v)) { nameInput.style.borderColor = '#e05555'; return; }
-          nameInput.style.borderColor = '';
-          Profiles.update(p.id, { name: v || p.name });
-        };
-      }
+      // Jméno: jednou zvolené zůstává; změna za semínka nejvýš jednou za týden
+      this._setText('ssNameText', p.name);
+      this._setText('ssNameBtn', t.name_change_btn(NAME_CHANGE_COST));
       // Family code
       const code = Profiles.getFamilyCode();
       this._setText('ssFamilyCodeNum', code || '——');
     }
+  },
+
+  // Změna jména hráče: NAME_CHANGE_COST semínek, nejvýš jednou za 7 dní (jméno vidí ostatní v žebříčcích)
+  changeName() {
+    const p = Profiles.active(); if (!p) return;
+    const t = tr(), lang = getLang();
+    const wait = (p.nameChangedAt || 0) + 7 * 864e5 - Date.now();
+    if (wait > 0) { this._showToast(t.name_change_wait(Math.ceil(wait / 864e5))); Feedback.error?.(); return; }
+    if (Skins.getSeeds(p.id) < NAME_CHANGE_COST) { this._showToast(t.name_change_seeds(NAME_CHANGE_COST)); Feedback.error?.(); return; }
+    document.getElementById('nameOverlay')?.remove();
+    const ov = document.createElement('div'); ov.id = 'nameOverlay'; ov.className = 'pg-overlay';
+    ov.innerHTML = `<div class="pg-card anim-pop"><div class="pg-title">✏️ ${t.name_change_title}</div>
+      <div class="pg-reason">${t.name_change_info(NAME_CHANGE_COST)}</div>
+      <input class="pg-in" style="width:100%;font-size:18px" maxlength="20" autocomplete="off" value="${escAttr(p.name)}" aria-label="${escAttr(t.name_change_title)}">
+      <div class="pg-err" hidden></div>
+      <button class="btn-primary">${t.name_change_ok(NAME_CHANGE_COST)}</button><button class="pg-cancel">${t.pg_cancel}</button></div>`;
+    document.body.appendChild(ov);
+    const inp = ov.querySelector('input'), err = ov.querySelector('.pg-err');
+    ov.querySelector('.pg-cancel').onclick = () => ov.remove();
+    ov.querySelector('.btn-primary').onclick = () => {
+      const v = inp.value.trim().slice(0, 20);
+      const bad = !v ? t.name_change_empty : v === p.name ? t.name_change_same : hasProfanity(v) ? (lang === 'cs' ? '🙈 Zvol prosím slušnější jméno.' : '🙈 Please choose a nicer name.') : '';
+      if (bad) { err.textContent = bad; err.hidden = false; return; }
+      if (!Skins.spendSeeds(p.id, NAME_CHANGE_COST)) { err.textContent = t.name_change_seeds(NAME_CHANGE_COST); err.hidden = false; return; }
+      Profiles.update(p.id, { name: v, nameChangedAt: Date.now() });
+      ov.remove(); Feedback.success?.();
+      this._showToast(t.name_change_done(v));
+      this.renderSettings?.();
+    };
+    inp.focus(); inp.select();
   },
 
   generateFamilyCode() {
@@ -3246,7 +3212,7 @@ window.App = {
       const me = MapView.userPos();
       const d = (p) => { if (!me) return ''; const R = 6371000, r = Math.PI / 180; const x = Math.sin((p.lat - me.lat) * r / 2) ** 2 + Math.cos(me.lat * r) * Math.cos(p.lat * r) * Math.sin((p.lon - me.lon) * r / 2) ** 2; const m = Math.round(2 * R * Math.asin(Math.sqrt(x))); return m < 1000 ? `${m} m` : `${(m / 1000).toFixed(1)} km`; };
       const row = (id, rare) => { const p = pois.find(x => x.id === id); if (!p) return ''; const ok = rare ? st.rareDone : st.done.includes(id);
-        return `<button class="exp-row${ok ? ' ok' : ''}" data-id="${id}"><span>${rare ? '✦' : ok ? '✅' : this._poiIcon(p.kind)}</span><b>${escAttr(p.name || t.poi_kind?.[p.kind] || t.exp_place)}</b><small>${ok ? t.exp_done : d(p)}</small></button>`; };
+        return `<button class="exp-row${ok ? ' ok' : ''}" data-id="${id}"><span>${rare ? '✦' : ok ? '✅' : this._poiIcon(p.kind)}</span><b>${escAttr(this._poiLabel(p))}</b><small>${ok ? t.exp_done : d(p)}</small></button>`; };
       const sh = document.createElement('div'); sh.id = 'expSheet'; sh.className = 'exp-sheet';
       sh.innerHTML = `<div class="exp-card"><div class="exp-h">⭐ ${t.exp_title}</div><div class="exp-sub">${t.exp_how(EXP_REWARD.place, EXP_REWARD.all, EXP_REWARD.rare)}</div>
         ${st.egg ? `<div class="exp-sub" style="margin-top:4px">${t.exp_egg}</div>${row(st.egg, false).replace(/<span>[^<]*<\/span>/, '<span>🥚</span>')}` : ''}
@@ -3255,7 +3221,7 @@ window.App = {
         <button class="btn-primary" style="width:100%;margin-top:10px">${t.nav_close}</button></div>`;
       sh.querySelector('.btn-primary').onclick = () => sh.remove();
       sh.onclick = (e) => { if (e.target === sh) sh.remove(); };
-      sh.querySelectorAll('.exp-row').forEach(b => b.onclick = () => { const p = pois.find(x => x.id === b.dataset.id); if (p) { MapView.setDestination(p.lat, p.lon, p.name || t.poi_kind?.[p.kind] || t.exp_place); sh.remove(); } });
+      sh.querySelectorAll('.exp-row').forEach(b => b.onclick = () => { const p = pois.find(x => x.id === b.dataset.id); if (p) { MapView.setDestination(p.lat, p.lon, this._poiLabel(p)); sh.remove(); } });
       mapEl.appendChild(sh);
     };
   },
@@ -3327,8 +3293,8 @@ window.App = {
     overlay.onclick = e => { if (e.target === overlay) this.closePoiModal(); };
 
     this._lastPoi = poi;
-    if (isBattleSpot(poi)) setTimeout(() => this._loadSpotHolder(poi), 0);
-    const kindIcon = this._poiIcon(poi.kind);
+    const battle = isBattleSpot(poi);   // výjimečné místo = jen souboj; ostatní = jen výzvy (místa se nepojmenovávají)
+    if (battle) setTimeout(() => this._loadSpotHolder(poi), 0);
     const bonusBadge = poi.bonusWorld
       ? `<div style="display:inline-block;padding:3px 10px;border-radius:50px;background:${WC[poi.bonusWorld]};color:white;font-size:11px;font-weight:800;margin-bottom:12px">${WORLD_EMOJIS[poi.bonusWorld]} +5 🌱</div>`
       : '';
@@ -3336,9 +3302,10 @@ window.App = {
     overlay.innerHTML = `
       <div style="background:white;border-radius:24px;padding:20px;max-width:340px;width:100%">
         <div style="text-align:center;margin-bottom:14px">
-          <span style="font-size:28px">${kindIcon}</span>
-          <div style="font-size:13px;font-weight:700;color:#888;margin-top:4px">${tr().poi_kind?.[poi.kind] || (poi.kind||'').replace(/_/g,' ')}</div>
-          ${bonusBadge}
+          <span style="font-size:30px">${battle ? '⚔️' : '🎯'}</span>
+          <div style="font-size:17px;font-weight:900;color:var(--green-deep);margin-top:2px">${battle ? t.poi_battle_title : t.poi_challenge_title}</div>
+          <div style="font-size:12px;font-weight:700;color:#888;margin:2px 0 6px">${battle ? t.poi_battle_sub : t.poi_challenge_sub}</div>
+          ${battle ? '' : bonusBadge}
         </div>
         ${tooFar ? `
           <div style="background:#fff6e6;border:2px solid rgba(245,166,35,0.5);border-radius:14px;padding:12px 14px;margin-bottom:14px;text-align:center">
@@ -3348,20 +3315,21 @@ window.App = {
           <button onclick="App.navigateToPoi()"
             style="width:100%;padding:14px;border-radius:14px;border:none;background:var(--green-mid);color:#fff;font-family:inherit;font-weight:900;font-size:15px;cursor:pointer;margin-bottom:8px">🧭 ${lang==='cs'?'Navigovat sem':'Navigate here'}</button>
         ` : `
+          ${battle ? `
+          <div id="poiSpotHolder" class="spot-holder"></div>
+          <button onclick="App.closePoiModal();App.openBattleIntro({outdoor:true,spot:true})"
+            style="width:100%;padding:14px;border-radius:14px;border:none;background:linear-gradient(135deg,#d2603a,#b0402a);color:#fff;font-family:inherit;font-weight:900;font-size:16px;cursor:pointer;margin-bottom:8px">⚔️ ${t.poi_battle_btn}</button>` : `
           <div style="font-size:12px;font-weight:800;color:var(--green-mid);margin-bottom:8px">${lang==='cs'?'Vyber svět:':'Pick a world:'}</div>
           <div id="poiModalWorlds" style="display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:14px"></div>
           <div style="font-size:12px;font-weight:800;color:var(--green-mid);margin-bottom:8px">${lang==='cs'?'Obtížnost:':'Difficulty:'}</div>
           <div style="display:flex;gap:6px;margin-bottom:16px">
             ${diffs.map(d=>`<button data-d="${d.id}" onclick="window._poiDiff('${d.id}')"
               style="flex:1;padding:10px 4px;border-radius:10px;border:2.5px solid ${d.id===cur?'var(--green-mid)':'rgba(0,0,0,0.08)'};background:${d.id===cur?'var(--green-pale)':'white'};font-family:inherit;font-weight:800;font-size:16px;cursor:pointer;transition:all 0.12s">
-              ${d.emoji}
+              ${Subscription.difficultyAllowed(d.id) ? d.emoji : '🔒'}
             </button>`).join('')}
           </div>
           <button id="poiModalStart" onclick="App.startPoiChallenge()"
-            style="display:none;width:100%;padding:14px;border-radius:14px;border:none;color:white;font-family:inherit;font-weight:900;font-size:15px;cursor:pointer;margin-bottom:8px"></button>
-          <div id="poiSpotHolder" class="spot-holder"></div>
-          <button onclick="App.closePoiModal();App.openBattleIntro({outdoor:true,spot:true})"
-            style="width:100%;padding:13px;border-radius:14px;border:none;background:linear-gradient(135deg,#d2603a,#b0402a);color:#fff;font-family:inherit;font-weight:900;font-size:15px;cursor:pointer;margin-bottom:8px">⚔️ ${lang==='cs'?'Souboj tady (venku)':'Battle here (outdoor)'}</button>
+            style="display:none;width:100%;padding:14px;border-radius:14px;border:none;color:white;font-family:inherit;font-weight:900;font-size:15px;cursor:pointer;margin-bottom:8px"></button>`}
           <button onclick="App.navigateToPoi()"
             style="width:100%;padding:12px;border-radius:14px;border:2px solid var(--green-pale);background:white;color:var(--green-dark);font-family:inherit;font-weight:800;font-size:14px;cursor:pointer;margin-bottom:8px">🧭 ${lang==='cs'?'Navigovat sem':'Navigate here'}</button>
         `}
@@ -3370,8 +3338,8 @@ window.App = {
         </button>
       </div>`;
 
-    // World buttons (only in the in-range modal)
-    if (tooFar) { document.body.appendChild(overlay); return; }
+    // World buttons (only in the in-range challenge modal)
+    if (tooFar || battle) { document.body.appendChild(overlay); return; }
     const worldGrid = overlay.querySelector('#poiModalWorlds');
     WORLDS.forEach(w => {
       const done = (poi.worldsDone || []).includes(w);
@@ -3398,6 +3366,7 @@ window.App = {
 
     let selectedDiff = cur;
     window._poiDiff = (diff) => {
+      if (!Subscription.difficultyAllowed(diff)) { this.openSubscription('difficulty'); return; }
       selectedDiff = diff;
       overlay.querySelectorAll('[data-d]').forEach(b => {
         const active = b.dataset.d === diff;
@@ -3410,13 +3379,14 @@ window.App = {
     document.body.appendChild(overlay);
   },
 
+  // Místa se nepojmenovávají (data z mapy často nesedí): jen „Výzva“ / „Souboj“
+  _poiLabel(poi) { const t = tr(); return isBattleSpot(poi) ? '⚔️ ' + t.poi_battle_title : (WORLD_EMOJIS[poi?.bonusWorld] || '🎯') + ' ' + t.poi_challenge_title; },
+
   navigateToPoi() {
     const poi = this._currentPoi;
     if (!poi) return;
     const lang = getLang();
-    const label = (WORLD_EMOJIS[poi.bonusWorld] ? WORLD_EMOJIS[poi.bonusWorld] + ' ' : '') +
-      (poi.kind ? String(poi.kind).replace(/_/g, ' ') : (lang === 'cs' ? 'Cíl' : 'Target'));
-    try { MapView.setDestination(poi.lat, poi.lon, label); } catch {}
+    try { MapView.setDestination(poi.lat, poi.lon, this._poiLabel(poi)); } catch {}
     document.getElementById('poiModalOverlay')?.remove();
     window._poiDiff = null;
     this._currentPoiWorld = null;
@@ -3740,7 +3710,7 @@ window.App = {
         <div style="flex:1;min-width:0">
           <div style="font-size:16px;font-weight:900;color:var(--green-deep)">${g.name || (arch.name?.[lang] || arch.name?.cs || 'Gream')}</div>
           <div style="font-size:12px;font-weight:700;color:${color};margin-bottom:${g.birth ? 2 : 6}px">${sName} · ${g.tasksFor} ${lang==='cs'?'úkolů':'tasks'}</div>
-          ${g.birth ? `<div style="font-size:11px;font-weight:700;color:#8a7a55;margin-bottom:6px">🐣 ${tr().birth_line(g.birth.place, new Date(g.birth.at).toLocaleDateString(lang === 'cs' ? 'cs-CZ' : 'en-GB'))}</div>` : ''}
+          ${g.birth ? `<div style="font-size:11px;font-weight:700;color:#8a7a55;margin-bottom:6px">🐣 ${tr().birth_line(g.birth.place ? tr().poi_outdoors : null, new Date(g.birth.at).toLocaleDateString(lang === 'cs' ? 'cs-CZ' : 'en-GB'))}</div>` : ''}
           ${next ? `
             <div style="background:#f0f0f0;border-radius:50px;height:6px;overflow:hidden">
               <div style="background:${color};height:100%;width:${prog}%;border-radius:50px;transition:width 0.4s"></div>
@@ -3872,7 +3842,7 @@ window.App = {
       // každý greamík patří k jedné skupině: v ní Super účinný, ve zbytku svého světa Účinný
       const myGroup = arch.group;
       const subs = `${WORLD_EMOJIS[world] || ''} ${t.worlds?.[world] || world}`;
-      const born = g.birth ? t.birth_line(g.birth.place, new Date(g.birth.at).toLocaleDateString(lang === 'cs' ? 'cs-CZ' : 'en-GB')) : '—';
+      const born = g.birth ? t.birth_line(g.birth.place ? tr().poi_outdoors : null, new Date(g.birth.at).toLocaleDateString(lang === 'cs' ? 'cs-CZ' : 'en-GB')) : '—';
       const row = (k, v) => `<div class="gd-row"><span>${k}</span><b>${v}</b></div>`;
       box.innerHTML = `
         <div class="gd-hero"><canvas data-sprite-sheet="img/greamici/${g.archetype}_${Math.min(g.stage, 4)}.png" data-sprite-mood="happy" data-arch="${g.archetype}" data-shiny="${g.isShiny ? '1' : ''}" width="132" height="132" class="${g.isShiny ? 'shiny' : ''}"></canvas></div>

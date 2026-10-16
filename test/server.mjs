@@ -2,7 +2,7 @@
 // node test/server.mjs   (port 8092 musí být volný)
 import { spawn } from 'node:child_process'; import fs from 'node:fs'; import os from 'node:os'; import path from 'node:path';
 const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'gream-'));
-const start = () => spawn(process.execPath, [new URL('../server/gream-api.js', import.meta.url).pathname], { env: { ...process.env, GREAM_DATA_DIR: dir, GREAM_RL_OFF: '1' }, stdio: 'ignore' });
+const start = () => spawn(process.execPath, [new URL('../server/gream-api.js', import.meta.url).pathname], { env: { ...process.env, GREAM_DATA_DIR: dir, GREAM_RL_OFF: '1', GREAM_CONTENT_FILE: path.join(dir, 'content.json') }, stdio: 'ignore' });
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const B = 'http://localhost:8092';
 const post = (p, b) => fetch(B + p, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(b) }).then(r => r.json());
@@ -26,6 +26,16 @@ try {
   ok((await post('/spots/claim', { id: 'node/9', arch: 'tlapka', stage: 3, score: 70, tok: 'ddd' })).held === true, 'místo: greamík podkategorie (tlapka) je povolený');
   const sp = await fetch(B + '/spots?ids=node/1,node/2').then(r => r.json());
   ok(sp['node/1']?.arch === 'vlnka' && sp['node/1'].score === 95 && !('name' in sp['node/1']) && !('pid' in sp['node/1']) && !sp['node/2'], 'místo: vrací greamíka a skóre, žádné jméno ani ID');
+  // Nové otázky: bez souboru prázdné, po zveřejnění nová verze, se starou verzí nic navíc
+  let c = await fetch(B + '/content/questions?since=0').then(r => r.json());
+  ok(c.version === 0 && c.items.length === 0, 'obsah: zatím prázdný');
+  fs.writeFileSync(path.join(dir, 'content.json'), JSON.stringify({ version: 3, items: [{ id: 'q1', v: 2 }, { id: 'q2', v: 3 }] }));
+  c = await fetch(B + '/content/questions?since=0').then(r => r.json());
+  ok(c.version === 3 && c.items.length === 2, 'obsah: zveřejněná verze 3 se 2 otázkami');
+  c = await fetch(B + '/content/questions?since=2').then(r => r.json());
+  ok(c.version === 3 && c.items.length === 1 && c.items[0].id === 'q2', 'obsah: jen přírůstek od verze 2');
+  c = await fetch(B + '/content/questions?since=3').then(r => r.json());
+  ok(c.version === 3 && c.items.length === 0, 'obsah: aktuální aplikace nedostane nic navíc');
   // Promo kódy: neplatný, platný, limit použití, vypnutý kód; bez identifikace zařízení
   fs.writeFileSync(path.join(dir, 'promo.json'), JSON.stringify({ 'ZNAMI-2026': { max: 2 }, 'STARY': { max: 5, off: true } }));
   ok((await post('/promo', { code: 'nic' })).ok === false, 'promo: neplatný kód');

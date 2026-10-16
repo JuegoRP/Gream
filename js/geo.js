@@ -20,9 +20,13 @@ export const roundPos = (p) => ({ lat: Math.round(p.lat / ROUND) * ROUND, lon: M
 
 // Seznam druhů míst (parky, památky, knihovny…) je na serveru – server/gream-api.js (POI_TAGS).
 
-// Kinds usable as ⚔️ battle spots — safe/social public places.
-export const BATTLE_SPOT_KINDS = new Set(['park', 'garden', 'playground', 'cafe', 'social_centre', 'pub', 'bar']);
-export const isBattleSpot = (poi) => !!poi && BATTLE_SPOT_KINDS.has(poi.kind);
+// ⚔️ Souboje jen na pár výjimečných místech (≈ 1 z 10), ostatní místa jsou výzvy (Roman 2026-10-16).
+// Výběr podle ID místa → stejný pro všechny hráče a stálý (držitel místa na serveru sedí); jen veřejná venkovní místa.
+export const BATTLE_SPOT_KINDS = new Set(['park', 'garden', 'playground', 'viewpoint', 'nature_reserve', 'wood', 'peak', 'water', 'fountain',
+  'castle', 'ruins', 'monument', 'memorial', 'attraction', 'artwork', 'tower', 'sports_centre', 'poi']);
+const idHash = (s) => { let h = 2166136261; for (const c of String(s)) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; };
+export const BATTLE_SPOT_EVERY = 10;
+export const isBattleSpot = (poi) => !!poi && BATTLE_SPOT_KINDS.has(poi.kind) && idHash(poi.id) % BATTLE_SPOT_EVERY === 0;
 
 export const WORLD_BONUS = {
   nature:   ['park', 'garden', 'nature_reserve', 'tree', 'spring', 'wood', 'peak', 'playground', 'water'],
