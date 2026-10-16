@@ -40,9 +40,16 @@ export const Validator = {
             : { passed: false, feedback: lang === 'cs' ? `Správná odpověď: ${correct}` : `Correct answer: ${correct}` };
         }
         const norm = s => s.toLowerCase().trim().normalize('NFC');
-        return norm(proof) === norm(correct)
+        // check.accept = další správné varianty (synonyma, např. „odolnost / resilience“)
+        return [correct, ...(check.accept || [])].some(c => norm(proof) === norm(String(c)))
           ? { passed: true, feedback: '' }
           : { passed: false, feedback: lang === 'cs' ? `Správná odpověď: ${correct}` : `Correct answer: ${correct}` };
+      }
+
+      case 'map_pin': {   // proof = "lat,lon" ťuknutí na mapě
+        const d = mapDist(check, proof);
+        if (d == null) return { passed: false, feedback: L.needText };
+        return { passed: d <= (check.km || 500), feedback: '' };
       }
 
       case 'sort':
@@ -64,7 +71,7 @@ export const Validator = {
         const num = this._extractNumber(proof);
         if (num === null) return { passed: false, feedback: L.needNumber };
         if (check.answer !== null && check.answer !== undefined) {
-          const tol = check.tolerance ?? 0;
+          const tol = numTolerance(check);
           const ok  = Math.abs(num - check.answer) <= tol;
           return ok
             ? { passed: true,  feedback: '' }
@@ -128,7 +135,7 @@ export const Validator = {
       case 'fill_blank': {
         if (!proof || !check.correct) return 80;
         const norm = s => s.toLowerCase().trim().normalize('NFC');
-        return norm(proof) === norm(check.correct) ? 100 : 20;
+        return [check.correct, ...(check.accept || [])].some(c => norm(proof) === norm(String(c))) ? 100 : 20;
       }
 
       case 'sort': {
@@ -149,11 +156,16 @@ export const Validator = {
       case 'exists':
         return proof ? 100 : 0;
 
+      case 'map_pin': {
+        const d = mapDist(check, proof);
+        return d == null ? 0 : mapScore(d, check.km || 500);
+      }
+
       case 'number': {
         const num = this._extractNumber(proof);
         if (num === null) return 0;
         if (check.answer == null) return 80;
-        const tol = check.tolerance ?? 0;
+        const tol = numTolerance(check);
         const diff = Math.abs(num - check.answer);
         if (diff <= tol) return 100;
         if (diff <= tol * 2) return 60;
@@ -268,3 +280,35 @@ const FEEDBACK_CS = {
   needWords:   (min, got) => `Napiš alespoň ${min} slov — napsal/a jsi ${got}. Přidej trochu víc!`,
   tooShort:    (secs) => `Řekni trochu víc — alespoň ${secs} sekund!`,
 };
+
+// Tolerance číselné odpovědi: pevná (tolerance) nebo v procentech u odhadů (tolerancePct)
+export function numTolerance(check) {
+  if (!check) return 0;
+  if (check.tolerancePct != null) return Math.abs(Number(check.answer) || 0) * check.tolerancePct / 100;
+  return check.tolerance ?? 0;
+}
+
+// ─── Otázka „Kde to je?“ (mapquiz.js) ───
+// Vzdálenost dvou bodů v km (haversine)
+export function distanceKm(a, b) {
+  const R = 6371, rad = (x) => x * Math.PI / 180;
+  const dLat = rad(b.lat - a.lat), dLon = rad(b.lon - a.lon);
+  const h = Math.sin(dLat / 2) ** 2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.min(1, Math.sqrt(h)));
+}
+
+// Skóre podle vzdálenosti od cíle (km = tolerance pro „správně“)
+export function mapScore(distKm, km) {
+  if (distKm <= km / 3) return 100;
+  if (distKm <= km) return 80;
+  if (distKm <= km * 2) return 50;
+  if (distKm <= km * 4) return 30;
+  return 20;
+}
+
+// Vzdálenost ťuknutí („lat,lon“) od cíle otázky v km
+export function mapDist(check, proof) {
+  const [lat, lon] = String(proof || '').split(',').map(Number);
+  if (!isFinite(lat) || !isFinite(lon) || check?.lat == null) return null;
+  return distanceKm({ lat, lon }, { lat: check.lat, lon: check.lon });
+}

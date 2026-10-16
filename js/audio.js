@@ -7,19 +7,18 @@
 // ═══════════════════════════════════
 
 const SCENE_MUSIC = {
-  menu:      'audio/music_menu.mp3',
+  intro:     'audio/music_menu.mp3',       // úvodní nastavení (onboarding, výběr profilu)
+  menu:      'audio/music_menu.mp3',       // hlavní menu – výchozí je ale „nová“ skladba (MENU_ALT_SRC), viz _menuSrc
   challenge: 'audio/music_challenge.mp3',
   outdoor:   'audio/music_outdoor.mp3',
 };
 
-// Alternative menu track — bought with seeds, switchable in settings.
+// Hlavní menu hraje od 2026-10 „novou“ skladbu (dřív se kupovala za semínka); původní zůstává pro úvod
+// a v nastavení se dá zdarma přepnout zpět.
 const MENU_ALT_SRC = 'audio/music_menu_alt.mp3';
 function _menuSrc() {
-  try {
-    if (localStorage.getItem('gream_menu_track') === 'alt' &&
-        localStorage.getItem('gream_menu_alt_owned') === '1') return MENU_ALT_SRC;
-  } catch {}
-  return SCENE_MUSIC.menu;
+  try { if (localStorage.getItem('gream_menu_track') === 'default') return SCENE_MUSIC.menu; } catch {}
+  return MENU_ALT_SRC;
 }
 function _srcFor(scene) { return scene === 'menu' ? _menuSrc() : SCENE_MUSIC[scene]; }
 
@@ -144,17 +143,23 @@ export const Audio = {
 
   isRunning() { return !!(_el && !_el.paused); },
 
-  // ─── Creature "cry" — a cute per-archetype voice, played on tap/hatch/evolve.
-  // Same sound for all evolutions of an archetype, just deeper the bigger it is. ───
+  // ─── Hlas greamíka (klepnutí, vylíhnutí, vývoj): roztomilý vysoký hlas.
+  // Soubory jsou přeladěné o ~6 půltónů výš (původní v Assety/hlasy-puvodni). Větší stádium = jen mírně hlubší. ───
   playCry(archetype, stage = 2) {
     if (!archetype) return;
     try { if (localStorage.getItem('gream_sound') === 'off') return; } catch {}
-    // Bigger evolution → lower pitch (deeper voice).
-    const rate = stage >= 4 ? 0.80 : stage === 3 ? 0.92 : 1.12;
+    let rate = stage >= 4 ? 0.94 : stage === 3 ? 1.0 : 1.1;
     try {
       const el = _cryEl || (_cryEl = new window.Audio());
+      // greamíci podkategorií mají hlas rodiče ze stejného světa, jen ještě o kousek výš
+      const CRY = { tlapka: 'lilek', micek: 'lilek', klapka: 'lilek', kanka: 'jiskra', ahojik: 'jiskra', hvezdik: 'jiskra',
+        poctik: 'kamen', banka: 'kamen', maska: 'kamen', hrejik: 'srodik', zdravik: 'srodik', mnamka: 'srodik',
+        noticka: 'vlnka', hadak: 'vlnka', bajka: 'vlnka', mapka: 'atlas', lvicek: 'atlas', mozik: 'atlas' };
+      if (CRY[archetype]) { rate *= 1.12; archetype = CRY[archetype]; }
       el.src = `audio/cry_${archetype}.mp3`;
-      el.playbackRate = rate;
+      // bez toho prohlížeč při změně rychlosti drží výšku tónu → stádia by zněla stejně
+      el.preservesPitch = false; el.mozPreservesPitch = false; el.webkitPreservesPitch = false;
+      el.defaultPlaybackRate = rate; el.playbackRate = rate;   // default: nové src jinak rychlost vrátí na 1
       el.volume = 0.75;
       el.currentTime = 0;
       const p = el.play();
@@ -163,7 +168,7 @@ export const Audio = {
   },
 
   // ─── Menu music selection (default vs bought alternative) ───
-  getMenuTrack() { try { return localStorage.getItem('gream_menu_track') === 'alt' ? 'alt' : 'default'; } catch { return 'default'; } },
+  getMenuTrack() { try { return localStorage.getItem('gream_menu_track') === 'default' ? 'default' : 'alt'; } catch { return 'alt'; } },
   menuAltOwned() { try { return localStorage.getItem('gream_menu_alt_owned') === '1'; } catch { return false; } },
   setMenuAltOwned(v) { try { localStorage.setItem('gream_menu_alt_owned', v ? '1' : '0'); } catch {} },
   setMenuTrack(which) {

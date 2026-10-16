@@ -4,43 +4,55 @@
 // ═══════════════════════════════════
 
 import { Profiles } from './profiles.js';
+import { GROUPS, groupOfSub } from './subcats.js';
 
 const KEY_GREAMS = 'gream_pets';
 
 // Archetype definitions
-export const ARCHETYPES = {
-  lilek:  { id: 'lilek',  name: { cs: 'Lilek',  en: 'Lilek'  }, primaryWorld: 'nature',   sprite: 'lilek'  },
-  jiskra: { id: 'jiskra', name: { cs: 'Jiskra', en: 'Jiskra' }, primaryWorld: 'language', sprite: 'jiskra' },
-  kamen:  { id: 'kamen',  name: { cs: 'Kámen',  en: 'Kámen'  }, primaryWorld: 'logic',    sprite: 'kamen'  },
-  srodik: { id: 'srodik', name: { cs: 'Srdík',  en: 'Srdík'  }, primaryWorld: 'feelings', sprite: 'srodik' },
-  vlnka:  { id: 'vlnka',  name: { cs: 'Vlnka',  en: 'Vlnka'  }, primaryWorld: 'arts',     sprite: 'vlnka'  },
-  atlas:  { id: 'atlas',  name: { cs: 'Atlas',  en: 'Atlas'  }, primaryWorld: 'world',    sprite: 'atlas'  }
-};
+// 24 greamíků – každý patří k jedné skupině podkategorií (js/subcats.js GROUPS), 4 v každém světě
+const NAMES = { lilek: 'Lilek', jiskra: 'Jiskra', kamen: 'Kámen', srodik: 'Srdík', vlnka: 'Vlnka', atlas: 'Atlas',
+  tlapka: 'Tlapka', kanka: 'Kaňka', poctik: 'Počtík', hrejik: 'Hřejík', noticka: 'Notička', mapka: 'Mapka',
+  hvezdik: 'Hvězdík', mnamka: 'Mňamka', bajka: 'Bajka', ahojik: 'Ahojík', banka: 'Baňka', hadak: 'Hádák',
+  mozik: 'Mozík', zdravik: 'Zdravík', klapka: 'Klapka', maska: 'Maska', micek: 'Míček', lvicek: 'Lvíček' };
+export const ARCHETYPES = Object.fromEntries(Object.entries(GROUPS).map(([g, v]) => [v.arch,
+  { id: v.arch, name: { cs: NAMES[v.arch], en: NAMES[v.arch] }, primaryWorld: v.world, sprite: v.arch, group: g }]));
+// Původních šest (výběr druhého greamíka, výpůjčka do souboje)
+export const BASE_ARCHETYPES = ['lilek', 'jiskra', 'kamen', 'srodik', 'vlnka', 'atlas'];
 
-// World → archetype mapping
-const WORLD_TO_ARCHETYPE = {
-  nature:   'lilek',
-  language: 'jiskra',
-  logic:    'kamen',
-  feelings: 'srodik',
-  arts:     'vlnka',
-  world:    'atlas'
-};
+const isEggG = (g) => g.stage < 2 || !g.archetype;
 
-// Resolve archetype from taskByWorld (used at hatching)
-function resolveArchetype(taskByWorld) {
+// Počty odpovědí vajíčka podle skupin (ze subkategorií otázek)
+function groupCounts(taskBySub = {}) {
+  const c = {};
+  for (const [sub, n] of Object.entries(taskBySub || {})) { const g = groupOfSub(sub); if (g) c[g] = (c[g] || 0) + n; }
+  return c;
+}
+// Vylíhne se greamík skupiny, na kterou vajíčko slyšelo nejvíc otázek (remíza = náhoda).
+// Bez údajů o podkategoriích (staré vajíčko) → náhodná skupina z nejčastějšího světa.
+function resolveArchetype(taskByWorld, taskBySub = {}) {
+  const gc = Object.entries(groupCounts(taskBySub)).sort((a, b) => b[1] - a[1]);
+  if (gc.length) { const top = gc.filter(([, n]) => n === gc[0][1]); return GROUPS[top[Math.floor(Math.random() * top.length)][0]].arch; }
+  const world = resolveWorld(taskByWorld);
+  const inWorld = Object.values(GROUPS).filter(v => v.world === world);
+  return inWorld[Math.floor(Math.random() * inWorld.length)].arch;
+}
+
+// Co vajíčko „cítí“ (nápověda hráči + výběr otázek): nejčastější skupina a kolik do ní odpovědí padlo
+export function eggLeaning(g) {
+  const gc = Object.entries(groupCounts(g?.taskBySub)).sort((a, b) => b[1] - a[1]);
+  if (!gc.length) return null;
+  const [group, groupCount] = gc[0];
+  return { group, groupCount, world: GROUPS[group].world, second: gc[1] ? { group: gc[1][0], count: gc[1][1] } : null,
+           willBe: GROUPS[group].arch };
+}
+
+const WORLDS6 = ['nature', 'language', 'logic', 'feelings', 'arts', 'world'];
+function resolveWorld(taskByWorld) {
   const entries = Object.entries(taskByWorld || {});
-  if (!entries.length) {
-    // No data yet → random
-    const keys = Object.keys(WORLD_TO_ARCHETYPE);
-    return WORLD_TO_ARCHETYPE[keys[Math.floor(Math.random() * keys.length)]];
-  }
-  // Sort by count descending, pick top world
+  if (!entries.length) return WORLDS6[Math.floor(Math.random() * 6)];
   entries.sort((a, b) => b[1] - a[1]);
-  const topCount = entries[0][1];
-  const tied = entries.filter(([, v]) => v === topCount).map(([k]) => k);
-  const winner = tied[Math.floor(Math.random() * tied.length)];
-  return WORLD_TO_ARCHETYPE[winner] || 'lilek';
+  const tied = entries.filter(([, v]) => v === entries[0][1]).map(([k]) => k);
+  return tied[Math.floor(Math.random() * tied.length)];
 }
 
 export { resolveArchetype };
@@ -140,9 +152,10 @@ export const Gream = {
     const data = load();
     const list = data[profileId] || [];
     const active = list.filter(x => !x.archived);
-    if (active.length >= 4) return null;
+    if (active.length >= 6) return null;
+    if (active.some(isEggG)) return null;   // v košíčku je místo jen pro jedno vajíčko – další až po vylíhnutí
     const egg = {
-      id: 'gream_' + Date.now(),
+      id: 'gream_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
       archetype: null,
       stage: 1,
       tasksFor: 0,
@@ -174,7 +187,7 @@ export const Gream = {
     if (existing) return existing;
 
     const newGream = {
-      id:           'gream_' + Date.now(),
+      id:           'gream_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
       archetype:    null,          // mystery until hatching
       stage:        1,
       tasksFor:     0,
@@ -198,11 +211,13 @@ export const Gream = {
   // ─── Feed Gream when a task is completed ───
   // world: 'nature'/'language'/etc. → maps to a specific need
   // Returns { evolved: bool, fromStage, toStage, isShiny, gream }
-  feedFromTask(profileId, world, isOutdoor = false) {
+  feedFromTask(profileId, world, isOutdoor = false, sub = null) {
     const data = load();
     const list = data[profileId] || [];
     const activeId = data[`${profileId}_activeId`];
-    const g = (activeId ? list.find(x => x.id === activeId && !x.archived) : null)
+    // Vajíčko v košíčku má přednost: poslouchá všechny otázky a vylíhne se po 12 (jinak by čekalo, až ho hráč vybere)
+    const g = list.find(x => !x.archived && isEggG(x))
+              || (activeId ? list.find(x => x.id === activeId && !x.archived) : null)
               || list.find(x => !x.archived);
     if (!g) return null;
 
@@ -221,6 +236,7 @@ export const Gream = {
 
     // Increment per-world counter
     g.taskByWorld[world] = (g.taskByWorld[world] || 0) + 1;
+    if (sub) { g.taskBySub = g.taskBySub || {}; g.taskBySub[sub] = (g.taskBySub[sub] || 0) + 1; }   // podkategorie otázky (líhnutí greamíků podkategorií)
     g.tasksFor = (g.tasksFor || 0) + 1;
     g.lastFedAt = Date.now();
     g.mood = 'happy';
@@ -242,7 +258,7 @@ export const Gream = {
         // The archetype is determined by which world the user played most.
         // Ties are broken randomly — every play pattern is valid.
         if (toStage === 2 && !g.archetype) {
-          g.archetype = resolveArchetype(g.taskByWorld);
+          g.archetype = resolveArchetype(g.taskByWorld, g.taskBySub);
           g._archetypeJustResolved = true; // flag for UI reveal animation
         }
 
@@ -330,6 +346,15 @@ export const Gream = {
     if (changed) save(data);
   },
 
+  // ─── Rodný list: kde a kdy se greamík vylíhl (jen v zařízení; místo = název místa, žádné souřadnice) ───
+  setBirth(profileId, greamId, info) {
+    const data = load();
+    const g = (data[profileId] || []).find(x => x.id === greamId);
+    if (!g || g.birth) return;
+    g.birth = { place: info.place ? String(info.place).slice(0, 60) : null, outdoor: !!info.outdoor, world: info.world || null, at: Date.now() };
+    save(data);
+  },
+
   // ─── Set name (only after stage 2) ───
   setName(profileId, greamId, name) {
     const data = load();
@@ -388,7 +413,7 @@ export const Gream = {
     if (active.some(g => g.archetype === archetype)) return null;
 
     const newGream = {
-      id:           'gream_' + Date.now(),
+      id:           'gream_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
       archetype,
       stage:        1,
       tasksFor:     0,
@@ -413,7 +438,7 @@ export const Gream = {
   canAddMore(profileId) {
     const active = this.all(profileId).filter(g => !g.archived);
     const primary = active.find(g => !g.archived);
-    return primary?.stage === 4 && primary?.tasksFor >= UNLOCK_NEXT_GREAM_TASKS && active.length < 6;
+    return primary?.stage === 4 && primary?.tasksFor >= UNLOCK_NEXT_GREAM_TASKS && active.length < 6 && !active.some(isEggG);   // košíček musí být volný
   },
 
   // ─── Which archetypes are already owned? ───

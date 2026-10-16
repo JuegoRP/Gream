@@ -1,17 +1,15 @@
-<div class="map-bar">
-  <button class="btn-back" onclick="App.back()" style="background:none;border:none;font-family:inherit;font-weight:800;color:var(--green-deep);cursor:pointer;font-size:15px">←</button>
-  <div style="flex:1;text-align:center">
-    <div style="font-size:18px;font-weight:900;color:var(--green-deep)" id="wardTitle">🥚 Greamíci</div>
-  </div>
-  <div class="streak-pill" style="background:linear-gradient(135deg,#fde7a8,#f5a623)">🌱 <span id="wardSeeds">0</span></div>
-</div>
+<header class="scr-header">
+  <div class="scr-left"><button class="btn-back" onclick="App.back()" data-icon="back"></button></div>
+  <h1 class="scr-title" id="wardTitle"></h1>
+  <div class="scr-right"><div class="seed-pill">🌱 <span id="wardSeeds">0</span></div></div>
+</header>
 
-<div style="display:flex;gap:6px;margin:0 auto 14px;max-width:420px;padding:0 2px">
-  <button class="ward-tab active" data-tab="greams"  id="wardTabGreams"  onclick="App.wardSwitchTab('greams')">🥚</button>
-  <button class="ward-tab"        data-tab="boosts"  id="wardTabBoosts"  onclick="App.wardSwitchTab('boosts')">✨</button>
-  <button class="ward-tab"        data-tab="avatars" id="wardTabAvatars" onclick="App.wardSwitchTab('avatars')">🎭</button>
-  <button class="ward-tab"        data-tab="frames"  id="wardTabFrames"  onclick="App.wardSwitchTab('frames')">🖼️</button>
-  <button class="ward-tab"        data-tab="bg"      id="wardTabBg"      onclick="App.wardSwitchTab('bg')">🌄</button>
+<div class="shop-tabs" role="tablist">
+  <button class="ward-tab active"  data-tab="decor"   onclick="App.wardSwitchTab('decor')"><span>🏡</span><b data-l="shop_tab_decor"></b></button>
+  <button class="ward-tab"        data-tab="bg"      onclick="App.wardSwitchTab('bg')"><span>🌄</span><b data-l="shop_tab_bg"></b></button>
+  <button class="ward-tab"        data-tab="boosts"  onclick="App.wardSwitchTab('boosts')"><span>✨</span><b data-l="shop_tab_boosts"></b></button>
+  <button class="ward-tab"        data-tab="avatars" onclick="App.wardSwitchTab('avatars')"><span>🎭</span><b data-l="shop_tab_avatars"></b></button>
+  <button class="ward-tab"        data-tab="frames"  onclick="App.wardSwitchTab('frames')"><span>🖼️</span><b data-l="shop_tab_frames"></b></button>
 </div>
 
 <div id="wardGrid" style="max-width:420px;margin:0 auto"></div>

@@ -18,10 +18,34 @@ import { Dev } from './dev.js';
 import { Battle } from './battle.js';
 import { Net } from './net.js';
 import { hasProfanity } from './profanity.js';
-import { Gream, ARCHETYPES, spritePath, smartSpritePath } from './gream.js';
+import { shinySource } from './shiny.js';
+import { GardenLife } from './garden-life.js';
+import { SPECIALS } from './battle-rules.js';
+import { SUBCAT_TAXONOMY, subcatName, groupName } from './subcats.js';
+
+// Rozmístění ve 2D zahradě (% světa; y = spodní hrana předmětu, čím víc, tím blíž).
+// Sladěno s pozadím garden_wide.jpg: nic nestojí na cestičce (vede zleva y≈55 esíčkem dolů doprava y≈90),
+// lavička a lucerna na jejím okraji, jezírko a hříbek na trávě vpravo, košíček a záhonek vlevo dole.
+// base = podíl výšky obrázku, který tvoří podstavu (přes ni se nechodí)
+const GARDEN_LAYOUT = {
+  nest:           { x: 14, y: 92, base: 0.5 },
+  deco_flowerbed: { x: 37, y: 99, base: 0.55 },
+  deco_bench:     { x: 45, y: 75, base: 0.35 },
+  deco_lantern:   { x: 55, y: 79, base: 0.15 },
+  deco_birdhouse: { x: 63, y: 67, base: 0.06 },
+  deco_pond:      { x: 81, y: 77, base: 0.85 },
+  deco_mushroom:  { x: 94, y: 71, base: 0.3 },
+};
+const DECOR_ASPECT = { nest: 46 / 78, deco_flowerbed: 0.67, deco_bench: 0.75, deco_lantern: 1.67, deco_birdhouse: 2.77, deco_pond: 0.64, deco_mushroom: 1.14 };
+import { Gream, ARCHETYPES, BASE_ARCHETYPES, eggLeaning, spritePath, smartSpritePath } from './gream.js';
 import { Subscription, FREE_DAILY_INDOOR, PREMIUM_DAILY_INDOOR, INDOOR_MAX_TOTAL, FREE_DAILY_OUTDOOR, SEED_COST_EXTRA_TASK } from './subscription.js';
 import { Ranking } from './ranking.js';
 import { Audio } from './audio.js';
+import { fillIcons } from './icons.js';
+import { Expedition, REWARD as EXP_REWARD } from './expedition.js';
+import { ParentGate, Playtime } from './parents.js';
+window.__greamLoaded = true;
+const escAttr = (x) => String(x ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); // modul hry se načetl (index.html pak neukáže „Failed to start“)
 
 // ─── Global error boundary ───
 // Catches uncaught errors and shows a friendly recovery UI instead of white screen
@@ -78,7 +102,8 @@ function showErrorBoundary(msg) {
 // ─── Service worker ───
 // Enabled by default for offline support.
 // Disable via URL: ?sw=off  → unregisters SW (for development)
-if ('serviceWorker' in navigator) {
+// V aplikaci (Capacitor) jsou soubory přibalené → service worker nepotřebujeme
+if ('serviceWorker' in navigator && !window.Capacitor?.isNativePlatform?.()) {
   const params = new URLSearchParams(location.search);
   if (params.get('sw') === 'off') {
     navigator.serviceWorker.getRegistrations().then(regs => {
@@ -227,7 +252,7 @@ function _floraWorld(season, tod) {
     <polygon points="320,138 332,150 345,130" fill="white" opacity="0.35"/>`;
   return globe + compass + mountains;
 }
-const AVATAR_POOL = ['🧒','👧','👦','🧑','🌟','🦊','🐻','🐸'];
+const AVATAR_POOL = ['chr_fox','chr_cat','chr_owl','chr_frog','chr_bear','chr_bunny'];   // postavičky zdarma (img/avatars)
 let _obAv = AVATAR_POOL[Math.floor(Math.random() * AVATAR_POOL.length)];
 
 // ═══════════════════════════════════
@@ -237,6 +262,8 @@ window.App = {
 
   async init() {
     console.log('[Gream] Init starting...');
+    this._initNativeBack();
+    Playtime.start(() => Profiles.active()?.id);
     // Ask the OS not to evict our data (profiles, pet, progress live in
     // localStorage). iOS/Safari can clear WebView storage under space pressure;
     // losing a child's Gream is the worst possible bug. Best-effort, non-blocking.
@@ -256,6 +283,11 @@ window.App = {
     console.log('[Gream] Profiles:', profiles.length, 'Active:', active?.name || 'none');
 
     if (active) this.applyCosmetics();
+    // Doplňky byly zrušeny (2026-10-16): kdo nějaký koupil, dostane semínka zpět
+    try {
+      let back = 0; Profiles.all().forEach(pr => { back += Skins.refundAccessories(pr.id) + Skins.refundRemovedDecor(pr.id); });
+      if (back) setTimeout(() => this._showToast(tr().acc_refund(back)), 2500);
+    } catch {}
 
     if (!profiles.length) {
       console.log('[Gream] → onboarding');
@@ -376,16 +408,38 @@ window.App = {
       Audio.switchScene('menu');
       Router.show('hub');
     }
-    // Update tab labels with current lang
-    const labels = {
-      garden: lang === 'cs' ? 'Zahrada' : 'Garden',
-      map:    lang === 'cs' ? 'Svět'    : 'World',
-      hub:    lang === 'cs' ? 'Já'      : 'Me',
-    };
-    for (const [k, v] of Object.entries(labels)) {
-      const el = document.getElementById('tabLbl' + k.charAt(0).toUpperCase() + k.slice(1));
-      if (el) el.textContent = v;
-    }
+    this._decorate();
+  },
+
+  // ─── Systémové tlačítko Zpět na Androidu (hra nemá historii prohlížeče → bez tohohle by Zpět zavřel aplikaci) ───
+  _initNativeBack() {
+    const CapApp = window.Capacitor?.isNativePlatform?.() && window.Capacitor.Plugins?.App;
+    if (!CapApp) return;
+    CapApp.addListener('backButton', () => {
+      // Souboj a průvodce: Zpět nic nedělá (žádný omylem přerušený souboj)
+      if (document.getElementById('battleOverlay') || document.getElementById('battleBoardOverlay') || document.getElementById('tutOverlay')) return;
+      // Otevřené okno → zavřít
+      const modal = ['poiModalOverlay', 'infoModalOverlay', 'reportOverlay', 'outdoorSuggestionOverlay', 'resetConfirmOverlay']
+        .map(id => document.getElementById(id)).find(Boolean);
+      if (modal) { modal.remove(); return; }
+      const cur = Router.current();
+      if (!cur || ['map', 'home', 'onboarding', 'profiles'].includes(cur)) { CapApp.minimizeApp(); return; }
+      if (['map-view', 'hub'].includes(cur)) { this.showTab('garden'); return; }
+      if (cur === 'challenge') { Router.show('home'); return; }
+      this.back();
+    });
+  },
+
+  // ─── Sdílené prvky: ikony, popisky lišty a přístupnost tlačítek (po každé obrazovce i změně jazyka) ───
+  _decorate() {
+    const t = tr();
+    fillIcons(document);
+    this._setText('tabLblGarden', t.tab_garden);
+    this._setText('tabLblMap',    t.tab_map);
+    this._setText('tabLblHub',    t.tab_hub);
+    document.querySelectorAll('.btn-back').forEach(b => b.setAttribute('aria-label', t.nav_back));
+    const aria = { bcStatsBtn: t.open_stats, mapLocateBtn: t.map_locate, mapWorldsBtn: t.map_worlds };
+    for (const [id, lbl] of Object.entries(aria)) document.getElementById(id)?.setAttribute('aria-label', lbl);
   },
 
   // ─── Hub screen ───
@@ -418,8 +472,14 @@ window.App = {
     }
 
     // Labels (bilingual)
-    this._setText('hubGreamiciLbl', cs ? 'Greamíci'            : 'My Greams');
-    this._setText('hubGreamiciSub', cs ? 'Správa & vývoj mazlíčků' : 'Manage & grow your pets');
+    const t = tr();
+    const greams = Gream.all(p.id).filter(g => !g.archived);
+    this._setText('hubGreamiciLbl', t.hub_greams);
+    this._setText('hubGreamiciSub', t.hub_greams_sub(greams.filter(g => g.stage >= 2 && g.archetype).length, greams.filter(g => g.stage < 2 || !g.archetype).length));
+    this._setText('hubShopLbl', t.hub_shop);
+    this._setText('hubShopSub', t.hub_shop_sub);
+    this._setText('hubStatsLbl', t.hub_stats);
+    this._setText('hubStatsSub', t.hub_stats_sub);
     this._setText('hubRankLbl',   cs ? 'Žebříček'   : 'Ranking');
     this._setText('hubRankSub',   cs ? 'Porovnej se s ostatními' : 'Compare with others');
     this._setText('hubBadgesLbl', cs ? 'Odznaky'    : 'Badges');
@@ -626,11 +686,13 @@ window.App = {
       return;
     }
     Feedback.success();
+    const chr = SKIN_CATALOG.char_avatars.find(c => c.id === _obAv);   // postavička (výchozí výběr)
     const p = Profiles.create({
       name,
-      avatar: _obAv === '__photo__' ? '🧒' : _obAv,
+      avatar: _obAv === '__photo__' ? '🧒' : chr ? chr.emoji : _obAv,
       lang: getLang()
     });
+    if (chr) { Profiles.update(p.id, { avatarImg: chr.img }); Skins.setEquipped(p.id, 'avatar', chr.id); }
     if (_obAv === '__photo__' && window._pendingPhoto) {
       Profiles.savePhoto(p.id, window._pendingPhoto);
       window._pendingPhoto = null;
@@ -699,6 +761,7 @@ window.App = {
 
   // ─── MAP ───
   async renderMap() {
+    setTimeout(() => this._renderGardenDecor(), 0);
     const p = Profiles.active();
     if (!p) return Router.show('profiles');
     const streakResult = Profiles.checkStreak(p.id);
@@ -931,7 +994,7 @@ window.App = {
     });
   },
 
-  openBattleIntro(opts) { Battle.intro(opts || {}); },
+  openBattleIntro(opts) { opts = opts || {}; if (opts.spot === true) opts.spot = this._lastPoi ? { id: this._lastPoi.id, kind: this._lastPoi.kind } : null; Battle.intro(opts); },
   showBattleLeaderboard() { Battle.showLeaderboard(); },
 
   reportCurrentChallenge() {
@@ -1014,84 +1077,170 @@ window.App = {
     bar.style.justifyContent = 'center';
   },
 
+  // ─── 2D zahrada: posuvný „svět“ (panorama) uvnitř #greamStage; ovládací prvky zůstávají pevně v rámu ───
+  _gardenWorld() {
+    const stage = document.getElementById('greamStage');
+    if (!stage) return null;
+    let scroll = stage.querySelector('.garden-scroll');
+    if (!scroll) {
+      scroll = document.createElement('div'); scroll.className = 'garden-scroll';
+      const world = document.createElement('div'); world.className = 'garden-world'; world.dataset.wide = '1';   // všechna pozadí jsou panoramata – šířka musí sedět už při rozmístění greamíků
+      scroll.appendChild(world);
+      (stage.querySelector('.gream-floor') || stage.firstChild)?.after(scroll);
+      if (!this._gardenResize) {
+        this._gardenResize = () => this._sizeGardenWorld();
+        window.addEventListener('resize', this._gardenResize);
+      }
+    }
+    return scroll.querySelector('.garden-world');
+  },
+  // Šířka světa: panorama 3 : 2 podle výšky scény (posouvá se do stran); kupované pozadí = jen šířka rámu
+  _sizeGardenWorld() {
+    const stage = document.getElementById('greamStage'), world = stage?.querySelector('.garden-world');
+    if (!world) return;
+    const wide = world.dataset.wide === '1';
+    // panorama zvětšené 1,3× a ukotvené dole → méně oblohy, víc trávníku (obrázek 3 : 2)
+    world.style.width = (wide ? Math.max(stage.clientWidth, Math.round(stage.clientHeight * 1.3 * 1.5)) : stage.clientWidth) + 'px';
+    world.style.setProperty('--stage-w', stage.clientWidth + 'px');
+    this._updateGardenArrows();
+  },
+  // Šipky na okrajích: ukazují, že zahrada pokračuje, a klepnutím ji posunou
+  _updateGardenArrows() {
+    const stage = document.getElementById('greamStage'), scroll = stage?.querySelector('.garden-scroll');
+    if (!scroll) return;
+    ['left', 'right'].forEach(side => {
+      let b = stage.querySelector('.garden-arrow.' + side);
+      if (!b) {
+        b = document.createElement('button'); b.className = 'garden-arrow ' + side; b.type = 'button';
+        b.setAttribute('aria-label', side === 'left' ? '←' : '→');
+        b.onclick = (e) => { e.stopPropagation(); scroll.scrollBy({ left: (side === 'left' ? -1 : 1) * scroll.clientWidth * 0.7, behavior: 'smooth' }); };
+        stage.appendChild(b);
+      }
+      const more = side === 'left' ? scroll.scrollLeft > 8 : scroll.scrollLeft < scroll.scrollWidth - scroll.clientWidth - 8;
+      b.classList.toggle('show', more);
+    });
+    if (!scroll._arrows) { scroll._arrows = true; scroll.addEventListener('scroll', () => this._updateGardenArrows(), { passive: true }); }
+  },
+
+  // Počká na obrázky aktuální obrazovky (img i pozadí zahrady i zdroje sprite canvasů), nejdéle maxMs
+  async _imagesReady(maxMs = 2500) {
+    const urls = new Set();
+    const scr = document.querySelector('.screen:not(.hidden)') || document;
+    scr.querySelectorAll('img[src]').forEach(i => urls.add(i.src));
+    scr.querySelectorAll('canvas[data-sprite-sheet]').forEach(c => urls.add(c.dataset.spriteSheet));
+    scr.querySelectorAll('.garden-world, .gream-stage').forEach(el => { const m = (el.style.backgroundImage || '').match(/url\(["']?([^"')]+)/); if (m) urls.add(m[1]); });
+    const load = (u) => new Promise(res => { const i = new Image(); i.onload = i.onerror = () => (i.decode ? i.decode().catch(() => {}).then(res) : res()); i.src = u; });
+    await Promise.race([Promise.all([...urls].map(load)), new Promise(r => setTimeout(r, maxMs))]);
+  },
+
+  // Výběr jiného greamíka v zahradě: jen přepnout „aktivního“ (velikost, jméno, pozdrav), nic znovu nevykreslovat
+  _switchActiveInGarden(g, slot) {
+    const p = Profiles.active(); if (!p) return;
+    Gream.setActive(p.id, g.id);
+    const lang = getLang(), world = slot.closest('.garden-world');
+    world?.querySelectorAll('.garden-gream-slot.is-active').forEach(el => el.classList.remove('is-active'));
+    slot.classList.add('is-active');
+    (this._gardenLife?.actors || []).forEach(a => { a.active = a.id === g.id; this._gardenLife._place(a); });
+    const egg = g.stage < 2 || !g.archetype;
+    this._setText('greamDisplayName', egg ? (lang === 'cs' ? '🌱 Záhadné vajíčko' : '🌱 Mystery egg') : Gream.getDisplayName(g, lang));
+    this._setText('mapGreeting', Gream.getGreeting(g, lang));
+    this._gardenLife?.poke(g.id);
+    if (g.archetype && g.stage >= 2) Audio.playCry(g.archetype, g.stage);
+  },
+
   _renderGardenGreams(allGreams, activeGream, lang) {
     const stage = document.getElementById('greamStage');
-    if (!stage) return;
+    const world = this._gardenWorld();
+    if (!stage || !world) return;
+    const prevPos = this._gardenLife?.positions?.() || {};   // po klepnutí / výběru zůstanou greamíci, kde byli
+    this._gardenLife?.stop();
+    world.querySelectorAll('.garden-gream-slot, .garden-nest, .gw-fx').forEach(el => el.remove());
+    stage.querySelectorAll(':scope > .garden-gream-slot, :scope > .garden-nest').forEach(el => el.remove());   // starý 1D rozvrh
+    this._sizeGardenWorld();
 
-    stage.querySelectorAll('.garden-gream-slot').forEach(el => el.remove());
+    // Vejce leží v košíčku (stálé místo líhnutí), vylíhnutí greamíci chodí po zahradě
+    const isEgg = (g) => g.stage < 2 || !g.archetype;
+    const hatched = allGreams.filter(g => !isEgg(g));
+    const eggs = allGreams.filter(isEgg);
+    const NEST = GARDEN_LAYOUT.nest;
+    const nest = document.createElement('img');
+    nest.className = 'garden-nest';
+    nest.src = 'img/zahrada/nest.png'; nest.alt = '';
+    nest.style.cssText = `left:${NEST.x}%;top:${NEST.y}%;width:calc(var(--stage-w) * ${hatched.length ? 0.2 : 0.3});z-index:${Math.round(NEST.y * 10)}`;
+    world.appendChild(nest);
 
-    const POSITIONS = {
-      1: [50],
-      2: [30, 70],
-      3: [22, 50, 78],
-      4: [18, 38, 62, 82]
-    };
-    const xPositions = POSITIONS[allGreams.length] || POSITIONS[1];
-
-    allGreams.forEach((g, i) => {
+    const actors = [];
+    allGreams.forEach((g) => {
       const isActive = g.id === activeGream?.id;
-      const xPct = xPositions[i] || 50;
-      const showJar = g.stage < 2 || !g.archetype;
-
+      const showJar = isEgg(g);
       const slot = document.createElement('div');
-      slot.className = 'garden-gream-slot';
-      slot.style.cssText = `
-        position:absolute;
-        left:${xPct}%;
-        bottom:18px;
-        transform:translateX(-50%) scale(${isActive ? 1.0 : 0.78});
-        transform-origin: bottom center;
-        opacity:${isActive ? 1 : 0.7};
-        z-index:${isActive ? 4 : 3};
-        transition:transform 0.3s,opacity 0.3s;
-        cursor:pointer;
-        display:flex;flex-direction:column;align-items:center;
-      `;
+      slot.className = 'garden-gream-slot' + (showJar ? ' gw-egg' : ' gw-slot idle') + (isActive ? ' is-active' : '');
 
       if (showJar) {
-        slot.innerHTML = `
-          <div style="width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,0.25);border:2px solid rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;
-            ${g.tasksFor >= 8 ? 'animation:greamIdle 1s ease-in-out infinite;' : ''}
-          ">
-            <img src="img/greamici/seed_1.png" style="width:38px;height:38px;image-rendering:pixelated" onerror="this.style.display='none';this.nextSibling.style.display='block'">
-            <span style="font-size:28px;display:none">🥚</span>
-          </div>
-          ${isActive ? '<div style="position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.18);width:40px;height:8px;border-radius:50%"></div>' : ''}
-        `;
+        // Vejce v košíčku: blízko vylíhnutí (8+ výzev) se kolébá
+        const i = eggs.indexOf(g);
+        const nw = hatched.length ? 0.2 : 0.3;   // šířka košíčku vůči rámu; vejce sedí v seně – před košíčkem, spodkem kousek pod horním okrajem (78×46)
+        slot.style.cssText = `left:${NEST.x + (eggs.length > 1 ? (i - (eggs.length - 1) / 2) * 2.4 : 0)}%;top:calc(${NEST.y}% - var(--stage-w) * ${(nw * 46 / 78 * 0.42).toFixed(3)});z-index:${Math.round(NEST.y * 10) + 1};width:calc(var(--stage-w) * ${hatched.length ? 0.1 : 0.15})`;
+        slot.innerHTML = `<img src="img/greamici/seed_1.png" alt="" style="width:100%;image-rendering:pixelated;display:block;transform-origin:50% 90%;
+            ${g.tasksFor >= 8 ? 'animation:eggWobble 1.6s ease-in-out infinite;' : ''}${isActive ? '' : 'filter:brightness(.92);'}">`;
       } else {
         const arch = g.archetype;
         const stageN = Math.min(g.stage, 4);
-        // Bigger evolution → visibly bigger. stage2 = base, +20% at 3, +30% again at 4.
+        // Větší stádium → viditelně větší (stádium 2 = základ)
         const STAGE_SCALE = { 1: 0.85, 2: 1.0, 3: 1.2, 4: 1.56 };
-        const gSize = Math.round(80 * (STAGE_SCALE[stageN] || 1));
-        const shW = Math.round(gSize * (isActive ? 0.62 : 0.5));
+        const gSize = Math.round(76 * (STAGE_SCALE[stageN] || 1));
+        const an = g.isShiny ? ['greamShinyGlow 3s ease-in-out infinite'] : [];
         slot.innerHTML = `
-          <canvas data-sprite-sheet="img/greamici/${arch}_${stageN}.png"
-            data-sprite-mood="${g.mood || 'happy'}"
-            width="${gSize}" height="${gSize}"
-            style="width:${gSize}px;height:${gSize}px;image-rendering:pixelated;display:block;
-              ${isActive ? 'animation:greamWalkBlock 1.1s ease-in-out infinite;' : ''}
-              filter:drop-shadow(0 4px 8px rgba(0,0,0,${isActive ? '0.3' : '0.15'}));
-              ${g.isShiny ? 'filter:drop-shadow(0 4px 8px rgba(255,215,0,0.5));' : ''}
-            "></canvas>
-          <div style="position:absolute;bottom:2px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,${isActive ? '0.22' : '0.1'});width:${shW}px;height:${Math.round(shW*0.16)}px;border-radius:50%;${isActive ? 'animation:greamWalkShadow 1.1s ease-in-out infinite;' : ''}"></div>
-        `;
+          <div class="gw-body"><div class="gw-hop"><div class="gw-bob">
+            <canvas data-sprite-sheet="img/greamici/${arch}_${stageN}.png"
+              data-sprite-mood="${g.mood || 'happy'}" data-arch="${arch}" data-shiny="${g.isShiny ? '1' : ''}"
+              width="${gSize}" height="${gSize}"
+              style="width:${gSize}px;height:${gSize}px;image-rendering:pixelated;display:block;${an.length ? `animation:${an.join(', ')};` : ''}filter:drop-shadow(0 4px 6px rgba(0,0,0,0.22));"></canvas>
+          </div></div></div>
+          <div class="gw-shadow" style="width:${Math.round(gSize * 0.6)}px"></div>`;
+        actors.push({ el: slot, id: g.id, active: isActive });
       }
 
-      slot.addEventListener('click', () => {
-        if (!isActive) {
-          Gream.setActive(Profiles.active()?.id, g.id);
-          this.renderMap();
+      slot.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (!slot.classList.contains('is-active')) {
+          this._switchActiveInGarden(g, slot);   // bez překreslení zahrady (dřív všichni problikli)
           Feedback.tap();
         } else {
-          this.tapGream();
+          this._gardenLife?.poke(g.id);
+          this.tapGream(slot);
         }
       });
-
-      stage.appendChild(slot);
+      world.appendChild(slot);
     });
 
-    this._initSpriteCanvases(stage);
+    this._initSpriteCanvases(world);
+
+    // Chování: greamíci chodí k předmětům v zahradě (výzdoba + košíček, když v něm je vejce)
+    const p = Profiles.active();
+    // rozměry předmětů v % světa (šířka) a % výšky scény (podstava) – greamíci je obcházejí
+    const sw = stage.clientWidth || 360, sh = stage.clientHeight || 440, ww = world.clientWidth || sw;
+    const dims = (id, wPctOfStage) => { const L = GARDEN_LAYOUT[id] || {}, wpx = wPctOfStage / 100 * sw;
+      const hpx = wpx * (DECOR_ASPECT[id] || 0.7);
+      return { w: wpx / ww * 100, d: hpx * (L.base ?? 0.4) / sh * 100, h: hpx / sh * 100 }; };
+    const props = (p ? Skins.shownDecor(p.id) : []).map(it => ({ id: it.id, ...(GARDEN_LAYOUT[it.id] || { x: it.x, y: it.y }), ...dims(it.id, it.w) }));
+    props.push({ id: 'nest', ...NEST, ...dims('nest', hatched.length ? 20 : 30), egg: eggs.length > 0 });
+    const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    this._gardenLife = new GardenLife(world, { reduced });
+    this._gardenLife.setProps(props);
+    this._gardenLife.setActors(actors, prevPos);
+    this._gardenLife.start();
+
+    // Na začátku ukázat aktivního greamíka (nebo vejce) uprostřed rámu
+    requestAnimationFrame(() => {
+      const scroll = stage.querySelector('.garden-scroll');
+      const focus = world.querySelector('.garden-gream-slot.is-active') || world.querySelector('.garden-gream-slot');
+      if (scroll && focus && !this._gardenScrolled) {
+        scroll.scrollLeft = Math.max(0, focus.offsetLeft - scroll.clientWidth / 2);
+        this._gardenScrolled = true;
+        this._updateGardenArrows();
+      }
+    });
 
     const activePet = activeGream;
     if (activePet) {
@@ -1149,7 +1298,9 @@ window.App = {
   },
 
   // Draw sprite sheet cell onto canvas, cropped to content and centered
-  _drawSpriteCell(ctx, img, sx, sy, canvasW, canvasH) {
+  // 7. parametr byl doplněk (zrušeno 2026-10-16) – zůstává kvůli pořadí argumentů
+  _drawSpriteCell(ctx, img, sx, sy, canvasW, canvasH, _acc = null, arch = null, shiny = false) {
+    if (shiny && arch) img = shinySource(img, arch);
     // Use offscreen canvas to detect content bbox
     const off = document.createElement('canvas');
     off.width = 128; off.height = 128;
@@ -1212,7 +1363,7 @@ window.App = {
       img.src = src;
       const draw = () => {
         const ctx = canvas.getContext('2d');
-        this._drawSpriteCell(ctx, img, sx, sy, cssW * dpr, cssH * dpr);
+        this._drawSpriteCell(ctx, img, sx, sy, cssW * dpr, cssH * dpr, null, canvas.dataset.arch || null, canvas.dataset.shiny === '1');
       };
       if (img.complete) draw();
       else { img.onload = draw; img.onerror = () => {}; }
@@ -1246,6 +1397,7 @@ window.App = {
       const photo = Profiles.getPhoto(p.id);
       if (photo) { el.innerHTML = `<img src="${photo}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`; return; }
     }
+    if (p.avatarImg) { el.innerHTML = `<img src="${p.avatarImg}" alt="" style="width:100%;height:100%;object-fit:contain">`; return; }
     el.textContent = p.avatar || '🧒';
   },
 
@@ -1284,13 +1436,14 @@ window.App = {
     if (canvas.width !== bufW) { canvas.width = bufW; canvas.height = bufW; }
     canvas.classList.toggle('shiny', spriteEl.classList.contains('shiny'));
 
-    const redraw = canvas.dataset.src !== src || canvas.dataset.mood !== mood;
+    const redraw = canvas.dataset.src !== src || canvas.dataset.mood !== mood || canvas.dataset.shiny !== (pet.isShiny ? '1' : '');
     if (redraw) {
       canvas.dataset.src  = src;
       canvas.dataset.mood = mood;
+      canvas.dataset.shiny = pet.isShiny ? '1' : '';
       const img = new Image();
       img.src = src;
-      const draw = () => this._drawSpriteCell(canvas.getContext('2d'), img, sx, sy, bufW, bufW);
+      const draw = () => this._drawSpriteCell(canvas.getContext('2d'), img, sx, sy, bufW, bufW, null, pet.archetype, !!pet.isShiny);
       img.onerror = () => {
         // Stage 3/4 not uploaded yet — fall back to stage 2
         const fallback = new Image();
@@ -1302,19 +1455,27 @@ window.App = {
     }
   },
 
-  tapGream() {
+  tapGream(slot = null) {
     Feedback.pop();
     // Cute per-archetype cry (deeper the bigger the Gream)
     const _tp = Profiles.active();
     const _pet = _tp ? Gream.active(_tp.id) : null;
     if (_pet?.archetype && _pet.stage >= 2) Audio.playCry(_pet.archetype, _pet.stage);
     // Works with both canvas (sprite sheet) and original img element
-    const target = document.getElementById('greamSpriteCanvas') || document.getElementById('greamSprite');
-    if (!target) return;
-    target.classList.remove('tapped');
-    void target.offsetWidth; // reflow
-    target.classList.add('tapped');
-    setTimeout(() => target.classList.remove('tapped'), 400);
+    // 2D zahrada: poskočení dělá GardenLife.poke, tady jen jiskry v místě greamíka
+    const target = slot ? null : (document.getElementById('greamSpriteCanvas') || document.getElementById('greamSprite'));
+    if (!slot && !target) return;
+    if (target) {
+      target.classList.remove('tapped');
+      void target.offsetWidth; // reflow
+      target.classList.add('tapped');
+      setTimeout(() => target.classList.remove('tapped'), 400);
+    }
+    let sparkAt = 'left:50%;top:42%;';
+    if (slot) {
+      const r = slot.getBoundingClientRect(), sr = document.getElementById('greamStage')?.getBoundingClientRect();
+      if (sr) sparkAt = `left:${Math.round(r.left - sr.left + r.width / 2)}px;top:${Math.round(r.top - sr.top + r.height * 0.45)}px;`;
+    }
 
     // Sparkle particle burst
     const stage = document.getElementById('greamStage');
@@ -1328,7 +1489,7 @@ window.App = {
         p.style.cssText = `
           position:absolute;width:7px;height:7px;border-radius:50%;
           background:${colors[i % colors.length]};
-          left:50%;top:42%;pointer-events:none;z-index:20;
+          ${sparkAt}pointer-events:none;z-index:20;
           --sx:${(Math.cos(angle) * dist).toFixed(1)}px;
           --sy:${(Math.sin(angle) * dist).toFixed(1)}px;
           animation:sparkleOut 0.55s ease forwards;
@@ -1395,8 +1556,10 @@ window.App = {
     const lang = getLang();
     const p = Profiles.active();
     if (!p) return;
-    this._setText('histTitle', '📜 ' + t.history_title);
+    this._setText('histTitle', t.history_title);
+    this._setText('histEmptyTitle', t.history_empty_title);
     this._setText('histEmptyMsg', t.history_empty);
+    this._setText('histEmptyCta', t.history_empty_cta);
 
     const items = Profiles.getHistory(p.id, 50);
     const list  = document.getElementById('histList');
@@ -1406,7 +1569,7 @@ window.App = {
     list.innerHTML = '';
 
     if (items.length === 0) {
-      if (empty) empty.style.display = 'block';
+      if (empty) empty.style.display = 'flex';
       return;
     }
     if (empty) empty.style.display = 'none';
@@ -1452,26 +1615,32 @@ window.App = {
 
   // ─── Dynamic SVG scene behind Greamík ───
   _renderGreamScene(pet) {
-    const bg = document.getElementById('greamStage');
-    if (!bg) return;
+    const stage = document.getElementById('greamStage');
+    const bg = this._gardenWorld();   // pozadí nese posuvný svět zahrady (2D)
+    if (!stage || !bg) return;
+    stage.style.backgroundImage = '';
 
     // Apply purchased background image if equipped
     const p = Profiles.active();
     const equippedBg = p ? Skins.getEquippedBg(p.id) : null;
     if (equippedBg?.file) {
+      bg.dataset.wide = '1';   // i kupovaná pozadí jsou panoramata 3 : 2 → posouvají se stejně jako louka
+      this._sizeGardenWorld();
       bg.style.backgroundImage = `url('img/backgrounds/${equippedBg.file}')`;
-      bg.style.backgroundSize = 'cover';
-      bg.style.backgroundPosition = 'center bottom';
+      bg.style.backgroundSize = 'auto 130%';
+      bg.style.backgroundPosition = 'left bottom';
       this._applyTodTint(bg);
       bg.querySelector('svg.scene-svg')?.remove();
       this._applyLivingOverlay(bg);
       return; // skip procedural SVG generation
     }
 
-    // No custom shop bg — use the painted default garden + living overlay
-    bg.style.backgroundImage = "url('img/bg/garden_bg.jpg')";
-    bg.style.backgroundSize = 'cover';
-    bg.style.backgroundPosition = 'center bottom';
+    // Výchozí zahrada: široké panorama (img/bg/garden_wide.jpg, 3 : 2), posouvá se do stran
+    bg.dataset.wide = '1';
+    this._sizeGardenWorld();
+    bg.style.backgroundImage = "url('img/bg/garden_wide.jpg')";
+    bg.style.backgroundSize = 'auto 130%';
+    bg.style.backgroundPosition = 'left bottom';
     this._applyTodTint(bg);
     bg.querySelector('svg.scene-svg')?.remove();
     this._applyLivingOverlay(bg);
@@ -1765,7 +1934,7 @@ window.App = {
         </div>`;
       const save = () => {
         const name = overlay.querySelector('#_rnInput')?.value.trim();
-        if (name) { G.rename(p.id, pet.id, name); this.renderMap(); }
+        if (name) { G.rename(p.id, pet.id, name); this.renderMap(); if (document.getElementById('greamsList')?.offsetParent) this._renderWardrobeGreams(); }
         overlay.remove();
       };
       overlay.querySelector('#_rnSave').onclick = save;
@@ -1986,28 +2155,32 @@ window.App = {
     const lang = getLang();
     const title = lang === 'cs' ? 'Zásady ochrany soukromí' : 'Privacy Policy';
     const content = lang === 'cs' ? `
-      <p><strong>Stručně:</strong> Tvoje poloha (GPS) a fotky nikdy neopustí zařízení. Pro souboje a žebříčky posíláme na náš server jen zvolenou přezdívku a skóre.</p>
+      <p><strong>Stručně:</strong> Tvoje přesná poloha (GPS) a fotky nikdy neopustí zařízení. Kvůli mapě posíláme na náš server jen přibližnou polohu (zaokrouhlenou na zhruba 500 m) a neukládáme ji. Pro souboje a žebříčky posíláme jen zvolenou přezdívku a skóre.</p>
 
       <p><strong>1. Co zůstává jen v zařízení</strong><br>
       Přezdívka, avatar, postup ve hře (úkoly, odznaky, semínka), greamíci, volitelná fotka,
-      pozice "domov" a historie úkolů. <strong>GPS souřadnice</strong> se zpracují jen v zařízení
-      (rozpoznání „jsi venku / u místa") a nikdy se neodesílají.</p>
+      pozice "domov" a historie úkolů. <strong>Přesné GPS souřadnice</strong> se zpracují jen v zařízení
+      (vzdálenost k místům, „jsi u místa") a nikdy se neodesílají. Jen v zařízení zůstává i prozkoumané okolí,
+      výprava dne a denní čas hraní nastavený rodičem. Otázka „Kde to je?“ tvou polohu nepoužívá.</p>
 
       <p><strong>2. Co posíláme na server</strong> (3rstudio.eu, bez účtu, anonymně)<br>
       • Přezdívku + skóre a rating ze soubojů → veřejný žebříček<br>
       • Anonymní ID splněných míst na mapě (kolik hráčů je splnilo)<br>
+      • Bitevní místa: u místa uložíme jen greamíka a skóre toho, kdo ho drží (bez přezdívky a ID), na 14 dní<br>
+      • Týdenní liga: body ze soubojů pod náhodným ID hráče (žebříček ligy ukazuje přezdívky)<br>
       • Nahlášení špatné otázky (které a proč)<br>
-      Přezdívku si volíš ty a je vidět ostatním — nedávej do ní osobní údaje.</p>
+      • <strong>Přibližnou polohu</strong> (zaokrouhlenou na ≈ 500 m) a výřez mapy – náš server podle ní najde zajímavá místa v okolí a pošle mapu. Neukládáme ji a není spojená s tebou ani s přezdívkou.<br>
+      Přezdívku si volíš ty a je vidět ostatním — nedávej do ní osobní údaje. Nevhodné přezdívky server automaticky nahradí.</p>
 
       <p><strong>3. Co Gream NEDĚLÁ</strong><br>
       • Žádné reklamy<br>
       • Žádné sledování napříč aplikacemi ani reklamní ID<br>
       • Žádná analytika třetích stran ve hře<br>
       • Neprodáváme data · nesbíráme e-mail/telefon<br>
-      • GPS a fotky nikdy neopustí zařízení</p>
+      • Přesná poloha a fotky nikdy neopustí zařízení</p>
 
       <p><strong>4. Externí služby</strong><br>
-      Mapa používá OpenStreetMap (jen mapové dlaždice). Fonty přes Google Fonts.</p>
+      Mapová data © OpenStreetMap (přes OpenFreeMap) – stahuje je náš server, tvoje zařízení se s cizími servery nespojuje. Písmo je součástí aplikace.</p>
 
       <p><strong>5. Děti</strong><br>
       Obsah je bezpečný a bez reklam; v úvodu je obrazovka pro rodiče. Rodič může požádat
@@ -2018,33 +2191,37 @@ window.App = {
       • Přezdívku a skóre ze serveru smažeme na žádost e-mailem.</p>
 
       <p style="margin-top:12px"><strong>Úplné znění:</strong>
-      <a href="https://3rstudio.eu/gream-privacy.html" target="_blank" rel="noopener">3rstudio.eu/gream-privacy.html</a><br>
+      <a href="#" onclick="App.openExternal('https://3rstudio.eu/gream-privacy.html');return false;">3rstudio.eu/gream-privacy.html</a><br>
       Kontakt: romanpavlorek@gmail.com</p>
 
-      <p style="font-size:11px;opacity:0.7;margin-top:14px">Naposledy aktualizováno: červenec 2026</p>
+      <p style="font-size:11px;opacity:0.7;margin-top:14px">Naposledy aktualizováno: říjen 2026</p>
     ` : `
-      <p><strong>In short:</strong> Your location (GPS) and photos never leave your device. For battles and leaderboards we send only your chosen nickname and score to our server.</p>
+      <p><strong>In short:</strong> Your precise location (GPS) and photos never leave your device. For the map we send our server only an approximate location (rounded to about 500 m) and don't store it. For battles and leaderboards we send only your chosen nickname and score.</p>
 
       <p><strong>1. What stays only on your device</strong><br>
       Nickname, avatar, game progress (tasks, badges, seeds), greamíci, optional photo,
-      "home" pin and task history. <strong>GPS coordinates</strong> are processed on-device only
-      (to detect "you're outdoors / at a place") and are never sent.</p>
+      "home" pin and task history. <strong>Precise GPS coordinates</strong> are processed on-device only
+      (distance to places, "you're at a place") and are never sent. Explored areas, the daily expedition
+      and the daily play time set by a parent also stay on your device. The "Where is it?" question doesn't use your location.</p>
 
       <p><strong>2. What we send to our server</strong> (3rstudio.eu, no account, anonymous)<br>
       • Nickname + score and rating from battles → public leaderboard<br>
       • Anonymous IDs of completed map places (how many players completed them)<br>
+      • Battle spots: for a place we store only the greamík and score of whoever holds it (no nickname or ID), for 14 days<br>
+      • Weekly league: battle points under a random player ID (the league table shows nicknames)<br>
       • Bad-question reports (which one and why)<br>
-      You choose your nickname and others can see it — don't put personal details in it.</p>
+      • <strong>Approximate location</strong> (rounded to ≈ 500 m) and the map area – our server uses it to find interesting places nearby and to send the map. It is not stored and not linked to you or your nickname.<br>
+      You choose your nickname and others can see it — don't put personal details in it. The server automatically replaces inappropriate nicknames.</p>
 
       <p><strong>3. What Gream does NOT do</strong><br>
       • No ads<br>
       • No cross-app tracking or advertising IDs<br>
       • No third-party analytics in the game<br>
       • We don't sell data · we don't collect email/phone<br>
-      • GPS and photos never leave the device</p>
+      • Precise location and photos never leave the device</p>
 
       <p><strong>4. External services</strong><br>
-      The map uses OpenStreetMap (map tiles only). Fonts via Google Fonts.</p>
+      Map data © OpenStreetMap (via OpenFreeMap) – downloaded by our server; your device does not connect to third-party servers. The font is bundled with the app.</p>
 
       <p><strong>5. Children</strong><br>
       Content is safe and ad-free; a parent screen appears at the start. Parents can request
@@ -2055,10 +2232,10 @@ window.App = {
       • We delete your server nickname and scores on request by email.</p>
 
       <p style="margin-top:12px"><strong>Full policy:</strong>
-      <a href="https://3rstudio.eu/gream-privacy.html" target="_blank" rel="noopener">3rstudio.eu/gream-privacy.html</a><br>
+      <a href="#" onclick="App.openExternal('https://3rstudio.eu/gream-privacy.html');return false;">3rstudio.eu/gream-privacy.html</a><br>
       Contact: romanpavlorek@gmail.com</p>
 
-      <p style="font-size:11px;opacity:0.7;margin-top:14px">Last updated: July 2026</p>
+      <p style="font-size:11px;opacity:0.7;margin-top:14px">Last updated: October 2026</p>
     `;
     this._showInfoModal(title, content);
   },
@@ -2301,7 +2478,7 @@ window.App = {
     };
     const delay = 6000 + Math.random() * 8000;
     this._chatTimer = setTimeout(() => {
-      const slots = document.querySelectorAll('.garden-gream-slot');
+      const slots = [...document.querySelectorAll('.garden-gream-slot')].filter(el => el.querySelector('canvas'));   // jen vylíhnutí (ne vejce v košíčku)
       if (slots.length < 2) return;
       const lines = chatLines[lang] || chatLines.en;
       const pair = lines[Math.floor(Math.random() * lines.length)];
@@ -2316,6 +2493,16 @@ window.App = {
           slot.appendChild(bubble);
         }
         bubble.textContent = pair[idx] || '...';
+        // bublina nesmí přetéct přes okraj zahrady (greamík na kraji); greamík mimo záběr (2D zahrada) nemluví
+        bubble.style.transform = 'translateX(-50%)';
+        const st = document.getElementById('greamStage')?.getBoundingClientRect(), br = bubble.getBoundingClientRect();
+        const sr = slot.getBoundingClientRect();
+        if (st && (sr.right < st.left + 10 || sr.left > st.right - 10)) return;
+        if (st && br.width) {
+          const scale = br.width / bubble.offsetWidth || 1;   // slot bývá zmenšený (scale)
+          const dx = br.left < st.left + 6 ? st.left + 6 - br.left : br.right > st.right - 6 ? st.right - 6 - br.right : 0;
+          if (dx) bubble.style.transform = `translateX(calc(-50% + ${Math.round(dx / scale)}px))`;
+        }
         bubble.style.opacity = '1';
         setTimeout(() => { bubble.style.opacity = '0'; }, 2800);
       });
@@ -2554,6 +2741,10 @@ window.App = {
     if (!p) return;
     const lang = getLang();
     const cs   = lang === 'cs';
+    const t    = tr();
+    this._setText('rankTitle', t.rank_title);
+    this._setText('rankTabLocal', t.rank_tab_local);
+    this._setText('rankTabGlobal', t.rank_tab_global);
 
     // Update own ranking entry
     const pet    = Gream.active(p.id);
@@ -2580,7 +2771,7 @@ window.App = {
           <div style="flex:1">
             <div style="font-size:11px;font-weight:700;opacity:0.7;margin-bottom:2px">${cs?'Tvůj profil':'Your profile'}</div>
             <div style="font-size:18px;font-weight:900">${own.name}</div>
-            <div style="font-size:12px;opacity:0.85">${title} · ${own.score.toLocaleString()} ${cs?'bodů':'pts'}</div>
+            <div style="font-size:12px;opacity:0.85">${title} · ${own.score.toLocaleString()} ${tr().points_unit}</div>
           </div>
           <div style="text-align:right">
             <div style="font-size:11px;opacity:0.7">${cs?'Úkoly':'Tasks'}</div>
@@ -2632,13 +2823,13 @@ window.App = {
           <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap">
             <span style="font-size:11px;color:var(--green-mid);font-weight:700">✅ ${entry.tasks} ${cs?'úkolů':'tasks'}</span>
             <span style="font-size:11px;color:#f5a623;font-weight:700">🔥 ${entry.streak}</span>
-            <span style="font-size:11px;color:#7a4abc;font-weight:700">🏅 ${entry.badges} ${cs?'odznaků':'badges'}</span>
+            <span style="font-size:11px;color:#7a4abc;font-weight:700">🏅 ${tr().badges_n(entry.badges)}</span>
             <span style="font-size:11px;color:#2d7abf;font-weight:700">🥚 ${cs?['','Vajíčko','Mládě','Dospívající','Dospělý'][entry.greamStage]||'?':['','Egg','Baby','Teen','Adult'][entry.greamStage]||'?'}</span>
           </div>
         </div>
         <div style="text-align:right;flex-shrink:0">
           <div style="font-size:16px;font-weight:900;color:var(--green-deep)">${entry.score.toLocaleString()}</div>
-          <div style="font-size:10px;color:#aaa">${cs?'bodů':'pts'}</div>
+          <div style="font-size:10px;color:#aaa">${tr().points_unit}</div>
         </div>`;
       list.appendChild(card);
     });
@@ -2681,7 +2872,7 @@ window.App = {
         </div>
         <div style="text-align:right;flex-shrink:0">
           <div style="font-size:16px;font-weight:900;color:var(--green-deep)">${(entry.score||0).toLocaleString()}</div>
-          <div style="font-size:10px;color:#aaa">${cs?'bodů':'pts'}</div>
+          <div style="font-size:10px;color:#aaa">${tr().points_unit}</div>
         </div>`;
       list.appendChild(card);
     });
@@ -2690,46 +2881,63 @@ window.App = {
   async renderBadges() {
     const p = Profiles.active();
     if (!p) return;
-    const t = tr();
+    const t = tr(), lang = getLang();
     this._setText('bc-title', t.my_badges);
-    this._setText('streak-title', t.streak_title);
+    this._setText('streak-title', t.bdg_streak);
+    this._setText('bdgWorldsTitle', t.bdg_worlds);
+    this._setText('bdgBattleTitle', t.bdg_battles);
+    const WC = { nature:'#4a8a2e', language:'#5a4a8a', logic:'#2d7abf', feelings:'#d46d94', arts:'#c87030', world:'#a8743c' };
+    const TH = [0, 10, 20, 30, 40, 50, 100];
+    let got = 0, all = 0;
 
-    // Streak badges
-    const row = document.getElementById('streakRow');
-    if (row) {
-      row.innerHTML = '';
-      (t.streakBadges || []).forEach(sb => {
-        const earned = (p.streak || 0) >= sb.days;
-        const el = document.createElement('div');
-        el.className = 'sbi' + (earned ? ' earned' : '');
-        el.innerHTML = `<div class="sbi-ring">${earned ? sb.e : '🔒'}</div><div class="sbi-lbl">${sb.desc}</div>`;
-        row.appendChild(el);
-      });
-    }
-
-    // World badges — evolving
+    // ── Světy: medaile aktuální úrovně, název, pruh k další úrovni, cesta 7 úrovní ──
     const grid = document.getElementById('worldBadgeGrid');
     if (grid) {
       grid.innerHTML = '';
       WORLDS.forEach(w => {
         const tasks = p.worldTasks?.[w] || 0;
-        const badge = Badges.getBadge(w, tasks);
-        const next  = Badges.nextThreshold(tasks);
-        const cell  = document.createElement('div');
-        cell.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:4px;';
-        const badgeEl = Badges.renderWorldBadge(w, tasks, 62);
-        const worldLbl = document.createElement('div');
-        worldLbl.style.cssText = 'font-size:11px;font-weight:900;color:var(--green-dark);text-align:center;margin-top:2px';
-        worldLbl.textContent = t.worlds[w];
-        const subLbl = document.createElement('div');
-        subLbl.style.cssText = 'font-size:9.5px;font-weight:700;color:var(--green-mid);text-align:center;line-height:1.3';
-        subLbl.innerHTML = `${badge.n}<br>${next ? `${tasks}/${next}` : `${tasks} ★`}`;
-        cell.appendChild(badgeEl);
-        cell.appendChild(worldLbl);
-        cell.appendChild(subLbl);
-        grid.appendChild(cell);
+        const lvl = Badges.getLevelIndex(tasks);
+        const levels = t.badgeLevels?.[w] || [];
+        const cur = levels[lvl] || {}, next = Badges.nextThreshold(tasks);
+        const from = TH[lvl], pct = next ? Math.round((tasks - from) / (next - from) * 100) : 100;
+        got += lvl; all += TH.length - 1;
+        const card = document.createElement('div');
+        card.className = 'bdg-world';
+        card.style.setProperty('--wc', WC[w]);
+        // průhledné odstíny barvy světa (místo color-mix – ten starší Android WebView / Safari < 16.2 neumí)
+        card.style.setProperty('--wc-soft', WC[w] + '59'); card.style.setProperty('--wc-mid', WC[w] + 'b3'); card.style.setProperty('--wc-faint', WC[w] + '2e');
+        card.innerHTML = `
+          <div class="bdg-medal lvl${lvl}"><span>${cur.e || '🏅'}</span><i>${lvl + 1}</i></div>
+          <div class="bdg-info">
+            <div class="bdg-name">${t.worlds[w]} <small>· ${cur.n || ''}</small></div>
+            <div class="bdg-bar"><b style="width:${pct}%"></b></div>
+            <div class="bdg-next">${next ? t.bdg_next(next - tasks, levels[lvl + 1]?.n || '') : t.bdg_max}</div>
+            <div class="bdg-path">${levels.map((L, i) => `<span class="${i <= lvl ? 'on' : ''}" title="${L.n}">${i <= lvl ? L.e : '·'}</span>`).join('')}</div>
+          </div>`;
+        grid.appendChild(card);
       });
     }
+
+    // ── Série dní ──
+    const medal = (on, e, label, sub) => `<div class="bdg-m ${on ? 'on' : ''}"><div class="bdg-ring">${on ? e : '🔒'}</div><b>${label}</b>${sub ? `<small>${sub}</small>` : ''}</div>`;
+    const row = document.getElementById('streakRow');
+    if (row) {
+      row.innerHTML = (t.streakBadges || []).map(sb => {
+        const on = Badges.streakEarned(p, sb); all++; if (on) got++;
+        return medal(on, sb.e, t.bdg_days(sb.days), sb.desc.replace(/^\d+\s*\S+\s*—\s*/, '').replace(/^\d+ dny v řadě|^\d+ days in a row/, ''));
+      }).join('');
+    }
+
+    // ── Souboje (dřív jen ve statistikách) ──
+    const brow = document.getElementById('bdgBattleRow');
+    if (brow) {
+      let bb = {}; try { bb = JSON.parse(localStorage.getItem('gream_battle_badges') || '{}')[p.id] || {}; } catch {}
+      const B = [['first_win', '🥇'], ['wins_10', '🏆'], ['streak_5', '🔥'], ['extreme_win', '⚡']];
+      brow.innerHTML = B.map(([k, e]) => { const on = !!bb[k]; all++; if (on) got++; return medal(on, e, t.bdg_battle[k], ''); }).join('');
+    }
+
+    const sum = document.getElementById('bdgSummary');
+    if (sum) sum.innerHTML = `<div class="bdg-sum-num">${got}<small>/${all}</small></div><div class="bdg-sum-txt"><b>${t.bdg_summary}</b><div class="bdg-bar"><b style="width:${Math.round(got / all * 100)}%"></b></div></div>`;
   },
 
   // ─── SETTINGS ───
@@ -2742,6 +2950,8 @@ window.App = {
     this._setText('ss-reset-btn',   t.ss_reset);
     this._setText('ss-data-info',   t.ss_data_info);
     this._setText('ss-privacy-title', t.ss_privacy_title);
+    this._setText('ss-parents-title', t.parents_title);
+    this._setText('parentsOpenBtn', '🔒 ' + t.parents_open);
     this._setText('ss-privacy-lbl',   t.ss_privacy_lbl);
     this._setText('ss-terms-lbl',     t.ss_terms_lbl);
     // Player ID
@@ -2751,6 +2961,8 @@ window.App = {
       ? 'Tvoje jedinečné ID pro párování soupeřů a žebříčky. Klepnutím zkopíruješ.'
       : 'Your unique ID for matchmaking and leaderboards. Tap to copy.');
     this._setText('ssPlayerId',  p?.id || '—');
+    // Číslo sestavení = verze service workeru (sw.js VERSION) → hned je vidět, jestli telefon nemá starou verzi
+    window.caches?.keys?.().then(k => { const v = (k.find(x => /^gream-v\d+-static$/.test(x)) || '').replace('-static', ''); this._setText('ssBuild', `Gream 1.1 · ${v || 'web'}`); }).catch(() => {});
     // Difficulty section
     const cs = getLang() === 'cs';
     this._setText('ss-diff-title', cs ? 'Obtížnost' : 'Difficulty');
@@ -2802,6 +3014,7 @@ window.App = {
     if (p) {
       this._setText('ss-profile-title', t.ss_profile);
       this._setText('ss-name-label',    t.ss_name);
+      this._setText('ss-avatar',        t.ss_avatar);
       const prev = document.getElementById('ssAvatarPreview');
       if (prev) {
         if (p.hasPhoto) {
@@ -2861,34 +3074,17 @@ window.App = {
     const box = document.getElementById('ssMenuMusic');
     if (!box) return;
     const cs = getLang() === 'cs';
-    const p  = Profiles.active();
-    const COST = 30;
     box.innerHTML = '';
     const title = document.createElement('div');
     title.style.cssText = 'font-size:12px;font-weight:800;color:var(--green-mid);margin-bottom:6px';
-    title.textContent = cs ? '🎵 Hudba v menu' : '🎵 Menu music';
+    title.textContent = cs ? '🎵 Hudba v menu' : '🎵 Menu music';   // nová skladba je výchozí a zdarma (úvod hraje původní)
     box.appendChild(title);
 
-    if (!Audio.menuAltOwned()) {
-      const buy = document.createElement('button');
-      buy.style.cssText = 'width:100%;padding:10px 12px;text-align:left;font-weight:700;border-radius:10px;border:2px solid rgba(245,166,35,0.4);background:#fffbf0;color:#8a5200;font-family:inherit;cursor:pointer';
-      buy.textContent = cs ? `🔓 Odemknout novou skladbu (${COST} 🌱)` : `🔓 Unlock new track (${COST} 🌱)`;
-      buy.onclick = () => {
-        if (!p) return;
-        if (Skins.getSeeds(p.id) < COST) { this._showToast(cs ? `Potřebuješ ${COST} 🌱` : `You need ${COST} 🌱`); return; }
-        Skins.spendSeeds(p.id, COST);
-        Audio.setMenuAltOwned(true);
-        Audio.setMenuTrack('alt');
-        Feedback.celebrate();
-        this._showToast(cs ? '🎵 Nová menu hudba odemčena!' : '🎵 New menu music unlocked!');
-        this._renderMenuMusicSetting();
-      };
-      box.appendChild(buy);
-    } else {
+    {
       const cur = Audio.getMenuTrack();
       const row = document.createElement('div');
       row.style.cssText = 'display:flex;gap:6px';
-      [['default', cs ? 'Původní' : 'Original'], ['alt', cs ? 'Nová' : 'New']].forEach(([val, label]) => {
+      [['alt', cs ? 'Nová (výchozí)' : 'New (default)'], ['default', cs ? 'Původní' : 'Original']].forEach(([val, label]) => {
         const active = cur === val;
         const b = document.createElement('button');
         b.style.cssText = `flex:1;padding:9px;border-radius:10px;border:2px solid ${active ? 'var(--green-mid)' : 'rgba(0,0,0,0.1)'};background:${active ? 'var(--green-pale)' : 'white'};font-family:inherit;font-weight:800;font-size:13px;cursor:pointer;color:var(--green-deep)`;
@@ -2999,7 +3195,12 @@ window.App = {
         <div class="stat-card"><div class="stat-num">${winRate}%</div><div class="stat-label">${cs ? 'Úspěšnost' : 'Win rate'}</div></div>
         <div class="stat-card"><div class="stat-num">${s.bestStreak || 0} 🔥</div><div class="stat-label">${cs ? 'Nejdelší série' : 'Best streak'}</div></div>
       </div>` : `
-      <div style="font-size:13px;color:#888;font-weight:600;margin-bottom:12px;line-height:1.4">${cs ? '⚔️ Zatím žádné souboje — vyzkoušej je a získej odznaky!' : '⚔️ No battles yet — try one and earn badges!'}</div>`}
+      <div class="empty-state compact" style="margin-bottom:12px">
+        <img src="img/greamici/jiskra_1.png" alt="">
+        <div class="es-title">${tr().battles_empty_title}</div>
+        <div class="es-text">${tr().battles_empty_text}</div>
+        <button class="btn-primary" onclick="App.openBattleIntro()">${tr().battles_empty_cta}</button>
+      </div>`}
       <div style="font-size:11px;font-weight:800;color:#999;margin-bottom:7px;text-transform:uppercase;letter-spacing:.5px">${cs ? 'Odznaky' : 'Badges'} ${earnedCount}/4</div>
       <div style="display:flex;flex-wrap:wrap;gap:6px">${badgeChips}</div>
       <button onclick="App.showBattleLeaderboard()" style="width:100%;margin-top:14px;padding:11px;border:none;border-radius:12px;background:#f0f0f0;color:#555;font-family:inherit;font-weight:800;font-size:14px;cursor:pointer">🏆 ${cs ? 'Žebříček soubojů' : 'Battle leaderboard'}</button>`;
@@ -3021,7 +3222,7 @@ window.App = {
     this._currentPoi      = null;
     this._currentPoiWorld = null;
 
-    this._setText('mapViewTitle', lang === 'cs' ? 'Mapa' : 'Map');
+    this._setText('mapViewTitle', t.map_title);
     this._setText('mapViewSub',   lang === 'cs' ? 'Hledám zajímavá místa…' : 'Finding places nearby…');
     this._setText('mapLoadingMsg', lang === 'cs' ? 'Hledám zajímavá místa…' : 'Finding places nearby…');
 
@@ -3088,6 +3289,7 @@ window.App = {
         onPoisLoaded: pois => {
           const loading = document.getElementById('mapLoading');
           if (loading) loading.style.display = 'none';
+          try { const st = Expedition.ensure(p.id, pois, MapView.userPos() || pos); MapView.markExpedition(st); this._renderExpeditionChip(st, pois); } catch (e) { console.warn('[Expedition]', e); }
           const count = pois.length;
           this._setText('mapViewSub', count > 0
             ? (lang === 'cs' ? `${count} míst v okolí` : `${count} places nearby`)
@@ -3099,6 +3301,77 @@ window.App = {
       const loading = document.getElementById('mapLoading');
       if (loading) loading.querySelector('#mapLoadingMsg').textContent = lang === 'cs' ? 'Chyba načítání.' : 'Load error.';
     }
+  },
+
+  // ─── Odkaz mimo hru jen po rodičovské bráně (Google Play Families) ───
+  async openExternal(url) {
+    if (!/^https:\/\//.test(url)) return;
+    if (await ParentGate.ask(tr().open_link_reason)) window.open(url, '_blank', 'noopener');
+  },
+
+  // ─── Pro rodiče: za bránou – denní limit, přehled ───
+  async openParents() {
+    const p = Profiles.active(); if (!p) return;
+    const t = tr();
+    if (!(await ParentGate.ask(t.parents_title))) return;
+    const box = document.getElementById('parentsPanel'); if (!box) return;
+    const hist = Profiles.getHistory ? Profiles.getHistory(p.id, 500) : [];
+    const week = hist.filter(h => Date.now() - (h.t || 0) < 7 * 864e5).length;
+    const W = ['nature', 'language', 'logic', 'feelings', 'arts', 'world'];
+    const max = Math.max(10, ...W.map(w => p.worldTasks?.[w] || 0));
+    const bs = Battle.getStats(p.id) || {};
+    const lim = Playtime.limitMin(p.id);
+    box.hidden = false;
+    box.innerHTML = `<label class="parents-row">${t.parents_limit}</label>
+      <select id="parentsLimit">${[0, 20, 30, 45, 60, 90, 120].map(m => `<option value="${m}"${m === lim ? ' selected' : ''}>${m ? m + ' min' : t.parents_nolimit}</option>`).join('')}</select>
+      <div class="parents-row">⏱️ ${t.parents_today(Math.round(Playtime.todaySec(p.id) / 60))}</div>
+      <div class="parents-row">📚 ${t.parents_week(week)}</div>
+      <div class="parents-row">⚔️ ${t.parents_battles(bs.total || 0)}</div>
+      <div class="parents-row" style="margin-top:10px">${t.parents_worlds}</div>
+      ${W.map(w => `<div class="parents-bar"><span>${WORLD_EMOJIS[w]} ${t.worlds?.[w] || w}</span><i><b style="width:${Math.round((p.worldTasks?.[w] || 0) / max * 100)}%"></b></i><span>${p.worldTasks?.[w] || 0}</span></div>`).join('')}
+      <div class="parents-row" style="font-size:12px;color:var(--ink-muted);margin-top:10px">🔒 ${t.parents_note}</div>`;
+    box.querySelector('#parentsLimit').onchange = (e) => { Playtime.setLimit(p.id, Number(e.target.value)); Feedback.tap(); };
+    document.getElementById('parentsOpenBtn')?.setAttribute('hidden', '');
+  },
+
+  // ─── Bitevní místo: kdo ho drží (anonymně – jen greamík a skóre) ───
+  async _loadSpotHolder(poi) {
+    const el = document.getElementById('poiSpotHolder'); if (!el) return;
+    const t = tr();
+    const h = (await Net.spots([poi.id]))?.[poi.id];
+    if (!document.getElementById('poiSpotHolder')) return;
+    if (!h) { el.innerHTML = `<span>👑</span><div>${t.spot_free}</div>`; return; }
+    const mine = (JSON.parse(localStorage.getItem('gream_spot_tokens') || '[]')).includes(h.tok);
+    el.innerHTML = `<canvas width="44" height="44"></canvas><div><b>${mine ? t.spot_mine : t.spot_held}</b><br>${ARCHETYPES[h.arch]?.name?.[getLang()] || h.arch} · ${h.score} ${t.spot_pts}${mine ? '' : ` · ${t.spot_beat}`}</div>`;
+    const { drawFighter } = await import('./arena.js');
+    drawFighter(el.querySelector('canvas'), h.arch, h.stage);
+  },
+
+  // ─── Výprava dne: štítek na mapě + seznam míst s navigací ───
+  _renderExpeditionChip(st, pois) {
+    const mapEl = document.getElementById('leafletMap');
+    if (!mapEl || !st) return;
+    const t = tr();
+    let chip = document.getElementById('expChip');
+    if (!chip) { chip = document.createElement('button'); chip.id = 'expChip'; chip.className = 'exp-chip'; mapEl.appendChild(chip); }
+    const done = st.done.length, n = st.ids.length;
+    chip.innerHTML = `⭐ ${t.exp_title} ${done}/${n}${st.rare && !st.rareDone ? ' · ✦' : ''} · ${t.exp_explored(Expedition.cells().length)}`;
+    chip.onclick = () => {
+      document.getElementById('expSheet')?.remove();
+      const me = MapView.userPos();
+      const d = (p) => { if (!me) return ''; const R = 6371000, r = Math.PI / 180; const x = Math.sin((p.lat - me.lat) * r / 2) ** 2 + Math.cos(me.lat * r) * Math.cos(p.lat * r) * Math.sin((p.lon - me.lon) * r / 2) ** 2; const m = Math.round(2 * R * Math.asin(Math.sqrt(x))); return m < 1000 ? `${m} m` : `${(m / 1000).toFixed(1)} km`; };
+      const row = (id, rare) => { const p = pois.find(x => x.id === id); if (!p) return ''; const ok = rare ? st.rareDone : st.done.includes(id);
+        return `<button class="exp-row${ok ? ' ok' : ''}" data-id="${id}"><span>${rare ? '✦' : ok ? '✅' : this._poiIcon(p.kind)}</span><b>${escAttr(p.name || t.poi_kind?.[p.kind] || t.exp_place)}</b><small>${ok ? t.exp_done : d(p)}</small></button>`; };
+      const sh = document.createElement('div'); sh.id = 'expSheet'; sh.className = 'exp-sheet';
+      sh.innerHTML = `<div class="exp-card"><div class="exp-h">⭐ ${t.exp_title}</div><div class="exp-sub">${t.exp_how(EXP_REWARD.place, EXP_REWARD.all, EXP_REWARD.rare)}</div>
+        ${st.ids.map(id => row(id, false)).join('')}${st.rare ? `<div class="exp-sub" style="margin-top:8px">✦ ${t.exp_rare}</div>${row(st.rare, true)}` : ''}
+        <div class="exp-sub" style="margin-top:8px">🗺️ ${t.exp_explored_long(Expedition.cells().length)}</div>
+        <button class="btn-primary" style="width:100%;margin-top:10px">${t.nav_close}</button></div>`;
+      sh.querySelector('.btn-primary').onclick = () => sh.remove();
+      sh.onclick = (e) => { if (e.target === sh) sh.remove(); };
+      sh.querySelectorAll('.exp-row').forEach(b => b.onclick = () => { const p = pois.find(x => x.id === b.dataset.id); if (p) { MapView.setDestination(p.lat, p.lon, p.name || t.poi_kind?.[p.kind] || t.exp_place); sh.remove(); } });
+      mapEl.appendChild(sh);
+    };
   },
 
   // ─── Location-off notice on the map ───
@@ -3167,6 +3440,8 @@ window.App = {
     overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;z-index:999;padding:20px';
     overlay.onclick = e => { if (e.target === overlay) this.closePoiModal(); };
 
+    this._lastPoi = poi;
+    if (isBattleSpot(poi)) setTimeout(() => this._loadSpotHolder(poi), 0);
     const kindIcon = this._poiIcon(poi.kind);
     const bonusBadge = poi.bonusWorld
       ? `<div style="display:inline-block;padding:3px 10px;border-radius:50px;background:${WC[poi.bonusWorld]};color:white;font-size:11px;font-weight:800;margin-bottom:12px">${WORLD_EMOJIS[poi.bonusWorld]} +5 🌱</div>`
@@ -3176,7 +3451,7 @@ window.App = {
       <div style="background:white;border-radius:24px;padding:20px;max-width:340px;width:100%">
         <div style="text-align:center;margin-bottom:14px">
           <span style="font-size:28px">${kindIcon}</span>
-          <div style="font-size:13px;font-weight:700;color:#888;margin-top:4px">${(poi.kind||'').replace(/_/g,' ')}</div>
+          <div style="font-size:13px;font-weight:700;color:#888;margin-top:4px">${tr().poi_kind?.[poi.kind] || (poi.kind||'').replace(/_/g,' ')}</div>
           ${bonusBadge}
         </div>
         ${tooFar ? `
@@ -3198,7 +3473,8 @@ window.App = {
           </div>
           <button id="poiModalStart" onclick="App.startPoiChallenge()"
             style="display:none;width:100%;padding:14px;border-radius:14px;border:none;color:white;font-family:inherit;font-weight:900;font-size:15px;cursor:pointer;margin-bottom:8px"></button>
-          <button onclick="App.closePoiModal();App.openBattleIntro({outdoor:true})"
+          <div id="poiSpotHolder" class="spot-holder"></div>
+          <button onclick="App.closePoiModal();App.openBattleIntro({outdoor:true,spot:true})"
             style="width:100%;padding:13px;border-radius:14px;border:none;background:linear-gradient(135deg,#d2603a,#b0402a);color:#fff;font-family:inherit;font-weight:900;font-size:15px;cursor:pointer;margin-bottom:8px">⚔️ ${lang==='cs'?'Souboj tady (venku)':'Battle here (outdoor)'}</button>
           <button onclick="App.navigateToPoi()"
             style="width:100%;padding:12px;border-radius:14px;border:2px solid var(--green-pale);background:white;color:var(--green-dark);font-family:inherit;font-weight:800;font-size:14px;cursor:pointer;margin-bottom:8px">🧭 ${lang==='cs'?'Navigovat sem':'Navigate here'}</button>
@@ -3325,8 +3601,8 @@ window.App = {
   // ═══════════════════════════════════
   //  WARDROBE
   // ═══════════════════════════════════
-  _wardTab: 'greams',
-  _wardAvatarSub: 'greams',   // avatars sub-tab: 'greams' | 'emoji'
+  _wardTab: 'decor',
+  _wardAvatarSub: 'chars',   // avatars sub-tab: 'chars' | 'greams' | 'emoji'
 
   wardAvatarSub(sub) {
     this._wardAvatarSub = sub;
@@ -3340,13 +3616,22 @@ window.App = {
     const t    = tr();
     const lang = getLang();
 
-    this._setText('wardTitle',      lang === 'cs' ? '🥚 Moji Greamíci' : '🥚 My Greams');
+    this._setText('wardTitle',      tr().ward_title);
     this._setText('wardSeeds',      Skins.getSeeds(p.id));
-    // Tab emoji labels are static in HTML — only title needs updating
-    this._setText('wardTitle', lang === 'cs' ? '🥚 Greamíci' : '🥚 My Greams');
+    this._setText('wardTitle', tr().ward_title);
+    document.querySelectorAll('.shop-tabs [data-l]').forEach(el => { el.textContent = t[el.dataset.l] || ''; });
 
-    const safeTab = ['greams','boosts','avatars','frames','bg'].includes(this._wardTab) ? this._wardTab : 'greams';
+    const safeTab = ['decor','boosts','avatars','frames','bg'].includes(this._wardTab) ? this._wardTab : 'decor';
     this.wardSwitchTab(safeTab);
+  },
+
+  // ─── Obrazovka Greamíci (samostatná sekce v záložce Já) ───
+  renderGreams() {
+    const p = Profiles.active();
+    if (!p) return;
+    this._setText('greamsTitle', tr().greams_title);
+    this._setText('greamsSeeds', Skins.getSeeds(p.id));
+    this._renderWardrobeGreams();
   },
 
   _renderNewGreamBanner(profileId, lang) {
@@ -3357,7 +3642,7 @@ window.App = {
 
     const owned = Gream.ownedArchetypes(profileId);
     const WC = { nature:'#4a8a2e', language:'#5a4a8a', logic:'#2d7abf', feelings:'#d46d94', arts:'#c87030', world:'#a8743c' };
-    const allArchetypes = Object.values(ARCHETYPES);
+    const allArchetypes = BASE_ARCHETYPES.map(id => ARCHETYPES[id]);   // výběr druhého greamíka: původních šest, ostatní jen z vajíčka
     const available = allArchetypes.filter(a => !owned.includes(a.id));
 
     // Find a good container to prepend to
@@ -3407,8 +3692,7 @@ window.App = {
     this._showToast(lang === 'cs'
       ? `🥚 ${ARCHETYPES[archetypeId]?.name.cs} se přidal k tvým Greamíkům!`
       : `🥚 ${ARCHETYPES[archetypeId]?.name.en} joined your Greams!`);
-    // Re-render wardrobe
-    this.renderWardrobe();
+    this.renderGreams();
   },
 
   wardSwitchTab(tab) {
@@ -3417,16 +3701,23 @@ window.App = {
     document.querySelectorAll('.ward-tab').forEach(b => {
       b.classList.toggle('active', b.dataset.tab === tab);
     });
+    // Vybraná záložka vždy viditelná (lišta se posouvá do strany), nový seznam od začátku
+    const bar = document.querySelector('.shop-tabs'), act = bar?.querySelector('.ward-tab.active');
+    if (bar && act) bar.scrollLeft = Math.max(0, act.offsetLeft - (bar.clientWidth - act.offsetWidth) / 2);
+    const scr = document.getElementById('screen-wardrobe');
+    if (scr) scr.scrollTop = 0;
     // Show/hide bgShopGrid vs wardGrid
     const wardGrid = document.getElementById('wardGrid');
     const bgGrid = document.getElementById('bgShopGrid');
     if (wardGrid) wardGrid.style.display = tab === 'bg' ? 'none' : '';
-    if (bgGrid) bgGrid.style.display = tab === 'bg' ? 'flex' : 'none';
+    if (bgGrid) bgGrid.style.display = tab === 'bg' ? 'grid' : 'none';
 
     if (tab === 'greams') {
       this._renderWardrobeGreams();
     } else if (tab === 'boosts') {
       this._renderWardrobeBoosts();
+    } else if (tab === 'decor') {
+      this._renderWardrobeDecor();
     } else if (tab === 'bg') {
       this.renderBgShop();
     } else {
@@ -3435,36 +3726,22 @@ window.App = {
   },
 
   _renderWardrobeBoosts() {
-    const p    = Profiles.active(); if (!p) return;
-    const lang = getLang();
-    const cs   = lang === 'cs';
+    const p = Profiles.active(); if (!p) return;
+    const lang = getLang(), cs = lang === 'cs';
     const grid = document.getElementById('wardGrid');
     if (!grid) return;
-    grid.style.cssText = 'max-width:420px;margin:0 auto;display:flex;flex-direction:column;gap:10px';
-    grid.innerHTML = `<div style="font-size:12px;color:#888;font-weight:700;margin-bottom:4px">${cs?'Jednorázové efekty za semínka':'One-time effects, buy with seeds'}</div>`;
-
+    this._shopGridStyle(grid, cs ? 'Jednorázové pomocníky za semínka' : 'One-time helpers, buy with seeds');
     const seeds = Skins.getSeeds(p.id);
     SKIN_CATALOG.boosts.forEach(boost => {
-      const owned = Skins.getBoosts(p.id)[boost.id] || 0;
-      const canAfford = seeds >= boost.cost;
-      const card = document.createElement('div');
-      card.style.cssText = `background:white;border-radius:16px;padding:14px 16px;border:2px solid rgba(0,0,0,0.07);display:flex;align-items:center;gap:14px;box-shadow:0 2px 8px rgba(0,0,0,0.05)`;
-      card.innerHTML = `
-        <div style="font-size:32px;flex-shrink:0">${boost.emoji}</div>
-        <div style="flex:1;min-width:0">
-          <div style="font-size:15px;font-weight:800;color:var(--green-deep)">${boost.name[lang]||boost.name.cs}</div>
-          <div style="font-size:12px;color:#888;margin-bottom:4px">${boost.desc[lang]||boost.desc.cs}</div>
-          ${owned > 0 ? `<div style="font-size:11px;font-weight:700;color:var(--green-mid)">× ${owned} ${cs?'k dispozici':'available'}</div>` : ''}
-        </div>
-        <button onclick="App._buyBoost('${boost.id}')" style="
-          padding:8px 14px;border-radius:50px;border:none;
-          background:${canAfford ? 'var(--green-mid)' : '#ddd'};
-          color:${canAfford ? 'white' : '#aaa'};
-          font-family:inherit;font-weight:800;font-size:13px;cursor:${canAfford?'pointer':'not-allowed'};
-          flex-shrink:0;white-space:nowrap;
-        ">🌱 ${boost.cost}</button>`;
-      grid.appendChild(card);
-      this._initSpriteCanvases(card);
+      const have = Skins.getBoosts(p.id)[boost.id] || 0;
+      grid.appendChild(this._shopCard({
+        thumb: `<span class="shop-emoji">${boost.emoji}</span>`,
+        name: boost.name[lang] || boost.name.cs,
+        sub: (boost.desc[lang] || boost.desc.cs) + (have ? ` · × ${have}` : ''),
+        state: '🌱 ' + boost.cost,
+        cls: have ? 'owned' : seeds < boost.cost ? 'poor' : '',
+        onClick: () => App._buyBoost(boost.id),
+      }));
     });
   },
 
@@ -3484,53 +3761,42 @@ window.App = {
     }
   },
 
-  _renderWardrobeAccessories() {
-    const p    = Profiles.active(); if (!p) return;
-    const lang = getLang();
-    const cs   = lang === 'cs';
+  // ─── Výzdoba v zahradě (za greamíkem) ───
+  _renderGardenDecor() {
+    const p = Profiles.active();
+    const stage = document.getElementById('greamStage');
+    if (!p || !stage) return;
+    const world = this._gardenWorld();
+    stage.querySelector(':scope > .garden-decor')?.remove();   // starý 1D rozvrh
+    let layer = world.querySelector('.garden-decor');
+    if (!layer) { layer = document.createElement('div'); layer.className = 'garden-decor'; world.prepend(layer); }
+    // šířka podle rámu (ne světa) → stejná velikost jako dřív; hloubka (z-index) podle spodní hrany, ať se greamíci můžou schovat za předmět
+    layer.innerHTML = Skins.shownDecor(p.id).map(it => { const L = GARDEN_LAYOUT[it.id] || it;
+      return `<img src="${it.img}" alt="" data-id="${it.id}" style="left:${L.x}%;top:${L.y}%;width:calc(var(--stage-w) * ${it.w / 100});z-index:${Math.round(L.y * 10)}">`; }).join('');
+  },
+
+  // ─── Výzdoba zahrady: koupit / ukázat-schovat ───
+  _renderWardrobeDecor() {
+    const p = Profiles.active();
+    if (!p) return;
+    const t = tr(), lang = getLang();
     const grid = document.getElementById('wardGrid');
     if (!grid) return;
-    grid.style.cssText = 'display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px;max-width:420px;margin:0 auto';
-    grid.innerHTML = '';
-
+    grid.style.cssText = 'display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:420px;margin:0 auto';
+    grid.innerHTML = `<div class="shop-hint" style="grid-column:1/-1">${t.shop_decor_hint}</div>`;
     const seeds = Skins.getSeeds(p.id);
-    const equipped   = Skins.getAccessory(p.id);
-
-    SKIN_CATALOG.accessories.forEach(acc => {
-      const owned    = Skins.isAccessoryOwned(p.id, acc.id);
-      const isOn     = equipped === acc.id;
-      const canAfford = seeds >= acc.cost;
+    const d = Skins.getDecor(p.id);
+    SKIN_CATALOG.decor.forEach(it => {
+      const owned = d.owned.includes(it.id), shown = owned && !d.hidden.includes(it.id);
       const card = document.createElement('button');
-      card.style.cssText = `
-        padding:14px 8px;border-radius:16px;border:2.5px solid ${isOn ? '#f5a623' : owned ? 'var(--green-mid)' : 'rgba(0,0,0,0.08)'};
-        background:${isOn ? '#fff9e6' : 'white'};cursor:pointer;font-family:inherit;
-        display:flex;flex-direction:column;align-items:center;gap:6px;
-        box-shadow:${isOn ? '0 4px 12px rgba(245,166,35,0.3)' : '0 2px 6px rgba(0,0,0,0.06)'};
-      `;
-      card.innerHTML = `
-        <span style="font-size:32px">${acc.emoji}</span>
-        <span style="font-size:12px;font-weight:800;color:var(--green-deep)">${acc.name[lang]||acc.name.cs}</span>
-        ${isOn ? `<span style="font-size:10px;font-weight:700;color:#f5a623">${cs?'Nasazeno':'Equipped'}</span>`
-               : owned ? `<span style="font-size:10px;font-weight:700;color:var(--green-mid)">${cs?'Vlastním':'Owned'}</span>`
-               : `<span style="font-size:10px;font-weight:700;color:#888">🌱 ${acc.cost}</span>`}
-      `;
+      card.className = 'shop-item' + (shown ? ' on' : owned ? ' owned' : '') + (!owned && seeds < it.cost ? ' poor' : '');
+      card.innerHTML = `<img src="${it.img}" alt=""><span class="shop-name">${it.name[lang] || it.name.cs}</span>
+        <span class="shop-state">${shown ? t.shop_in_garden : owned ? t.shop_hidden : '🌱 ' + it.cost}</span>`;
       card.onclick = () => {
-        if (isOn) {
-          // Unequip
-          try { localStorage.removeItem('gream_acc_' + p.id); } catch {}
-          Feedback.tap();
-          this._renderWardrobeAccessories();
-          return;
-        }
-        const ok = Skins.equipAccessory(p.id, acc.id);
-        if (ok) {
-          Feedback.success();
-          this._setText('wardSeeds', Skins.getSeeds(p.id));
-          this._renderWardrobeAccessories();
-        } else {
-          Feedback.error();
-          this._showToast(cs ? 'Nedostatek semínek 🌱' : 'Not enough seeds 🌱');
-        }
+        if (owned) { Skins.toggleDecor(p.id, it.id); Feedback.tap(); this._renderWardrobeDecor(); return; }
+        const r = Skins.buyDecor(p.id, it.id);
+        if (r.ok) { Feedback.success(); this._setText('wardSeeds', Skins.getSeeds(p.id)); this._renderWardrobeDecor(); }
+        else { Feedback.error(); this._showToast(t.shop_no_seeds); }
       };
       grid.appendChild(card);
     });
@@ -3540,9 +3806,9 @@ window.App = {
     const p    = Profiles.active();
     if (!p) return;
     const lang = getLang();
-    const grid = document.getElementById('wardGrid');
+    const grid = document.getElementById('greamsList');   // samostatná obrazovka Greamíci (screens/greams.html)
     if (!grid) return;
-    grid.style.cssText = 'max-width:420px;margin:0 auto;display:flex;flex-direction:column;gap:10px';
+    grid.style.cssText = 'width:100%;max-width:420px;margin:0 auto;display:flex;flex-direction:column;gap:10px';
     grid.innerHTML = '';
 
     const allGreams = Gream.all(p.id).filter(g => !g.archived);
@@ -3576,7 +3842,7 @@ window.App = {
       card.innerHTML = `
         <div style="flex-shrink:0;position:relative;width:64px;height:64px;border-radius:12px;background:${color}18;overflow:hidden;display:flex;align-items:center;justify-content:center">
           ${g.archetype && g.stage >= 2
-            ? `<canvas data-sprite-sheet="img/greamici/${g.archetype}_${g.stage}.png" data-sprite-mood="${g.mood||'happy'}"
+            ? `<canvas data-sprite-sheet="img/greamici/${g.archetype}_${Math.min(g.stage, 4)}.png" data-sprite-mood="${g.mood||'happy'}" data-arch="${g.archetype}" data-shiny="${g.isShiny ? '1' : ''}"
                  width="64" height="64"
                  style="width:64px;height:64px;image-rendering:pixelated;display:block"></canvas>`
             : `<img src="img/greamici/seed_1.png" style="width:48px;height:48px;object-fit:contain;image-rendering:pixelated" onerror="this.style.fontSize='32px';this.textContent='🥚'">`
@@ -3587,27 +3853,25 @@ window.App = {
         </div>
         <div style="flex:1;min-width:0">
           <div style="font-size:16px;font-weight:900;color:var(--green-deep)">${g.name || (arch.name?.[lang] || arch.name?.cs || 'Gream')}</div>
-          <div style="font-size:12px;font-weight:700;color:${color};margin-bottom:6px">${sName} · ${g.tasksFor} ${lang==='cs'?'úkolů':'tasks'}</div>
+          <div style="font-size:12px;font-weight:700;color:${color};margin-bottom:${g.birth ? 2 : 6}px">${sName} · ${g.tasksFor} ${lang==='cs'?'úkolů':'tasks'}</div>
+          ${g.birth ? `<div style="font-size:11px;font-weight:700;color:#8a7a55;margin-bottom:6px">🐣 ${tr().birth_line(g.birth.place, new Date(g.birth.at).toLocaleDateString(lang === 'cs' ? 'cs-CZ' : 'en-GB'))}</div>` : ''}
           ${next ? `
             <div style="background:#f0f0f0;border-radius:50px;height:6px;overflow:hidden">
               <div style="background:${color};height:100%;width:${prog}%;border-radius:50px;transition:width 0.4s"></div>
             </div>
             <div style="font-size:10px;color:#999;margin-top:3px">${lang==='cs'?`do ${stageNames[lang][g.stage+1]}: ${g.tasksFor}/${next}`:`to ${stageNames['en'][g.stage+1]}: ${g.tasksFor}/${next}`}</div>
           ` : `<div style="font-size:11px;color:${color};font-weight:700">⭐ ${lang==='cs'?'Plně vyrostlý!':'Fully grown!'}</div>`}
-          ${!isActive && allGreams.length > 1 ? `<div style="font-size:11px;color:#bbb;margin-top:3px">${lang==='cs'?'Klepni pro aktivaci':'Tap to activate'}</div>` : ''}
+          <div style="font-size:11px;color:#aaa;margin-top:3px">${isActive ? `✓ ${tr().greams_active} · ` : ''}${this._greamOpen === g.id ? '▲' : '▼'} ${lang==='cs'?'detail':'details'}</div>
         </div>
       `;
 
-      // Tap to set active gream
-      if (allGreams.length > 1 && !isActive) {
-        card.addEventListener('click', () => {
-          Gream.setActive(p.id, g.id);
-          this._renderWardrobeGreams();
-          this._showToast(lang === 'cs'
-            ? `${g.name || arch.name?.[lang] || 'Gream'} je teď aktivní!`
-            : `${g.name || arch.name?.en || 'Gream'} is now active!`);
-        });
-      }
+      // Klepnutí = rozbalit/sbalit detail (aktivace a přejmenování jsou v detailu)
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', () => {
+        this._greamOpen = this._greamOpen === g.id ? null : g.id;
+        Feedback.tap();
+        this._renderWardrobeGreams();
+      });
 
       // Sleep (archive) button — only if more than one is awake
       if (allGreams.length > 1) {
@@ -3630,6 +3894,7 @@ window.App = {
       }
 
       grid.appendChild(card);
+      if (this._greamOpen === g.id) { card.style.borderRadius = '18px 18px 0 0'; card.style.borderBottomWidth = '0'; grid.appendChild(this._greamDetail(p, g, isActive, color)); }
     });
 
     // ─── Sleeping (archived) Greams ───
@@ -3650,7 +3915,7 @@ window.App = {
         row.innerHTML = `
           <div style="flex-shrink:0;width:44px;height:44px;border-radius:10px;background:${color}14;overflow:hidden;display:flex;align-items:center;justify-content:center;filter:grayscale(0.5)">
             ${g.archetype && g.stage >= 2
-              ? `<canvas data-sprite-sheet="img/greamici/${g.archetype}_${g.stage}.png" data-sprite-mood="${g.mood||'happy'}" width="44" height="44" style="width:44px;height:44px;image-rendering:pixelated;display:block"></canvas>`
+              ? `<canvas data-sprite-sheet="img/greamici/${g.archetype}_${Math.min(g.stage, 4)}.png" data-sprite-mood="${g.mood||'happy'}" data-arch="${g.archetype}" data-shiny="${g.isShiny ? '1' : ''}" width="44" height="44" style="width:44px;height:44px;image-rendering:pixelated;display:block"></canvas>`
               : `<img src="img/greamici/seed_1.png" style="width:34px;height:34px;object-fit:contain;image-rendering:pixelated">`}
           </div>
           <div style="flex:1;min-width:0">
@@ -3674,7 +3939,7 @@ window.App = {
     // Add new gream button if eligible
     if (Gream.canAddMore(p.id)) {
       const owned = Gream.ownedArchetypes(p.id);
-      const available = Object.values(ARCHETYPES).filter(a => !owned.includes(a.id));
+      const available = BASE_ARCHETYPES.map(id => ARCHETYPES[id]).filter(a => !owned.includes(a.id));   // ostatní jen vylíhnutím
       const addCard = document.createElement('div');
       addCard.style.cssText = 'background:linear-gradient(135deg,#fff9e6,#ffedb0);border-radius:18px;padding:14px 16px;border:2px dashed #f5c842';
       addCard.innerHTML = `
@@ -3697,6 +3962,55 @@ window.App = {
     this._initSpriteCanvases(grid);
   },
 
+  // Detail greamíka: velký obrázek, svět, stádium, rodný list, souboje (speciál, Super účinné / Účinné)
+  _greamDetail(p, g, isActive, color) {
+    const t = tr(), lang = getLang();
+    const box = document.createElement('div');
+    box.className = 'gream-detail';
+    box.style.borderColor = color;
+    const egg = g.stage < 2 || !g.archetype;
+    if (egg) {
+      // Vajíčko: kolik zbývá, co „cítí“ (svět + podkategorie) a co by se z něj teď vylíhlo
+      const lean = eggLeaning(g);
+      const subName = lean ? groupName(lean.group, lang) : '';
+      const willName = lean?.willBe ? (ARCHETYPES[lean.willBe]?.name?.[lang] || lean.willBe) : '';
+      box.innerHTML = `<img src="img/greamici/seed_1.png" alt="" class="gd-egg"><p class="gd-hint">${t.greams_egg_hint(Math.max(0, 12 - (g.tasksFor || 0)))}</p>
+        ${lean ? `<div class="gd-row"><span>🥚</span><b>${t.egg_feels(`${WORLD_EMOJIS[lean.world] || ''} ${subName} (${lean.groupCount})`, lean.second ? `${groupName(lean.second.group, lang)} (${lean.second.count})` : '')}</b></div>
+        <div class="gd-row"><span>🔮</span><b>${t.egg_will(willName)}</b></div>
+        <p class="gd-hint" style="font-size:12px">${t.egg_rule}</p>` : `<p class="gd-hint" style="font-size:12px">${t.egg_rule}</p>`}`;
+    } else {
+      const arch = ARCHETYPES[g.archetype] || {}, world = arch.primaryWorld;
+      const sp = SPECIALS[g.archetype], spT = sp && t.battle_special?.[sp.id];
+      const STAGE = { cs: ['', 'Vajíčko', 'Mládě', 'Dospívající', 'Dospělý'], en: ['', 'Egg', 'Baby', 'Teen', 'Adult'] }[lang] || [];
+      const nextAt = { 2: 60, 3: 250 }[g.stage];
+      // každý greamík patří k jedné skupině: v ní Super účinný, ve zbytku svého světa Účinný
+      const myGroup = arch.group;
+      const subs = `${WORLD_EMOJIS[world] || ''} ${t.worlds?.[world] || world}`;
+      const born = g.birth ? t.birth_line(g.birth.place, new Date(g.birth.at).toLocaleDateString(lang === 'cs' ? 'cs-CZ' : 'en-GB')) : '—';
+      const row = (k, v) => `<div class="gd-row"><span>${k}</span><b>${v}</b></div>`;
+      box.innerHTML = `
+        <div class="gd-hero"><canvas data-sprite-sheet="img/greamici/${g.archetype}_${Math.min(g.stage, 4)}.png" data-sprite-mood="happy" data-arch="${g.archetype}" data-shiny="${g.isShiny ? '1' : ''}" width="132" height="132" class="${g.isShiny ? 'shiny' : ''}"></canvas></div>
+        ${g.isShiny ? `<div class="gd-shiny">${t.greams_shiny}</div>` : ''}
+        ${row(t.greams_world, `${WORLD_EMOJIS[world] || ''} ${t.worlds?.[world] || world}`)}
+        ${row(t.greams_stage, `${STAGE[g.stage] || ''} · ${nextAt ? t.greams_next(Math.max(0, nextAt - (g.tasksFor || 0)), STAGE[g.stage + 1]) : t.greams_max}`)}
+        ${row(t.greams_born, born)}
+        ${spT ? row(t.greams_special, `${spT.name} – ${spT.desc}`) : ''}
+        ${row(t.greams_topic, groupName(myGroup, lang))}
+        ${row(t.greams_bonus, groupName(myGroup, lang))}
+        ${row(t.greams_half, subs)}
+        <div class="gd-actions"></div>`;
+      const act = box.querySelector('.gd-actions');
+      const btn = (label, cls, fn) => { const b = document.createElement('button'); b.className = cls; b.textContent = label; b.onclick = (e) => { e.stopPropagation(); fn(); }; act.appendChild(b); };
+      if (!isActive) btn(t.greams_set_active, 'btn-primary', () => {
+        Gream.setActive(p.id, g.id); Feedback.tap();
+        this._showToast(lang === 'cs' ? `${g.name || arch.name?.cs || 'Gream'} je teď aktivní!` : `${g.name || arch.name?.en || 'Gream'} is now active!`);
+        this._renderWardrobeGreams();
+      });
+      btn('✏️ ' + t.greams_rename, 'btn-ghost', () => { Gream.setActive(p.id, g.id); this.promptRenameGream(); });
+    }
+    return box;
+  },
+
   _renderWardrobeGrid(tab) {
     const p = Profiles.active();
     if (!p) return;
@@ -3714,63 +4028,67 @@ window.App = {
     if (tab === 'avatars') {
       const cs = lang === 'cs';
       const seeds = Skins.getSeeds(p.id);
-      const sub = this._wardAvatarSub || 'greams';
-      const unlockedArchetypes = new Set(
-        Gream.all(p.id).filter(g => !g.archived && g.stage >= 2 && g.archetype).map(g => g.archetype)
-      );
+      const sub = this._wardAvatarSub || 'chars';
       const bestStage = {};
       Gream.all(p.id).filter(g => !g.archived && g.stage >= 2 && g.archetype).forEach(g => {
         if (!bestStage[g.archetype] || g.stage > bestStage[g.archetype]) bestStage[g.archetype] = g.stage;
       });
+      this._shopGridStyle(grid, '');
 
-      grid.style.cssText = 'max-width:420px;margin:0 auto;display:flex;flex-direction:column;gap:10px';
-      grid.innerHTML = '';
-
-      // ── Sub-tab switcher (segmented): Greamíci | Emoji ──
+      // ── Přepínač: Greamíci | Emoji (přes celou šířku mřížky) ──
       const sw = document.createElement('div');
-      sw.style.cssText = 'display:flex;gap:4px;background:rgba(0,0,0,0.05);border-radius:14px;padding:4px;margin-bottom:2px';
-      [['greams', cs ? '🐾 Greamíci' : '🐾 Greams'], ['emoji', '🎭 Emoji']].forEach(([id, label]) => {
+      sw.className = 'shop-seg';
+      [['chars', cs ? '🦊 Postavičky' : '🦊 Characters'], ['greams', cs ? '🐾 Greamíci' : '🐾 Greams'], ['emoji', '😺 Emoji']].forEach(([id, label]) => {
         const b = document.createElement('button');
-        const on = sub === id;
-        b.textContent = label;
-        b.style.cssText = `flex:1;padding:9px;border-radius:11px;border:none;font-family:inherit;font-weight:800;font-size:13px;cursor:pointer;background:${on ? 'white' : 'transparent'};color:${on ? 'var(--green-deep)' : '#999'};box-shadow:${on ? '0 1px 4px rgba(0,0,0,0.12)' : 'none'};transition:all .15s`;
+        b.textContent = label; b.className = sub === id ? 'on' : '';
         b.onclick = () => this.wardAvatarSub(id);
         sw.appendChild(b);
       });
       grid.appendChild(sw);
 
-      // Unified shop card: [thumb] [title + meta] [pill]
-      const mkCard = (thumbHtml, title, metaHtml, pillHtml, onClick, active) => {
-        const card = document.createElement('div');
-        card.style.cssText = `background:white;border-radius:16px;padding:12px 14px;border:2px solid ${active ? 'var(--green-mid)' : 'rgba(0,0,0,0.07)'};display:flex;align-items:center;gap:14px;box-shadow:${active ? '0 4px 12px rgba(74,138,46,0.2)' : '0 2px 8px rgba(0,0,0,0.05)'};cursor:${onClick ? 'pointer' : 'default'}`;
-        card.innerHTML = `<div style="flex-shrink:0;width:52px;height:52px;display:flex;align-items:center;justify-content:center">${thumbHtml}</div><div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:800;color:var(--green-deep)">${title}</div>${metaHtml || ''}</div>${pillHtml || ''}`;
-        if (onClick) card.onclick = onClick;
-        grid.appendChild(card);
+      const equipAvatar = (id, emoji, img = null) => {
+        Feedback.pop();
+        Skins.setEquipped(p.id, 'avatar', id);
+        Profiles.update(p.id, { avatar: emoji, avatarImg: img });   // emoji zůstává pro žebříčky na serveru
+        this._applyAvatarToEl(document.getElementById('hubAv'), Profiles.active());
+        this._applyAvatarToEl(document.getElementById('mapAv'), Profiles.active());
+        this._renderWardrobeGrid('avatars');
       };
-      const equipPill = `<span style="padding:8px 14px;border-radius:50px;background:#f0f0f0;color:var(--green-mid);font-weight:800;font-size:13px;flex-shrink:0;white-space:nowrap">${cs ? 'Nasadit' : 'Equip'}</span>`;
-      const activePill = `<span style="padding:8px 14px;border-radius:50px;background:var(--green-mid);color:white;font-weight:800;font-size:13px;flex-shrink:0;white-space:nowrap">✓ ${cs ? 'Aktivní' : 'Active'}</span>`;
-      const lockPill = (txt) => `<span style="padding:8px 12px;border-radius:50px;background:#eee;color:#aaa;font-weight:800;font-size:12px;flex-shrink:0;white-space:nowrap">🔒 ${txt}</span>`;
-
-      if (sub === 'greams') {
+      if (sub === 'chars') {
+        SKIN_CATALOG.char_avatars.forEach(c => {
+          const isOwned = owned.has(c.id);
+          const isEquipped = equipped.avatar === c.id;
+          grid.appendChild(this._shopCard({
+            thumb: `<img src="${c.img}" alt="" style="width:58px;height:58px;image-rendering:auto">`,
+            name: c.name[lang] || c.name.cs,
+            state: isEquipped ? t.shop_equipped : isOwned ? t.ward_equip : '🌱 ' + c.cost,
+            cls: isEquipped ? 'on' : isOwned ? 'owned' : seeds < c.cost ? 'poor' : '',
+            onClick: () => {
+              if (isEquipped) return;
+              if (!isOwned) {
+                if (seeds < c.cost) { Feedback.error(); this._showToast(t.shop_no_seeds); return; }
+                if (!Skins.buyAvatar(p.id, c.id).ok) { Feedback.error(); return; }
+                Feedback.coin(); this._setText('wardSeeds', Skins.getSeeds(p.id));
+              }
+              equipAvatar(c.id, c.emoji, c.img);
+            },
+          }));
+        });
+      } else if (sub === 'greams') {
         SKIN_CATALOG.gream_avatars.forEach(ga => {
           const arch = ga.archetype;
-          const isUnlocked = unlockedArchetypes.has(arch);
+          const isUnlocked = !!bestStage[arch];
           const isEquipped = equipped.avatar === ga.id;
-          const stage = Math.min(bestStage[arch] || 2, 4);
           const thumb = isUnlocked
-            ? `<canvas data-sprite-sheet="img/greamici/${arch}_${stage}.png" data-sprite-mood="happy" width="52" height="52" style="width:52px;height:52px;border-radius:50%;image-rendering:pixelated"></canvas>`
-            : `<div style="width:52px;height:52px;border-radius:50%;background:rgba(0,0,0,0.08);display:flex;align-items:center;justify-content:center;font-size:22px">🔒</div>`;
-          const meta = `<div style="font-size:12px;color:#999;font-weight:700">${WORLD_EMOJIS[ARCHETYPES[arch]?.primaryWorld] || ''} ${cs ? 'Greamík portrét' : 'Gream portrait'}</div>`;
-          const pill = isEquipped ? activePill : isUnlocked ? equipPill : lockPill(cs ? 'Vylíhni' : 'Hatch');
-          mkCard(thumb, ga.name[lang] || ga.name.cs, meta, pill,
-            (isUnlocked && !isEquipped) ? () => {
-              Feedback.pop();
-              Skins.setEquipped(p.id, 'avatar', ga.id);
-              Profiles.update(p.id, { avatar: '🐾' });
-              this._applyAvatarToEl(document.getElementById('hubAv'), Profiles.active());
-              this._applyAvatarToEl(document.getElementById('mapAv'), Profiles.active());
-              this._renderWardrobeGrid('avatars');
-            } : null, isEquipped);
+            ? `<canvas data-sprite-sheet="img/greamici/${arch}_${Math.min(bestStage[arch], 4)}.png" data-sprite-mood="happy" width="56" height="56"></canvas>`
+            : `<span class="shop-lock">🔒</span>`;
+          grid.appendChild(this._shopCard({
+            thumb, name: ga.name[lang] || ga.name.cs,
+            sub: `${WORLD_EMOJIS[ARCHETYPES[arch]?.primaryWorld] || ''} ${cs ? 'portrét' : 'portrait'}`,
+            state: isEquipped ? t.shop_equipped : isUnlocked ? t.ward_equip : (cs ? '🔒 Vylíhni' : '🔒 Hatch'),
+            cls: isEquipped ? 'on' : isUnlocked ? 'owned' : 'locked',
+            onClick: (isUnlocked && !isEquipped) ? () => equipAvatar(ga.id, '🐾') : null,
+          }));
         });
       } else {
         SKIN_CATALOG.avatars.forEach(skin => {
@@ -3778,79 +4096,64 @@ window.App = {
           const isUnlocked = isBuy ? owned.has(skin.id) : (skin.unlock.type === 'free' || unlocked.has(skin.id));
           const isEquipped = equipped.avatar === skin.id;
           const canAfford = seeds >= (skin.cost || 0);
-          const thumb = `<span style="font-size:32px;line-height:1">${skin.emoji}</span>`;
-          let meta = '';
-          if (isBuy && !isUnlocked) meta = `<div style="font-size:12px;color:${canAfford ? 'var(--green-mid)' : '#aaa'};font-weight:700">${cs ? 'Ke koupi' : 'For sale'}</div>`;
-          else if (!isUnlocked) meta = `<div style="font-size:11px;color:var(--green-mid);font-weight:700">${Skins.unlockText(skin, lang)}</div>`;
-          const pill = isEquipped ? activePill
-            : isUnlocked ? equipPill
-            : isBuy ? `<span style="padding:8px 14px;border-radius:50px;background:${canAfford ? 'var(--green-mid)' : '#ddd'};color:${canAfford ? 'white' : '#aaa'};font-weight:800;font-size:13px;flex-shrink:0;white-space:nowrap">🌱 ${skin.cost}</span>`
-            : lockPill(cs ? 'Zamčeno' : 'Locked');
-          mkCard(thumb, skin.name?.[lang] || skin.id, meta, pill, () => {
-            if (isEquipped) return;
-            if (isBuy && !isUnlocked) {
-              if (!canAfford) { Feedback.error(); this._showToast(cs ? 'Nedostatek semínek 🌱' : 'Not enough seeds 🌱'); return; }
-              if (!Skins.buyAvatar(p.id, skin.id).ok) { Feedback.error(); return; }
-              Feedback.coin();
-              this._setText('wardSeeds', Skins.getSeeds(p.id));
-            } else if (!isUnlocked) { Feedback.error(); return; }
-            Feedback.pop();
-            Skins.setEquipped(p.id, 'avatar', skin.id);
-            Profiles.update(p.id, { avatar: skin.emoji });
-            this._applyAvatarToEl(document.getElementById('hubAv'), Profiles.active());
-            this._applyAvatarToEl(document.getElementById('mapAv'), Profiles.active());
-            this._renderWardrobeGrid('avatars');
-          }, isEquipped);
+          grid.appendChild(this._shopCard({
+            thumb: `<span class="shop-emoji">${skin.emoji}</span>`,
+            name: skin.name?.[lang] || skin.id,
+            sub: !isUnlocked && !isBuy ? Skins.unlockText(skin, lang) : '',
+            state: isEquipped ? t.shop_equipped : isUnlocked ? t.ward_equip : isBuy ? '🌱 ' + skin.cost : '🔒',
+            cls: isEquipped ? 'on' : isUnlocked ? 'owned' : isBuy ? (canAfford ? '' : 'poor') : 'locked',
+            onClick: () => {
+              if (isEquipped) return;
+              if (isBuy && !isUnlocked) {
+                if (!canAfford) { Feedback.error(); this._showToast(t.shop_no_seeds); return; }
+                if (!Skins.buyAvatar(p.id, skin.id).ok) { Feedback.error(); return; }
+                Feedback.coin();
+                this._setText('wardSeeds', Skins.getSeeds(p.id));
+              } else if (!isUnlocked) { Feedback.error(); return; }
+              equipAvatar(skin.id, skin.emoji);
+            },
+          }));
         });
       }
       this._initSpriteCanvases(grid);
     } else if (tab === 'frames') {
-      const items  = SKIN_CATALOG.frames;
-      const seeds  = Skins.getSeeds(p.id);
-      const cs     = lang === 'cs';
-
-      grid.style.cssText = 'max-width:420px;margin:0 auto;display:flex;flex-direction:column;gap:10px';
-      grid.innerHTML = `<div style="font-size:12px;color:#888;font-weight:700;margin-bottom:4px">${cs ? 'Rámy pro tvůj avatar' : 'Frames for your avatar'}</div>`;
-
+      const seeds = Skins.getSeeds(p.id);
+      const cs = lang === 'cs';
+      this._shopGridStyle(grid, cs ? 'Rámeček kolem tvého avataru' : 'A frame around your avatar');
       const FRAME_EMOJIS = { fr_none:'◯', fr_leaf:'🍃', fr_gold:'⭐', fr_rainbow:'🌈', fr_galaxy:'🌌' };
-      items.forEach(item => {
-        const isOwned    = owned.has(item.id);
+      SKIN_CATALOG.frames.forEach(item => {
+        const isOwned = item.cost === 0 || owned.has(item.id);
         const isEquipped = equipped.frame === item.id;
-        const canAfford  = seeds >= item.cost;
-        const card = document.createElement('div');
-        card.style.cssText = `background:white;border-radius:16px;padding:14px 16px;border:2px solid ${isEquipped ? 'var(--green-mid)' : 'rgba(0,0,0,0.07)'};display:flex;align-items:center;gap:14px;box-shadow:${isEquipped ? '0 4px 12px rgba(74,138,46,0.2)' : '0 2px 8px rgba(0,0,0,0.05)'};cursor:pointer`;
-        const statusBtn = isOwned
-          ? `<span style="padding:8px 14px;border-radius:50px;background:${isEquipped ? 'var(--green-mid)' : '#f0f0f0'};color:${isEquipped ? 'white' : 'var(--green-mid)'};font-weight:800;font-size:13px;font-family:inherit;flex-shrink:0">${isEquipped ? (cs?'✓ Aktivní':'✓ Active') : t.ward_equip}</span>`
-          : `<button style="padding:8px 14px;border-radius:50px;border:none;background:${canAfford ? 'var(--green-mid)' : '#ddd'};color:${canAfford ? 'white' : '#aaa'};font-family:inherit;font-weight:800;font-size:13px;cursor:${canAfford?'pointer':'not-allowed'};flex-shrink:0">🌱 ${item.cost}</button>`;
-        card.innerHTML = `
-          <div style="font-size:34px;flex-shrink:0;width:48px;text-align:center">${FRAME_EMOJIS[item.id] || '🖼️'}</div>
-          <div style="flex:1;min-width:0">
-            <div style="font-size:15px;font-weight:800;color:var(--green-deep)">${item.name?.[lang] || item.id}</div>
-            ${item.cost === 0 ? `<div style="font-size:12px;color:var(--green-mid);font-weight:700">${cs?'Zdarma':'Free'}</div>` : ''}
-          </div>
-          ${statusBtn}
-        `;
-        card.onclick = () => {
-          if (isOwned) {
-            Feedback.pop();
-            Skins.setEquipped(p.id, 'frame', item.id);
-            this._renderWardrobeGrid('frames');
-          } else if (canAfford) {
+        const canAfford = seeds >= item.cost;
+        grid.appendChild(this._shopCard({
+          thumb: `<span class="shop-emoji">${FRAME_EMOJIS[item.id] || '🖼️'}</span>`,
+          name: item.name?.[lang] || item.id,
+          state: isEquipped ? t.shop_equipped : isOwned ? t.ward_equip : '🌱 ' + item.cost,
+          cls: isEquipped ? 'on' : isOwned ? 'owned' : canAfford ? '' : 'poor',
+          onClick: () => {
+            if (isEquipped) return;
+            if (isOwned) { Feedback.pop(); Skins.setEquipped(p.id, 'frame', item.id); this._renderWardrobeGrid('frames'); return; }
+            if (!canAfford) { Feedback.error(); this._showToast(t.ward_not_enough); return; }
             const r = Skins.buyCosmetic(p.id, item.id);
-            if (r.ok) {
-              Feedback.coin();
-              Skins.setEquipped(p.id, 'frame', item.id);
-              this._setText('wardSeeds', Skins.getSeeds(p.id));
-              this._renderWardrobeGrid('frames');
-            }
-          } else {
-            Feedback.error();
-            this._showToast(t.ward_not_enough);
-          }
-        };
-        grid.appendChild(card);
+            if (r.ok) { Feedback.coin(); Skins.setEquipped(p.id, 'frame', item.id); this._setText('wardSeeds', Skins.getSeeds(p.id)); this._renderWardrobeGrid('frames'); }
+          },
+        }));
       });
     }
+  },
+
+  // Jednotná karta obchůdku (všechny záložky): obrázek, název (max 2 řádky), popis (max 2 řádky), stav/cena dole
+  _shopCard({ thumb, name, sub = '', state = '', cls = '', onClick = null }) {
+    const card = document.createElement('button');
+    card.type = 'button';
+    card.className = ('shop-item ' + cls).trim();
+    card.innerHTML = `<span class="shop-thumb">${thumb}</span><span class="shop-name">${name}</span>${sub ? `<span class="shop-sub">${sub}</span>` : ''}<span class="shop-state">${state}</span>`;
+    if (onClick) card.onclick = onClick;
+    return card;
+  },
+  _shopGridStyle(grid, hint) {
+    grid.style.cssText = 'display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;max-width:420px;margin:0 auto';
+    grid.innerHTML = hint ? `<div class="shop-hint" style="grid-column:1/-1">${hint}</div>` : '';
   },
 
   // ═══════════════════════════════════
@@ -4106,7 +4409,7 @@ window.App = {
     const toast = document.createElement('div');
     toast.id = 'app-feedback-toast';
     toast.style.cssText = `
-      position:fixed; bottom:120px; left:50%; transform:translateX(-50%);
+      position:fixed; bottom:calc(120px + env(safe-area-inset-bottom)); left:16px; right:16px; margin:0 auto; width:fit-content;   /* bez translateX – animace slideUp by ho přepsala a hláška by ujela doprava */
       background:#1a3d0a; color:white; padding:14px 22px;
       border-radius:50px; font-family:'Nunito',sans-serif;
       font-size:15px; font-weight:700; z-index:999;
@@ -4123,62 +4426,45 @@ window.App = {
   renderBgShop() {
     const p = Profiles.active();
     if (!p) return;
-    const lang = getLang();
+    const t = tr(), lang = getLang(), cs = lang === 'cs';
     const owned = Skins.getOwnedCosmetics(p.id);
     const equipped = Skins.getEquippedBg(p.id);
     const seeds = Skins.getSeeds(p.id);
-    const cs = lang === 'cs';
-
     const container = document.getElementById('bgShopGrid');
     if (!container) return;
-    container.style.cssText = 'max-width:420px;margin:0 auto;display:flex;flex-direction:column;gap:10px';
-    container.innerHTML = `<div style="font-size:12px;color:#888;font-weight:700;margin-bottom:4px">${cs ? 'Pozadí pro tvoji zahradu' : 'Backgrounds for your garden'}</div>`;
-
+    this._shopGridStyle(container, cs ? 'Zahrada v jiném kraji – greamíci se v ní procházejí stejně' : 'Your garden somewhere else – Greams walk around it the same way');
     SKIN_CATALOG.backgrounds.forEach(bg => {
       const isOwned = bg.cost === 0 || owned.includes(bg.id);
       const isEquipped = equipped.id === bg.id;
-      const canAfford = seeds >= bg.cost;
-      const card = document.createElement('div');
-      card.style.cssText = `background:white;border-radius:16px;overflow:hidden;border:2px solid ${isEquipped ? 'var(--green-mid)' : 'rgba(0,0,0,0.07)'};display:flex;align-items:center;gap:0;box-shadow:${isEquipped ? '0 4px 12px rgba(74,138,46,0.2)' : '0 2px 8px rgba(0,0,0,0.05)'};cursor:pointer`;
-      const bgPreview = bg.file
-        ? `url('img/backgrounds/${bg.file}') center/cover`
-        : 'linear-gradient(135deg,#87ceeb,#5a9a3a)';
-      const statusBtn = isOwned
-        ? `<span style="padding:8px 14px;border-radius:50px;background:${isEquipped ? 'var(--green-mid)' : '#f0f0f0'};color:${isEquipped ? 'white' : 'var(--green-mid)'};font-weight:800;font-size:13px;font-family:inherit;flex-shrink:0;white-space:nowrap">${isEquipped ? (cs?'✓ Aktivní':'✓ Active') : (cs?'Nasadit':'Equip')}</span>`
-        : `<span style="padding:8px 14px;border-radius:50px;background:${canAfford ? 'var(--green-mid)' : '#ddd'};color:${canAfford ? 'white' : '#aaa'};font-weight:800;font-size:13px;flex-shrink:0;white-space:nowrap">🌱 ${bg.cost}</span>`;
-      card.innerHTML = `
-        <div style="width:72px;height:58px;flex-shrink:0;background:${bgPreview}"></div>
-        <div style="flex:1;min-width:0;padding:0 12px">
-          <div style="font-size:15px;font-weight:800;color:var(--green-deep)">${bg.name[lang] || bg.name.cs}</div>
-          ${bg.cost === 0 ? `<div style="font-size:12px;color:var(--green-mid);font-weight:700">${cs?'Zdarma':'Free'}</div>` : ''}
-        </div>
-        <div style="padding:0 14px 0 0;flex-shrink:0">${statusBtn}</div>
-      `;
-      card.onclick = () => {
-        const result = Skins.purchaseBg(p.id, bg.id);
-        if (!result.ok) {
-          this._showToast(cs ? `Nemáš dost semínek (${seeds} / ${bg.cost})` : `Not enough seeds (${seeds} / ${bg.cost})`);
-          return;
-        }
-        Feedback.tap();
-        this._setText('wardSeeds', Skins.getSeeds(p.id));
-        this.renderBgShop();
-      };
-      container.appendChild(card);
+      container.appendChild(this._shopCard({
+        thumb: `<span class="shop-bgthumb" style="background-image:url('${bg.file ? 'img/backgrounds/' + bg.file : 'img/bg/garden_wide.jpg'}')"></span>`,
+        name: bg.name[lang] || bg.name.cs,
+        state: isEquipped ? t.shop_equipped : isOwned ? t.ward_equip : '🌱 ' + bg.cost,
+        cls: isEquipped ? 'on' : isOwned ? 'owned' : seeds < bg.cost ? 'poor' : '',
+        onClick: () => {
+          if (isEquipped) return;
+          const result = Skins.purchaseBg(p.id, bg.id);
+          if (!result.ok) { Feedback.error(); this._showToast(t.shop_no_seeds); return; }
+          Feedback.tap();
+          this._setText('wardSeeds', Skins.getSeeds(p.id));
+          this.renderBgShop();
+        },
+      }));
     });
   },
 };
 
 // ─── Screen lifecycle events ───
 document.addEventListener('screen:ready', ({ detail: { screenId } }) => {
+  App._decorate();
   switch (screenId) {
     case 'onboarding':
       App.renderOnboarding();
-      Audio.switchScene('menu');
+      Audio.switchScene('intro');
       break;
     case 'profiles':
       App.renderProfiles();
-      Audio.switchScene('menu');
+      Audio.switchScene('intro');
       break;
     case 'map':
     case 'home':
@@ -4202,6 +4488,7 @@ document.addEventListener('screen:ready', ({ detail: { screenId } }) => {
       Audio.switchScene('outdoor');
       break;
     case 'wardrobe':    App.renderWardrobe();    Audio.switchScene('menu'); break;
+    case 'greams':      App.renderGreams();      Audio.switchScene('menu'); break;
     case 'geo-gate':    App.renderGeoGate();     Audio.switchScene('menu'); break;
     case 'history':     App.renderHistory();     Audio.switchScene('menu'); break;
     case 'challenge': {
@@ -4239,9 +4526,11 @@ window.MapView = MapView; // expose for router cleanup
 (async function startGream() {
   try {
     await App.init();
-    // Remove loading fallback once started
+    // Úvodní obrazovku schovat až po načtení obrázků zahrady (pozadí, greamíci, výzdoba) – jinak se scéna
+    // skládá po kouscích; nejdéle 2,5 s, ať pomalé připojení nezdrží hru
+    await App._imagesReady(2500);
     const fallback = document.getElementById('appLoadingFallback');
-    if (fallback) fallback.style.display = 'none';
+    if (fallback) { fallback.style.transition = 'opacity .35s'; fallback.style.opacity = '0'; setTimeout(() => { fallback.style.display = 'none'; }, 360); }
   } catch (err) {
     console.error('[Gream] Init crashed:', err);
     const msg = document.getElementById('appLoadingMsg');

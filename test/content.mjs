@@ -44,13 +44,18 @@ for (const lang of ['en', 'cs']) {
         if (new Set(as).size !== as.length) issues.push(`${at} match duplicate a — "${short}"`);
         if (ch.pairs.some(p => p.a == null || p.b == null)) issues.push(`${at} match null pair — "${short}"`);
       }
+      else if (t === 'map_pin') {
+        const { lat, lon, km } = ch.check;
+        if (!(Math.abs(lat) <= 85 && Math.abs(lon) <= 180 && km > 0)) issues.push(`${at} map_pin bad lat/lon/km — "${short}"`);
+        if (!['world', 'europe', 'cz'].includes(ch.scope)) issues.push(`${at} map_pin bad scope '${ch.scope}' — "${short}"`);
+      }
       else issues.push(`${at} unknown type '${t}' — "${short}"`);
     });
   }
 }
 
 // ── Ověření, že VALIDATOR reálně přijme správnou a odmítne špatnou odpověď ──
-const { Validator } = await import(new URL('validator.js', base));
+const { Validator, numTolerance } = await import(new URL('validator.js', base));
 let behav = [];
 for (const lang of ['en', 'cs']) {
   const C = T[lang].challenges;
@@ -66,13 +71,18 @@ for (const lang of ['en', 'cs']) {
         if (wrong && Validator.validate(ch.check, wrong.value ?? wrong.text, 'choice', lang).passed) behav.push(`${at} choice ACCEPTS wrong answer`);
       }
       else if (t === 'number' && ch.check.answer != null) {
-        const tol = ch.check.tolerance ?? 0;
+        const tol = numTolerance(ch.check);   // i odhad v % (tolerancePct)
         if (!Validator.validate(ch.check, String(ch.check.answer), 'number', lang).passed) behav.push(`${at} number REJECTS correct`);
         if (Validator.validate(ch.check, String(Number(ch.check.answer) + tol + 100), 'number', lang).passed) behav.push(`${at} number ACCEPTS far-wrong`);
       }
       else if (t === 'fill_blank') {
         if (!Validator.validate(ch.check, ch.check.correct, 'text', lang).passed) behav.push(`${at} fill_blank REJECTS correct`);
         if (Validator.validate(ch.check, 'zzz-nope-'+i, 'text', lang).passed) behav.push(`${at} fill_blank ACCEPTS wrong`);
+      }
+      else if (t === 'map_pin') {
+        const { lat, lon, km } = ch.check;
+        if (!Validator.validate(ch.check, `${lat},${lon}`, 'map_pin', lang).passed || Validator.score(ch.check, `${lat},${lon}`, 'map_pin') !== 100) behav.push(`${at} map_pin REJECTS exact spot`);
+        if (Validator.validate(ch.check, `${-lat},${lon > 0 ? lon - 150 : lon + 150}`, 'map_pin', lang).passed) behav.push(`${at} map_pin ACCEPTS far-wrong`);
       }
       else if (t === 'sort') {
         // score() must give 100 for correct order, less for reversed
@@ -83,6 +93,22 @@ for (const lang of ['en', 'cs']) {
       }
     });
   }
+}
+
+for (const w of Object.keys(T.cs.challenges)) for (const d of Object.keys(T.cs.challenges[w])) {
+  const a = T.cs.challenges[w][d], b = T.en.challenges[w]?.[d] || [];
+  if (a.length !== b.length) issues.push(`${w}|${d} počet cs=${a.length} ≠ en=${b.length}`);
+  a.forEach((ch, i) => { if (b[i] && ch.action === 'map_pin' && (b[i].check?.lat !== ch.check.lat)) issues.push(`${w}|${d}[${i}] map_pin cs/en jiné místo`); });
+}
+
+// Podkategorie (1.1): nové otázky je potřeba zařadit (scripts/classify-subcats.mjs → build-subcats.mjs); toleruje se 1 % nezařazených
+{
+  const { subcatOf } = await import('../js/subcats.js');
+  let n = 0, miss = 0;
+  for (const l of ['cs', 'en']) for (const w of Object.keys(T[l].challenges)) for (const d of Object.keys(T[l].challenges[w]))
+    T[l].challenges[w][d].forEach(ch => { n++; if (!subcatOf(w, d, ch.text, l)) miss++; });
+  if (miss > n * 0.01) issues.push(`podkategorie: nezařazeno ${miss} z ${n} otázek – spusť scripts/classify-subcats.mjs`);
+  else console.log(`✓ Podkategorie: zařazeno ${n - miss}/${n}`);
 }
 
 let total = 0; for (const w of Object.keys(T.en.challenges)) for (const d of Object.keys(T.en.challenges[w])) total += T.en.challenges[w][d].length;

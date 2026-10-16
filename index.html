@@ -9,6 +9,21 @@
 <meta name="theme-color" content="#2d5a1b">
 <meta name="format-detection" content="telephone=no">
 <title>Gream</title>
+<script>
+// Ukázka pro vývojářskou galerii (tools/greamici.html): ?demo=1 → hra běží nad kopií ukázkových dat v paměti
+// (sessionStorage 'gream_demo'), skutečná data v zařízení se nečtou ani nemění. Bez parametru se nic neděje.
+(function () {
+  if (!/[?&]demo=1(&|$)/.test(location.search)) return;
+  try {
+    var m = new Map(Object.entries(JSON.parse(sessionStorage.getItem('gream_demo') || '{}')));
+    var st = { getItem: function (k) { return m.has(k) ? m.get(k) : null; }, setItem: function (k, v) { m.set(k, String(v)); },
+      removeItem: function (k) { m.delete(k); }, clear: function () { m.clear(); }, key: function (i) { return Array.from(m.keys())[i] || null; } };
+    Object.defineProperty(st, 'length', { get: function () { return m.size; } });
+    Object.defineProperty(window, 'localStorage', { value: st, configurable: true });
+    window.__greamDemo = true;
+  } catch (e) {}
+})();
+</script>
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
@@ -16,15 +31,13 @@
 <link rel="apple-touch-icon" sizes="152x152" href="icons/apple-touch-icon-152.png">
 <link rel="apple-touch-icon" sizes="120x120" href="icons/apple-touch-icon-120.png">
 <link rel="apple-touch-icon" sizes="76x76" href="icons/apple-touch-icon-76.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/fonts.css">
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/layout.css">
 <link rel="stylesheet" href="css/components.css">
 <link rel="stylesheet" href="css/themes.css">
-<!-- Leaflet (lazy-loaded only when map view opens) — preconnect for speed -->
-<link rel="preconnect" href="https://unpkg.com">
-<link rel="preconnect" href="https://tile.openstreetmap.org" crossorigin>
+<!-- Mapa: MapLibre (lokálně, načte se až s mapou); dlaždice přes vlastní server -->
+<link rel="preconnect" href="https://3rstudio.eu" crossorigin>
 </head>
 <body>
 
@@ -70,23 +83,25 @@
 <!-- BOTTOM TAB BAR -->
 <nav id="tabBar" class="tab-bar hidden">
   <button class="tab-btn" id="tab-garden" onclick="App.showTab('garden')">
-    <span class="tab-icon">🌱</span>
-    <span class="tab-lbl" id="tabLblGarden">Garden</span>
+    <span class="tab-icon" data-icon="garden"></span>
+    <span class="tab-lbl" id="tabLblGarden"></span>
   </button>
   <button class="tab-btn" id="tab-map" onclick="App.showTab('map')">
-    <span class="tab-icon">🗺️</span>
-    <span class="tab-lbl" id="tabLblMap">Svět</span>
+    <span class="tab-icon" data-icon="map"></span>
+    <span class="tab-lbl" id="tabLblMap"></span>
   </button>
   <button class="tab-btn" id="tab-hub" onclick="App.showTab('hub')">
-    <span class="tab-icon">☰</span>
-    <span class="tab-lbl" id="tabLblHub">Me</span>
+    <span class="tab-icon" data-icon="me"></span>
+    <span class="tab-lbl" id="tabLblHub"></span>
   </button>
 </nav>
 
 <script type="module" src="js/app.js"></script>
 <script>
   // If module fails to load (Safari syntax error, CORS, etc.), show error after 4s
+  // Hláška jen když se modul hry opravdu nenačetl (pomalý telefon ≠ chyba) – app.js hned na začátku nastaví __greamLoaded
   setTimeout(function() {
+    if (window.__greamLoaded) return;
     var fallback = document.getElementById('appLoadingFallback');
     var msg = document.getElementById('appLoadingMsg');
     if (fallback && fallback.style.display !== 'none' && msg && msg.textContent === 'Loading...') {
@@ -97,7 +112,7 @@
         'Check the browser console (Web Inspector) for errors.</div>' +
         '<button onclick="location.reload()" style="margin-top:12px;padding:8px 16px;border:none;border-radius:8px;background:#4a8a2e;color:white;font-weight:700;cursor:pointer">Reload</button>';
     }
-  }, 4000);
+  }, 10000);
 </script>
 </body>
 </html>

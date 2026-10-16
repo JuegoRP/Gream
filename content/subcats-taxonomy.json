@@ -1,0 +1,9 @@
+{
+  "_info": "Podkategorie otázek (1.1, zatím jen klasifikace). Každá patří k jednomu světu; otázka má hlavní podkategorii a případně vedlejší (i z jiného světa). Data: js/subcats-data.js",
+  "nature":   { "animals": ["Zvířata", "Animals"], "plants": ["Rostliny a houby", "Plants & fungi"], "body": ["Lidské tělo", "Human body"], "earth": ["Země, počasí a krajina", "Earth & weather"], "space": ["Vesmír", "Space"], "food": ["Jídlo a vaření", "Food & cooking"] },
+  "language": { "words": ["Slova a jejich význam", "Words & meanings"], "grammar": ["Pravopis a gramatika", "Spelling & grammar"], "books": ["Knihy a autoři", "Books & authors"], "sayings": ["Přísloví a rčení", "Sayings & idioms"], "foreign": ["Cizí jazyky a písma", "Languages & scripts"] },
+  "logic":    { "math": ["Počítání a matematika", "Numbers & maths"], "riddles": ["Hádanky a úvahy", "Riddles & reasoning"], "patterns": ["Řady a vzory", "Sequences & patterns"], "science": ["Fyzika a chemie", "Physics & chemistry"], "tech": ["Technika a vynálezy", "Tech & inventions"] },
+  "feelings": { "emotions": ["Emoce", "Emotions"], "people": ["Vztahy a kamarádi", "Relationships"], "mind": ["Mysl a psychologie", "Mind & psychology"], "health": ["Zdraví a pohoda", "Health & wellbeing"], "safety": ["Bezpečí a pravidla", "Safety & rules"] },
+  "arts":     { "music": ["Hudba", "Music"], "visual": ["Výtvarné umění", "Visual arts"], "film": ["Film, TV a hry", "Film, TV & games"], "architecture": ["Architektura", "Architecture"], "stage": ["Divadlo a tanec", "Theatre & dance"], "tales": ["Pohádky a mýty", "Fairy tales & myths"] },
+  "world":    { "geography": ["Zeměpis", "Geography"], "history": ["Historie", "History"], "czech": ["Česko", "Czechia"], "sport": ["Sport", "Sport"], "culture": ["Zvyky a kultury", "Customs & cultures"], "society": ["Společnost a peníze", "Society & money"] }
+}

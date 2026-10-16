@@ -38,14 +38,6 @@
   font-size:var(--fs-sm); font-weight:800; color:var(--danger);
 }
 
-.btn-back {
-  width:44px; height:44px; border-radius:50%;
-  background:rgba(255,255,255,0.87); border:none;
-  font-size:21px; display:flex; align-items:center; justify-content:center;
-  box-shadow:0 2px 10px rgba(0,0,0,0.1); flex-shrink:0;
-  transition:transform var(--t-fast);
-}
-.btn-back:active { transform:scale(0.9); }
 
 .btn-action {
   width:100%; padding:15px; border-radius:var(--r-lg); border:none;
@@ -495,17 +487,6 @@
   transform:translateX(22px);
 }
 
-/* ─── BACK BUTTON ─── */
-.btn-back {
-  font-family:inherit;
-  font-weight:800;
-  color:var(--green-deep);
-  cursor:pointer;
-  font-size:15px;
-  background:none;
-  border:none;
-  padding:8px 12px;
-}
 
 /* ─── BACKGROUND THEMES (wardrobe purchasable) ─── */
 body.bg-sunset { background:linear-gradient(180deg,#ffd699,#ffaa6b 50%,#ff8a73); }
@@ -551,19 +532,8 @@ body.bg-starry { background:linear-gradient(180deg,#0d1b3d,#2c3e7a 50%,#4a5fa3);
 /* ─── POI sheet animations ─── */
 #poiSheet { will-change: transform; }
 
-/* ─── Leaflet container fix ─── */
-.leaflet-container {
-  font-family: 'Nunito', sans-serif !important;
-  background: #cbe3a0 !important;
-}
-.leaflet-control-attribution {
-  font-size: 9px !important;
-  background: rgba(255,255,255,0.7) !important;
-}
-.leaflet-control-zoom a {
-  font-family: 'Nunito', sans-serif !important;
-  font-weight: 800 !important;
-}
+/* ─── Mapa (MapLibre) – podklad během načítání v barvě stylu Gream ─── */
+.maplibregl-map { background: #f7f3e8; }
 
 /* ═══════════════════════════════════
    HOME SCREEN with GREAM (v3)
@@ -712,10 +682,15 @@ body.bg-starry { background:linear-gradient(180deg,#0d1b3d,#2c3e7a 50%,#4a5fa3);
 .gream-sprite.shiny {
   animation: greamWalk 1.1s ease-in-out infinite, greamShinyGlow 3s ease-in-out infinite;
 }
+/* Zářivý = stříbrné jiskření (jiné barvy kreslí shiny.js); zlatá svatozář patří doplňku Hvězdná záře (auraPulse) */
 @keyframes greamShinyGlow {
-  0%, 100% { filter: drop-shadow(0 4px 8px rgba(255,215,0,0.4)) drop-shadow(0 0 12px rgba(255,215,0,0.3)); }
-  50%      { filter: drop-shadow(0 4px 12px rgba(255,215,0,0.7)) drop-shadow(0 0 20px rgba(255,215,0,0.5)); }
+  0%, 100% { filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25)) drop-shadow(0 0 2px rgba(255,255,255,0.9)); }
+  12%      { filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25)) drop-shadow(0 0 6px #fff) drop-shadow(0 0 14px rgba(170,225,255,0.9)); }
+  24%      { filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25)) drop-shadow(0 0 2px rgba(255,255,255,0.9)); }
+  36%      { filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25)) drop-shadow(0 0 5px #fff) drop-shadow(0 0 10px rgba(200,170,255,0.8)); }
+  48%      { filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25)) drop-shadow(0 0 2px rgba(255,255,255,0.9)); }
 }
+.ar-sprite.shiny { animation: greamShinyGlow 3s ease-in-out infinite; }
 .gream-sprite.tapped {
   animation: greamPop 0.4s ease;
 }
@@ -1344,3 +1319,419 @@ body.bg-starry { background:linear-gradient(180deg,#0d1b3d,#2c3e7a 50%,#4a5fa3);
   60%  { transform: rotate(0deg) scale(1); }
   100% { transform: rotate(0deg) scale(1); }
 }
+
+/* ═══════════════════════════════════
+   Gream 1.0 — sdílené komponenty (tokeny z base.css)
+═══════════════════════════════════ */
+
+/* Hlavička obrazovky: zpět vlevo · nadpis na střed · akce vpravo */
+.scr-header {
+  width:100%; max-width:480px; margin:0 auto var(--space-4);
+  display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:var(--space-2);
+  min-height:44px; flex-shrink:0;
+}
+.scr-header > .scr-left  { justify-self:start; display:flex; gap:var(--space-2); }
+.scr-header > .scr-right { justify-self:end;   display:flex; gap:var(--space-2); align-items:center; }
+.scr-title {
+  font-size:var(--text-lg); font-weight:900; color:var(--ink); line-height:1.2;
+  text-align:center; margin:0; min-width:0; max-width:62vw;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.scr-sub { display:block; font-size:var(--text-xs); font-weight:700; color:var(--ink-soft); text-align:center; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+/* Kulaté ikonové tlačítko (zpět, akce v hlavičce) */
+.btn-back, .icon-btn {
+  width:44px; height:44px; border-radius:var(--radius-full); flex-shrink:0;
+  background:var(--surface); border:2px solid var(--line); color:var(--ink);
+  display:inline-flex; align-items:center; justify-content:center;
+  font-size:var(--text-lg); line-height:1; box-shadow:var(--elev-1);
+  cursor:pointer; padding:0; transition:transform var(--t-fast);
+}
+.btn-back:active, .icon-btn:active { transform:scale(0.92); }
+.btn-back svg, .icon-btn svg, .tab-icon svg { width:24px; height:24px; display:block; }
+.icon-btn.is-on { background:var(--green-mid); border-color:var(--green-mid); color:#fff; }
+
+/* Prázdný stav: ilustrace + text + výzva k akci */
+.empty-state {
+  width:100%; max-width:420px; margin:var(--space-5) auto; padding:var(--space-5) var(--space-4);
+  display:flex; flex-direction:column; align-items:center; text-align:center; gap:var(--space-3);
+  background:var(--surface); border-radius:var(--radius-lg); box-shadow:var(--elev-1);
+}
+.empty-state img { width:96px; height:96px; image-rendering:pixelated; animation:emptyFloat 3s ease-in-out infinite; }
+.empty-state .es-title { font-size:var(--text-md); font-weight:900; color:var(--ink); }
+.empty-state .es-text  { font-size:var(--text-sm); font-weight:600; color:var(--ink-soft); line-height:1.45; }
+.empty-state .btn-primary { margin-top:var(--space-2); padding:var(--space-3) var(--space-5); font-size:var(--text-md); width:auto; }
+.empty-state.compact { margin:var(--space-2) 0 0; box-shadow:none; background:var(--green-bg); padding:var(--space-4); }
+.empty-state.compact img { width:64px; height:64px; }
+@keyframes emptyFloat { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-6px); } }
+@media (prefers-reduced-motion: reduce) { .empty-state img { animation:none; } }
+
+/* Přepínač (segmenty) – žebříček Zařízení / Svět apod. */
+.seg {
+  width:100%; max-width:420px; margin:0 auto var(--space-3);
+  display:flex; gap:var(--space-1); padding:var(--space-1);
+  background:var(--surface); border-radius:var(--radius-full); box-shadow:var(--elev-1);
+}
+.seg-btn {
+  flex:1; min-height:40px; border-radius:var(--radius-full);
+  font-size:var(--text-sm); font-weight:800; color:var(--ink-soft);
+  transition:background var(--t-fast), color var(--t-fast);
+}
+.seg-btn.active { background:var(--green-mid); color:#fff; }
+
+/* Zahrada: scéna vyplní volnou výšku (žádné prázdné místo pod tlačítky), hlavní akce výrazná */
+#screen-map .gream-stage, #screen-home .gream-stage {
+  flex:1 1 auto; height:auto; min-height:260px; max-height:560px; max-width:480px;
+}
+.home-actions {
+  width:100%; max-width:480px; flex-shrink:0;
+  padding:var(--space-2) 0 0; display:flex; flex-direction:column; gap:var(--space-2);
+}
+.home-actions .home-choice-indoor { min-height:56px; padding:var(--space-3) var(--space-5); font-size:var(--text-lg); }
+.home-actions .btn-ghost { min-height:48px; }
+
+/* ═══════════════════════════════════
+   Souboje 1.1 — aréna
+═══════════════════════════════════ */
+.battle-screen {
+  position:fixed; inset:0; z-index:1001; display:flex; flex-direction:column; align-items:center;
+  background:linear-gradient(180deg,#203a1a 0%,#16241a 100%); color:#fff;
+  padding:calc(var(--sat,0px) + var(--space-3)) var(--space-4) calc(var(--sab,0px) + var(--space-4));
+  overflow-y:auto;
+}
+.battle-screen > * { width:100%; max-width:440px; }
+.ar-stage {
+  position:relative; height:clamp(230px, 36vh, 300px); flex-shrink:0; border-radius:var(--radius-lg); overflow:hidden;
+  background:url('../img/bg/garden_bg.jpg') center 70%/cover; box-shadow:var(--elev-2);
+}
+.ar-stage::after { content:''; position:absolute; inset:0; background:linear-gradient(180deg,rgba(255,255,255,0) 40%,rgba(30,60,20,0.25)); pointer-events:none; }
+.ar-stage.ar-night { filter:brightness(0.62) saturate(0.85) hue-rotate(10deg); }
+.ar-stage.ar-night .ar-card, .ar-stage.ar-night .ar-sprite { filter:brightness(1.55); }
+.ar-side { position:absolute; display:flex; align-items:flex-end; gap:var(--space-2); z-index:2; }
+.ar-op { top:var(--space-3); right:var(--space-3); flex-direction:row; }
+.ar-me { bottom:var(--space-3); left:var(--space-3); }
+.ar-card {
+  background:rgba(255,255,255,0.92); color:var(--ink); border-radius:var(--radius-sm);
+  padding:var(--space-1) var(--space-2); min-width:118px; box-shadow:var(--elev-1);
+}
+.ar-op .ar-card { align-self:flex-start; }
+.ar-name { font-size:var(--text-xs); font-weight:900; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:120px; }
+.ar-hp { position:relative; height:10px; background:#e3e8de; border-radius:var(--radius-full); overflow:hidden; margin-top:2px; }
+.ar-hp i { position:absolute; inset:0 auto 0 0; background:linear-gradient(90deg,#5fae3a,#9ed36a); border-radius:inherit; transition:width .45s ease; }
+.ar-hp i.low { background:linear-gradient(90deg,#e0603a,#f2a93b); }
+.ar-hp b { position:absolute; right:4px; top:-1px; font-size:9px; line-height:12px; color:var(--ink); }
+.ar-en { display:flex; gap:3px; margin-top:3px; }
+.ar-en span { width:14px; height:5px; border-radius:3px; background:#d5dccd; }
+.ar-en span.on { background:#f5c842; box-shadow:0 0 6px #f5c842; }
+.ar-ready .ar-en span.on { animation:enGlow 1s ease-in-out infinite; }
+@keyframes enGlow { 50% { box-shadow:0 0 12px #ffe27a; } }
+.ar-mon { position:relative; width:clamp(96px, 26vw, 124px); }
+.ar-sprite { width:100%; aspect-ratio:1; display:block; image-rendering:pixelated; filter:drop-shadow(0 6px 4px rgba(0,0,0,0.25)); }
+.ar-mon.lunge { animation:arLunge .35s ease; }
+.ar-op .ar-mon.lunge { animation-name:arLungeOp; }
+@keyframes arLunge { 40% { transform:translate(14px,-10px) scale(1.06); } }
+@keyframes arLungeOp { 40% { transform:translate(-14px,10px) scale(1.06); } }
+.ar-mon.hit { animation:arHit .4s ease; }
+@keyframes arHit { 0%,100% { transform:none; filter:none; } 20% { transform:translateX(-6px); filter:brightness(2.2); } 45% { transform:translateX(6px); } 70% { transform:translateX(-3px); } }
+.ar-mon.ko { animation:arKo .9s ease forwards; }
+@keyframes arKo { to { transform:translateY(18px) rotate(-8deg); opacity:.35; filter:grayscale(1); } }
+.ar-mon.victory { animation:arWin .6s ease 2; }
+@keyframes arWin { 50% { transform:translateY(-16px); } }
+.ar-status { position:absolute; top:-6px; left:50%; transform:translateX(-50%); display:flex; gap:3px; }
+.ar-status span { width:18px; height:18px; border-radius:50%; display:block; box-shadow:var(--elev-1); }
+.st-wall  { background:#5c7fa8 linear-gradient(135deg,rgba(255,255,255,.5) 0 30%,transparent 30%); border:2px solid #9fd3ff; }
+.st-boost { background:radial-gradient(circle,#ffe08a 0 35%,#f2a93b 36%); border:2px solid #fff; }
+.st-stun  { background:radial-gradient(circle,#fff 0 25%,#38d6e8 26%); border:2px solid #b9f3fa; animation:spin 1.2s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg); } }
+.ar-fx { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:3; }
+.ar-stage.ar-special::before { content:''; position:absolute; inset:0; z-index:1; background:radial-gradient(circle at 50% 60%, var(--sp) 0%, transparent 70%); opacity:0; animation:arFlash .9s ease; }
+@keyframes arFlash { 25% { opacity:.55; } }
+.ar-banner {
+  position:absolute; left:50%; top:46%; transform:translate(-50%,-50%) scale(.6); z-index:4; opacity:0;
+  font-size:var(--text-lg); font-weight:900; color:#fff; white-space:nowrap; pointer-events:none;
+  text-shadow:0 2px 0 rgba(0,0,0,.45), 0 0 14px rgba(0,0,0,.35); transition:all .18s ease;
+}
+.ar-banner.show { opacity:1; transform:translate(-50%,-50%) scale(1); }
+.ar-banner.dom { color:#ffe27a; } .ar-banner.crit { color:#9ff0ff; } .ar-banner.sp { font-size:var(--text-xl); }
+.ar-float { position:absolute; left:50%; top:20%; transform:translateX(-50%); font-size:var(--text-lg); font-weight:900; color:#fff; text-shadow:0 2px 0 #b0402a, 0 0 8px rgba(0,0,0,.4); animation:arFloat 1.1s ease forwards; pointer-events:none; z-index:5; }
+.ar-float.crit { color:#ffe27a; font-size:var(--text-xl); }
+.ar-float.heal { color:#ffd1e4; text-shadow:0 2px 0 #c23c78; }
+.ar-float.shield { top:45%; font-size:var(--text-md); }
+@keyframes arFloat { from { opacity:0; transform:translate(-50%,10px); } 15% { opacity:1; } to { opacity:0; transform:translate(-50%,-40px); } }
+
+/* Otázka pod arénou */
+.bt-top { display:flex; justify-content:space-between; align-items:center; margin:var(--space-3) 0 var(--space-2); font-size:var(--text-sm); font-weight:900; }
+.bt-world { font-size:var(--text-xs); font-weight:800; color:#b6e388; }
+.bt-time { height:8px; background:rgba(255,255,255,.15); border-radius:var(--radius-full); overflow:hidden; margin-bottom:var(--space-3); }
+.bt-time i { display:block; height:100%; width:100%; background:linear-gradient(90deg,#7ec44a,#f5c842); }
+.bt-q { font-size:var(--text-md); font-weight:900; line-height:1.35; text-align:center; margin-bottom:var(--space-3); min-height:44px; }
+.bt-choices { display:flex; flex-direction:column; gap:var(--space-2); }
+.bt-choice { width:100%; min-height:48px; padding:var(--space-3) var(--space-4); border-radius:var(--radius-md); border:2px solid rgba(255,255,255,.2); background:rgba(255,255,255,.08); color:#fff; font-weight:800; font-size:var(--text-sm); text-align:left; }
+.bt-choice.ok { background:rgba(126,196,74,.4); border-color:#7ec44a; }
+.bt-choice.bad { background:rgba(224,112,90,.4); border-color:#e0705a; }
+.bt-choice.gone { opacity:.25; text-decoration:line-through; pointer-events:none; }
+.bt-special {
+  width:100%; min-height:48px; margin-bottom:var(--space-3); border-radius:var(--radius-md); font-weight:900; font-size:var(--text-sm);
+  color:#2a1c00; background:linear-gradient(135deg,#ffe27a,#f5a623); box-shadow:0 0 0 0 rgba(255,226,122,.7); animation:spPulse 1.4s ease-in-out infinite;
+}
+.bt-special[hidden] { display:none; }
+@keyframes spPulse { 50% { box-shadow:0 0 0 8px rgba(255,226,122,0); } }
+.bt-special small { display:block; font-weight:700; font-size:var(--text-xs); opacity:.8; }
+.bt-report { margin-top:var(--space-3); color:rgba(255,255,255,.45); font-size:var(--text-xs); font-weight:700; align-self:center; width:auto; }
+
+/* Výběr greamíka do souboje */
+.bt-packs { display:flex; flex-wrap:wrap; gap:6px; margin-bottom:var(--space-3); }
+.bt-pack { padding:7px 10px; border-radius:999px; border:2px solid rgba(74,138,46,0.22); background:#fff; color:var(--green-deep); font-family:inherit; font-weight:800; font-size:12px; cursor:pointer; }
+.bt-pack.on { background:var(--green-mid); border-color:var(--green-mid); color:#fff; }
+.bt-pick { display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-2); margin-bottom:var(--space-3); }
+.bt-pick button { border:2px solid var(--line); border-radius:var(--radius-md); background:#fff; padding:var(--space-1) var(--space-1) var(--space-2); font-size:var(--text-xs); font-weight:800; color:var(--ink); }
+.bt-pick button.on { border-color:var(--green-mid); background:var(--green-pale); }
+.bt-pick canvas { width:56px; height:56px; display:block; margin:0 auto; image-rendering:pixelated; }
+.bt-pick .loan { display:block; font-size:10px; color:var(--ink-muted); font-weight:700; }
+.bt-skill { background:#f6faf2; border-radius:var(--radius-md); padding:var(--space-3); margin-bottom:var(--space-3); font-size:var(--text-xs); font-weight:700; color:var(--ink-soft); }
+.bt-skill b { display:block; font-size:var(--text-sm); color:var(--ink); }
+.bt-review { text-align:left; max-height:180px; overflow-y:auto; margin:var(--space-2) 0 var(--space-3); font-size:var(--text-xs); }
+.bt-review div { padding:var(--space-2) 0; border-bottom:1px solid #eee; color:#555; }
+.bt-review b { color:var(--green-dark); }
+@media (prefers-reduced-motion: reduce) { .ar-mon.lunge, .ar-mon.hit, .ar-mon.victory, .bt-special, .st-stun { animation:none !important; } }
+
+/* „Víš, že…?“ a okno po špatné odpovědi */
+.fact-card { width:100%; max-width:420px; margin:0 auto var(--space-4); padding:var(--space-3) var(--space-4); background:#fff8e1; border:2px solid #f5d77a; border-radius:var(--radius-md); text-align:left; }
+.fact-title { font-size:var(--text-xs); font-weight:900; color:#b07800; text-transform:uppercase; letter-spacing:.5px; margin-bottom:var(--space-1); }
+.fact-text { font-size:var(--text-sm); font-weight:700; color:var(--ink); line-height:1.45; }
+.fact-src { font-size:var(--text-xs); color:var(--ink-muted); margin-top:var(--space-1); }
+.wrong-overlay { position:fixed; inset:0; z-index:950; background:rgba(20,30,15,.55); display:flex; align-items:center; justify-content:center; padding:var(--space-4); }
+.wrong-card { width:100%; max-width:380px; background:#fff; border-radius:var(--radius-lg); padding:var(--space-5) var(--space-4); box-shadow:var(--elev-2); text-align:center; }
+.wrong-title { font-size:var(--text-lg); font-weight:900; color:#b0402a; margin-bottom:var(--space-2); }
+.wrong-answer { font-size:var(--text-sm); font-weight:700; color:var(--ink-soft); margin-bottom:var(--space-3); }
+.wrong-answer b { color:var(--green-dark); }
+.wrong-card .btn-primary { width:100%; }
+
+/* Doplněk „Hvězdná záře“ */
+canvas.aura, #greamSpriteCanvas.aura { filter:drop-shadow(0 0 4px #ffd84d) drop-shadow(0 0 12px rgba(255,196,40,.95)) drop-shadow(0 0 24px rgba(255,214,90,.7)); animation:auraPulse 2.4s ease-in-out infinite; }
+@keyframes auraPulse { 0%, 100% { filter:drop-shadow(0 0 4px #ffd84d) drop-shadow(0 0 12px rgba(255,196,40,.95)) drop-shadow(0 0 24px rgba(255,214,90,.7)); } 50% { filter:drop-shadow(0 0 6px #fff3b0) drop-shadow(0 0 18px rgba(255,200,60,1)) drop-shadow(0 0 34px rgba(255,214,90,.9)); } }
+@media (prefers-reduced-motion: reduce) { canvas.aura { animation:none; } }
+
+/* Obchůdek */
+/* flex-shrink:0 – v posuvné .screen by se jinak lišta s overflow smrštila na nulu; sticky = zůstane po ruce u dlouhých seznamů */
+.shop-tabs { display:flex; gap:var(--space-1); width:100%; max-width:440px; margin:0 auto var(--space-3); overflow-x:auto; scrollbar-width:none; padding:2px; flex-shrink:0; position:sticky; top:calc(-1 * (var(--sat) + 16px)); z-index:5; background:var(--shop-tabs-bg, #f0f8e8); border-radius:0 0 var(--radius-lg) var(--radius-lg); }
+.shop-tabs::-webkit-scrollbar { display:none; }
+.shop-tabs .ward-tab { flex:0 0 auto; min-width:64px; display:flex; flex-direction:column; align-items:center; gap:2px; padding:var(--space-2) var(--space-2); transform:none; }
+.shop-tabs .ward-tab span { font-size:20px; line-height:1; }
+.shop-tabs .ward-tab b { font-size:11px; font-weight:800; }
+.shop-tabs .ward-tab.active { transform:none; }
+.shop-hint { font-size:var(--text-xs); font-weight:700; color:var(--ink-soft); text-align:center; margin-bottom:var(--space-1); }
+.shop-item { display:flex; flex-direction:column; align-items:center; gap:var(--space-1); padding:var(--space-3) var(--space-1); border-radius:var(--radius-md); border:2.5px solid var(--line); background:#fff; box-shadow:var(--elev-1); }
+.shop-item img { width:56px; height:56px; object-fit:contain; image-rendering:pixelated; }
+.shop-item .shop-emoji { font-size:34px; line-height:56px; }
+.shop-item .shop-name { font-size:var(--text-xs); font-weight:800; color:var(--ink); text-align:center; line-height:1.2; }
+.shop-item .shop-state { font-size:11px; font-weight:800; color:var(--ink-muted); }
+.shop-item.owned { border-color:var(--green-mid); } .shop-item.owned .shop-state { color:var(--green-mid); }
+.shop-item.on { border-color:#f5a623; background:#fff9e6; } .shop-item.on .shop-state { color:#c47d0a; }
+.shop-item.poor { opacity:.6; }
+
+/* Výzdoba v zahradě */
+.garden-decor { position:absolute; inset:0; pointer-events:none; z-index:1; }
+/* ─── 2D zahrada: posuvný svět (panorama) – predměty i greamíci v jedné vrstvě, hloubka = z-index podle spodní hrany ─── */
+.garden-scroll { position:absolute; inset:0; overflow-x:auto; overflow-y:hidden; z-index:2; scrollbar-width:none; overscroll-behavior-x:contain; -webkit-overflow-scrolling:touch; }
+.garden-scroll::-webkit-scrollbar { display:none; }
+.garden-world { position:relative; height:100%; min-width:100%; background-repeat:no-repeat; }
+.garden-world .garden-decor { display:contents; }
+.garden-world .garden-decor img, .garden-world .garden-nest { position:absolute; transform:translate(-50%,-100%); image-rendering:pixelated; pointer-events:none; filter:drop-shadow(0 3px 2px rgba(0,0,0,.18)); }
+.garden-world .garden-gream-slot { position:absolute; transform:translate(-50%,-100%); cursor:pointer; }
+.gw-slot { transform:translate(-50%,-100%) scale(var(--gw-scale,1)) !important; transform-origin:50% 100%; transition:opacity .5s; -webkit-tap-highlight-color:transparent; }
+.gw-body { transform:scaleX(var(--gw-dir,1)); transform-origin:50% 100%; }
+.gw-hop.gw-jump { animation:gwJump .5s cubic-bezier(.3,.7,.4,1); }
+@keyframes gwJump { 40% { transform:translateY(-22%); } 70% { transform:translateY(2%); } }
+.gw-slot.walking .gw-bob { animation:greamWalkBlock .62s ease-in-out infinite; }
+.gw-slot.idle .gw-bob { animation:greamBob 2.6s ease-in-out infinite; }
+.gw-slot.act-sit .gw-bob { animation:none; transform:translateY(8%) scaleY(.94); transform-origin:50% 100%; }
+.gw-slot.act-look .gw-bob { animation:none; transform:rotate(-7deg); transform-origin:50% 100%; }
+.gw-slot.act-sniff .gw-bob { animation:gwSniff 1.1s ease-in-out infinite; transform-origin:50% 100%; }
+@keyframes gwSniff { 0%, 100% { transform:rotate(0); } 50% { transform:rotate(9deg) translateY(4%); } }
+.gw-slot.act-hide { opacity:.15; }
+.gw-slot.act-warm .gw-bob, .gw-slot.act-guard .gw-bob { animation:greamBob 1.8s ease-in-out infinite; }
+.gw-shadow { position:absolute; left:50%; bottom:-3px; height:7px; transform:translateX(-50%); border-radius:50%; background:rgba(0,0,0,.16); z-index:-1; }
+.gw-slot.is-active .gw-shadow { background:rgba(0,0,0,.24); }
+.gw-slot.walking .gw-shadow { animation:greamWalkShadow .62s ease-in-out infinite; }
+.gw-fx { position:absolute; transform:translate(-50%,-100%); margin-top:-74px; font-size:18px; pointer-events:none; animation:gwFx 1.5s ease-out forwards; }
+.gw-fx.peek { margin-top:-40px; }
+@keyframes gwFx { 0% { opacity:0; transform:translate(-50%,-40%) scale(.6); } 15% { opacity:1; transform:translate(-50%,-100%) scale(1); } 100% { opacity:0; transform:translate(-50%,-260%) scale(1.05); } }
+@media (prefers-reduced-motion: reduce) { .gw-slot .gw-bob, .gw-hop, .gw-fx { animation:none !important; } }
+.garden-decor img { position:absolute; transform:translate(-50%,-100%); image-rendering:pixelated; filter:drop-shadow(0 3px 2px rgba(0,0,0,.18)); }
+
+/* Rodinný souboj – předání telefonu */
+.family-hand { position:absolute; inset:0; z-index:20; display:flex; align-items:center; justify-content:center; text-align:center; background:rgba(22,36,26,.97); color:#fff; padding:var(--space-5); }
+.family-hand .fh-title { font-size:var(--text-sm); font-weight:800; opacity:.85; margin-top:var(--space-2); }
+.family-hand .fh-name { font-size:var(--text-xl); font-weight:900; margin:var(--space-1) 0 var(--space-2); }
+.family-hand .btn-primary { min-width:220px; }
+.shop-item.on { border-color:#f5a623; }
+
+/* Týdenní liga */
+.league-chip { width:100%; margin-bottom:var(--space-3); padding:var(--space-2) var(--space-3); border-radius:var(--radius-full); background:#fff9e6; border:2px solid #f5d77a; font-size:var(--text-xs); font-weight:700; color:#8a5a00; text-align:center; }
+.league-chip[hidden] { display:none; }
+.lg-row { display:grid; grid-template-columns:32px 1fr auto; gap:var(--space-2); align-items:center; padding:var(--space-2); border-radius:var(--radius-sm); font-size:var(--text-sm); color:var(--ink); }
+.lg-row b { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.lg-row.up { background:#eef9e4; } .lg-row.down { background:#fdeeea; } .lg-row.me { outline:2px solid var(--green-mid); }
+.lg-dot { display:inline-block; width:10px; height:10px; border-radius:3px; vertical-align:middle; }
+.lg-dot.up { background:#cfeebb; } .lg-dot.down { background:#f6cfc5; }
+
+/* Výprava dne na mapě */
+.exp-chip { position:absolute; left:50%; top:var(--space-2); transform:translateX(-50%); z-index:510; max-width:calc(100% - 24px); padding:var(--space-2) var(--space-3); border-radius:var(--radius-full); background:rgba(255,255,255,.96); border:2px solid #ffd84d; box-shadow:var(--elev-1); font-size:var(--text-xs); font-weight:800; color:#7a4a00; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.exp-sheet { position:absolute; inset:0; z-index:530; background:rgba(20,30,15,.35); display:flex; align-items:flex-end; }
+.exp-card { width:100%; background:#fff; border-radius:var(--radius-lg) var(--radius-lg) 0 0; padding:var(--space-4); box-shadow:var(--elev-2); max-height:80%; overflow-y:auto; }
+.exp-h { font-size:var(--text-md); font-weight:900; color:var(--ink); }
+.exp-sub { font-size:var(--text-xs); font-weight:700; color:var(--ink-soft); line-height:1.45; margin:var(--space-1) 0 var(--space-2); }
+.exp-row { width:100%; display:grid; grid-template-columns:28px 1fr auto; gap:var(--space-2); align-items:center; padding:var(--space-3); border-radius:var(--radius-md); border:2px solid var(--line); background:#fffdf3; margin-bottom:var(--space-2); text-align:left; }
+.exp-row b { font-size:var(--text-sm); color:var(--ink); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.exp-row small { font-size:var(--text-xs); font-weight:800; color:var(--ink-muted); }
+.exp-row.ok { background:#eef9e4; border-color:#bfe3a3; }
+.spot-holder { display:flex; align-items:center; gap:var(--space-2); background:#fff9e6; border:2px solid #f5d77a; border-radius:var(--radius-md); padding:var(--space-2) var(--space-3); margin-bottom:var(--space-2); font-size:var(--text-xs); font-weight:700; color:#7a4a00; text-align:left; }
+.spot-holder:empty { display:none; }
+.spot-holder canvas { width:44px; height:44px; image-rendering:pixelated; flex-shrink:0; }
+.spot-holder span { font-size:24px; }
+
+/* Rodičovská brána a denní limit */
+.pg-overlay { position:fixed; inset:0; z-index:1200; background:rgba(20,30,15,.6); display:flex; align-items:center; justify-content:center; padding:var(--space-4); }
+.pg-card { width:100%; max-width:360px; background:#fff; border-radius:var(--radius-lg); padding:var(--space-5) var(--space-4); text-align:center; box-shadow:var(--elev-2); }
+.pg-title { font-size:var(--text-lg); font-weight:900; color:var(--ink); margin-bottom:var(--space-2); }
+.pg-reason { font-size:var(--text-sm); font-weight:700; color:var(--ink-soft); line-height:1.45; margin-bottom:var(--space-3); }
+.pg-q { font-size:var(--text-md); font-weight:800; color:var(--ink); margin-bottom:var(--space-3); }
+.pg-in { width:120px; padding:var(--space-3); font-size:var(--text-xl); font-weight:900; text-align:center; border:2px solid var(--line); border-radius:var(--radius-md); margin-bottom:var(--space-2); }
+.pg-err { color:#b0402a; font-size:var(--text-xs); font-weight:800; margin-bottom:var(--space-2); }
+.pg-card .btn-primary { width:100%; margin-top:var(--space-2); }
+.pg-cancel { margin-top:var(--space-2); color:var(--ink-muted); font-weight:800; font-size:var(--text-sm); padding:var(--space-2); }
+.parents-panel { margin-top:var(--space-3); }
+.parents-panel select { width:100%; padding:var(--space-3); border-radius:var(--radius-md); border:2px solid var(--line); font-family:inherit; font-weight:800; font-size:var(--text-sm); background:#fff; margin:var(--space-1) 0 var(--space-3); }
+.parents-row { font-size:var(--text-sm); font-weight:700; color:var(--ink); margin:var(--space-1) 0; }
+.parents-bar { display:grid; grid-template-columns:110px 1fr 36px; gap:var(--space-2); align-items:center; font-size:var(--text-xs); font-weight:800; color:var(--ink-soft); margin:4px 0; }
+.parents-bar i { display:block; height:8px; border-radius:var(--radius-full); background:var(--green-pale); overflow:hidden; }
+.parents-bar i b { display:block; height:100%; background:var(--green-mid); }
+
+/* ─── Vývoj greamíka (challenge.js _showEvolution): 0–2,1 s silueta bliká mezi starou a novou podobou, 2,2 s záblesk, pak nová podoba ─── */
+.evo-overlay { position:fixed; inset:0; z-index:1000; display:flex; align-items:center; justify-content:center; padding:24px; background:radial-gradient(circle at 50% 42%, rgba(60,110,40,.96), rgba(12,34,6,.97) 70%); animation:fadeIn .35s ease; }
+.evo-box { text-align:center; max-width:320px; width:100%; color:#fff; }
+.evo-kicker { font-size:13px; font-weight:800; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,.65); margin-bottom:10px; }
+.evo-stage { position:relative; width:180px; height:180px; margin:0 auto 14px; }
+.evo-stage canvas { position:absolute; left:15px; bottom:0; width:150px; height:150px; image-rendering:pixelated; }
+.evo-old { animation:evoOld 2.2s steps(1,end) forwards; }
+.evo-new { opacity:0; animation:evoNew 2.2s steps(1,end) forwards, evoPop .5s cubic-bezier(.2,.8,.3,1.3) 2.2s both, greamBob 2s ease-in-out 2.8s infinite; }
+@keyframes evoOld {
+  0%  { opacity:1; filter:none; }
+  20% { filter:brightness(0) invert(1); }
+  35% { opacity:0; } 45% { opacity:1; } 58% { opacity:0; } 66% { opacity:1; } 76% { opacity:0; } 82% { opacity:1; } 90% { opacity:0; } 94% { opacity:1; }
+  100% { opacity:0; filter:brightness(0) invert(1); }
+}
+@keyframes evoNew {
+  0%  { opacity:0; filter:brightness(0) invert(1); }
+  35% { opacity:1; } 45% { opacity:0; } 58% { opacity:1; } 66% { opacity:0; } 76% { opacity:1; } 82% { opacity:0; } 90% { opacity:1; } 94% { opacity:0; }
+  100% { opacity:1; filter:none; }
+}
+@keyframes evoPop { 0% { transform:scale(.6); } 60% { transform:scale(1.15); } 100% { transform:scale(1); } }
+.evo-flash { position:absolute; inset:-60px; border-radius:50%; background:radial-gradient(circle, #fff 0 30%, rgba(255,250,200,.6) 45%, transparent 70%); opacity:0; pointer-events:none; animation:evoFlash .7s ease-out 2s both; }
+@keyframes evoFlash { 0% { opacity:0; transform:scale(.3); } 30% { opacity:1; } 100% { opacity:0; transform:scale(1.6); } }
+.evo-rays { position:absolute; inset:-40px; border-radius:50%; background:repeating-conic-gradient(rgba(255,240,170,.11) 0 10deg, transparent 10deg 30deg); opacity:0; animation:evoRays 1s ease 2.1s forwards, spin 14s linear 2.1s infinite; }
+@keyframes evoRays { to { opacity:1; } }
+.evo-shiny .evo-new { filter:drop-shadow(0 0 10px #ffd84d); }
+.evo-after { opacity:0; animation:slideUp .45s ease 2.5s both; }
+.evo-title { font-size:22px; font-weight:900; margin-bottom:4px; }
+.evo-sub { font-size:14px; font-weight:700; color:rgba(190,235,160,.95); margin-bottom:8px; }
+.evo-shiny-txt { font-size:13px; font-weight:800; color:#f5d020; margin-bottom:8px; }
+.evo-btn { margin-top:10px; padding:14px 32px; border-radius:50px; border:none; background:var(--green-mid,#4a8a2e); color:#fff; font-family:inherit; font-weight:800; font-size:16px; cursor:pointer; box-shadow:0 4px 20px rgba(0,0,0,.35); }
+.evo-reduced .evo-old, .evo-reduced .evo-flash, .evo-reduced .evo-rays { display:none; }
+.evo-reduced .evo-new { opacity:1; animation:none; filter:none; }
+.evo-reduced .evo-after { animation:none; opacity:1; }
+/* Pohupování bez posunu do strany (greamIdle počítá s left:50% + translateX(-50%) v zahradě) */
+@keyframes greamBob { 0%, 100% { transform:translateY(0); } 50% { transform:translateY(-4px); } }
+.garden-arrow { position:absolute; top:0; bottom:0; z-index:9; width:44px; border:none; padding:0; background:none; opacity:0; pointer-events:none; transition:opacity .3s; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+.garden-arrow.left { left:0; background:linear-gradient(90deg, rgba(255,255,255,.35), transparent); }
+.garden-arrow.right { right:0; background:linear-gradient(270deg, rgba(255,255,255,.35), transparent); }
+.garden-arrow::after { content:''; position:absolute; top:50%; left:50%; width:30px; height:30px; margin:-15px 0 0 -15px; border-radius:50%; background:rgba(255,255,255,.92) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 5l7 7-7 7' fill='none' stroke='%232d5a1b' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/18px no-repeat; box-shadow:0 2px 8px rgba(0,0,0,.18); }
+.garden-arrow.left::after { transform:scaleX(-1); }
+.garden-arrow.show { opacity:1; pointer-events:auto; }
+.garden-arrow.show::after { animation:arrowNudge 2.4s ease-in-out 1s 2; }
+@keyframes arrowNudge { 50% { margin-left:-11px; } }
+.garden-arrow.left.show::after { animation:none; }
+
+/* ─── Záložka Já: jednotné dlaždice ─── */
+.hub-big, .hub-grid { width:100%; max-width:420px; display:grid; gap:10px; margin-bottom:10px; }
+.hub-big { grid-template-columns:1fr; }
+.hub-grid { grid-template-columns:1fr 1fr; }
+.hub-tile { display:flex; align-items:center; gap:12px; min-height:68px; padding:12px 14px; border-radius:16px; border:none; background:#fff; box-shadow:0 2px 12px rgba(0,0,0,0.08); cursor:pointer; text-align:left; font-family:inherit; color:var(--green-deep); }
+.hub-tile.big { min-height:78px; background:linear-gradient(135deg,#edfbe0,#c8f0a8); border:2px solid rgba(74,138,46,0.22); box-shadow:0 3px 14px rgba(74,138,46,0.18); }
+.hub-tile.big.shop { background:linear-gradient(135deg,#fff7e3,#ffe2a8); border-color:rgba(200,140,40,0.28); box-shadow:0 3px 14px rgba(200,140,40,0.18); }
+.hub-tile.wide { width:100%; max-width:420px; margin-bottom:10px; }
+.hub-ico { font-size:28px; flex-shrink:0; width:36px; text-align:center; }
+.hub-tile.big .hub-ico { font-size:34px; width:40px; }
+.hub-txt { flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; }
+.hub-txt b { font-size:15px; font-weight:900; }
+.hub-tile.big .hub-txt b { font-size:17px; }
+.hub-txt small { font-size:11px; font-weight:700; color:var(--green-mid); line-height:1.25; }
+.hub-arr { font-size:20px; color:var(--green-mid); flex-shrink:0; }
+
+/* ─── Obrazovka Greamíci: detail ─── */
+.gream-detail { background:#fff; border:2.5px solid; border-top:none; border-radius:0 0 18px 18px; margin-top:-16px; padding:22px 16px 14px; display:flex; flex-direction:column; gap:8px; box-shadow:0 4px 14px rgba(0,0,0,0.06); }
+.gd-hero { display:flex; justify-content:center; padding:4px 0 6px; background:radial-gradient(circle at 50% 70%, rgba(135,194,109,.25), transparent 65%); }
+.gd-hero canvas { width:132px; height:132px; image-rendering:pixelated; animation:greamBob 2.6s ease-in-out infinite; }
+.gd-hero canvas.shiny { animation:greamBob 2.6s ease-in-out infinite, greamShinyGlow 3s ease-in-out infinite; }
+.gd-shiny { text-align:center; font-size:12px; font-weight:800; color:#6a7fa8; }
+.gd-row { display:flex; gap:10px; font-size:12px; line-height:1.35; padding:6px 0; border-top:1px solid rgba(0,0,0,0.06); }
+.gd-row span { flex:0 0 34%; color:#8a9a80; font-weight:700; }
+.gd-row b { flex:1; color:var(--green-deep); font-weight:800; }
+.gd-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:6px; }
+.gd-actions button { flex:1; min-width:130px; padding:11px 12px; font-size:14px; }
+.gd-egg { width:72px; display:block; margin:0 auto; image-rendering:pixelated; animation:eggWobble 2.4s ease-in-out infinite; }
+.gd-hint { margin:0; text-align:center; font-size:13px; font-weight:700; color:var(--green-mid); }
+
+/* ─── Obchůdek: jednotná karta ve všech záložkách (stejná výška, obrázek, název, popis, stav) ─── */
+.shop-item { height:158px; justify-content:flex-start; font-family:inherit; cursor:pointer; overflow:hidden; }
+.shop-item .shop-thumb { width:100%; height:58px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.shop-item .shop-thumb canvas { width:56px; height:56px; image-rendering:pixelated; }
+.shop-item .shop-name { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; min-height:0; padding:0 4px; }
+.shop-item .shop-sub { font-size:10px; font-weight:700; color:var(--ink-soft); text-align:center; line-height:1.2; padding:0 4px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+.shop-item .shop-state { margin-top:auto; }
+.shop-item.locked { opacity:.7; } .shop-item.locked .shop-thumb { filter:grayscale(.6); }
+.shop-lock { font-size:28px; width:56px; height:56px; border-radius:50%; background:rgba(0,0,0,.06); display:flex; align-items:center; justify-content:center; }
+.shop-bgthumb { width:92%; height:56px; border-radius:10px; background-size:cover; background-position:center 70%; box-shadow:inset 0 0 0 1px rgba(0,0,0,.08); }
+.shop-seg { grid-column:1/-1; display:flex; gap:4px; background:rgba(0,0,0,0.05); border-radius:14px; padding:4px; }
+.shop-seg button { flex:1; padding:9px; border-radius:11px; border:none; font-family:inherit; font-weight:800; font-size:13px; cursor:pointer; background:transparent; color:#999; }
+.shop-seg button.on { background:#fff; color:var(--green-deep); box-shadow:0 1px 4px rgba(0,0,0,0.12); }
+
+/* ─── Odznaky (přepracováno 2026-10-16) ─── */
+.bdg-summary { width:100%; max-width:420px; display:flex; align-items:center; gap:14px; padding:14px 16px; margin-bottom:14px; border-radius:18px; background:linear-gradient(135deg,#fff7df,#ffe7a8); box-shadow:0 3px 12px rgba(200,140,40,.18); }
+.bdg-sum-num { font-size:30px; font-weight:900; color:#a0620a; line-height:1; } .bdg-sum-num small { font-size:15px; color:#c48d3a; }
+.bdg-sum-txt { flex:1; } .bdg-sum-txt > b { font-size:13px; color:#7a4a00; }
+.bdg-section { width:100%; max-width:420px; margin-bottom:16px; }
+.bdg-h { font-size:13px; font-weight:900; color:var(--green-deep); margin:0 4px 8px; }
+.bdg-worlds { display:flex; flex-direction:column; gap:8px; }
+.bdg-world { display:flex; gap:12px; align-items:center; background:#fff; border-radius:16px; padding:10px 12px; box-shadow:0 2px 10px rgba(0,0,0,.06); border-left:5px solid var(--wc); }
+.bdg-medal { position:relative; flex-shrink:0; width:58px; height:58px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:28px; background:radial-gradient(circle at 35% 30%, #fff, var(--wc-soft)); box-shadow:inset 0 0 0 4px var(--wc-mid), 0 3px 8px rgba(0,0,0,.12); }
+.bdg-medal.lvl0 { filter:saturate(.4); opacity:.75; }
+.bdg-medal.lvl5, .bdg-medal.lvl6 { box-shadow:inset 0 0 0 4px #f2c14e, 0 0 12px rgba(242,193,78,.7); }
+.bdg-medal i { position:absolute; right:-3px; bottom:-3px; width:22px; height:22px; border-radius:50%; background:var(--wc); color:#fff; font:900 11px/22px var(--font, sans-serif); text-align:center; font-style:normal; border:2px solid #fff; }
+.bdg-info { flex:1; min-width:0; }
+.bdg-name { font-size:14px; font-weight:900; color:var(--green-deep); } .bdg-name small { font-weight:800; color:var(--wc); font-size:12px; }
+.bdg-bar { height:7px; border-radius:7px; background:#eef0ea; overflow:hidden; margin:5px 0 3px; } .bdg-bar b { display:block; height:100%; border-radius:7px; background:var(--wc, #e0a030); }
+.bdg-next { font-size:11px; font-weight:700; color:#8a9a80; }
+.bdg-path { display:flex; gap:3px; margin-top:4px; } .bdg-path span { width:22px; height:22px; border-radius:50%; background:#f1f3ee; display:flex; align-items:center; justify-content:center; font-size:12px; color:#c5ccbf; } .bdg-path span.on { background:var(--wc-faint); }
+.bdg-medals { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.bdg-m { background:#fff; border-radius:14px; padding:10px 6px; display:flex; flex-direction:column; align-items:center; gap:3px; box-shadow:0 2px 8px rgba(0,0,0,.05); text-align:center; }
+.bdg-ring { width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:24px; background:#f1f3ee; }
+.bdg-m.on .bdg-ring { background:radial-gradient(circle at 35% 30%, #fffbe8, #ffd877); box-shadow:0 0 0 3px #f2c14e, 0 3px 8px rgba(200,140,40,.3); }
+.bdg-m b { font-size:12px; font-weight:900; color:var(--green-deep); } .bdg-m small { font-size:10px; font-weight:700; color:#8a9a80; line-height:1.2; }
+.bdg-m:not(.on) b { color:#7d8a74; } .bdg-m:not(.on) .bdg-ring { font-size:18px; }
+.bdg-medals.four { grid-template-columns:repeat(4,1fr); } .bdg-medals.four .bdg-ring { width:42px; height:42px; } .bdg-medals.four b { font-size:11px; }
+.av-opt img { width:100%; height:100%; object-fit:contain; display:block; }
+.avatar-row { display:grid !important; grid-template-columns:repeat(3, 58px); justify-content:center; gap:12px 16px !important; } .avatar-row .av-opt { width:58px; height:58px; }
+
+/* ─── Odpočet před soubojem (arena.js countdown) ─── */
+.ar-count { position:absolute; inset:0; z-index:6; display:flex; align-items:center; justify-content:center; pointer-events:none; font-weight:900; color:#fff; text-shadow:0 4px 0 #2d5a1b, 0 0 18px rgba(0,0,0,.35); }
+.ar-count.num { font-size:84px; }
+.ar-count.go { font-size:48px; color:#ffe27a; text-shadow:0 4px 0 #b0402a, 0 0 18px rgba(0,0,0,.35); }
+.ar-count.pop { animation:arCount .7s cubic-bezier(.2,.8,.3,1.2) both; }
+@keyframes arCount { 0% { transform:scale(2.2); opacity:0; } 25% { transform:scale(1); opacity:1; } 80% { opacity:1; } 100% { transform:scale(.85); opacity:0; } }
+.ar-stage.ar-intro .ar-me { animation:arSlideL .7s cubic-bezier(.2,.8,.3,1.1) both; }
+.ar-stage.ar-intro .ar-op { animation:arSlideR .7s cubic-bezier(.2,.8,.3,1.1) both; }
+@keyframes arSlideL { from { transform:translateX(-120%); } }
+@keyframes arSlideR { from { transform:translateX(120%); } }
+@media (prefers-reduced-motion: reduce) { .ar-count.pop, .ar-stage.ar-intro .ar-me, .ar-stage.ar-intro .ar-op { animation:none; } }

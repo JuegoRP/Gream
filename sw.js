@@ -1,13 +1,13 @@
 // ═══════════════════════════════════
 //  GREAM — sw.js  v3
-//  Strategy: network-first for app code (always fresh)
-//            cache-first for media (audio, images, leaflet, OSM tiles)
+//  Strategie (2026-10-16): vše vlastní cache-first v rámci VERZE (rychlé načítání), první stažení vždy s ověřením
+//  na serveru (cache:'no-cache'), takže nová verze nepřevezme staré soubory z HTTP mezipaměti prohlížeče.
+//  Navigace (index.html) network-first. PŘI KAŽDÉ ZMĚNĚ APLIKACE ZVÝŠIT VERSION.
 // ═══════════════════════════════════
 
-const VERSION = 'gream-v17';
+const VERSION = 'gream-v32';
 const STATIC_CACHE = `${VERSION}-static`;
-const TILES_CACHE  = `gream-tiles-v1`;
-const LEAFLET_CACHE = `gream-leaflet-v1`;
+const TILES_CACHE  = `gream-tiles-v2`;   // vektorové dlaždice z 3rstudio.eu/api/gream/tiles
 
 // ─── On install: pre-cache only known-stable files ───
 const STATIC_ASSETS = [
@@ -17,12 +17,13 @@ const STATIC_ASSETS = [
   'css/layout.css',
   'css/components.css',
   'css/themes.css',
+  'css/fonts.css',
 ];
 
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(STATIC_CACHE)
-      .then(c => c.addAll(STATIC_ASSETS).catch(err => console.warn('SW install partial:', err)))
+      .then(c => c.addAll(STATIC_ASSETS.map(u => new Request(u, { cache: 'reload' }))).catch(err => console.warn('SW install partial:', err)))
       .then(() => self.skipWaiting())
   );
 });
@@ -33,7 +34,7 @@ self.addEventListener('activate', e => {
     caches.keys().then(keys =>
       Promise.all(
         keys
-          .filter(k => k !== STATIC_CACHE && k !== TILES_CACHE && k !== LEAFLET_CACHE)
+          .filter(k => k !== STATIC_CACHE && k !== TILES_CACHE)
           .map(k => caches.delete(k))
       )
     ).then(() => self.clients.claim())
@@ -49,41 +50,18 @@ self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
   const url = new URL(e.request.url);
 
-  // External: Overpass = bypass (live data)
-  if (url.hostname.includes('overpass')) return;
-
-  // External: Leaflet from CDN — cache-first
-  if (url.hostname === 'unpkg.com' && url.pathname.includes('leaflet')) {
-    e.respondWith(cacheFirst(e.request, LEAFLET_CACHE));
-    return;
-  }
-
-  // External: map tiles (OSM + CartoDB basemaps) — cache-first for fast, judder-free map
-  if (url.hostname.includes('tile.openstreetmap.org') || url.hostname.includes('basemaps.cartocdn.com')) {
+  // Vlastní server: místa v okolí = vždy živě (POST se sem stejně nedostane); dlaždice mapy = cache-first
+  if (url.hostname === '3rstudio.eu' && url.pathname.startsWith('/api/gream/tiles/')) {
     e.respondWith(cacheFirst(e.request, TILES_CACHE));
     return;
   }
+  if (url.hostname !== self.location.hostname) return;   // nic jiného cizího aplikace nenačítá
 
-  // External: Google Fonts — cache-first
-  if (url.hostname.includes('fonts.googleapis.com') || url.hostname.includes('fonts.gstatic.com')) {
-    e.respondWith(cacheFirst(e.request, STATIC_CACHE));
-    return;
-  }
-
-  // Local: JS modules / screens / json → network-first (always fresh code)
-  if (url.pathname.match(/\.(js|json)$/) || url.pathname.startsWith('/screens/')) {
-    e.respondWith(networkFirst(e.request));
-    return;
-  }
-
-  // Local: images, audio, css → cache-first
-  if (url.pathname.match(/\.(png|jpg|jpeg|svg|webp|gif|wav|mp3|css)$/)) {
-    e.respondWith(cacheFirst(e.request, STATIC_CACHE));
-    return;
-  }
-
-  // Default: network-first
-  e.respondWith(networkFirst(e.request));
+  // Vlastní soubory: z mezipaměti této verze (rychlý start bez desítek dotazů na server); co v ní ještě není,
+  // stáhne se s ověřením a uloží. Nová verze (VERSION) = nová mezipaměť → po aktualizaci vše čerstvé.
+  // Výjimka: index.html / navigace – network-first, aby se nová verze SW vůbec dozvěděla.
+  if (e.request.mode === 'navigate') { e.respondWith(networkFirst(e.request)); return; }
+  e.respondWith(cacheFirst(e.request, STATIC_CACHE));
 });
 
 // ─── Strategies ───
@@ -92,7 +70,7 @@ async function cacheFirst(req, cacheName) {
   const cached = await cache.match(req);
   if (cached) return cached;
   try {
-    const res = await fetch(req);
+    const res = await fetch(req, { cache: 'no-cache' });   // první stažení v této verzi vždy ověřit na serveru
     if (res.ok && res.type !== 'opaque') {
       cache.put(req, res.clone()).catch(() => {});
     }
@@ -104,7 +82,7 @@ async function cacheFirst(req, cacheName) {
 
 async function networkFirst(req) {
   try {
-    const res = await fetch(req);
+    const res = await fetch(req, { cache: 'no-cache' });
     // Cache successful responses for offline fallback
     if (res.ok) {
       const cache = await caches.open(STATIC_CACHE);

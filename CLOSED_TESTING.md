@@ -19,13 +19,15 @@ Balíček aplikace: `com.gream.app` · Opt-in URL testerů (po publikaci tracku)
 3. **Testing → Closed testing → Create track** (nebo použij výchozí „Alpha").
 4. **Testers → Create email list** → vlož ≥12 e-mailů (Gmail účty testerů). Ulož.
    - Tip: nahraj rovnou **15–16 lidí**, ať máš rezervu, kdyby se dva nepřihlásili.
-5. **Create new release** → nahraj **signed AAB** (`npx cap build android` / Android
-   Studio → Generate Signed Bundle; **keystore ulož na 2 místa!**). versionCode = 1.
+5. **Create new release** → Play nabídne **Play App Signing** (přijmout – Google drží
+   podpisový klíč aplikace, my jen upload klíč) → nahraj **`gream-1.0.0.aab`** z GDrive
+   `Gream/vydani/1.0.0/` (sestavuje server, viz `CAPACITOR.md`). versionCode = 1.
+   Obrázky do obchodu jsou tamtéž ve složce `obchod/`.
 6. Release name + krátký changelog → **Review release → Start rollout to Closed testing**.
 7. Po publikaci se aktivuje **opt-in URL** výše — tu pošli testerům.
 8. **Den 0 = kdy jsou testeři opt-in a test běží.** Od té chvíle počítej 14 dní.
 
-> ⏱️ Dřív spustíš = dřív produkce. Není důvod čekat; build je hotový.
+> ⏱️ Dřív spustíš = dřív produkce. Balíček 1.0.0 je sestavený a otestovaný v emulátoru Androidu 16 (15. 10. 2026).
 
 ---
 

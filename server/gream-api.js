@@ -9,9 +9,14 @@
 //   GET  /battle/leaderboard?difficulty=medium                 -> [{name, rating, wins}]
 //   POST /poi/done        {poiId}                              -> {count}
 //   GET  /poi/counts?ids=a,b,c                                 -> {a:1,b:0,...}
+//   POST /poi             {lat, lon}  (≈500 m, zaokrouhluje i server) -> Overpass JSON {elements}
+//   GET  /tiles/{z}/{x}/{y}.pbf  vektorové dlaždice mapy (OpenFreeMap) přes cache – cizí server hráče nevidí
+//
+// Soukromí: nic z /poi ani /tiles se neukládá s IP ani polohou hráče (jen cache podle buňky/dlaždice).
 const http = require('http');
 const fs   = require('fs');
 const path = require('path');
+const zlib = require('zlib');
 
 const PORT     = 8092;
 const DATA_DIR = process.env.GREAM_DATA_DIR || '/data';
@@ -21,6 +26,10 @@ const F = (n) => path.join(DATA_DIR, n);
 function loadJSON(file, fallback) { try { return JSON.parse(fs.readFileSync(file, 'utf8')); } catch { return fallback; } }
 const reports = loadJSON(F('reports.json'), []);
 const battle  = loadJSON(F('battle.json'), { players: {}, runs: {} });     // runs: {diff: [{pid,name,score,rating,ts}]}
+const league  = loadJSON(F('league.json'), { week: null, tier: {}, pts: {}, last: {} });   // týdenní ligy (1.1)
+// Bitevní místa (1.1): kdo místo „drží“ – BEZ přezdívky a ID hráče (jen greamík, skóre, náhodný žeton z telefonu),
+// aby nevznikal záznam o tom, kde kdo byl. Platnost 14 dní.
+const spots   = loadJSON(F('spots.json'), {});
 const poi     = loadJSON(F('poi.json'), {});
 const daily   = loadJSON(F('daily.json'), {});                             // { 'YYYY-MM-DD': { pid: {name,score,ts} } }
 const rank    = loadJSON(F('rank.json'), {});                              // { pid: {name,avatar,score,tasks,badges,streak,greamStage,ts} }
@@ -49,7 +58,14 @@ function persist(name, file, obj) {
 }
 
 const DIFFS = ['easy','medium','hard','extreme'];
-const clampName = (s) => String(s || 'Hráč').slice(0, 20).replace(/[<>]/g, '');
+// Přezdívky vidí ostatní (i děti) → filtr i na serveru, aplikace se dá obejít.
+const BAD = ['kurv', 'pica', 'picus', 'picovin', 'kokot', 'curak', 'debil', 'zmrd', 'hovn', 'prdel', 'sukat', 'buzn', 'kreten', 'idiot', 'cikan', 'negr', 'nigg',
+  'fuck', 'shit', 'bitch', 'cunt', 'dick', 'cock', 'pussy', 'whore', 'slut', 'fagg', 'nazi', 'hitler', 'porn', 'sex', 'penis', 'vagin', 'rape', 'zabij'];
+const norm = (s) => String(s).toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
+  .replace(/[0@]/g, 'o').replace(/[1!|]/g, 'i').replace(/3/g, 'e').replace(/4/g, 'a').replace(/5|\$/g, 's').replace(/7/g, 't').replace(/[^a-z]/g, '');
+const BADN = [...new Set(BAD.map(norm))].filter(w => w.length >= 3);
+const isBadName = (s) => { const n = norm(s); return BADN.some(w => n.includes(w)); };
+const clampName = (s) => { const n = String(s || 'Hráč').slice(0, 20).replace(/[<>]/g, '').trim() || 'Hráč'; return isBadName(n) ? 'Hráč' : n; };
 const MAX_REPORTS = 8000;
 const RUNS_PER_DIFF = 300;      // pool of recent runs used as async opponents
 
@@ -61,19 +77,84 @@ function corsHeaders(res) {
 }
 function send(res, code, obj) { res.writeHead(code); res.end(JSON.stringify(obj)); }
 
-function pickOpponent(diff, rating) {
-  const pool = (battle.runs[diff] || []).filter(r => r.rating != null);
+const ARCHES = ['lilek', 'jiskra', 'kamen', 'srodik', 'vlnka', 'atlas', 'tlapka', 'kanka', 'poctik', 'hrejik', 'noticka', 'mapka',
+  'hvezdik', 'mnamka', 'bajka', 'ahojik', 'banka', 'hadak', 'mozik', 'zdravik', 'klapka', 'maska', 'micek', 'lvicek'];   // 24 greamíků (1.1)
+// Nahrávka souboje (1.1): greamík + odpovědi a časy po kolech → přehraje se soupeři
+function cleanAnswers(a) {
+  if (!Array.isArray(a)) return null;
+  const out = a.slice(0, 10).map(x => ({ ok: !!(x && x.ok), ms: Math.max(300, Math.min(30000, Math.round(Number(x && x.ms) || 0))) }));
+  return out.length >= 5 ? out : null;
+}
+function pickOpponent(diff, rating, pid) {
+  const pool = (battle.runs[diff] || []).filter(r => r.rating != null && (!pid || r.pid !== pid));
   if (pool.length) {
     // closest by rating, small randomness so it's not always the same
     pool.sort((a, b) => Math.abs(a.rating - rating) - Math.abs(b.rating - rating));
     const near = pool.slice(0, Math.min(8, pool.length));
     const o = near[Math.floor(Math.random() * near.length)];
-    return { name: o.name, score: o.score, rating: o.rating, bot: false };
+    return { name: o.name, score: o.score, rating: o.rating, bot: false, arch: o.arch, stage: o.stage, acc: o.acc || null, answers: o.answers };
   }
   // No real opponent yet → generated bot scaled by difficulty
   const acc = { easy:0.55, medium:0.65, hard:0.72, extreme:0.78 }[diff] || 0.65;
   let score = 0; for (let i = 0; i < 10; i++) if (Math.random() < acc) score++;
   return { name: 'Gream Bot', score, rating: 1000, bot: true };
+}
+
+// ─── Týdenní ligy: body za souboje, na konci týdne postup / sestup ───
+const TIERS = ['bronze', 'silver', 'gold', 'diamond'];
+const PROMOTE = 0.3, DEMOTE = 0.2;
+function isoWeek(d = new Date()) {
+  const t = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()));
+  const day = t.getUTCDay() || 7; t.setUTCDate(t.getUTCDate() + 4 - day);
+  const y = t.getUTCFullYear(), w = Math.ceil(((t - Date.UTC(y, 0, 1)) / 864e5 + 1) / 7);
+  return `${y}-W${String(w).padStart(2, '0')}`;
+}
+function weekEnds() {   // pondělí 00:00 UTC příštího týdne
+  const d = new Date(); const day = d.getUTCDay() || 7;
+  return Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() + 8 - day);
+}
+function rollLeague() {
+  const wk = isoWeek();
+  if (league.week === wk) return;
+  if (league.week) {   // vyhodnotit uplynulý týden po ligách
+    league.last = {};
+    const before = { ...league.tier };   // vyhodnotit podle lig na začátku týdne (postoupivší se nepočítají dvakrát)
+    for (const tier of TIERS) {
+      const rows = Object.entries(league.pts).filter(([pid]) => (before[pid] || 'bronze') === tier).sort((a, b) => b[1].pts - a[1].pts);
+      const n = rows.length, up = Math.floor(n * PROMOTE), down = Math.floor(n * DEMOTE);
+      rows.forEach(([pid], i) => {
+        const ti = TIERS.indexOf(tier);
+        let to = tier;
+        if (i < up && ti < TIERS.length - 1) to = TIERS[ti + 1];
+        else if (i >= n - down && ti > 0 && n >= 5) to = TIERS[ti - 1];
+        league.tier[pid] = to;
+        league.last[pid] = { week: league.week, from: tier, to, rank: i + 1, of: n };
+      });
+    }
+  }
+  league.week = wk; league.pts = {};
+  persist('league', F('league.json'), league);
+}
+function leagueAdd(pid, name, add) {
+  rollLeague();
+  const row = league.pts[pid] || { name, pts: 0, games: 0 };
+  row.name = name; row.pts += add; row.games++;
+  league.pts[pid] = row;
+  persist('league', F('league.json'), league);
+}
+function leagueView(pid) {
+  rollLeague();
+  const tier = league.tier[pid] || 'bronze';
+  const rows = Object.entries(league.pts).filter(([id]) => (league.tier[id] || 'bronze') === tier).sort((a, b) => b[1].pts - a[1].pts);
+  const n = rows.length;
+  const me = rows.findIndex(([id]) => id === pid);
+  return {
+    week: league.week, endsAt: weekEnds(), tier, players: n,
+    promote: Math.floor(n * PROMOTE), demote: n >= 5 ? Math.floor(n * DEMOTE) : 0,
+    top: rows.slice(0, 20).map(([id, r], i) => ({ rank: i + 1, name: r.name, pts: r.pts, me: id === pid })),
+    me: me >= 0 ? { rank: me + 1, pts: rows[me][1].pts } : null,
+    last: league.last[pid] || null,
+  };
 }
 
 function updateRating(cur, oppRating, win) {
@@ -98,7 +179,7 @@ const server = http.createServer((req, res) => {
   // Rate limit writes (anti-spam / anti-inflation).
   if (req.method === 'POST') {
     const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket.remoteAddress || 'x';
-    if (rateLimited(ip)) return send(res, 429, { error: 'rate-limited' });
+    if (!process.env.GREAM_RL_OFF && rateLimited(ip)) return send(res, 429, { error: 'rate-limited' });   // GREAM_RL_OFF jen pro lokální testy
   }
 
   // ─── Daily round: everyone plays the same date-seeded set; ranked per day ───
@@ -150,7 +231,7 @@ const server = http.createServer((req, res) => {
     if (!d) return send(res, 400, { error: 'bad-json' });
     const diff = DIFFS.includes(d.difficulty) ? d.difficulty : 'medium';
     const rating = Number(d.rating) || 1000;
-    return send(res, 200, pickOpponent(diff, rating));
+    return send(res, 200, pickOpponent(diff, rating, d.pid ? String(d.pid).slice(0, 40) : null));
   });
 
   if (req.method === 'POST' && p === '/battle/result') return readBody(req, (d) => {
@@ -166,14 +247,41 @@ const server = http.createServer((req, res) => {
     if (win) pl.wins++; else pl.losses++;
     battle.players[d.pid] = pl;
     // store this run as a future opponent
-    (battle.runs[diff] = battle.runs[diff] || []).push({ pid: d.pid, name, score, rating: pl.rating, ts: Date.now() });
+    const run = { pid: d.pid, name, score, rating: pl.rating, ts: Date.now() };
+    const answers = cleanAnswers(d.answers);
+    if (answers && ARCHES.includes(d.arch)) Object.assign(run, { arch: d.arch, stage: Math.max(2, Math.min(4, Number(d.stage) || 2)), answers, acc: /^acc_[a-z]{2,12}$/.test(d.acc || '') ? d.acc : null });
+    (battle.runs[diff] = battle.runs[diff] || []).push(run);
     if (battle.runs[diff].length > RUNS_PER_DIFF) battle.runs[diff].splice(0, battle.runs[diff].length - RUNS_PER_DIFF);
     persist('battle', F('battle.json'), battle);
+    leagueAdd(String(d.pid).slice(0, 40), name, (win ? 3 : 1) + (d.ko ? 1 : 0));
     // rank by rating
     const board = Object.values(battle.players).sort((a, b) => b.rating - a.rating);
     const rank = board.findIndex(x => x.name === name && x.rating === pl.rating) + 1;
     return send(res, 200, { rating: pl.rating, rank: rank || board.length, wins: pl.wins });
   });
+
+  if (req.method === 'GET' && p === '/spots') {
+    const ids = String(u.searchParams.get('ids') || '').split(',').map(x => x.slice(0, 40)).filter(Boolean).slice(0, 60);
+    const now = Date.now(), out = {};
+    for (const id of ids) { const h = spots[id]; if (h && now - h.ts < 14 * 864e5) out[id] = { arch: h.arch, stage: h.stage, acc: h.acc, score: h.score, tok: h.tok }; }
+    return send(res, 200, out);
+  }
+  if (req.method === 'POST' && p === '/spots/claim') return readBody(req, (d) => {
+    if (!d || !d.id || !ARCHES.includes(d.arch)) return send(res, 400, { error: 'bad' });
+    const id = String(d.id).slice(0, 40), score = Math.max(0, Math.min(200, Math.round(Number(d.score) || 0)));
+    const cur = spots[id], now = Date.now();
+    const free = !cur || now - cur.ts >= 14 * 864e5;
+    if (!free && score <= cur.score) return send(res, 200, { held: false, best: cur.score });
+    spots[id] = { arch: d.arch, stage: Math.max(2, Math.min(4, Number(d.stage) || 2)), acc: /^acc_[a-z]{2,12}$/.test(d.acc || '') ? d.acc : null,
+      score, tok: String(d.tok || '').replace(/[^a-z0-9]/gi, '').slice(0, 16), ts: now };
+    persist('spots', F('spots.json'), spots);
+    return send(res, 200, { held: true, best: score });
+  });
+
+  if (req.method === 'GET' && p === '/league') {
+    const pid = String(u.searchParams.get('pid') || '').slice(0, 40);
+    return send(res, 200, leagueView(pid));
+  }
 
   if (req.method === 'GET' && p === '/battle/leaderboard') {
     const board = Object.values(battle.players)
@@ -227,7 +335,81 @@ const server = http.createServer((req, res) => {
     return send(res, 200, board);
   }
 
+  // ─── Místa v okolí: klient posílá polohu zaokrouhlenou na ≈500 m, server zaokrouhlí znovu ───
+  if (req.method === 'POST' && p === '/poi') return readBody(req, async (d) => {
+    const lat = Number(d && d.lat), lon = Number(d && d.lon);
+    if (!isFinite(lat) || !isFinite(lon) || Math.abs(lat) > 85 || Math.abs(lon) > 180) return send(res, 400, { error: 'bad' });
+    try { return send(res, 200, await poiCell(roundCoord(lat), roundCoord(lon))); }
+    catch { return send(res, 502, { error: 'overpass-unavailable' }); }
+  });
+
+  // ─── Vektorové dlaždice mapy (OpenFreeMap) přes cache ───
+  const tm = p.match(/^\/tiles\/(\d{1,2})\/(\d{1,6})\/(\d{1,6})\.pbf$/);
+  if (req.method === 'GET' && tm) {
+    const [z, x, y] = tm.slice(1).map(Number);
+    if (z > TILE_MAX_Z || x >= 2 ** z || y >= 2 ** z) return send(res, 404, { error: 'not-found' });
+    return tile(z, x, y).then((gz) => {
+      res.setHeader('Content-Type', 'application/x-protobuf');
+      res.setHeader('Cache-Control', 'public, max-age=604800');
+      if (!gz.length) { res.writeHead(204); return res.end(); }
+      // dlaždice držíme gzipované (≈5× menší); prohlížeč/MapLibre je rozbalí sám
+      if (/\bgzip\b/.test(req.headers['accept-encoding'] || '')) { res.setHeader('Content-Encoding', 'gzip'); res.writeHead(200); return res.end(gz); }
+      res.writeHead(200); res.end(zlib.gunzipSync(gz));
+    }).catch(() => send(res, 502, { error: 'tiles-unavailable' }));
+  }
+
   return send(res, 404, { error: 'not-found' });
 });
+
+// ─── Místa (Overpass) – cache po buňkách ≈500 m na 24 h, bez vazby na hráče ───
+const roundCoord = (v) => Math.round(v / 0.005) * 0.005;
+const POI_TAGS = ['leisure=park', 'leisure=garden', 'leisure=nature_reserve', 'leisure=playground', 'natural=tree', 'natural=spring', 'natural=peak', 'natural=wood', 'natural=water',
+  'historic=monument', 'historic=memorial', 'historic=castle', 'historic=ruins', 'historic=wayside_cross', 'historic=boundary_stone', 'amenity=place_of_worship', 'tourism=attraction', 'tourism=viewpoint',
+  'amenity=library', 'tourism=museum', 'amenity=planetarium', 'amenity=school', 'amenity=university', 'amenity=post_office', 'information=board', 'information=map',
+  'tourism=artwork', 'tourism=gallery', 'amenity=theatre', 'amenity=arts_centre', 'amenity=cinema', 'amenity=music_venue',
+  'amenity=fountain', 'tourism=information', 'amenity=clock', 'amenity=telephone', 'man_made=tower',
+  'amenity=bench', 'amenity=social_centre', 'amenity=community_centre', 'amenity=cafe', 'leisure=sports_centre', 'amenity=hospital', 'amenity=pub', 'amenity=bar'];
+const OVERPASS = ['https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter', 'https://overpass.openstreetmap.fr/api/interpreter'];
+const poiCache = new Map(); // klíč buňky → { t, data }
+async function poiCell(lat, lon) {
+  const key = `${lat.toFixed(3)},${lon.toFixed(3)}`;
+  const c = poiCache.get(key);
+  if (c && Date.now() - c.t < 24 * 3600e3) return c.data;
+  const parts = POI_TAGS.map(t => { const [k, v] = t.split('='); return `node["${k}"="${v}"](around:2200,${lat},${lon});way["${k}"="${v}"](around:2200,${lat},${lon});`; }).join('');
+  const body = 'data=' + encodeURIComponent(`[out:json][timeout:20];(${parts});out center 120;`);
+  const one = async (url) => {
+    const r = await fetch(url, { method: 'POST', body, headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'User-Agent': 'Gream/1.0 (3rstudio.eu)' }, signal: AbortSignal.timeout(15000) });
+    if (!r.ok) throw new Error('overpass ' + r.status);
+    return r.json();
+  };
+  const json = await Promise.any(OVERPASS.map(one));
+  const data = { elements: (json.elements || []).map(e => ({ id: e.id, lat: e.lat, lon: e.lon, center: e.center, tags: e.tags })) };
+  poiCache.set(key, { t: Date.now(), data });
+  if (poiCache.size > 3000) poiCache.delete(poiCache.keys().next().value);
+  return data;
+}
+
+// ─── Dlaždice: OpenFreeMap (zdarma i komerčně, data © OpenStreetMap) – cache na disku 30 dní ───
+const TILE_MAX_Z = 14;
+const TILE_DIR = path.join(DATA_DIR, 'tiles');
+let tileTpl = null, tileTplAt = 0;
+async function tileTemplate() {
+  if (tileTpl && Date.now() - tileTplAt < 24 * 3600e3) return tileTpl;
+  const r = await fetch('https://tiles.openfreemap.org/planet', { signal: AbortSignal.timeout(10000) });
+  const j = await r.json();
+  tileTpl = j.tiles[0]; tileTplAt = Date.now();
+  return tileTpl;
+}
+async function tile(z, x, y) {
+  const f = path.join(TILE_DIR, String(z), String(x), `${y}.pbf.gz`);
+  try { const st = fs.statSync(f); if (Date.now() - st.mtimeMs < 30 * 86400e3) return fs.readFileSync(f); } catch { /* není v cache */ }
+  const url = (await tileTemplate()).replace('{z}', z).replace('{x}', x).replace('{y}', y);
+  const r = await fetch(url, { signal: AbortSignal.timeout(15000), headers: { 'User-Agent': 'Gream/1.0 (3rstudio.eu)' } });
+  if (r.status === 404 || r.status === 204) return Buffer.alloc(0);
+  if (!r.ok) throw new Error('tile ' + r.status);
+  const buf = zlib.gzipSync(Buffer.from(await r.arrayBuffer()), { level: 9 });
+  try { fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f + '.tmp', buf); fs.renameSync(f + '.tmp', f); } catch { /* cache je bonus */ }
+  return buf;
+}
 
 server.listen(PORT, () => console.log('gream-api on', PORT));

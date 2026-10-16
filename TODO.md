@@ -5,6 +5,51 @@
 
 ---
 
+## Verze 1.1 (větev `release-1.1`, čeká na schválení Romana)
+- [x] Greamíci: nové stádium 4 všech šesti ve stylu stádií 2–3, původní v `img/greamici/puvodni/` (2026-10-15)
+- [x] Aréna soubojů: životy, energie, speciály, animace útoků; balanc simulací v `npm test` (2026-10-15)
+- [x] Rodinný souboj na jednom telefonu, týdenní ligy, bitevní místa (anonymní držitel) (2026-10-15)
+- [x] Obchůdek: doplňky viditelné na greamíkovi, výzdoba zahrady (2026-10-15)
+- [x] Mapa: výprava dne, vzácné místo, prozkoumané okolí (jen v telefonu) (2026-10-15)
+- [x] Pro rodiče: brána před odkazy ven, denní čas hraní, přehled pokroku (2026-10-15)
+- [x] Kontrola pravdivosti všech 2 124 otázek (CZ i EN) + ruční posouzení nálezů, opravy (2026-10-15)
+- [x] Nové druhy: Pravda/mýtus, Odhadni, Časová osa, Co sem nepatří, Kde to je? (mapa), tematické balíčky – 198 + 33 otázek (2026-10-15)
+- [x] „Víš, že…?“ zajímavosti (ověřené) po odpovědi i po chybě (2026-10-15)
+- [x] OPRAVA: správná odpověď byla na obrazovce výzvy vždy první (2026-10-15)
+- [x] Nastavení: obtížnost zpět v nastavení, přeskupení (2026-10-15)
+- [x] Zásady na webu: ligy a bitevní místa – PR 3Rstudio.eu#3 (čeká na schválení) (2026-10-15)
+- [x] Balíčky: výběr tématu v souboji (i rodinném); film a hudba 160, věda 163, sport 151, historie 151, jídlo 162, Česko 132 otázek (2026-10-15)
+- [ ] Balíček Česko doplnit na 150+
+- [x] Mapa: body drží na místě při zoomu (oprava i ve větvích 1.0) (2026-10-15)
+- [x] Zářivé greamíky přepracovány: jiné barvy (shiny.js) + stříbrné jiskření, odlišné od Hvězdné záře; viditelné i v aréně (2026-10-16)
+- [x] Obchůdek: lišta záložek se nesmršťuje a drží nahoře (2026-10-16)
+- [x] Animace vývoje 2→3 a 3→4; galerie `tools/greamici.html` (stádia, doplňky, zahrada, velké chvíle, aréna) (2026-10-16)
+- [x] Doplňky ZRUŠENY (nešly napasovat na 12 greamíků × 3 stádia), koupené → semínka zpět (2026-10-16)
+- [x] Audit 1.1 (audit/AUDIT.md): mezipaměť SW/náhledu, galerie v Safari, server ARCHES, toast, color-mix – opraveno (2026-10-16)
+- [x] Opraveny průhledné díry v obrázcích (Kámen 4 tvář, Atlas 4 zorničky, odlesky očí) – scripts/fix-sprite-holes.py (2026-10-16)
+- [x] Zahrada: 5. a 6. greamík už se nekreslí přes sebe; košíček na vejce (stálé místo líhnutí); rodný list (místo a datum vylíhnutí) (2026-10-16)
+- [x] Ekonomika: ceny obchodu ×2, bonus za odznak 10→6, plná odměna jen za 5 výher soubojů denně (2026-10-16)
+- [x] Boti v souboji: síla podle hráče (klouzavý průměr úspěšnosti), přezdívky „🤖 Zvídavý Brouk“ (2026-10-16)
+- [x] Podkategorie otázek (32, jen klasifikace): content/subcats-*, js/subcats.js, kontrola v npm test (2026-10-16)
+- [x] Souboj „Účinné!“: poloviční bonus světa přes podkategorii, balanc ověřen (N=20000), Objetí 14 (2026-10-16)
+- [x] Noví greamíci podle podkategorií: Tlapka (zvířata), Kaňka (pravopis), Počtík (počítání), Hřejík (emoce), Notička (hudba), Mapka (zeměpis) – líhnou se podle odpovědí vajíčka (≥ 40 % odpovědí ve světě z jejich podkategorie), vajíčko přitahuje otázky svého tématu, vlastní speciály, balanc 12 greamíků ověřen (2026-10-16)
+- [x] Hlasy greamíků výš, nové odznaky, menu hudba, kreslené postavičky (avatary) (2026-10-16)
+- [x] Záložka Já přeskládaná: Greamíci (vlastní obrazovka s detailem) a Obchůdek zvlášť, Statistiky viditelně vedle Odznaků (2026-10-16)
+- [x] Obchůdek: jednotná karta ve všech záložkách; pozadí předělána na panoramata ve stylu zahrady (+ Zimní zahrada, Zahrada u moře) (2026-10-16)
+- [x] Vajíčko sedí v košíčku viditelně (2026-10-16)
+- [x] Odpočet před soubojem (soupeři najedou, 3 · 2 · 1 · Souboj!) (2026-10-16)
+- [x] Načítání: úvodní obrazovka do načtení obrázků zahrady, soubory z mezipaměti verze (sw.js) (2026-10-16)
+- [x] Opravy obrázků: Hvězdík 4, Lilek 2, Ahojík 3, Maska 2, Míček 4, Lvíček 2; duha z výzdoby zrušena (semínka zpět) (2026-10-16)
+- [x] Zahrada: výběr greamíka bez problikání, předměty blokují celou výšku (greamíci je obcházejí) (2026-10-16)
+- [ ] Otázky ze serveru (balíčky obsahu bez nové verze aplikace) – navrženo, čeká na Romana
+- [ ] Sloučit release-1.1 do main (PR Gream#4, 3Rstudio.eu#3, 3r-control#2) – Roman schválil, sloučení musí klepnout sám (pojistka Claude Code)
+- [x] 24 greamíků podle témat (4 v každém světě, každý své téma) – líhnutí podle nejčastějšího tématu odpovědí, souboj losuje rovnoměrně ze 24 skupin, balanc N=20000 48,9–51,7 % (2026-10-16)
+- [x] +419 otázek (cs+en) pro slabé skupiny: knihy a pohádky, cizí jazyky, hádanky a řady, mysl, zdraví a bezpečí, vztahy, divadlo a stavby – ručně posouzeno, 70 vyřazeno (2026-10-16)
+- [x] OPRAVA: míchání možností bylo zaujaté – správná odpověď na 1. místě ve 44 % místo 33 % (js/shuffle.js) (2026-10-16)
+- [x] Zahrada: předměty mimo cestičku, obcházení, lavička zepředu, pozice drží; jedno vajíčko v košíčku (2026-10-16)
+- [x] Zahrada 2D: posuvné panorama, greamíci chodí a používají předměty (lavička, jezírko, hříbek, budka, záhonek, lucerna, košíček), potkávají se; js/garden-life.js (2026-10-16)
+- [ ] Rodiště na mapě (špendlík), přihlášení Google Play Games (úspěchy) – po vydání 1.0
+
 ## Před vydáním (cíl Q4 2026 — Google Play + App Store)
 
 ### Platformní opravy
@@ -16,10 +61,10 @@
 - [~] Vlastní artworky — greamíci + vejce + pozadí + ikony hotové (2026-07-01), zbývá: Kenney placeholdery na mapě, barevnější vlnka, stage-varianty gramíků
 
 ### Build a distribuce
-- [ ] Capacitor build iOS + Android (postup: CAPACITOR.md)
+- [x] Capacitor build Android (2026-10-15) – Capacitor 8, API 36, AAB na GDrive Gream/vydani/1.0.0; iOS čeká
 - [ ] Google Play testing track (interní testování)
-- [ ] Store assety: screenshoty, popisky (EN texty hotové v i18n.js — využít)
-- [ ] **Privacy policy URL** — Google Play i App Store ji u dětských aplikací vyžadují povinně; obsah je vlastně hotový v onboarding v4 textech, stačí publikovat stránku (např. 3rstudio.eu/gream-privacy)
+- [x] Store assety (2026-10-15): ikona 512, úvodní grafika, snímky CZ/EN v store/ a na GDrive; popisky v STORE_LISTING.md
+- [x] Hotovo (2026-10-15, PR 3Rstudio.eu#2) **Privacy policy URL** — Google Play i App Store ji u dětských aplikací vyžadují povinně; obsah je vlastně hotový v onboarding v4 textech, stačí publikovat stránku (např. 3rstudio.eu/gream-privacy)
 - [ ] Ověřit „Kenney placeholdery na mapě" — v kódu (js/mapview.js) žádná reference na Kenney není; buď už vyřešeno a položka je zastaralá, nebo se assety jmenují jinak
 
 ---

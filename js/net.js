@@ -35,8 +35,11 @@ export function challengeId(world, difficulty, enText) {
 export const Net = {
   base: BASE,
   report:         (data)              => req('POST', '/report', data),
-  battleOpponent: (difficulty, rating) => req('POST', '/battle/opponent', { difficulty, rating }),
+  battleOpponent: (difficulty, rating, pid) => req('POST', '/battle/opponent', { difficulty, rating, pid }),
   battleResult:   (data)              => req('POST', '/battle/result', data),
+  spots:          (ids)               => req('GET', '/spots?ids=' + encodeURIComponent(ids.join(','))),
+  spotClaim:      (data)              => req('POST', '/spots/claim', data),
+  league:         (pid)               => req('GET', '/league?pid=' + encodeURIComponent(pid || '')),
   leaderboard:    (difficulty)        => req('GET', '/battle/leaderboard' + (difficulty ? `?difficulty=${encodeURIComponent(difficulty)}` : '')),
   dailyResult:      (data)            => req('POST', '/battle/daily/result', data),
   dailyLeaderboard: (date)            => req('GET', '/battle/daily/leaderboard?date=' + encodeURIComponent(date)),

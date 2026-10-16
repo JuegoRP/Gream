@@ -1,7 +1,8 @@
 # Gream — Store Listing podklady (Google Play + App Store)
 
 Hotové texty a přesné odpovědi do formulářů. Vše odpovídá REÁLNému chování hry
-(souboje/leaderboard posílají přezdívku+skóre; GPS a fotky NIKDY neopouští zařízení).
+(souboje/leaderboard posílají přezdívku+skóre; kvůli mapě jde na náš server přibližná poloha ≈ 500 m,
+přesná poloha a fotky NIKDY neopouští zařízení). Aktualizováno 2026-10-15 (verze 1.0).
 Privacy policy URL do listingu: **https://3rstudio.eu/gream-privacy.html**
 
 ---
@@ -17,7 +18,7 @@ Privacy policy URL do listingu: **https://3rstudio.eu/gream-privacy.html**
 | Web | https://3rstudio.eu/gream.html |
 | Privacy Policy | https://3rstudio.eu/gream-privacy.html |
 | Kontakt | romanpavlorek@gmail.com |
-| In-app purchases | ANO — **Premium 69 Kč/měs · 599 Kč/rok** (7 dní trial). Odemyká: neomezené úkoly (free = 2 doma/den + 6 celkem/den), extrémní obtížnost, souboje. Product IDy: `gream_premium_monthly`, `gream_premium_yearly` |
+| In-app purchases | **NE ve verzi 1.0 (hra zdarma).** Premium (69 Kč/měs · 599 Kč/rok, product IDy `gream_premium_monthly`, `gream_premium_yearly`) přijde v aktualizaci přes Google Play Billing za rodičovskou bránou. |
 | Reklamy | NE |
 
 ---
@@ -43,9 +44,9 @@ Za plnění výzev líhneš vajíčka a vychováváš svoje greamíky. Vyvíjej�
 zlepšuješ — a v soubojích ti dávají bonusový čas ve svém oboru.
 
 🗺️ OBJEVUJ SVĚT VENKU
-Volitelné venkovní výzvy tě pošlou do parku, na hřiště nebo za roh. Poloha se
-zpracovává jen v telefonu — souřadnice nikdy neopustí tvoje zařízení. Na mapě
-uvidíš, kolik hráčů které místo splnilo.
+Volitelné venkovní výzvy tě pošlou do parku, na hřiště nebo za roh. Přesná poloha
+zůstává v telefonu — kvůli mapě posíláme jen přibližnou polohu a neukládáme ji.
+Na mapě uvidíš, kolik hráčů které místo splnilo.
 
 ⚔️ SOUBOJE A ŽEBŘÍČKY
 Změř síly v časově omezených soubojích proti záznamům jiných hráčů. Každý den
@@ -55,8 +56,7 @@ navíc denní kolo — všichni mají stejných 10 otázek a společný žebří
 Žádné reklamy. Žádné sledování. Bezpečný obsah a rodičovská obrazovka na úvod.
 Kids-first, ale kvízy baví každého.
 
-Zdarma (2 úkoly doma denně + 6 celkem) s volitelným Premium (69 Kč/měs) —
-neomezené úkoly, extrémní obtížnost a souboje.
+Celá hra je zdarma.
 ```
 
 ### EN
@@ -75,7 +75,8 @@ you improve — and give you bonus time in their field during battles.
 
 🗺️ EXPLORE THE WORLD OUTDOORS
 Optional outdoor challenges send you to a park, playground or around the corner.
-Location is processed on your phone only — coordinates never leave your device.
+Your precise location stays on your phone — for the map we only send an approximate
+location and never store it.
 On the map you can see how many players completed each place.
 
 ⚔️ BATTLES AND LEADERBOARDS
@@ -86,8 +87,7 @@ round — everyone gets the same 10 questions and a shared leaderboard.
 No ads. No tracking. Safe content and a parent screen at the start.
 Kids-first, but the quizzes are fun for everyone.
 
-Free (2 home tasks a day + 6 total) with optional Premium (from 69 CZK/mo) —
-unlimited tasks, extreme difficulty and battles.
+The whole game is free.
 ```
 
 ---
@@ -107,9 +107,15 @@ unlimited tasks, extreme difficulty and battles.
 | **Personal info → Name** (zvolená přezdívka) | ANO | ANO (veřejný leaderboard) | App functionality | Vyžadováno pro hru |
 | **App activity → Other actions** (skóre, rating, splněné výzvy/POI) | ANO | ANO (leaderboard, počty u míst) | App functionality | — |
 
+**Verze 1.1 – beze změny kategorií** (vše spadá pod App activity / Name výše):
+- Týdenní liga: body ze soubojů pod náhodným ID hráče + přezdívka v tabulce ligy.
+- Bitevní místa: u místa (id POI) server drží jen greamíka, skóre a náhodný žeton držitele, 14 dní – bez přezdívky a ID hráče.
+- Jen v zařízení: prozkoumané okolí (buňky 200 m), výprava dne, denní čas hraní (rodič), otázka „Kde to je?“ (polohu nepoužívá).
+
 ### NEsbírané / NEsdílené (explicitně)
-- **Location** → NE. Poloha se zpracovává jen v zařízení pro venkovní výzvy;
-  souřadnice se NEodesílají. (Oprávnění polohy ano, ale data neopouští zařízení.)
+- **Location → Precise location** → NE. Přesné souřadnice zůstávají v zařízení (vzdálenost k místům se počítá v telefonu).
+- **Location → Approximate location** → **ANO, collected, NOT shared**, *processed ephemerally* (zaškrtnout „Data is processed ephemerally“), účel **App functionality**, povinné pro mapu.
+  Aplikace posílá na náš server (3rstudio.eu) polohu zaokrouhlenou na ≈ 500 m; server podle ní najde místa v okolí (Overpass/OpenStreetMap, dotaz už jen se zaokrouhlenou buňkou, bez IP a bez vazby na hráče) a posílá mapové dlaždice (OpenFreeMap přes naši cache). Nic se neukládá.
 - **Photos/Media** → NE (fotky zůstávají lokálně).
 - **Device or other IDs** → NE. Náhodné hráčské ID je generované appkou, není to
   Android/reklamní ID a neslouží k trackingu.
@@ -132,11 +138,10 @@ unlimited tasks, extreme difficulty and battles.
   ani přímé zprávy mezi hráči. → odpovědět pravdivě „users can interact / user-
   generated content: display names on leaderboard", což může přidat štítek
   „Users Interact". Neskrývat — recenze to odhalí.
-- **Digital purchases** → **ANO** (Premium předplatné).
+- **Digital purchases** → **NE** ve verzi 1.0 (Premium až v aktualizaci → pak změnit na ANO).
 - Sdílí polohu s ostatními? → **NE** (jen anonymní počty u míst, ne kdo/kde jsi).
 
-Očekávaný rating: nízký (PEGI 3 / ESRB Everyone), případně s „Users Interact"
-a „In-App Purchases" štítky.
+Očekávaný rating: nízký (PEGI 3 / ESRB Everyone), případně se štítkem „Users Interact".
 
 ---
 
@@ -196,6 +201,6 @@ Feature graphic 1024×500, ikona 512×512 (z `icons/`).
 - [ ] Vložit privacy URL: https://3rstudio.eu/gream-privacy.html
 - [ ] Data Safety dle §4 (NE „no collection")
 - [ ] Content rating dle §5
-- [ ] Nastavit Premium jako in-app produkt (Play Console → Products)
+- [ ] Premium až v aktualizaci (1.0 je zdarma, žádné in-app produkty)
 - [ ] Screenshoty §7 + popisy §2/§3
 - [ ] Interní test track → poté produkce

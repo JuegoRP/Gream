@@ -11,6 +11,8 @@ def('document', window.document);
 def('navigator', window.navigator);
 def('localStorage', window.localStorage);
 def('requestAnimationFrame', cb => setTimeout(cb, 0));
+def('cancelAnimationFrame', id => clearTimeout(id));
+window.matchMedia = () => ({ matches: true, addEventListener() {}, removeEventListener() {} });   // „omezit pohyb“ → aréna bez částic, rychlejší test
 // stub audio so Feedback/Audio never throw in jsdom
 class FakeAudio { constructor(){ this.play=()=>Promise.resolve(); } play(){ return Promise.resolve(); } }
 window.Audio = FakeAudio; globalThis.Audio = FakeAudio;
@@ -44,28 +46,43 @@ Battle.intro();
 const ov = document.getElementById('battleOverlay');
 ok(!!ov, 'intro overlay exists');
 ok(document.getElementById('battleDiffRow')?.querySelectorAll('button').length === 4, 'intro has 4 difficulty buttons');
+ok(document.getElementById('battlePackRow')?.querySelectorAll('button').length === 7, 'intro has 7 topic buttons (Vše + 6 balíčků)');
+{ const { packPool, PACKS } = await import(new URL('battle.js', base));
+  for (const k of PACKS) { const n = packPool(k, 'hard').length; ok(n >= 10, `balíček ${k} má aspoň 10 otázek do souboje (${n})`); } }
+// Souboj losuje rovnoměrně ze 24 skupin greamíků – i na lehké obtížnosti musí mít každá skupina otázky (přibere sousední obtížnost)
+{ const { pickQuestions } = await import(new URL('battle.js', base)); const { groupOf, GROUPS } = await import(new URL('subcats.js', base)); const { getLang } = await import(new URL('i18n.js', base));
+  for (const d of ['easy', 'extreme']) { const c = {}; for (let i = 0; i < 300; i++) for (const q of pickQuestions(d)) { const g = q.group; if (g) c[g] = (c[g] || 0) + 1; }
+    const n = Object.values(c), miss = Object.keys(GROUPS).filter(g => !c[g]);
+    if (process.env.DBG) console.log(d, JSON.stringify(c));
+    ok(!miss.length && Math.max(...n) / Math.min(...n) < 1.6, `${d}: všech 24 skupin v soubojích zhruba rovnoměrně (chybí ${miss.join(',') || '–'}, max/min ${(Math.max(...n) / Math.min(...n)).toFixed(2)})`); } }
 const startBtn = document.getElementById('battleStartBtn');
 ok(!!startBtn, 'intro has start button');
 ok(!startBtn.disabled, 'start button enabled (has seeds + premium)');
 
 // ── Start battle ──
 const seedsBefore = Skins.getSeeds(p.id);
+ok(document.querySelectorAll('#battlePick button').length >= 1, 'intro has greamík picker');
+ok(!!document.getElementById('battleSkill')?.textContent, 'intro shows the special of the picked greamík');
 startBtn.click();
 await sleep(30);
 ok(!document.getElementById('battleOverlay'), 'intro overlay closed after start');
 ok(Skins.getSeeds(p.id) < seedsBefore, 'entry deducted on start');
+await sleep(2000);   // soupeř ze serveru (max 1,5 s) + nástup arény
 ok(!!document.getElementById('battleRound'), 'first round rendered');
+ok(!!document.querySelector('.ar-stage .ar-me .ar-hp'), 'arena shows HP bars');
 
 // ── Auto-play 10 rounds (click first choice each round) ──
 let rounds = 0;
-for (let i = 0; i < 14; i++) {
+let usedSpecial = false;
+for (let i = 0; i < 400; i++) {
   if (document.getElementById('battleResult')) break;
-  const choices = document.querySelectorAll('#battleChoices button');
+  const sp = document.getElementById('btSpecial');
+  if (sp && !sp.hidden && !usedSpecial) { sp.click(); usedSpecial = true; await sleep(1200); continue; }
+  const choices = [...document.querySelectorAll('#btChoices button')].filter(b => !b.disabled && !b.classList.contains('gone'));
   if (choices.length) { choices[0].click(); rounds++; }
-  await sleep(120);   // let the 550ms inter-round timeout + render happen
-  await sleep(500);
+  await sleep(150);
 }
-ok(rounds >= 10, `played ~10 rounds (${rounds})`);
+ok(rounds >= 3, `played rounds until KO or 10 (${rounds})`);
 const result = document.getElementById('battleResult');
 ok(!!result, 'result screen rendered after 10 rounds');
 const stats = Battle.getStats(p.id);
@@ -79,19 +96,52 @@ ok(!document.getElementById('battleResult'), 'result closes cleanly');
 
 // ── Daily round: seeded set, plays to daily board ──
 Battle.daily();
-await sleep(30);
+await sleep(500);
 ok(!!document.getElementById('battleRound'), 'daily round rendered');
 let dRounds = 0;
-for (let i = 0; i < 14; i++) {
+for (let i = 0; i < 400; i++) {
   if (document.getElementById('battleBoardOverlay')) break;
-  const btns = document.querySelectorAll('#battleChoices button');
+  const btns = [...document.querySelectorAll('#btChoices button')].filter(b => !b.disabled && !b.classList.contains('gone'));
   if (btns.length) { btns[0].click(); dRounds++; }
-  await sleep(120); await sleep(500);
+  await sleep(150);
 }
-ok(dRounds >= 10, `daily played ~10 rounds (${dRounds})`);
+ok(dRounds >= 3, `daily played rounds (${dRounds})`);
 await sleep(60);
 ok(!!document.getElementById('battleBoardOverlay'), 'daily leaderboard rendered');
 document.getElementById('battleBoardOverlay')?.remove();
+
+// ── Rodinný souboj: dva hráči, předávání telefonu ──
+Battle.familySetup();
+await sleep(50);
+ok(!!document.getElementById('famStart'), 'family setup rendered');
+document.getElementById('famStart').click();
+await sleep(600);
+let handovers = 0, fRounds = 0;
+for (let i = 0; i < 600; i++) {
+  if (document.getElementById('battleResult')) break;
+  const hand = document.querySelector('.family-hand button');
+  if (hand) { hand.click(); handovers++; await sleep(60); continue; }
+  const btns = [...document.querySelectorAll('#btChoices button')].filter(b => !b.disabled && !b.classList.contains('gone'));
+  if (btns.length) { btns[0].click(); fRounds++; }
+  await sleep(150);
+}
+ok(handovers >= 4, `family: phone handed over between players (${handovers})`);
+ok(!!document.getElementById('battleResult'), 'family: result shown');
+document.getElementById('battleResult')?.remove();
+
+// ── Denní limit od rodiče ──
+const { Playtime } = await import(new URL('parents.js', base));
+Playtime.setLimit(p.id, 20);
+localStorage.setItem('gream_playtime', JSON.stringify({ [p.id]: { date: new Date().toISOString().slice(0, 10), sec: 21 * 60, grant: 0 } }));
+document.getElementById('battleOverlay')?.remove();
+Battle.intro();
+ok(!!document.getElementById('limitOverlay') && !document.getElementById('battleOverlay'), 'limit: po vyčerpání se souboj neotevře, ukáže se okno');
+Playtime.grant(p.id, 15);
+document.getElementById('limitOverlay')?.remove();
+Battle.intro();
+ok(!!document.getElementById('battleOverlay'), 'limit: po přidání 15 min jde hrát');
+document.getElementById('battleOverlay')?.remove();
+Playtime.setLimit(p.id, 0);
 
 ok(errors.length === 0, `no window errors (${errors.length}: ${errors.slice(0,2).join(' | ')})`);
 

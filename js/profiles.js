@@ -98,6 +98,7 @@ export const Profiles = {
       const photo = this.getPhoto(profile.id);
       if (photo) { el.innerHTML = `<img src="${photo}" alt="${profile.name}">`; return el; }
     }
+    if (profile.avatarImg) { el.innerHTML = `<img src="${profile.avatarImg}" alt="" style="width:100%;height:100%;object-fit:contain">`; return el; }
     el.textContent = profile.avatar || '🧒';
     return el;
   },
@@ -208,14 +209,10 @@ export const Profiles = {
     const tr2 = tr();
     const worlds = Object.keys(p.worldTasks || {});
     const worldsExplored = worlds.filter(w => (p.worldTasks[w] || 0) > 0).length;
-    // count earned badges
-    let earnedBadges = 0;
-    for (const w of ['nature','language','logic','feelings','arts','world']) {
-      earnedBadges += Badges.getLevelIndex(p.worldTasks?.[w] || 0);
-    }
+    const earnedBadges = Badges.earnedCount(p);
     return {
       totalTasks:    p.totalTasks || 0,
-      bestStreak:    p.bestStreak || 0,
+      bestStreak:    Badges.bestStreak(p),
       currentStreak: p.streak || 0,
       worldsExplored,
       earnedBadges

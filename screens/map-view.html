@@ -1,15 +1,15 @@
 <!-- Top bar -->
-<div style="display:flex;align-items:center;gap:8px;padding:0 0 10px;flex-shrink:0">
-  <div style="flex:1;min-width:0">
-    <div id="mapViewTitle" style="font-size:15px;font-weight:900;color:var(--green-deep)">🗺️ Mapa</div>
-    <div id="mapViewSub" style="font-size:11px;color:var(--green-mid);font-weight:600"></div>
+<header class="scr-header" style="margin-bottom:var(--space-3)">
+  <div class="scr-left"></div>
+  <h1 class="scr-title"><span id="mapViewTitle"></span><span class="scr-sub" id="mapViewSub"></span></h1>
+  <div class="scr-right">
+    <button class="icon-btn" id="mapLocateBtn" onclick="App.mapRecenter()" data-icon="locate"></button>
+    <button class="icon-btn" id="mapWorldsBtn" onclick="App.toggleMapSidePanel()" data-icon="worlds"></button>
   </div>
-  <button onclick="App.mapRecenter()" style="background:white;border:2px solid rgba(74,138,46,0.3);border-radius:50%;width:38px;height:38px;font-size:18px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center">📍</button>
-  <button onclick="App.toggleMapSidePanel()" id="mapWorldsBtn" style="background:white;border:2px solid rgba(74,138,46,0.3);border-radius:50%;width:38px;height:38px;font-size:20px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center">🌍</button>
-</div>
+</header>
 
 <!-- Map fills remaining space -->
-<div id="leafletMap" style="width:100%;flex:1;min-height:0;border-radius:16px;overflow:hidden;background:#e8e8e8;position:relative">
+<div id="leafletMap" style="width:100%;flex:1;min-height:0;border-radius:16px;overflow:hidden;background:#f7f3e8;position:relative">
   <div id="mapLoading" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;z-index:500;background:rgba(240,240,240,0.9)">
     <div class="gream-spinner"></div>
     <div id="mapLoadingMsg" style="font-size:13px;color:#666;font-weight:700">Hledám místa…</div>

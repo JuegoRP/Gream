@@ -1,0 +1,13 @@
+const { webkit, devices } = await import('playwright');
+const OUT = process.argv[3];
+const b = await webkit.launch(); const page = await (await b.newContext({ ...devices['iPhone 13'] })).newPage();
+const errs = []; page.on('pageerror', e => errs.push('pageerror: ' + String(e).slice(0, 200))); page.on('console', m => { if (m.type() === 'error' && !m.text().includes('placard')) errs.push('console: ' + m.text().slice(0, 200)); });
+await page.goto(process.argv[2]); await page.waitForTimeout(7000);
+const fr = page.frames().find(f => f.url().includes('demo=1'));
+console.log(await page.evaluate(() => JSON.stringify({ errBoxes: [...document.querySelectorAll('.err')].map(e => e.textContent.slice(0, 200)), frame: document.getElementById('gardenFrame')?.src.slice(-40), arena: !!document.querySelector('#arWrap .ar-stage') })));
+if (fr) console.log('iframe:', await fr.evaluate(() => JSON.stringify({ slots: document.querySelectorAll('.garden-gream-slot').length, demo: !!window.__greamDemo, name: document.getElementById('mapName')?.textContent })));
+await page.evaluate(() => document.getElementById('zahrada').scrollIntoView()); await page.waitForTimeout(800); await page.screenshot({ path: OUT + '/g-zahrada.png' });
+await page.evaluate(() => { document.getElementById('btnEvo4').click(); }); await page.waitForTimeout(3200); await page.screenshot({ path: OUT + '/g-evo.png' });
+await page.evaluate(() => { document.querySelector('.evo-btn')?.click(); document.getElementById('arena').scrollIntoView(); document.querySelector('[data-a=sp]').click(); }); await page.waitForTimeout(500); await page.screenshot({ path: OUT + '/g-arena.png' });
+console.log(errs.join('\n'));
+await b.close();

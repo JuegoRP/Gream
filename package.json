@@ -1,9 +1,21 @@
 {
   "scripts": {
-    "test": "node test/content.mjs && node test/sim.mjs && node test/ui.mjs"
+    "test": "node test/content.mjs && node test/sim.mjs && node test/ui.mjs && node test/hatch.mjs && node test/battle-balance.mjs",
+    "build:www": "node scripts/build-www.mjs",
+    "build:android": "node scripts/build-www.mjs && npx cap sync android",
+    "test:server": "node test/server.mjs"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.5.3",
     "acorn": "^8.16.0",
     "jsdom": "^29.1.1"
+  },
+  "name": "gream",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@capacitor/android": "^8.5.3",
+    "@capacitor/app": "^8.1.2",
+    "@capacitor/core": "^8.5.3"
   }
 }

@@ -35,18 +35,31 @@
   --w-arts:     linear-gradient(135deg,#c04898,#7a1060);
   --w-world:    linear-gradient(135deg,#8a4abc,#4a1a7a);
 
-  /* Spacing */
-  --sp-xs: 4px;  --sp-sm: 8px;  --sp-md: 14px;
-  --sp-lg: 20px; --sp-xl: 28px; --sp-2xl:40px;
+  /* ─── Design tokens (Gream 1.0) — nové styly používají JEN tyto ─── */
+  /* Mezery: 4 / 8 / 12 / 16 / 24 / 32 */
+  --space-1: 4px; --space-2: 8px; --space-3: 12px;
+  --space-4: 16px; --space-5: 24px; --space-6: 32px;
+  /* Písmo: 5 velikostí */
+  --text-xs: 12px; --text-sm: 14px; --text-md: 16px; --text-lg: 20px; --text-xl: 28px;
+  /* Poloměry: 3 (+ kulaté tlačítko/pilulka) */
+  --radius-sm: 10px; --radius-md: 16px; --radius-lg: 24px; --radius-full: 999px;
+  /* Stíny: 2 */
+  --elev-1: 0 2px 10px rgba(45,90,27,0.10);
+  --elev-2: 0 8px 24px rgba(45,90,27,0.18);
+  /* Text */
+  --ink: var(--green-deep); --ink-soft: #5b7a4a; --ink-muted: #8a9a80;
+  --surface: #ffffff; --line: rgba(74,138,46,0.18);
 
-  /* Radius */
-  --r-sm: 8px; --r-md: 14px; --r-lg: 20px; --r-xl: 28px; --r-full: 999px;
+  /* Starší názvy → mapované na tokeny (kvůli stávajícím stylům) */
+  --sp-xs: var(--space-1); --sp-sm: var(--space-2); --sp-md: var(--space-3);
+  --sp-lg: var(--space-4); --sp-xl: var(--space-5); --sp-2xl: var(--space-6);
+  --r-sm: var(--radius-sm); --r-md: var(--radius-md); --r-lg: var(--radius-md); --r-xl: var(--radius-lg); --r-full: var(--radius-full);
 
   /* Typography */
   --font: 'Nunito', system-ui, sans-serif;
-  --fs-xs: 10px; --fs-sm: 12px; --fs-base: 14px;
-  --fs-md: 16px; --fs-lg: 18px; --fs-xl: 22px;
-  --fs-2xl: 28px; --fs-3xl: 36px;
+  --fs-xs: var(--text-xs); --fs-sm: var(--text-xs); --fs-base: var(--text-sm);
+  --fs-md: var(--text-md); --fs-lg: var(--text-lg); --fs-xl: var(--text-lg);
+  --fs-2xl: var(--text-xl); --fs-3xl: var(--text-xl);
 
   /* Transitions */
   --t-fast: 0.15s; --t-base: 0.25s; --t-slow: 0.4s;

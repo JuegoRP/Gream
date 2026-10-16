@@ -24,8 +24,7 @@ const ok = (cond, msg) => { if (cond) pass++; else { fail++; console.log('  ✗ 
     const e = T.en.challenges[w][d].length, c = T.cs.challenges[w]?.[d]?.length || 0;
     if (e !== c) mismatch++;
     total += e;
-    const seen = new Set();
-    for (const ch of T.en.challenges[w][d]) { if (seen.has(ch.text)) dups++; seen.add(ch.text); }
+    for (const lang of ['en', 'cs']) { const seen = new Set(); for (const ch of T[lang].challenges[w]?.[d] || []) { if (seen.has(ch.text)) dups++; seen.add(ch.text); } }
   }
   ok(mismatch === 0, `EN/CZ pool alignment (${mismatch} mismatches)`);
   ok(dups === 0, `no within-difficulty duplicates (${dups})`);
@@ -39,7 +38,7 @@ const ok = (cond, msg) => { if (cond) pass++; else { fail++; console.log('  ✗ 
   let stages = [];
   for (let i=0;i<4;i++){ const r = Gream.devAdvanceStage(p.id,'logic'); if (r && r.toStage) stages.push(r.toStage); }
   ok(JSON.stringify(stages) === JSON.stringify([2,3,4]), `evolution 1→2→3→4 (${stages})`);
-  ok(Gream.active(p.id).archetype === 'kamen', 'archetype resolved from played world (logic→kamen)');
+  ok(['poctik','kamen','banka','hadak'].includes(Gream.active(p.id).archetype), 'bez podkategorií: greamík ze hraného světa (logika)');
 }
 
 // ── 3. Battle economy + invariants over many runs ──

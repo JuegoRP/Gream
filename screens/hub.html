@@ -11,52 +11,29 @@
   </div>
 </div>
 
-<!-- Greamíci card -->
-<button onclick="App.goTo('wardrobe')" style="width:100%;max-width:420px;background:linear-gradient(135deg,#edfbe0,#c8f0a8);border-radius:18px;padding:16px 18px;display:flex;align-items:center;gap:14px;margin-bottom:14px;border:2px solid rgba(74,138,46,0.22);box-shadow:0 3px 14px rgba(74,138,46,0.18);cursor:pointer;text-align:left">
-  <span style="font-size:36px;flex-shrink:0">🐣</span>
-  <div style="flex:1;min-width:0">
-    <div id="hubGreamiciLbl" style="font-size:17px;font-weight:900;color:var(--green-deep)">Greamíci</div>
-    <div id="hubGreamiciSub" style="font-size:12px;color:var(--green-mid);font-weight:700;margin-top:2px">Správa & vývoj mazlíčků</div>
-  </div>
-  <span style="font-size:20px;color:var(--green-mid)">›</span>
-</button>
-
-<!-- Main actions grid -->
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:420px">
-
-  <button onclick="App.goTo('ranking')" style="background:white;border-radius:16px;padding:16px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 12px rgba(0,0,0,0.08);border:none;cursor:pointer;transition:transform 0.15s;text-align:left">
-    <span style="font-size:26px">🏆</span>
-    <div>
-      <div id="hubRankLbl" style="font-size:14px;font-weight:900;color:var(--green-deep)">Ranking</div>
-      <div id="hubRankSub" style="font-size:10px;color:var(--green-mid);font-weight:700">Žebříček hráčů</div>
-    </div>
+<!-- Hlavní sekce: Greamíci a Obchůdek (dvě velké karty) -->
+<div class="hub-big">
+  <button class="hub-tile big" onclick="App.goTo('greams')">
+    <span class="hub-ico">🐾</span>
+    <span class="hub-txt"><b id="hubGreamiciLbl"></b><small id="hubGreamiciSub"></small></span>
+    <span class="hub-arr">›</span>
   </button>
-
-  <button onclick="App.goTo('badges')" style="background:white;border-radius:16px;padding:16px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 12px rgba(0,0,0,0.08);border:none;cursor:pointer;transition:transform 0.15s;text-align:left">
-    <span style="font-size:26px">🏅</span>
-    <div>
-      <div id="hubBadgesLbl" style="font-size:14px;font-weight:900;color:var(--green-deep)">Odznaky</div>
-      <div id="hubBadgesSub" style="font-size:10px;color:var(--green-mid);font-weight:700">Tvůj postup</div>
-    </div>
+  <button class="hub-tile big shop" onclick="App.goTo('wardrobe')">
+    <span class="hub-ico">🛍️</span>
+    <span class="hub-txt"><b id="hubShopLbl"></b><small id="hubShopSub"></small></span>
+    <span class="hub-arr">›</span>
   </button>
-
-  <button onclick="App.goTo('history')" style="background:white;border-radius:16px;padding:16px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 12px rgba(0,0,0,0.08);border:none;cursor:pointer;transition:transform 0.15s;text-align:left">
-    <span style="font-size:26px">📜</span>
-    <div>
-      <div id="hubHistLbl" style="font-size:14px;font-weight:900;color:var(--green-deep)">Historie</div>
-      <div id="hubHistSub" style="font-size:10px;color:var(--green-mid);font-weight:700">Splněné úkoly</div>
-    </div>
-  </button>
-
-  <button onclick="App.goTo('settings')" style="background:white;border-radius:16px;padding:16px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 12px rgba(0,0,0,0.08);border:none;cursor:pointer;transition:transform 0.15s;text-align:left">
-    <span style="font-size:26px">⚙️</span>
-    <div>
-      <div id="hubSetLbl" style="font-size:14px;font-weight:900;color:var(--green-deep)">Nastavení</div>
-      <div id="hubSetSub" style="font-size:10px;color:var(--green-mid);font-weight:700">Jazyk, profil, info</div>
-    </div>
-  </button>
-
 </div>
+
+<!-- Postup: statistiky, odznaky, žebříček, historie -->
+<div class="hub-grid">
+  <button class="hub-tile" onclick="App.goTo('stats')"><span class="hub-ico">📊</span><span class="hub-txt"><b id="hubStatsLbl"></b><small id="hubStatsSub"></small></span></button>
+  <button class="hub-tile" onclick="App.goTo('badges')"><span class="hub-ico">🏅</span><span class="hub-txt"><b id="hubBadgesLbl"></b><small id="hubBadgesSub"></small></span></button>
+  <button class="hub-tile" onclick="App.goTo('ranking')"><span class="hub-ico">🏆</span><span class="hub-txt"><b id="hubRankLbl"></b><small id="hubRankSub"></small></span></button>
+  <button class="hub-tile" onclick="App.goTo('history')"><span class="hub-ico">📜</span><span class="hub-txt"><b id="hubHistLbl"></b><small id="hubHistSub"></small></span></button>
+</div>
+
+<button class="hub-tile wide" onclick="App.goTo('settings')"><span class="hub-ico">⚙️</span><span class="hub-txt"><b id="hubSetLbl"></b><small id="hubSetSub"></small></span><span class="hub-arr">›</span></button>
 
 <!-- Subscribe section (shown when not premium) -->
 <div id="hubSubscribeSection" style="display:none;width:100%;max-width:420px;margin-top:10px">

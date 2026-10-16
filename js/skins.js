@@ -6,6 +6,7 @@
 // ═══════════════════════════════════
 
 import { Profiles } from './profiles.js';
+import { T } from './i18n.js';
 
 const KEY_SEEDS         = 'gream_seeds';            // map { profileId: number }
 const KEY_UNLOCKED      = 'gream_unlocked_skins';   // map { profileId: [skinId,...] }
@@ -13,19 +14,62 @@ const KEY_EQUIPPED      = 'gream_equipped';         // map { profileId: { avatar
 const KEY_OWNED_COSMETIC= 'gream_owned_cosmetics';  // map { profileId: [id,...] }
 const KEY_PENDING_BOOST = 'gream_pending_boost';    // map { profileId: boostId | null }
 const KEY_HINT_CHARGES  = 'gream_hint_charges';     // map { profileId: number }
+const KEY_DECOR         = 'gream_decor';            // map { profileId: { owned:[id], hidden:[id] } }
 
 // ─── Skin catalog: unlocked by milestones ───
 // Each skin specifies what it takes to unlock.
 // type = 'avatar' (replaces emoji), 'frame' (border around avatar), 'bg' (background pattern)
+// Ceny zrušených doplňků (jen pro vrácení semínek – refundAccessories)
+const ACC_REFUND = {'acc_bow': 50, 'acc_cap': 60, 'acc_glasses': 70, 'acc_scarf': 70, 'acc_hat': 80, 'acc_flowers': 90, 'acc_wizard': 120, 'acc_star': 120, 'acc_crown': 160};
+
 export const SKIN_CATALOG = {
   // ─── GREAM AVATARS — unlocked by having that greamík at stage ≥ 2 ───
+  // ─── POSTAVIČKY: kreslené avatary ve stylu hry (Assety/avatary-1.1), 6 zdarma, ostatní za semínka ───
+  char_avatars: [
+    { id: 'chr_fox', img: 'img/avatars/fox.png', emoji: '🦊', name: { cs: 'Liška', en: 'Fox' }, cost: 0 },
+    { id: 'chr_cat', img: 'img/avatars/cat.png', emoji: '🐱', name: { cs: 'Kočička', en: 'Kitten' }, cost: 0 },
+    { id: 'chr_owl', img: 'img/avatars/owl.png', emoji: '🦉', name: { cs: 'Sovička', en: 'Owl' }, cost: 0 },
+    { id: 'chr_frog', img: 'img/avatars/frog.png', emoji: '🐸', name: { cs: 'Žabka', en: 'Frog' }, cost: 0 },
+    { id: 'chr_bear', img: 'img/avatars/bear.png', emoji: '🐻', name: { cs: 'Medvídek', en: 'Bear cub' }, cost: 0 },
+    { id: 'chr_bunny', img: 'img/avatars/bunny.png', emoji: '🐰', name: { cs: 'Zajíček', en: 'Bunny' }, cost: 0 },
+    { id: 'chr_panda', img: 'img/avatars/panda.png', emoji: '🐼', name: { cs: 'Panda', en: 'Panda' }, cost: 40 },
+    { id: 'chr_penguin', img: 'img/avatars/penguin.png', emoji: '🐧', name: { cs: 'Tučňák', en: 'Penguin' }, cost: 40 },
+    { id: 'chr_hedgehog', img: 'img/avatars/hedgehog.png', emoji: '🦔', name: { cs: 'Ježek', en: 'Hedgehog' }, cost: 50 },
+    { id: 'chr_raccoon', img: 'img/avatars/raccoon.png', emoji: '🦝', name: { cs: 'Mýval', en: 'Raccoon' }, cost: 50 },
+    { id: 'chr_dino', img: 'img/avatars/dino.png', emoji: '🦖', name: { cs: 'Dino', en: 'Dino' }, cost: 60 },
+    { id: 'chr_unicorn', img: 'img/avatars/unicorn.png', emoji: '🦄', name: { cs: 'Jednorožec', en: 'Unicorn' }, cost: 80 },
+    { id: 'chr_robot', img: 'img/avatars/robot.png', emoji: '🤖', name: { cs: 'Robot', en: 'Robot' }, cost: 80 },
+    { id: 'chr_astronaut', img: 'img/avatars/astronaut.png', emoji: '🧑‍🚀', name: { cs: 'Kosmonaut', en: 'Astronaut' }, cost: 100 },
+    { id: 'chr_wizard', img: 'img/avatars/wizard.png', emoji: '🧙', name: { cs: 'Čaroděj', en: 'Wizard' }, cost: 100 },
+    { id: 'chr_knight', img: 'img/avatars/knight.png', emoji: '🛡️', name: { cs: 'Rytíř', en: 'Knight' }, cost: 120 },
+    { id: 'chr_pirate', img: 'img/avatars/pirate.png', emoji: '🏴‍☠️', name: { cs: 'Pirát', en: 'Pirate' }, cost: 120 },
+    { id: 'chr_dragon', img: 'img/avatars/dragon.png', emoji: '🐉', name: { cs: 'Dráček', en: 'Dragon' }, cost: 150 },
+  ],
   gream_avatars: [
-    { id: 'gream_lilek',  archetype: 'lilek',  name: { cs: 'Lilek',  en: 'Lilek'  } },
+    { id: 'gream_lilek', archetype: 'lilek', name: { cs: 'Lilek', en: 'Lilek' } },
     { id: 'gream_jiskra', archetype: 'jiskra', name: { cs: 'Jiskra', en: 'Jiskra' } },
-    { id: 'gream_kamen',  archetype: 'kamen',  name: { cs: 'Kámen',  en: 'Kámen'  } },
-    { id: 'gream_srodik', archetype: 'srodik', name: { cs: 'Srdík',  en: 'Srdík'  } },
-    { id: 'gream_vlnka',  archetype: 'vlnka',  name: { cs: 'Vlnka',  en: 'Vlnka'  } },
-    { id: 'gream_atlas',  archetype: 'atlas',  name: { cs: 'Atlas',  en: 'Atlas'  } },
+    { id: 'gream_kamen', archetype: 'kamen', name: { cs: 'Kámen', en: 'Kámen' } },
+    { id: 'gream_srodik', archetype: 'srodik', name: { cs: 'Srdík', en: 'Srdík' } },
+    { id: 'gream_vlnka', archetype: 'vlnka', name: { cs: 'Vlnka', en: 'Vlnka' } },
+    { id: 'gream_atlas', archetype: 'atlas', name: { cs: 'Atlas', en: 'Atlas' } },
+    { id: 'gream_tlapka', archetype: 'tlapka', name: { cs: 'Tlapka', en: 'Tlapka' } },
+    { id: 'gream_kanka', archetype: 'kanka', name: { cs: 'Kaňka', en: 'Kaňka' } },
+    { id: 'gream_poctik', archetype: 'poctik', name: { cs: 'Počtík', en: 'Počtík' } },
+    { id: 'gream_hrejik', archetype: 'hrejik', name: { cs: 'Hřejík', en: 'Hřejík' } },
+    { id: 'gream_noticka', archetype: 'noticka', name: { cs: 'Notička', en: 'Notička' } },
+    { id: 'gream_mapka', archetype: 'mapka', name: { cs: 'Mapka', en: 'Mapka' } },
+    { id: 'gream_hvezdik', archetype: 'hvezdik', name: { cs: 'Hvězdík', en: 'Hvězdík' } },
+    { id: 'gream_mnamka', archetype: 'mnamka', name: { cs: 'Mňamka', en: 'Mňamka' } },
+    { id: 'gream_bajka', archetype: 'bajka', name: { cs: 'Bajka', en: 'Bajka' } },
+    { id: 'gream_ahojik', archetype: 'ahojik', name: { cs: 'Ahojík', en: 'Ahojík' } },
+    { id: 'gream_banka', archetype: 'banka', name: { cs: 'Baňka', en: 'Baňka' } },
+    { id: 'gream_hadak', archetype: 'hadak', name: { cs: 'Hádák', en: 'Hádák' } },
+    { id: 'gream_mozik', archetype: 'mozik', name: { cs: 'Mozík', en: 'Mozík' } },
+    { id: 'gream_zdravik', archetype: 'zdravik', name: { cs: 'Zdravík', en: 'Zdravík' } },
+    { id: 'gream_klapka', archetype: 'klapka', name: { cs: 'Klapka', en: 'Klapka' } },
+    { id: 'gream_maska', archetype: 'maska', name: { cs: 'Maska', en: 'Maska' } },
+    { id: 'gream_micek', archetype: 'micek', name: { cs: 'Míček', en: 'Míček' } },
+    { id: 'gream_lvicek', archetype: 'lvicek', name: { cs: 'Lvíček', en: 'Lvíček' } },
   ],
 
   // ─── AVATAR SKINS — milestone-unlocked + purchasable emoji ───
@@ -43,57 +87,63 @@ export const SKIN_CATALOG = {
     { id: 'av_master',  emoji: '🌟',  name: { cs: 'Mistr',      en: 'Master' },   unlock: { type: 'totalTasks', count: 100 } },
     { id: 'av_legend',  emoji: '👑',  name: { cs: 'Legenda',    en: 'Legend' },   unlock: { type: 'totalTasks', count: 300 } },
     // Purchasable emoji
-    { id: 'av_cat',    emoji: '😺', name: { cs: 'Kočička',       en: 'Cat'    }, cost: 10,  unlock: { type: 'buy' } },
-    { id: 'av_fox',    emoji: '🦊', name: { cs: 'Liška',         en: 'Fox'    }, cost: 10,  unlock: { type: 'buy' } },
-    { id: 'av_frog',   emoji: '🐸', name: { cs: 'Žabka',         en: 'Frog'   }, cost: 15,  unlock: { type: 'buy' } },
-    { id: 'av_alien',  emoji: '👾', name: { cs: 'Mimozemšťan',   en: 'Alien'  }, cost: 20,  unlock: { type: 'buy' } },
-    { id: 'av_robot',  emoji: '🤖', name: { cs: 'Robot',         en: 'Robot'  }, cost: 20,  unlock: { type: 'buy' } },
-    { id: 'av_ninja',  emoji: '🥷', name: { cs: 'Ninja',         en: 'Ninja'  }, cost: 25,  unlock: { type: 'buy' } },
+    { id: 'av_cat',    emoji: '😺', name: { cs: 'Kočička',       en: 'Cat'    }, cost: 20,  unlock: { type: 'buy' } },
+    { id: 'av_fox',    emoji: '🦊', name: { cs: 'Liška',         en: 'Fox'    }, cost: 20,  unlock: { type: 'buy' } },
+    { id: 'av_frog',   emoji: '🐸', name: { cs: 'Žabka',         en: 'Frog'   }, cost: 30,  unlock: { type: 'buy' } },
+    { id: 'av_alien',  emoji: '👾', name: { cs: 'Mimozemšťan',   en: 'Alien'  }, cost: 40,  unlock: { type: 'buy' } },
+    { id: 'av_robot',  emoji: '🤖', name: { cs: 'Robot',         en: 'Robot'  }, cost: 40,  unlock: { type: 'buy' } },
+    { id: 'av_ninja',  emoji: '🥷', name: { cs: 'Ninja',         en: 'Ninja'  }, cost: 50,  unlock: { type: 'buy' } },
   ],
 
   // ─── FRAMES — bought with eggs ───
   frames: [
     { id: 'fr_none',    name: { cs: 'Bez rámečku', en: 'No frame' }, cssClass: '', cost: 0 },
-    { id: 'fr_leaf',    name: { cs: 'Lístkový',    en: 'Leaf' },     cssClass: 'frame-leaf',    cost: 30 },
-    { id: 'fr_gold',    name: { cs: 'Zlatý',       en: 'Gold' },     cssClass: 'frame-gold',    cost: 80 },
-    { id: 'fr_rainbow', name: { cs: 'Duhový',      en: 'Rainbow' },  cssClass: 'frame-rainbow', cost: 150 },
-    { id: 'fr_galaxy',  name: { cs: 'Galaxie',     en: 'Galaxy' },   cssClass: 'frame-galaxy',  cost: 250 },
+    { id: 'fr_leaf',    name: { cs: 'Lístkový',    en: 'Leaf' },     cssClass: 'frame-leaf',    cost: 60 },
+    { id: 'fr_gold',    name: { cs: 'Zlatý',       en: 'Gold' },     cssClass: 'frame-gold',    cost: 160 },
+    { id: 'fr_rainbow', name: { cs: 'Duhový',      en: 'Rainbow' },  cssClass: 'frame-rainbow', cost: 300 },
+    { id: 'fr_galaxy',  name: { cs: 'Galaxie',     en: 'Galaxy' },   cssClass: 'frame-galaxy',  cost: 500 },
   ],
 
   // ─── FRAMES — bought with eggs (cheaper) ───
   // (overrides the ones above)
 
   // ─── BACKGROUNDS — bought with seeds ───
-  backgrounds: [
-    { id: 'bg_default',      name: { cs: 'Výchozí louka',     en: 'Default meadow' },   file: null,                    cost: 0   },
-    { id: 'bg_rain_jungle',  name: { cs: 'Deštný les',        en: 'Rain jungle' },      file: 'bg_rain_jungle.png',    cost: 80  },
-    { id: 'bg_cyberpunk',    name: { cs: 'Kybernetické město',en: 'Cyberpunk city' },   file: 'bg_cyberpunk.png',      cost: 120 },
-    { id: 'bg_cave',         name: { cs: 'Krystalová jeskyně',en: 'Crystal cave' },     file: 'bg_cave.png',           cost: 150 },
-    { id: 'bg_ruins',        name: { cs: 'Záhadné ruiny',     en: 'Ancient ruins' },    file: 'bg_ruins.png',          cost: 200 },
-    { id: 'bg_town',         name: { cs: 'Středověké město',  en: 'Medieval town' },    file: 'bg_town.png',           cost: 250 },
+  backgrounds: [   // 2026-10: všechna pozadí jsou široká panoramata ve stylu zahrady (posouvají se, greamíci po nich chodí)
+    { id: 'bg_default',      name: { cs: 'Výchozí louka',      en: 'Meadow' },            file: null,                 cost: 0   },
+    { id: 'bg_rain_jungle',  name: { cs: 'Deštný prales',      en: 'Rainy jungle' },      file: 'bg_rain_jungle.jpg', cost: 160 },
+    { id: 'bg_winter',       name: { cs: 'Zimní zahrada',      en: 'Winter garden' },     file: 'bg_winter.jpg',      cost: 200 },
+    { id: 'bg_cyberpunk',    name: { cs: 'Večerní město',      en: 'City evening' },      file: 'bg_cyberpunk.jpg',   cost: 240 },
+    { id: 'bg_beach',        name: { cs: 'Zahrada u moře',     en: 'Seaside garden' },    file: 'bg_beach.jpg',       cost: 260 },
+    { id: 'bg_cave',         name: { cs: 'Krystalová jeskyně', en: 'Crystal cave' },      file: 'bg_cave.jpg',        cost: 300 },
+    { id: 'bg_ruins',        name: { cs: 'Hradní zřícenina',   en: 'Castle ruins' },      file: 'bg_ruins.jpg',       cost: 400 },
+    { id: 'bg_town',         name: { cs: 'Středověké městečko', en: 'Medieval town' },    file: 'bg_town.jpg',        cost: 500 },
   ],
 
   // ─── BOOSTS — jednorázové efekty za vajíčka ───
   boosts: [
-    { id: 'boost_2x',    name: { cs: '2× vajíčka',      en: '2× eggs' },        desc: { cs: 'Příští úkol dá 2× vajec',          en: 'Next task gives 2× eggs' },         cost: 15, emoji: '✨' },
+    { id: 'boost_2x',    name: { cs: '2× semínka',      en: '2× seeds' },       desc: { cs: 'Příští úkol dá 2× víc semínek',    en: 'Next task gives 2× seeds' },         cost: 15, emoji: '✨' },
     { id: 'boost_hint',  name: { cs: '3 nápovědy',      en: '3 hints' },          desc: { cs: '3 nápovědy zdarma',                  en: '3 free hints' },                     cost: 10, emoji: '💡' },
     { id: 'boost_skip',  name: { cs: 'Přeskočit krok',  en: 'Skip step' },        desc: { cs: 'Přeskoč jeden krok bez ztráty',       en: 'Skip one step without penalty' },    cost: 20, emoji: '⏭️' },
     { id: 'boost_lucky', name: { cs: 'Šťastný úkol',   en: 'Lucky task' },       desc: { cs: 'Výběr obtížnosti dalšího úkolu',      en: 'Choose difficulty of next task' },   cost: 12, emoji: '🍀' },
   ],
 
-  // ─── GREAM ACCESSORIES — kosmetika pro Greamíka ───
-  accessories: [
-    { id: 'acc_hat',    name: { cs: 'Čepička',     en: 'Hat' },         emoji: '🎩', cost: 40 },
-    { id: 'acc_bow',    name: { cs: 'Mašlička',    en: 'Bow' },         emoji: '🎀', cost: 25 },
-    { id: 'acc_crown',  name: { cs: 'Korunka',     en: 'Crown' },       emoji: '👑', cost: 80 },
-    { id: 'acc_glasses',name: { cs: 'Brýle',       en: 'Glasses' },     emoji: '🕶️', cost: 35 },
-    { id: 'acc_star',   name: { cs: 'Hvězdička',   en: 'Star aura' },   emoji: '⭐', cost: 60 },
+  // ─── GREAM ACCESSORIES — doplňky viditelné na greamíkovi (zahrada, aréna, výběr do souboje) ───
+  // slot: head = na hlavě, face = přes oči, neck = na krku, aura = záře kolem (bez obrázku)
+
+  // ─── VÝZDOBA ZAHRADY — vše koupené se ukáže v zahradě (jde vypnout); x/y = % scény, w = % šířky ───
+  decor: [
+    { id: 'deco_flowerbed', name: { cs: 'Záhonek',        en: 'Flower bed' },   cost: 40,  img: 'img/zahrada/deco_flowerbed.png', x: 14, y: 92, w: 22 },
+    { id: 'deco_bench',     name: { cs: 'Lavička',        en: 'Bench' },        cost: 60,  img: 'img/zahrada/deco_bench.png',     x: 80, y: 90, w: 24 },
+    { id: 'deco_birdhouse', name: { cs: 'Budka pro ptáčky', en: 'Birdhouse' },  cost: 70,  img: 'img/zahrada/deco_birdhouse.png', x: 90, y: 66, w: 10 },
+    { id: 'deco_lantern',   name: { cs: 'Lucernička',     en: 'Lantern' },      cost: 80,  img: 'img/zahrada/deco_lantern.png',   x: 32, y: 84, w: 10 },
+    { id: 'deco_pond',      name: { cs: 'Jezírko',        en: 'Pond' },         cost: 120,  img: 'img/zahrada/deco_pond.png',      x: 66, y: 97, w: 26 },
+    { id: 'deco_mushroom',  name: { cs: 'Hříbkový domeček', en: 'Mushroom house' }, cost: 180, img: 'img/zahrada/deco_mushroom.png', x: 10, y: 70, w: 16 },
   ],
 };
 
 // ─── Seeds earned per event ───
 const SEEDS_PER_TASK   = 2;   // base × difficulty multiplier below
-const SEEDS_PER_BADGE  = 10;  // bonus for completing full 3-step badge
+const SEEDS_PER_BADGE  = 6;   // bonus for completing full 3-step badge (2026-10: 10 → 6, obchod se nemá dát vykoupit za týden)
 const SEEDS_PER_STREAK = 5;
 const SEEDS_OUTDOOR_BONUS = 3; // added on top of base when outdoor
 const SEEDS_DAILY_BONUS = 4;   // daily login bonus
@@ -220,12 +270,13 @@ export const Skins = {
     const owned = new Set(m[profileId] || []);
     SKIN_CATALOG.frames.forEach(f => { if (f.cost === 0) owned.add(f.id); });
     SKIN_CATALOG.backgrounds.forEach(b => { if (b.cost === 0) owned.add(b.id); });
+    SKIN_CATALOG.char_avatars.forEach(c => { if (c.cost === 0) owned.add(c.id); });
     return owned;
   },
 
-  // ─── Buy avatar emoji ───
+  // ─── Buy avatar emoji / postavička ───
   buyAvatar(profileId, id) {
-    const item = SKIN_CATALOG.avatars.find(a => a.id === id && a.unlock?.type === 'buy');
+    const item = SKIN_CATALOG.avatars.find(a => a.id === id && a.unlock?.type === 'buy') || SKIN_CATALOG.char_avatars.find(a => a.id === id && a.cost > 0);
     if (!item) return { ok: false, reason: 'not-found' };
     const owned = this.getOwned(profileId);
     if (owned.has(id)) return { ok: true, reason: 'already-owned' };
@@ -316,34 +367,58 @@ export const Skins = {
     return true;
   },
 
-  // ─── ACCESSORIES: equip/get ───
-  getEquippedAccessory(profileId) {
-    const m = loadMap(KEY_EQUIPPED);
-    return (m[profileId] && m[profileId].accessory) || null;
-  },
-
-  setEquippedAccessory(profileId, accId) {
-    const m = loadMap(KEY_EQUIPPED);
-    if (!m[profileId]) m[profileId] = { avatar: 'av_default', frame: 'fr_none', bg: 'bg_default', accessory: null };
-    m[profileId].accessory = accId;
-    saveMap(KEY_EQUIPPED, m);
-  },
-
-  buyAccessory(profileId, accId) {
-    const acc = SKIN_CATALOG.accessories.find(a => a.id === accId);
-    if (!acc) return { ok: false, reason: 'not-found' };
-    if (!this.spendSeeds(profileId, acc.cost)) return { ok: false, reason: 'not-enough-seeds' };
+  // ─── DOPLŇKY: zrušeny 2026-10-16 (nešly napasovat na 12 greamíků × 3 stádia) ───
+  // Kdo si nějaký koupil, dostane semínka zpět. Vrací počet vrácených semínek (0 = nic).
+  refundAccessories(profileId) {
     const m = loadMap(KEY_OWNED_COSMETIC);
-    if (!m[profileId]) m[profileId] = [];
-    if (!m[profileId].includes(accId)) m[profileId].push(accId);
-    saveMap(KEY_OWNED_COSMETIC, m);
-    this.setEquippedAccessory(profileId, accId);
-    return { ok: true, acc };
+    const owned = (m[profileId] || []).filter(id => id.startsWith('acc_'));
+    if (!owned.length) return 0;
+    const back = owned.reduce((s, id) => s + (ACC_REFUND[id] || 0), 0);
+    m[profileId] = m[profileId].filter(id => !id.startsWith('acc_')); saveMap(KEY_OWNED_COSMETIC, m);
+    const e = loadMap(KEY_EQUIPPED); if (e[profileId]) { delete e[profileId].accessory; saveMap(KEY_EQUIPPED, e); }
+    this.addSeeds(profileId, back);
+    return back;
   },
 
-  getOwnedAccessories(profileId) {
-    const m = loadMap(KEY_OWNED_COSMETIC);
-    return new Set((m[profileId] || []).filter(id => SKIN_CATALOG.accessories.some(a => a.id === id)));
+  // Duha zrušena 2026-10-16 (na jiných pozadích nedávala smysl) → semínka zpět. Vrací počet vrácených semínek.
+  refundRemovedDecor(profileId) {
+    const REMOVED = { deco_rainbow: 240 };
+    const m = loadMap(KEY_DECOR), d = m[profileId];
+    if (!d?.owned) return 0;
+    const gone = d.owned.filter(id => REMOVED[id]);
+    if (!gone.length) return 0;
+    d.owned = d.owned.filter(id => !REMOVED[id]); d.hidden = (d.hidden || []).filter(id => !REMOVED[id]);
+    saveMap(KEY_DECOR, m);
+    const back = gone.reduce((s, id) => s + REMOVED[id], 0);
+    this.addSeeds(profileId, back);
+    return back;
+  },
+
+  // ─── VÝZDOBA ZAHRADY ───
+  getDecor(profileId) {
+    const m = loadMap(KEY_DECOR);
+    const d = m[profileId] || { owned: [], hidden: [] };
+    return { owned: d.owned || [], hidden: d.hidden || [] };
+  },
+  buyDecor(profileId, id) {
+    const it = SKIN_CATALOG.decor.find(x => x.id === id);
+    if (!it) return { ok: false, reason: 'not-found' };
+    const d = this.getDecor(profileId);
+    if (d.owned.includes(id)) return { ok: true, it };
+    if (!this.spendSeeds(profileId, it.cost)) return { ok: false, reason: 'not-enough-seeds' };
+    d.owned.push(id);
+    const m = loadMap(KEY_DECOR); m[profileId] = d; saveMap(KEY_DECOR, m);
+    return { ok: true, it };
+  },
+  toggleDecor(profileId, id) {
+    const d = this.getDecor(profileId);
+    if (!d.owned.includes(id)) return;
+    d.hidden = d.hidden.includes(id) ? d.hidden.filter(x => x !== id) : [...d.hidden, id];
+    const m = loadMap(KEY_DECOR); m[profileId] = d; saveMap(KEY_DECOR, m);
+  },
+  shownDecor(profileId) {
+    const d = this.getDecor(profileId);
+    return SKIN_CATALOG.decor.filter(x => d.owned.includes(x.id) && !d.hidden.includes(x.id));
   },
 
   // ─── Aliases for backward compatibility ───
@@ -358,23 +433,6 @@ export const Skins = {
     return result;
   },
 
-  getAccessory(profileId) {
-    return this.getEquippedAccessory(profileId);
-  },
-
-  isAccessoryOwned(profileId, accId) {
-    return this.getOwnedAccessories(profileId).has(accId);
-  },
-
-  equipAccessory(profileId, accId) {
-    // If already owned, just equip. Otherwise try to buy first.
-    if (this.isAccessoryOwned(profileId, accId)) {
-      this.setEquippedAccessory(profileId, accId);
-      return true;
-    }
-    return this.buyAccessory(profileId, accId);
-  },
-
   // ─── Utility: human-readable unlock text ───
   unlockText(skin, lang = 'cs') {
     const u = skin.unlock;
@@ -382,7 +440,8 @@ export const Skins = {
     if (u.type === 'totalTasks')
       return lang === 'cs' ? `Splň ${u.count} výzev`        : `Complete ${u.count} tasks`;
     if (u.type === 'world')
-      return lang === 'cs' ? `${u.count} výzev v ${u.world}` : `${u.count} tasks in ${u.world}`;
+    { const w = T[lang]?.worlds?.[u.world] || u.world;
+      return lang === 'cs' ? `${u.count} výzev ve světě ${w}` : `${u.count} tasks in ${w}`; }
     if (u.type === 'streak')
       return lang === 'cs' ? `Série ${u.count} dnů`         : `${u.count}-day streak`;
     return '';
