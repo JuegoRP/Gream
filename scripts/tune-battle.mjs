@@ -2,25 +2,21 @@
 // Každý speciál má složku „pro všechny“ (A) a složku, která roste se zkušeností (B).
 // Použití: node scripts/tune-battle.mjs  → vypíše SPECIALS k přepsání do battle-rules.js
 import fs from 'node:fs';
-import { SPECIALS, ARCHES, winMatrix } from '../js/battle-rules.js';
+import { SPECIALS, ARCHES, winMatrix, fam } from '../js/battle-rules.js';
 const DAMP = +(process.env.DAMP || 1);
 // [klíč A, meze], [klíč B, meze, směr (+1 = větší hodnota = silnější)]
-const P = {
+// Ladicí knoflíky podle vzoru speciálu (FAMILY v battle-rules.js): A = složka pro všechny, B = roste se zkušeností
+const TEMPLATE = {
   lilek:  { A: ['dmg', 0, 20],  B: ['mult', 1, 4, +1] },
   jiskra: { A: ['dmg', 0, 30],  B: ['stun', 0.15, 1, -1] },
   kamen:  { A: ['dmg', 0, 20],  B: ['block', 0.05, 0.95, +1] },
-  srodik:  { A: ['heal', 2, 50], B: null },  // vrácená energie je skoková → necháváme 0
+  srodik: { A: ['heal', 2, 50], B: null },
   vlnka:  { A: ['dmg', 0, 30],  B: ['mult', 1, 3, +1] },
   atlas:  { A: ['dmg', 0, 30],  B: null },
-  tlapka:  { A: ['dmg', 0, 20],  B: ['mult', 1, 4, +1] },
-  kanka:   { A: ['dmg', 0, 30],  B: ['stun', 0.15, 1, -1] },
-  poctik:  { A: ['dmg', 0, 20],  B: ['block', 0.05, 0.95, +1] },
-  hrejik:  { A: ['heal', 2, 50], B: null },
-  noticka: { A: ['dmg', 0, 30],  B: ['mult', 1, 3, +1] },
-  mapka:   { A: ['dmg', 0, 30],  B: null },
 };
-// ONLY=new → ladí jen greamíky podkategorií (původní čísla zůstávají)
-const TUNE = process.env.ONLY === 'new' ? ['tlapka', 'kanka', 'poctik', 'hrejik', 'noticka', 'mapka'] : null;
+const P = Object.fromEntries(ARCHES.map(a => [a, TEMPLATE[fam(a)]]));
+// ONLY=a,b,c → ladí jen vybrané greamíky
+const TUNE = process.env.ONLY ? process.env.ONLY.split(',') : null;
 const Ks = [0.45, 0.65, 0.85];
 const avgOf = (m) => Object.fromEntries(ARCHES.map(a => [a, ARCHES.filter(b => b !== a).reduce((s, b) => s + m[a][b], 0) / (ARCHES.length - 1)]));
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));

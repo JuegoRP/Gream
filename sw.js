@@ -6,7 +6,7 @@
 //  2026-10-16: dřív CSS cache-first + přednačtení z HTTP mezipaměti → po aktualizaci se ukazoval starý vzhled/obrázky.
 // ═══════════════════════════════════
 
-const VERSION = 'gream-v30';
+const VERSION = 'gream-v31';
 const STATIC_CACHE = `${VERSION}-static`;
 const TILES_CACHE  = `gream-tiles-v2`;   // vektorové dlaždice z 3rstudio.eu/api/gream/tiles
 

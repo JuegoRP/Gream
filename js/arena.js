@@ -24,6 +24,18 @@ export const ARCH_STYLE = {
   hrejik:  { color: '#f28c28', light: '#ffe08a', glyphs: null,                shape: 'heart'  },
   noticka: { color: '#e0503a', light: '#ffb199', glyphs: '♪♫♩♬',              shape: 'letter' },
   mapka:   { color: '#2f9e8f', light: '#f0d48a', glyphs: null,                shape: 'star'   },
+  hvezdik: { color: '#3b4fb8', light: '#ffe68a', glyphs: null,                shape: 'star'   },
+  mnamka:  { color: '#d9862e', light: '#ffd9a0', glyphs: null,                shape: 'heart'  },
+  bajka:   { color: '#5aa06e', light: '#f3e7c4', glyphs: 'ABCDEFGH✦',          shape: 'letter' },
+  ahojik:  { color: '#1fb3b3', light: '#fff0a0', glyphs: 'αβγЖЯあ字ñ',          shape: 'letter' },
+  banka:   { color: '#59c26b', light: '#d6f7c8', glyphs: null,                shape: 'paint'  },
+  hadak:   { color: '#7b4fc4', light: '#e0d0ff', glyphs: '?!',                shape: 'letter' },
+  mozik:   { color: '#d48ac4', light: '#f9dff2', glyphs: null,                shape: 'heart'  },
+  zdravik: { color: '#3fbf8f', light: '#ffffff', glyphs: '+',                 shape: 'letter' },
+  klapka:  { color: '#333333', light: '#f5f5f5', glyphs: '★',                 shape: 'letter' },
+  maska:   { color: '#8b5bc4', light: '#d0302a', glyphs: null,                shape: 'paint'  },
+  micek:   { color: '#e8762b', light: '#ffffff', glyphs: null,                shape: 'paint'  },
+  lvicek:  { color: '#c9d0dc', light: '#d0302a', glyphs: null,                shape: 'star'   },
 };
 const PAINT = ['#ff5a5f', '#ffb400', '#3ec1d3', '#7b61ff', '#4cd964', '#ff7ac6'];
 

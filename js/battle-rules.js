@@ -6,6 +6,8 @@
 //  Čísla speciálů ladí scripts/tune-battle.mjs – po změně spusť `npm test`.
 // ═══════════════════════════════════
 
+import { GROUPS } from './subcats.js';
+
 export const RULES = {
   HP: 100,
   ROUNDS: 10,
@@ -17,33 +19,58 @@ export const RULES = {
 };
 
 // Speciály – témata podle světa. Čísla ověřená simulací (test/battle-balance.mjs, 2,16 mil. zápasů):
-// 12 greamíků (6 + 6 podkategorií) vyhrává 47,0–52,2 % na úrovni začátečník / průměr / expert (N=20000), nejsilnější dvojice 57 : 43
-// (od 2026-10-16 včetně „Účinné!“ – poloviční bonus světa přes podkategorii, HALF_SHARE).
+// 24 greamíků (4 v každém světě, každý své téma). Souboj losuje otázky rovnoměrně ze 24 skupin.
+// Ověřeno simulací N=20000 na dvojici a úroveň: každý vyhrává 48,9–51,7 %, nejsilnější dvojice 57 : 43.
 export const SPECIALS = {
-  lilek:  { id: 'leafstorm', mult: 2, dmg: 2 },            // Listová smršť: 2 poškození hned + příští zásah 2×
-  jiskra: { id: 'bolt', dmg: 10, stun: 0.8 },              // Blesk: 10 poškození + soupeřův příští útok −20 %
-  kamen:  { id: 'wall', block: 0.25, hits: 2, dmg: 7 },    // Kamenná zeď: 7 poškození + další 2 zásahy soupeře −25 %
-  srodik:  { id: 'hug', heal: 14, energy: 0 },              // Objetí: vyléčí 14 (2026-10-16: 13 → 14 po zavedení „Účinné!“ z podkategorií)
-  vlnka:  { id: 'wave', dmg: 1, mult: 2 },                 // Barevná vlna: 1 poškození + příští otázka bez jedné špatné možnosti + příští zásah 2×
-  atlas:  { id: 'compass', dmg: 10 },                      // Kompas: 10 poškození + příští otázka z mého světa (jistý „Super účinné!“)
-  // Greamíci podkategorií (2026-10): stejná mechanika jako rodič ze stejného světa, vlastní název a čísla (ladí tune-battle.mjs)
-  tlapka:  { id: 'pounce', mult: 2, dmg: 3 },
-  kanka:   { id: 'inkblot', dmg: 12, stun: 0.85 },
-  poctik:  { id: 'numshield', block: 0.25, hits: 2, dmg: 8 },
-  hrejik:  { id: 'warmhug', heal: 15, energy: 0 },
-  noticka: { id: 'solo', dmg: 3, mult: 2 },
-  mapka:   { id: 'expedition', dmg: 11 },
+  // Listová smršť a příbuzné (FAMILY = mechanika): poškození hned + příští zásah ×mult
+  lilek:   { id: 'leafstorm', mult: 1.95, dmg: 3 },
+  tlapka:  { id: 'pounce', mult: 1.95, dmg: 3 },
+  micek:   { id: 'goal', mult: 1.95, dmg: 3 },
+  klapka:  { id: 'action', mult: 1.95, dmg: 3 },
+  // Blesk: poškození + soupeřův příští útok ×stun
+  jiskra:  { id: 'bolt', dmg: 12, stun: 0.9 },
+  kanka:   { id: 'inkblot', dmg: 12, stun: 0.9 },
+  ahojik:  { id: 'babel', dmg: 12, stun: 0.9 },
+  hvezdik: { id: 'meteor', dmg: 12, stun: 0.9 },
+  // Zeď: poškození + další `hits` zásahy soupeře slabší o `block`
+  kamen:   { id: 'wall', block: 0.22, hits: 2, dmg: 8.5 },
+  poctik:  { id: 'numshield', block: 0.22, hits: 2, dmg: 8.5 },
+  banka:   { id: 'experiment', block: 0.22, hits: 2, dmg: 8.5 },
+  maska:   { id: 'curtain', block: 0.22, hits: 2, dmg: 8.5 },
+  // Objetí: vyléčí `heal`
+  srodik:  { id: 'hug', heal: 14, energy: 0 },
+  hrejik:  { id: 'warmhug', heal: 14, energy: 0 },
+  zdravik: { id: 'firstaid', heal: 14, energy: 0 },
+  mnamka:  { id: 'snack', heal: 14, energy: 0 },
+  // Vlna: poškození + příští otázka bez jedné špatné možnosti + příští zásah ×mult
+  vlnka:   { id: 'wave', dmg: 2, mult: 2 },
+  noticka: { id: 'solo', dmg: 2, mult: 2 },
+  hadak:   { id: 'hint', dmg: 2, mult: 2 },
+  bajka:   { id: 'oncebefore', dmg: 2, mult: 2 },
+  // Kompas: poškození + příští otázka z mé skupiny (jisté „Super účinné!“)
+  atlas:   { id: 'compass', dmg: 10.6 },
+  mapka:   { id: 'expedition', dmg: 10.6 },
+  lvicek:  { id: 'roar', dmg: 10.6 },
+  mozik:   { id: 'focus', dmg: 10.6 },
 };
 
-// Rodina = rodič ze stejného světa (mechanika speciálu, svět, AI); ARCH_SUB = podkategorie, ve které je greamík „Super účinný“
-export const FAMILY = { tlapka: 'lilek', kanka: 'jiskra', poctik: 'kamen', hrejik: 'srodik', noticka: 'vlnka', mapka: 'atlas' };
-export const ARCH_SUB = { tlapka: 'animals', kanka: 'grammar', poctik: 'math', hrejik: 'emotions', noticka: 'music', mapka: 'geography' };
+// Mechanika speciálu podle „vzoru“ (6 vzorů × 4 greamíci)
+export const FAMILY = {
+  tlapka: 'lilek', micek: 'lilek', klapka: 'lilek',
+  kanka: 'jiskra', ahojik: 'jiskra', hvezdik: 'jiskra',
+  poctik: 'kamen', banka: 'kamen', maska: 'kamen',
+  hrejik: 'srodik', zdravik: 'srodik', mnamka: 'srodik',
+  noticka: 'vlnka', hadak: 'vlnka', bajka: 'vlnka',
+  mapka: 'atlas', lvicek: 'atlas', mozik: 'atlas',
+};
 export const fam = (a) => FAMILY[a] || a;
 
+// Skupina a svět každého greamíka (z GROUPS v subcats.js)
+export const ARCH_GROUP = {}, ARCH_WORLD = {}, GROUP_WORLD = {};
+for (const [g, v] of Object.entries(GROUPS)) { ARCH_GROUP[v.arch] = g; ARCH_WORLD[v.arch] = v.world; GROUP_WORLD[g] = v.world; }
+export const ARCHES = Object.keys(ARCH_GROUP);
+export const GROUP_IDS = Object.keys(GROUPS);
 export const BASE_ARCHES = ['lilek', 'jiskra', 'kamen', 'srodik', 'vlnka', 'atlas'];
-export const ARCH_WORLD = { lilek: 'nature', jiskra: 'language', kamen: 'logic', srodik: 'feelings', vlnka: 'arts', atlas: 'world' };
-Object.keys(FAMILY).forEach(a => { ARCH_WORLD[a] = ARCH_WORLD[FAMILY[a]]; });
-export const ARCHES = Object.keys(ARCH_WORLD);
 
 export function newFighter(arch, extra = {}) {
   return { arch, hp: RULES.HP, energy: 0, mult: 1, stun: 1, wall: 0, fiftyNext: false, ownWorldNext: false, ...extra };
@@ -116,25 +143,24 @@ export function winner(f) {
 
 // ─── Simulace (test balancu a ladění) ───
 // K = pravděpodobnost, že hráč odpověď zná; jinak tipuje mezi `choices` možnostmi.
-// HALF_SHARE = podíl otázek, které se přes podkategorii týkají i jiného světa (změřeno na datech 1.1: 26 %)
-export const HALF_SHARE = 0.26;
-// Podíl otázek světa, jejichž hlavní podkategorie je ta „greamíkova“ (změřeno na datech 1.1)
-export const SUB_SHARE = { animals: 0.29, grammar: 0.37, math: 0.46, emotions: 0.43, music: 0.38, geography: 0.19 };
-// Váha bonusu pro greamíka: základní = svůj svět 1 / přesah 0,5; podkategoriový = svá podkategorie 1 / zbytek svého světa 0,5
+// Bonus greamíka za otázku: 1 = otázka z jeho skupiny („Super účinné!“), 0.5 = jiná skupina jeho světa nebo
+// vedlejší podkategorie z jeho skupiny („Účinné!“), jinak 0. q = { world, group, side }
 export function domainWeightFor(arch, q) {
-  const sub = ARCH_SUB[arch];
-  if (sub) return q.main === sub ? 1 : (q.world === ARCH_WORLD[arch] || q.side === sub) ? 0.5 : 0;
-  return q.world === ARCH_WORLD[arch] ? 1 : (q.mainWorld === ARCH_WORLD[arch] || q.sideWorld === ARCH_WORLD[arch]) ? 0.5 : 0;
+  const g = ARCH_GROUP[arch];
+  if (!g) return 0;
+  if (q.group === g) return 1;
+  return (q.world === ARCH_WORLD[arch] || q.side === g) ? 0.5 : 0;
 }
+// Podíl otázek s vedlejší podkategorií (změřeno na datech 1.1)
+export const SIDE_SHARE = 0.26;
+// Souboj vybírá otázky tak, že každá skupina přijde na řadu stejně často → simulace táhne skupinu rovnoměrně
 export function simulate(archA, archB, K, rnd = Math.random, choices = 3) {
   const f = [newFighter(archA), newFighter(archB)];
   for (let r = 0; r < RULES.ROUNDS; r++) {
     for (let i = 0; i < 2; i++) if (aiWantsSpecial(f[i])) useSpecial(f[i], f[1 - i]);
     if (f[0].hp <= 0 || f[1].hp <= 0) break;
-    const qBase = BASE_ARCHES[Math.floor(rnd() * 6)], world = ARCH_WORLD[qBase];
-    const subHere = Object.keys(ARCH_SUB).find(a => ARCH_WORLD[a] === world);
-    const q = { world, main: rnd() < SUB_SHARE[ARCH_SUB[subHere]] ? ARCH_SUB[subHere] : null, side: null, mainWorld: null, sideWorld: null };
-    if (rnd() < HALF_SHARE) q.sideWorld = ARCH_WORLD[BASE_ARCHES.filter(a => a !== qBase)[Math.floor(rnd() * 5)]];
+    const group = GROUP_IDS[Math.floor(rnd() * GROUP_IDS.length)];
+    const q = { group, world: GROUP_WORLD[group], side: rnd() < SIDE_SHARE ? GROUP_IDS[Math.floor(rnd() * GROUP_IDS.length)] : null };
     const ans = f.map(me => {
       const knows = rnd() < K;
       const ok = knows || rnd() < (me.fiftyNext ? 1 / (choices - 1) : 1 / choices);

@@ -4144,3 +4144,975 @@
 {"id":"packb833|en","ok":"yes","why":"Unimate installed at GM in 1961 handling hot die-castings."}
 {"id":"packb843|cs","ok":"yes","why":"Správně: rhizobia fixují N2 do přístupné formy, bobovité se používají jako zelené hnojení."}
 {"id":"packb843|en","ok":"yes","why":"Correct: rhizobia fix N2 into plant-available form; legumes used as green manure."}
+{"id":"grp14|cs","ok":"yes","why":"Perrault 1697, verre = sklo, doloženo."}
+{"id":"grp14|en","ok":"yes","why":"Same fact, accurate."}
+{"id":"grp15|cs","ok":"yes","why":"Kanonická scéna z Grimmů, přesné."}
+{"id":"grp15|en","ok":"yes","why":"Accurate Grimm scene."}
+{"id":"grp17|cs","ok":"no","why":"Viktorka je postava z Babičky, ale Němcová ji nepsala „podle vzpomínek na dětství“ – předlohou byla reálná osoba z Ratibořic; formulace zavádějící."}
+{"id":"grp17|en","ok":"no","why":"Same misleading claim about childhood memories; Viktorka based on a real person."}
+{"id":"grp18|cs","ok":"yes","why":"Slovo robot navrhl Josef Čapek, R.U.R. premiéra 25. 1. 1921."}
+{"id":"grp18|en","ok":"yes","why":"Correct: Josef Čapek coined it, premiere 1921."}
+{"id":"grp19|cs","ok":"no","why":"Kytice vyšla 1853, ale má 13 básní jen ve vydání od r. 1861 (první vydání 12); navíc řazení k romantismu je diskutabilní (Erben bývá řazen k romantismu, ale dílo má baladické/realistické rysy)."}
+{"id":"grp19|en","ok":"no","why":"13 poems only from 1861 edition (first 1853 had 12); Romanticism label debatable."}
+{"id":"grp20|cs","ok":"no","why":"Malá mořská víla vyšla 1837, ale tvrzení, že ji „sám zařadil mezi pohádky, kde si hraje s vlastní fantazií“, je neověřitelná parafráze."}
+{"id":"grp20|en","ok":"no","why":"1837 correct, but the claim about how Andersen categorized it is unverifiable."}
+{"id":"grp0|cs","ok":"yes","why":"Josef Čapek Devatero pohádek ilustroval; podíl na textu doložen (spolupráce bratří)."}
+{"id":"grp0|en","ok":"yes","why":"Josef Čapek illustrated Nine Fairy Tales and collaborated on the text."}
+{"id":"grp1|cs","ok":"no","why":"Kytice má 13 básní, ale jen 12 balad + úvodní báseň Kytice (ne balada); Vodník, Polednice, Záhořovo lože jsou správně."}
+{"id":"grp1|en","ok":"no","why":"Kytice has 13 poems, but only 12 ballads plus the opening poem; not thirteen ballads."}
+{"id":"grp3|cs","ok":"yes","why":"Vodník je ikonická pohádková bytost, Erben má stejnojmennou baladu."}
+{"id":"grp3|en","ok":"yes","why":"Water Sprite is a well-known Czech fairy-tale figure; Erben wrote the ballad Vodník."}
+{"id":"grp5|cs","ok":"yes","why":"Ilustroval Josef Čapek, bratr Karla Čapka, malíř."}
+{"id":"grp5|en","ok":"yes","why":"Illustrated by Josef Čapek, painter and brother of Karel Čapek."}
+{"id":"grp12|cs","ok":"yes","why":"Dornröschen = „Růženka“; Grimmova verze, přesné."}
+{"id":"grp12|en","ok":"yes","why":"Dornröschen translates as Little Briar Rose; correct."}
+{"id":"grp13|cs","ok":"yes","why":"Ošklivé káčátko vyšlo 1843, jedna z nejznámějších Andersenových pohádek."}
+{"id":"grp13|en","ok":"yes","why":"The Ugly Duckling published 1843; among Andersen's most famous."}
+{"id":"grp37|cs","ok":"yes","why":"Dcera Karin nemocná, požádala o příběh – doloženo."}
+{"id":"grp37|en","ok":"yes","why":"Daughter Karin ill, asked for a story – documented."}
+{"id":"grp38|cs","ok":"yes","why":"Vlastní jméno Charles Lutwidge Dodgson, matematik a oxfordský učitel."}
+{"id":"grp38|en","ok":"yes","why":"Real name Charles Lutwidge Dodgson, Oxford mathematician and teacher."}
+{"id":"grp40|cs","ok":"yes","why":"Francouzský pilot, knihu i ilustrace dokončil v USA v exilu."}
+{"id":"grp40|en","ok":"yes","why":"French pilot, finished book and own illustrations in US exile."}
+{"id":"grp41|cs","ok":"yes","why":"Čtyři zakladatelé, Zmijozel je kolej, ne škola."}
+{"id":"grp41|en","ok":"yes","why":"Four founders; Slytherin is a house, not the school."}
+{"id":"grp42|cs","ok":"yes","why":"Medvídek syna C. R. Milnea; ilustrace E. H. Shepard."}
+{"id":"grp42|en","ok":"yes","why":"Named after son's teddy bear; illustrated by E. H. Shepard."}
+{"id":"grp43|cs","ok":"yes","why":"Andersen autorské, Grimmové sbírali lidové – přesné."}
+{"id":"grp43|en","ok":"yes","why":"Andersen original, Grimms collected folk tales – accurate."}
+{"id":"grp22|cs","ok":"yes","why":"Perrault 1697 má skleněný střevíček; kožešinová varianta (vair) je doložená v lidové tradici — přesné."}
+{"id":"grp22|en","ok":"yes","why":"Same claim; glass slipper in Perrault, fur in some older folk versions — accurate."}
+{"id":"grp23|cs","ok":"yes","why":"Kocour v botách je součástí Perraultovy sbírky 1697 a patří k nejznámějším."}
+{"id":"grp23|en","ok":"yes","why":"Puss in Boots in Perrault's 1697 collection, among his best-known — correct."}
+{"id":"grp24|cs","ok":"yes","why":"Andersen 1837, sbírka pohádek pro děti (Eventyr, fortalte for Børn) — správně."}
+{"id":"grp24|en","ok":"yes","why":"Andersen published it in 1837 in a collection of fairy tales for children — correct."}
+{"id":"grp25|cs","ok":"yes","why":"Perraultova sbírka vyšla v Paříži 1697; osm pohádek (tři ve verši + Histoires) — přijatelné."}
+{"id":"grp25|en","ok":"yes","why":"Paris 1697, eight tales — standard accepted count."}
+{"id":"grp26|cs","ok":"yes","why":"První svazek 1812 obsahoval 86 pohádek — doloženo."}
+{"id":"grp26|en","ok":"yes","why":"First volume 1812 with 86 tales — correct."}
+{"id":"grp27|cs","ok":"yes","why":"Malá mořská víla, 1837, poprvé v Kodani (Eventyr, fortalte for Børn) — správně."}
+{"id":"grp27|en","ok":"yes","why":"Written 1837 and first published in Copenhagen that year — correct."}
+{"id":"grp44|cs","ok":"yes","why":"Přesné – psáno v USA, vydáno 1943 v New Yorku."}
+{"id":"grp44|en","ok":"yes","why":"Accurate – written in US exile, published New York 1943."}
+{"id":"grp46|cs","ok":"yes","why":"Durmstrang je jiná škola; čtyři zakladatelé dali jména kolejí."}
+{"id":"grp46|en","ok":"yes","why":"Correct – Durmstrang separate; four founders named the houses."}
+{"id":"grp48|cs","ok":"yes","why":"Věrné shrnutí ponaučení bajky o vráně a džbánu."}
+{"id":"grp48|en","ok":"yes","why":"Faithful moral summary of the crow fable."}
+{"id":"grp50|cs","ok":"yes","why":"Správné ponaučení (lev a myš) – nepodceňovat druhé."}
+{"id":"grp50|en","ok":"yes","why":"Correct moral (lion and mouse) – don't underestimate others."}
+{"id":"grp51|cs","ok":"yes","why":"Odpovídá ponaučení o želvě a zajíci."}
+{"id":"grp51|en","ok":"yes","why":"Matches tortoise-and-hare lesson."}
+{"id":"grp52|cs","ok":"yes","why":"Fráze i Ezopovo datování (6. stol. př. n. l.) jsou ustálené."}
+{"id":"grp52|en","ok":"yes","why":"Phrase origin and Aesop's 6th-century BC dating are standard."}
+{"id":"grp30|cs","ok":"no","why":"Perraultova moralita chválí 'la grâce' a dobrou povahu (a že půvab dokáže víc než krása), ne že by chytrost byla nad zlato; formulace posouvá text."}
+{"id":"grp30|en","ok":"no","why":"Moral praises grace/good temper over beauty, not 'wit worth more than beauty' — misstated."}
+{"id":"grp32|cs","ok":"yes","why":"Vyšel 1943 v New Yorku (Reynal & Hitchcock), Saint-Exupéry žil do 1944."}
+{"id":"grp32|en","ok":"yes","why":"First published 1943 in New York, author died 1944."}
+{"id":"grp33|cs","ok":"yes","why":"Sekora byl sportovní novinář (Lidové noviny) a kreslíř; Ferda vznikl pro novinové čtenáře."}
+{"id":"grp33|en","ok":"yes","why":"Sekora was sports journalist and illustrator; Ferda created for newspaper readers."}
+{"id":"grp34|cs","ok":"yes","why":"Čtyři koleje i odjezd z nástupiště 9 a 3/4 jsou kanonické."}
+{"id":"grp34|en","ok":"yes","why":"Four houses and Platform 9¾ departure are canonical."}
+{"id":"grp35|cs","ok":"yes","why":"Pipi vznikla 1941 pro dceru Karin, která byla nemocná a chtěla příběh."}
+{"id":"grp35|en","ok":"yes","why":"Pippi created 1941 for ill daughter Karin who asked for a story."}
+{"id":"grp36|cs","ok":"yes","why":"Saint-Exupéry byl pilot; kniha poprvé 1943 v New Yorku."}
+{"id":"grp36|en","ok":"yes","why":"He was a pilot; book first published 1943 in New York."}
+{"id":"grp61|cs","ok":"yes","why":"Grimm: Hänsel und Gretel; česká varianta Jeník a Mařenka je ustálená."}
+{"id":"grp61|en","ok":"yes","why":"Hansel and Gretel correct; Czech Jeník/Mařenka is established."}
+{"id":"grp63|cs","ok":"yes","why":"Vřeteno (spindle) je správný klíčový předmět v Šípkové Růžence."}
+{"id":"grp63|en","ok":"yes","why":"Spindle prick and sleep are core plot; spindle is the key object."}
+{"id":"grp64|cs","ok":"yes","why":"Dýně→kočár, myši→koně, hadry→šaty jsou standardní motivy."}
+{"id":"grp64|en","ok":"yes","why":"Pumpkin, mice, rags transformation are standard Cinderella motifs."}
+{"id":"grp65|cs","ok":"yes","why":"Peter Pan létá s vílím prachem Zvonilky a odmítá dospět."}
+{"id":"grp65|en","ok":"yes","why":"Tinker Bell's fairy dust and refusal to grow up are canonical."}
+{"id":"grp66|cs","ok":"no","why":"V Grimmovi zrcadlo řekne, že Sněhurka je krásnější; 'tisíckrát' je z Disneye, ne přesné."}
+{"id":"grp66|en","ok":"no","why":"'A thousand times fairer' is Disney phrasing, not the Grimm text."}
+{"id":"grp70|cs","ok":"yes","why":"Aesopova bajka: myš osvobodí lva ze sítě, ponaučení sedí."}
+{"id":"grp70|en","ok":"yes","why":"Aesop's fable: mouse frees lion from net; lesson accurate."}
+{"id":"grp53|cs","ok":"yes","why":"Moral i La Fontaine 1668 (první sbírka) správně."}
+{"id":"grp53|en","ok":"yes","why":"Moral and La Fontaine 1668 correct."}
+{"id":"grp54|cs","ok":"yes","why":"Předvídavost/příprava na zimu sedí; La Fontaine 1668 správně."}
+{"id":"grp54|en","ok":"yes","why":"Foresight theme and La Fontaine 1668 correct."}
+{"id":"grp55|cs","ok":"yes","why":"Ezop otrok, cca 6. stol. př. n. l. – standardní, opatrně formulováno."}
+{"id":"grp55|en","ok":"yes","why":"Aesop slave ~6th c. BC, hedged correctly."}
+{"id":"grp56|cs","ok":"yes","why":"Děj bajky přesně: želva vytrvalostí, zajíc usne."}
+{"id":"grp56|en","ok":"yes","why":"Plot accurate."}
+{"id":"grp57|cs","ok":"yes","why":"Děj bajky O lišce a hroznech přesně."}
+{"id":"grp57|en","ok":"yes","why":"Plot accurate."}
+{"id":"grp58|cs","ok":"yes","why":"Děj O lvu a myši přesně."}
+{"id":"grp58|en","ok":"yes","why":"Plot accurate."}
+{"id":"grp96|cs","ok":"yes","why":"Ciao pochází z benátského 's-ciavo' a používá se při pozdravu i loučení."}
+{"id":"grp96|en","ok":"yes","why":"Correct: Venetian origin, used for both hello and goodbye."}
+{"id":"grp97|cs","ok":"yes","why":"Všechny tři překlady jsou správné."}
+{"id":"grp97|en","ok":"yes","why":"All three translations correct."}
+{"id":"grp98|cs","ok":"yes","why":"Správné překlady."}
+{"id":"grp98|en","ok":"yes","why":"Correct translations."}
+{"id":"grp99|cs","ok":"yes","why":"Správné překlady."}
+{"id":"grp99|en","ok":"yes","why":"Correct translations."}
+{"id":"grp102|cs","ok":"no","why":"Konnichiwa se používá spíš v poledne/odpoledne, ale tvrzení je zjednodušující; 'hlavně odpoledne' je nepřesné."}
+{"id":"grp102|en","ok":"no","why":"'Mainly afternoon' is imprecise; konnichiwa is daytime greeting, not specifically afternoon."}
+{"id":"grp103|cs","ok":"yes","why":"Správně, danke = děkuji."}
+{"id":"grp103|en","ok":"yes","why":"Correct."}
+{"id":"grp89|cs","ok":"yes","why":"Kolofon (explicit) tradičně uváděl tiskaře, místo a rok; badatelům slouží k dataci."}
+{"id":"grp89|en","ok":"yes","why":"Colophon traditionally named printer, place and year; used for dating."}
+{"id":"grp90|cs","ok":"yes","why":"Inkunábule = tisk do roku 1500 (tj. před 1501)."}
+{"id":"grp90|en","ok":"yes","why":"Incunabulum = printed before 1501, i.e. printed not handwritten."}
+{"id":"grp91|cs","ok":"yes","why":"Gutenbergův knihtisk s kovovými literami ~1450, počátek éry tištěných knih v Evropě."}
+{"id":"grp91|en","ok":"yes","why":"Gutenberg's movable metal type ~1450 launched print era in Europe."}
+{"id":"grp92|cs","ok":"yes","why":"Inkunábule = tisk do 1500, rukopis = ručně psaný; správné a přesné."}
+{"id":"grp92|en","ok":"yes","why":"Incunabulum = print before 1501, manuscript = handwritten; correct."}
+{"id":"grp94|cs","ok":"yes","why":"Kolofon býval na konci; dnes jeho roli plní tiráž (impresum) – přesné."}
+{"id":"grp94|en","ok":"yes","why":"Colophon at book's end; role now largely taken by imprint/title verso."}
+{"id":"grp95|cs","ok":"yes","why":"Redakce → sazba/zlom → tisk/vazba; standardní výrobní sled."}
+{"id":"grp95|en","ok":"yes","why":"Editing → typesetting/layout → printing/binding; standard order."}
+{"id":"grp71|cs","ok":"yes","why":"Ezopova bajka Liška a hrozny, rčení 'kyselé hrozny' skutečně odtud."}
+{"id":"grp71|en","ok":"yes","why":"Aesop's fable; phrase \"sour grapes\" originates here."}
+{"id":"grp72|cs","ok":"no","why":"Nápis 'Erised' čtený pozpátku je 'desire' (touha), ale v češtině se čte jako 'touha' — nepřesné/překroucené. Text je anglický a čte se jako 'desire', nikoli 'touha'."}
+{"id":"grp72|en","ok":"yes","why":"Inscription \"erised stra ehru oyt ube cafru oyt on wohsi\" reversed reads \"I show not your face but your heart's desire.\""}
+{"id":"grp77|cs","ok":"no","why":"Vágní/neověřitelné — výpůjční lhůty se liší (dny až měsíce), 'obvykle několik týdnů' je nepodložené zobecnění."}
+{"id":"grp77|en","ok":"no","why":"Vague/unverifiable generalization; loan periods vary widely."}
+{"id":"grp82|cs","ok":"yes","why":"Pohádka 'Stoleček, oslík a obušek' — stolek dostane nejstarší syn; mlýnek a oslík patří jiným pohádkám."}
+{"id":"grp82|en","ok":"yes","why":"Grimm's \"The Wishing-Table, the Gold-Ass, and the Cudgel in the Sack\" — eldest son gets the table."}
+{"id":"grp83|cs","ok":"no","why":"Aladin NENÍ součástí původní arabské sbírky Tisíc a jedna noc; přidal jej Galland v 18. stol. Formulace 'pochází ze sbírky' je nepřesná."}
+{"id":"grp83|en","ok":"no","why":"Aladdin is not in the original Nights; it was added by Galland in the 18th century — 'comes from the collection' is inaccurate."}
+{"id":"grp88|cs","ok":"yes","why":"Knižní šitá vazba nití je doložena přes 1000 let (rané kodexy) a dodnes je znakem kvality."}
+{"id":"grp88|en","ok":"yes","why":"Thread-sewn binding used for over a millennium; still a quality marker."}
+{"id":"grp111|cs","ok":"no","why":"'güle güle' znamená 'jdi s úsměvem' jen volně; doslova 'jdi se smíchem' – hraniční, ale spíš zavádějící"}
+{"id":"grp111|en","ok":"no","why":"'go with a smile' is a loose/incorrect gloss; literally 'go laughing'"}
+{"id":"grp112|cs","ok":"yes","why":"shalom = pozdrav i rozloučení; bevakasha = prosím/není zač"}
+{"id":"grp112|en","ok":"yes","why":"correct meanings for shalom and bevakasha"}
+{"id":"grp113|cs","ok":"yes","why":"mahalo = děkuji, ohana = rodina; popularizováno Lilo a Stitch"}
+{"id":"grp113|en","ok":"yes","why":"correct Hawaiian meanings and film reference"}
+{"id":"grp114|cs","ok":"yes","why":"konnichiwa = dobrý den, sayōnara = sbohem"}
+{"id":"grp114|en","ok":"yes","why":"correct Japanese meanings"}
+{"id":"grp116|cs","ok":"yes","why":"arabština i hebrejština se píší zprava doleva"}
+{"id":"grp116|en","ok":"yes","why":"both written right to left"}
+{"id":"grp117|cs","ok":"yes","why":"řecká abeceda ~8. stol. př. n. l., přes 2800 let, stále používána"}
+{"id":"grp117|en","ok":"yes","why":"Greek alphabet dates to ~8th c. BCE and is still used"}
+{"id":"grp104|cs","ok":"yes","why":"Aloha běžně znamená ahoj/sbohem i lásku a přátelství."}
+{"id":"grp104|en","ok":"yes","why":"Stejné jako cs, obecně přijímané."}
+{"id":"grp105|cs","ok":"yes","why":"Merci = děkuji; etymologie z lat. merces (odměna, milost) je správná."}
+{"id":"grp105|en","ok":"yes","why":"Merci from Latin merces (reward/favour) — správně."}
+{"id":"grp107|cs","ok":"yes","why":"Aloha i mahalo = děkuji — správně."}
+{"id":"grp107|en","ok":"yes","why":"Aloha + mahalo = thank you — správně."}
+{"id":"grp108|cs","ok":"yes","why":"Merhaba/güle güle/teşekkür ederim — správně."}
+{"id":"grp108|en","ok":"yes","why":"Turecké pozdravy a poděkování — správně."}
+{"id":"grp109|cs","ok":"yes","why":"Marhaba, shukran, ma'a salama — správně."}
+{"id":"grp109|en","ok":"yes","why":"Arabské pozdravy/poděkování — správně."}
+{"id":"grp110|cs","ok":"yes","why":"Shalom, lehitraot, toda — správně."}
+{"id":"grp110|en","ok":"yes","why":"Hebrejské pozdravy a poděkování — správně."}
+{"id":"grp118|cs","ok":"yes","why":"Cyrilice se používá v Bulharsku, Srbsku i na Ukrajině – správně."}
+{"id":"grp118|en","ok":"yes","why":"Cyrillic is indeed used in Bulgaria, Serbia and Ukraine."}
+{"id":"grp119|cs","ok":"yes","why":"Japonština používá hiraganu, katakanu a kandži – přesné."}
+{"id":"grp119|en","ok":"yes","why":"Japanese uses hiragana, katakana and kanji – correct."}
+{"id":"grp120|cs","ok":"yes","why":"Latinku používá nejvíc lidí na světě – obecně uznávané."}
+{"id":"grp120|en","ok":"yes","why":"Latin script has the most users worldwide – widely accepted."}
+{"id":"grp121|cs","ok":"yes","why":"Arabština se píše zprava doleva a písmena se spojují – správně."}
+{"id":"grp121|en","ok":"yes","why":"Arabic is right-to-left with joined letters – correct."}
+{"id":"grp122|cs","ok":"yes","why":"Tři systémy: hiragana, katakana, převzaté kandži – přesné."}
+{"id":"grp122|en","ok":"yes","why":"Three systems incl. borrowed kanji – correct."}
+{"id":"grp123|cs","ok":"yes","why":"Cyrilice vychází z řecké alfabety a přidala znaky pro slovanské hlásky – správně."}
+{"id":"grp123|en","ok":"yes","why":"Cyrillic based on Greek with added Slavic letters – correct."}
+{"id":"grp124|cs","ok":"yes","why":"Řecká alfabeta ~8. st. př. n. l., cyrilice i kana až 9. st. n. l. – správně."}
+{"id":"grp124|en","ok":"yes","why":"Greek ~8th c. BCE; Cyrillic and kana ~9th c. CE – correct."}
+{"id":"grp125|cs","ok":"yes","why":"Latinka je nejrozšířenější písmo, většina jazyků – obhajitelné."}
+{"id":"grp125|en","ok":"yes","why":"Latin script is the most widespread, used by majority of languages."}
+{"id":"grp126|cs","ok":"yes","why":"Arabské písmo RTL, tvary písmen dle pozice – správně."}
+{"id":"grp126|en","ok":"yes","why":"Arabic RTL, contextual letter forms – correct."}
+{"id":"grp127|cs","ok":"no","why":"Japonština používá i kandži – tři systémy, ne dva; zavádějící."}
+{"id":"grp127|en","ok":"no","why":"Japanese also uses kanji (three scripts), not just two syllabaries."}
+{"id":"grp128|cs","ok":"yes","why":"Řečtina ovlivnila latinku i cyrilici, podobné tvary – správně."}
+{"id":"grp128|en","ok":"yes","why":"Greek influenced Latin and Cyrillic; similar letter shapes – correct."}
+{"id":"grp129|cs","ok":"yes","why":"Klinové písmo v Mezopotámii, rákosové rydlo do hlíny – správně."}
+{"id":"grp129|en","ok":"yes","why":"Cuneiform in Mesopotamia, reed stylus on wet clay – correct."}
+{"id":"grp131|cs","ok":"yes","why":"Románské jazyky, oba z latiny – správně."}
+{"id":"grp131|en","ok":"yes","why":"Both Romance, both from Latin – correct."}
+{"id":"grp132|cs","ok":"yes","why":"Obě slovanské, indoevropské – správně."}
+{"id":"grp132|en","ok":"yes","why":"Both Slavic branch of Indo-European – correct."}
+{"id":"grp133|cs","ok":"yes","why":"Obě germánské – správně."}
+{"id":"grp133|en","ok":"yes","why":"Both Germanic – correct."}
+{"id":"grp134|cs","ok":"yes","why":"Arabské písmo zleva? Ne – zprava doleva, používá se pro perštinu i urdštinu – správně."}
+{"id":"grp134|en","ok":"yes","why":"Right-to-left, used for Persian and Urdu – correct."}
+{"id":"grp135|cs","ok":"yes","why":"Ugrofinské, švédština germánská – správně."}
+{"id":"grp135|en","ok":"yes","why":"Finnic group, not related to Swedish – correct."}
+{"id":"grp136|cs","ok":"no","why":"Cyrilice nevznikla z řecké abecedy přímo? Vznikla – ale 'nepřetržité používání 2700 let' je sporné/přesné číslo."}
+{"id":"grp136|en","ok":"no","why":"'Over 2,700 years continuous use' is imprecise/contested; Cyrillic descent is indirect."}
+{"id":"grp144|cs","ok":"yes","why":"Germánské národy, Skandinávie i Anglie – správně."}
+{"id":"grp144|en","ok":"yes","why":"Germanic peoples, Scandinavia and England – correct."}
+{"id":"grp145|cs","ok":"yes","why":"Klasifikace jazyků je správná."}
+{"id":"grp145|en","ok":"yes","why":"Language classification is correct."}
+{"id":"grp146|cs","ok":"yes","why":"Portugalská kolonie, úřední jazyk, výjimka v Jižní Americe – pravda."}
+{"id":"grp146|en","ok":"yes","why":"Correct."}
+{"id":"grp147|cs","ok":"yes","why":"Hieroglyfy i arabština jako úřední jazyk – pravda."}
+{"id":"grp147|en","ok":"yes","why":"Correct."}
+{"id":"grp148|cs","ok":"yes","why":"Samostatný germánský jazyk, téměř všichni v NL – pravda."}
+{"id":"grp148|en","ok":"yes","why":"Correct."}
+{"id":"grp149|cs","ok":"yes","why":"Thajské písmo nepoužívá mezery mezi slovy – pravda."}
+{"id":"grp149|en","ok":"yes","why":"Correct."}
+{"id":"grp137|cs","ok":"yes","why":"Arabic script is RTL and letters connect contextually; correct."}
+{"id":"grp137|en","ok":"yes","why":"Accurate: RTL and positional joining."}
+{"id":"grp138|cs","ok":"yes","why":"Kanji + hiragana + katakana; correct."}
+{"id":"grp138|en","ok":"yes","why":"Correct three-set description."}
+{"id":"grp140|cs","ok":"yes","why":"Latin from Greek via Etruscan; standard account."}
+{"id":"grp140|en","ok":"yes","why":"Correct, though 'most' is a mild simplification—acceptable."}
+{"id":"grp141|cs","ok":"yes","why":"Czech/Polish Slavic; Hungarian/Finnish Uralic; correct."}
+{"id":"grp141|en","ok":"yes","why":"Correct classification."}
+{"id":"grp142|cs","ok":"yes","why":"Hebrew/Arabic RTL, Latin/Greek LTR; correct."}
+{"id":"grp142|en","ok":"yes","why":"Accurate directionality."}
+{"id":"grp143|cs","ok":"yes","why":"Romance languages descend from Latin; correct."}
+{"id":"grp143|en","ok":"yes","why":"Correct."}
+{"id":"grp151|cs","ok":"yes","why":"Finština je uralská, příbuzná estonštině a maďarštině, ne germánská."}
+{"id":"grp151|en","ok":"yes","why":"Finnish is Uralic, related to Estonian/Hungarian, not Germanic."}
+{"id":"grp153|cs","ok":"yes","why":"Turečtina je turkická, blízká ázerbájdžánštině a turkmenštině, ne indoevropská."}
+{"id":"grp153|en","ok":"yes","why":"Turkish is Turkic, close to Azerbaijani/Turkmen, not Indo-European."}
+{"id":"grp154|cs","ok":"yes","why":"Perština používá arabské písmo se čtyřmi přidanými znaky p, č, ž, g."}
+{"id":"grp154|en","ok":"yes","why":"Persian uses Arabic script plus four letters for p, ch, zh, g."}
+{"id":"grp155|cs","ok":"no","why":"„Jediné písmo se známým datem i autorem“ je sporné/neověřitelné tvrzení."}
+{"id":"grp155|en","ok":"no","why":"'Only script with known date and author' is unverifiable/contested."}
+{"id":"grp156|cs","ok":"yes","why":"Finština je příbuzná maďarštině a estonštině, ne švédštině."}
+{"id":"grp156|en","ok":"yes","why":"Finnish related to Hungarian/Estonian, not Swedish."}
+{"id":"grp157|cs","ok":"yes","why":"Islandština se oddělila od norštiny ~900 a zůstala velmi konzervativní."}
+{"id":"grp157|en","ok":"yes","why":"Icelandic split from Norwegian ~900 and stayed highly conservative."}
+{"id":"grp159|cs","ok":"yes","why":"Perština skutečně přidává p, č, ž, g k arabskému písmu."}
+{"id":"grp159|en","ok":"yes","why":"Persian adds p, ch, zh, g to Arabic script — correct."}
+{"id":"grp161|cs","ok":"yes","why":"Brazílie je nejlidnatější portugalsky mluvící země, portugalština úřední."}
+{"id":"grp161|en","ok":"yes","why":"Brazil is the most populous Portuguese-speaking country; Portuguese official."}
+{"id":"grp163|cs","ok":"yes","why":"Hebrejština obnovena ve 20. stol., přes 9 mil. mluvčích – správně."}
+{"id":"grp163|en","ok":"yes","why":"Hebrew revived in 20th century; over 9 million speakers — accurate."}
+{"id":"grp164|cs","ok":"yes","why":"Perština je indoevropská, psaná arabským písmem – správně."}
+{"id":"grp164|en","ok":"yes","why":"Persian is Indo-European, written in Arabic script — correct."}
+{"id":"grp165|cs","ok":"yes","why":"Svahilština je úřední v Keni i Tanzanii, lingua franca východní Afriky."}
+{"id":"grp165|en","ok":"yes","why":"Swahili official in Kenya and Tanzania, common East African language."}
+{"id":"grp166|cs","ok":"no","why":"Brazílie není jediná – portugalština je úřední i v Surinamu? Ne, ale tvrzení o výhradnosti je zjednodušené; Tordesillas je nepřesné přiřazení."}
+{"id":"grp166|en","ok":"no","why":"Not strictly the only one and Tordesillas attribution oversimplifies; when in doubt, no."}
+{"id":"grp167|cs","ok":"yes","why":"Perština je indoevropská (íránská větev), píše se arabským písmem; příbuznost s češtinou platí (vzdálená)."}
+{"id":"grp167|en","ok":"yes","why":"Persian is Indo-European (Iranian branch) written in Arabic script; distant relative of Czech is accurate."}
+{"id":"grp168|cs","ok":"no","why":"Egyptská arabština je sice odlišná, ale obecně jí rodilí mluvčí z jiných zemí rozumí díky filmům/hudbě; 'někdy nerozumí' je přehnané."}
+{"id":"grp168|en","ok":"no","why":"Egyptian Arabic is widely understood across the Arab world via media; 'struggle to understand' overstates the difficulty."}
+{"id":"grp169|cs","ok":"yes","why":"Hebrejština byla liturgickým jazykem, obnovena jako mluvená koncem 19./ve 20. století – přesné."}
+{"id":"grp169|en","ok":"yes","why":"Hebrew was mainly liturgical for centuries and revived as spoken language in the 20th century – accurate."}
+{"id":"grp170|cs","ok":"yes","why":"Thajské písmo nepoužívá mezery mezi slovy, jen mezi frázemi/větami – správně."}
+{"id":"grp170|en","ok":"yes","why":"Thai script doesn't use spaces between words, only between phrases/clauses – correct."}
+{"id":"grp173|cs","ok":"no","why":"Svahilština je úřední v Keni a Tanzanii, ale v Ugandě je úřední angličtina (svahilština jen od 2022 povýšena); formulace zavádějící."}
+{"id":"grp173|en","ok":"no","why":"Swahili official in Kenya and Tanzania; Uganda's official language is English (Swahili only recently promoted) – misleading."}
+{"id":"grp175|cs","ok":"yes","why":"Perština užívá arabské písmo s přidanými znaky pro p, č, ž, g – správně."}
+{"id":"grp175|en","ok":"yes","why":"Persian uses Arabic script plus extra letters for p, ch, zh, g – accurate."}
+{"id":"grp189|cs","ok":"yes","why":"Čapek užil robot v R.U.R. (1920), odvozeno od robota; bratr Josef slovo vytvořil, ale fakt to připisuje dramatu správně."}
+{"id":"grp189|en","ok":"yes","why":"Correct: Čapek used it in R.U.R. (1920), from robota."}
+{"id":"grp191|cs","ok":"yes","why":"Braille vyvinul 1824, ve 15 letech."}
+{"id":"grp191|en","ok":"yes","why":"Invented 1824 at age 15."}
+{"id":"grp192|cs","ok":"yes","why":"Znakové jazyky mají vlastní gramatiku, uznávané jako plnohodnotné."}
+{"id":"grp192|en","ok":"yes","why":"Sign languages are full languages with own grammar."}
+{"id":"grp193|cs","ok":"yes","why":"6 bodů = 63 kombinací (2^6−1)."}
+{"id":"grp193|en","ok":"yes","why":"63 combinations is correct."}
+{"id":"grp194|cs","ok":"yes","why":"63 znaků z šesti bodů – správně."}
+{"id":"grp194|en","ok":"yes","why":"63 signs, correct."}
+{"id":"grp195|cs","ok":"no","why":"Počet znakových jazyků se obvykle uvádí ~300+ (Ethnologue 300+); ASL a BSL se liší – tvrzení hraniční, ale číslo je nejisté/neověřitelné."}
+{"id":"grp195|en","ok":"no","why":"Count is uncertain/unverifiable; ASL vs BSL differ, but 'over 300' is not firmly established."}
+{"id":"grp198|cs","ok":"no","why":"Etymologie 'xocolātl' je sporná; pravděpodobněji z mayštiny, ne prokazatelně nahuatl."}
+{"id":"grp198|en","ok":"no","why":"'xocolātl' origin is disputed; likely Mayan, not securely Nahuatl."}
+{"id":"grp202|cs","ok":"yes","why":"2^6−1=63 kombinací; stačí pro znaky."}
+{"id":"grp202|en","ok":"yes","why":"2^6−1=63 combinations; enough for characters."}
+{"id":"grp203|cs","ok":"no","why":"Zákon 155/1998 Sb. uznává znakový jazyk, ale přesná formulace 'plnohodnotný' je zjednodušení."}
+{"id":"grp203|en","ok":"no","why":"Act 155/1998 recognises it, but 'full language' framing oversimplifies the law."}
+{"id":"grp204|cs","ok":"no","why":"International Sign je často popisován jako kontaktní jazyk s vlastními rysy; tvrzení 'není plnohodnotný' je sporné."}
+{"id":"grp204|en","ok":"no","why":"International Sign is debated as a contact language with own features; 'not full-fledged' is contested."}
+{"id":"grp205|cs","ok":"yes","why":"Základní latinka sdílí body, diakritika se liší dle jazyků."}
+{"id":"grp205|en","ok":"yes","why":"Basic Latin shares dots; diacritics differ by language."}
+{"id":"grp206|cs","ok":"yes","why":"1824, Louis Braille, nevidomý, ve 15 letech."}
+{"id":"grp206|en","ok":"yes","why":"1824, Louis Braille, blind, aged 15."}
+{"id":"grp207|cs","ok":"yes","why":"ASL má vlastní gramatiku, není to přepis angličtiny."}
+{"id":"grp207|en","ok":"yes","why":"ASL has its own grammar, not English encoded."}
+{"id":"grp209|cs","ok":"yes","why":"Braillské kontrakce (zkratky) šetří místo i čas, je jich stovky."}
+{"id":"grp209|en","ok":"yes","why":"Braille contractions save space and time; hundreds exist."}
+{"id":"grp210|cs","ok":"yes","why":"Haüy 1784 Paříž, první škola pro nevidomé, reliéfní latinka."}
+{"id":"grp210|en","ok":"yes","why":"Haüy 1784 Paris, first blind school, raised Latin letters."}
+{"id":"grp211|cs","ok":"yes","why":"Braille 1829, šestibodová; osmibodová později pro počítače."}
+{"id":"grp211|en","ok":"yes","why":"Braille 1829 six-dot; eight-dot came later for computers."}
+{"id":"grp213|cs","ok":"yes","why":"ČZJ uznán zákonem 1998 (155/1998 Sb.); znakovaná čeština je podpůrná."}
+{"id":"grp213|en","ok":"yes","why":"Czech Sign Language recognized by law 1998; Signed Czech is support."}
+{"id":"grp214|cs","ok":"yes","why":"Číslování teček po sloupcích 1-2-3 / 4-5-6 je správné."}
+{"id":"grp214|en","ok":"yes","why":"Dot numbering down columns 1-2-3 / 4-5-6 is correct."}
+{"id":"grp176|cs","ok":"yes","why":"turecké yoğurt ze staroturkického základu, správně"}
+{"id":"grp176|en","ok":"yes","why":"Turkish yoğurt from old Turkic root, correct"}
+{"id":"grp179|cs","ok":"yes","why":"kara=prázdný, te=ruka; kabát/kanál evropského původu"}
+{"id":"grp179|en","ok":"yes","why":"kara=empty, te=hand; coat/canal European origins"}
+{"id":"grp180|cs","ok":"yes","why":"italský původ, šíření ve 20. století"}
+{"id":"grp180|en","ok":"yes","why":"Italian origin, spread in 20th century"}
+{"id":"grp183|cs","ok":"yes","why":"sifr → cifra, cipher, zero, správně"}
+{"id":"grp183|en","ok":"yes","why":"Arabic ṣifr gave both cipher and zero"}
+{"id":"grp185|cs","ok":"no","why":"slovo robot vymyslel Josef Čapek, ne Karel (Karel ho použil v R.U.R.)"}
+{"id":"grp185|en","ok":"no","why":"word 'robot' coined by Josef Čapek, not Karel"}
+{"id":"grp187|cs","ok":"yes","why":"Schule←schola←scholé, původně volný čas, správně"}
+{"id":"grp187|en","ok":"yes","why":"via German/Latin from Greek scholé = leisure, correct"}
+{"id":"grp216|cs","ok":"yes","why":"Násobky deseti, krok 10 – správně."}
+{"id":"grp216|en","ok":"yes","why":"Multiples of ten, step 10 – correct."}
+{"id":"grp217|cs","ok":"yes","why":"Lichá čísla, krok 2, nedělitelná na dvě stejné části – správně."}
+{"id":"grp217|en","ok":"yes","why":"Odd numbers, step 2, not splittable into two equal parts – correct."}
+{"id":"grp218|cs","ok":"yes","why":"Klesá o 10, odčítání desítek – správně."}
+{"id":"grp218|en","ok":"yes","why":"Drops by 10, subtracting tens – correct."}
+{"id":"grp220|cs","ok":"yes","why":"Rozdíly +1 až +6 – správně."}
+{"id":"grp220|en","ok":"yes","why":"Gaps +1 through +6 – correct."}
+{"id":"grp221|cs","ok":"yes","why":"Trojúhelníková čísla, 15+6=21 – správně."}
+{"id":"grp221|en","ok":"yes","why":"Triangular numbers, 15+6=21 – correct."}
+{"id":"grp222|cs","ok":"yes","why":"Dělení dvěma, 12,5:2=6,25 – správně."}
+{"id":"grp222|en","ok":"yes","why":"Dividing by two, 12.5÷2=6.25 – correct."}
+{"id":"grp235|cs","ok":"yes","why":"AB vzor platí"}
+{"id":"grp235|en","ok":"yes","why":"alternating AB correct"}
+{"id":"grp236|cs","ok":"yes","why":"26 písmen, po D je E"}
+{"id":"grp236|en","ok":"yes","why":"26 letters, E after D"}
+{"id":"grp237|cs","ok":"yes","why":"správné pořadí"}
+{"id":"grp237|en","ok":"yes","why":"correct order"}
+{"id":"grp238|cs","ok":"yes","why":"vzor 2+1 sedí"}
+{"id":"grp238|en","ok":"yes","why":"pattern 2+1 correct"}
+{"id":"grp239|cs","ok":"yes","why":"po jablku banán"}
+{"id":"grp239|en","ok":"yes","why":"apple then banana"}
+{"id":"grp241|cs","ok":"no","why":"111221 = jedna 1, jedna 2, dvě 1 (ne tři 1, dvě 2, jedna 1)"}
+{"id":"grp241|en","ok":"no","why":"111221 reads 'one 1, one 2, two 1s', not 'three 1s, two 2s, one 1'"}
+{"id":"grp223|cs","ok":"yes","why":"1,10,2,20,3,30,4 — po 30 následuje 4, přesné"}
+{"id":"grp223|en","ok":"yes","why":"alternating n and 10n; after 30 comes 4, correct"}
+{"id":"grp224|cs","ok":"yes","why":"dny v měsících leden–květen; červen=30, správně"}
+{"id":"grp224|en","ok":"yes","why":"days per month Jan–May; June=30, correct"}
+{"id":"grp225|cs","ok":"yes","why":"1,8,27,64 = krychle; 5³=125, správně"}
+{"id":"grp225|en","ok":"yes","why":"cubes of 1–4; 5³=125, correct"}
+{"id":"grp226|cs","ok":"yes","why":"rozdíly 4,6,8,10,12; n(n+1): 6·7=42, správně"}
+{"id":"grp226|en","ok":"yes","why":"differences +2; n(n+1): 6·7=42, correct"}
+{"id":"grp227|cs","ok":"yes","why":"111221 → 312211, popis sedí"}
+{"id":"grp227|en","ok":"yes","why":"111221 → 312211, description correct"}
+{"id":"grp228|cs","ok":"no","why":"3112 popisuje sám sebe (31,12), ne 132112"}
+{"id":"grp228|en","ok":"no","why":"3112 → 3112, not 132112; mapping is wrong"}
+{"id":"grp229|cs","ok":"yes","why":"Conway's constant ≈1.303577; from 1, digit 4 never appears (first appears from seed 4). Correct."}
+{"id":"grp229|en","ok":"yes","why":"Same as CS: constant ≈1.303577, no digit 4 from seed 1. Correct."}
+{"id":"grp230|cs","ok":"yes","why":"Factorials: 5!=120, 6!=720, so 120×6=720. Correct."}
+{"id":"grp230|en","ok":"yes","why":"Factorials: 120×6=720. Correct."}
+{"id":"grp231|cs","ok":"yes","why":"nⁿ sequence; 5⁵=3125. Correct."}
+{"id":"grp231|en","ok":"yes","why":"nⁿ; 5⁵=3125. Correct."}
+{"id":"grp232|cs","ok":"no","why":"Cannot verify the pattern from the fact alone; unverifiable claim about specific pattern."}
+{"id":"grp232|en","ok":"no","why":"Unverifiable without the shown pattern."}
+{"id":"grp233|cs","ok":"yes","why":"Days of the week in correct order. True."}
+{"id":"grp233|en","ok":"yes","why":"Days of the week in correct order. True."}
+{"id":"grp234|cs","ok":"no","why":"Unverifiable pattern claim (two smiling, one with sunglasses)."}
+{"id":"grp234|en","ok":"no","why":"Unverifiable pattern claim."}
+{"id":"grp242|cs","ok":"yes","why":"Caesar cipher je posun písmen o pevný počet, používal se v Římě."}
+{"id":"grp242|en","ok":"yes","why":"Correct definition and historical use."}
+{"id":"grp245|cs","ok":"no","why":"Sekvence 0,3,4,5 nedává smysl; 0 stran není tvar a chybí trojúhelník jako první."}
+{"id":"grp245|en","ok":"no","why":"Sequence 0,3,4,5 is incoherent; 0 sides isn't a shape."}
+{"id":"grp246|cs","ok":"no","why":"IV (4) v římské řadě nepředchází V v přirozeném pořadí čísel; nesmyslná formulace."}
+{"id":"grp246|en","ok":"no","why":"IV doesn't precede V in a natural sequence; misleading wording."}
+{"id":"grp248|cs","ok":"yes","why":"Ordinální srovnání věku funguje bez přesných čísel."}
+{"id":"grp248|en","ok":"yes","why":"Ordinal age comparison is valid."}
+{"id":"grp249|cs","ok":"yes","why":"Pigeonhole: 3 ponožky, 2 barvy → dvě stejné."}
+{"id":"grp249|en","ok":"yes","why":"Pigeonhole principle holds."}
+{"id":"grp250|cs","ok":"no","why":"Chybí informace o Petrovi; závěr „je první“ nelze odvodit."}
+{"id":"grp250|en","ok":"no","why":"Peter's position isn't established by the given chain."}
+{"id":"grp251|cs","ok":"no","why":"Chybí klíčový předpoklad, že falešná mince je lehčí; bez něj závěry neplatí a obecně jedno vážení nestačí."}
+{"id":"grp251|en","ok":"no","why":"Missing assumption that the fake coin is lighter; without it the conclusion is invalid and one weighing isn't generally enough."}
+{"id":"grp252|cs","ok":"no","why":"Chybí definice, co znamená '>' (věk vs. pořadí); tvrzení o 'vždy' je nesprávné bez kontextu."}
+{"id":"grp252|en","ok":"no","why":"Ambiguous meaning of '>'; 'always the youngest' is unjustified without defining the ordering."}
+{"id":"grp253|cs","ok":"yes","why":"Se dvěma barvami tři ponožky zaručí pár — správně (princip holubníku)."}
+{"id":"grp253|en","ok":"yes","why":"3 socks, 2 colours guarantee a matching pair — correct pigeonhole principle."}
+{"id":"grp254|cs","ok":"no","why":"Opět chybí předpoklad, že falešná mince je lehčí; bez něj jedno vážení nestačí."}
+{"id":"grp254|en","ok":"no","why":"Missing assumption the fake is lighter; otherwise one weighing doesn't suffice."}
+{"id":"grp256|cs","ok":"no","why":"Tranzitivita platí, ale závěr 'Klára je nejmladší' nevyplývá bez definice vztahu a pořadí."}
+{"id":"grp256|en","ok":"no","why":"Transitivity holds, but 'Clara is the youngest' doesn't follow without defining the relation."}
+{"id":"grp257|cs","ok":"yes","why":"Přesné znění principu: 2 barvy + 3 ponožky zaručí dvě stejné barvy."}
+{"id":"grp257|en","ok":"yes","why":"Accurate statement: 2 colours, 3 socks guarantee two of the same colour."}
+{"id":"grp258|cs","ok":"yes","why":"9 kuliček, 3 skupiny po 3, 2 vážení stačí — správně."}
+{"id":"grp258|en","ok":"yes","why":"Correct: 9 balls, 3 groups of 3, 2 weighings suffice."}
+{"id":"grp259|cs","ok":"yes","why":"5×3=15; v rodině o 3 dětech má každé dítě sourozence — pravda."}
+{"id":"grp259|en","ok":"yes","why":"5×3=15; in a family of 3 every child has a sibling — true."}
+{"id":"grp260|cs","ok":"no","why":"Tranzitivita platí, ale z A>B>C nevyplývá, že David je nejmladší ze všech."}
+{"id":"grp260|en","ok":"no","why":"Transitivity holds, but A>B>C does not imply David is the youngest of all."}
+{"id":"grp261|cs","ok":"yes","why":"Dirichletův princip, 3 ponožky, 2 barvy — správně."}
+{"id":"grp261|en","ok":"yes","why":"Pigeonhole principle, 3 socks, 2 colours — correct."}
+{"id":"grp263|cs","ok":"no","why":"Pořadí nelze ověřit bez zadání; tvrzení je nepodložené."}
+{"id":"grp263|en","ok":"no","why":"Order unverifiable without the puzzle's premises."}
+{"id":"grp264|cs","ok":"yes","why":"Hřeben má zuby, ale nekoušou — pravdivé a neškodné."}
+{"id":"grp264|en","ok":"yes","why":"A comb has teeth but they don't bite — true and harmless."}
+{"id":"grp265|cs","ok":"yes","why":"Botanicky správně – očka jsou pupeny (axilární pupeny) na hlíze."}
+{"id":"grp265|en","ok":"yes","why":"Correct – potato eyes are buds that sprout."}
+{"id":"grp267|cs","ok":"yes","why":"Truismus, ale pravdivý a nezavádějící."}
+{"id":"grp267|en","ok":"yes","why":"True truism, no factual error."}
+{"id":"grp268|cs","ok":"yes","why":"Hřeben i pila mají zuby; hřebík ‚hlava‘ – ‚ozubený hřebík‘ je slangové, ale v češtině se ‚zub‘ u hřebíku nepoužívá standardně – hraniční."}
+{"id":"grp268|en","ok":"no","why":"Saws have teeth, but nails are not commonly said to have teeth – inaccurate."}
+{"id":"grp270|cs","ok":"yes","why":"Očka jako pupeny – správně, brambora nevidí."}
+{"id":"grp270|en","ok":"yes","why":"Correct botanical fact."}
+{"id":"grp272|cs","ok":"no","why":"Vidlička má ‚hroty/cípy‘, ne zuby – nepřesné."}
+{"id":"grp272|en","ok":"no","why":"Forks have tines/prongs, not teeth – inaccurate."}
+{"id":"grp275|cs","ok":"yes","why":"Zápalná hlava vzplane třením, dřívko hoří následně – správně."}
+{"id":"grp275|en","ok":"yes","why":"Match head ignites by friction; stick burns afterwards – accurate."}
+{"id":"grp276|cs","ok":"yes","why":"Šachy: 8 pěšců + 8 figur (2 věže, 2 jezdci, 2 střelci, dáma, král) = 16, přesné."}
+{"id":"grp276|en","ok":"yes","why":"Chess setup: 8 pawns + 8 pieces = 16 per player, accurate."}
+{"id":"grp279|cs","ok":"yes","why":"Gomoku = pět v řadě, standardní cíl hry, přesné."}
+{"id":"grp279|en","ok":"yes","why":"Gomoku win condition is five in a row, correct."}
+{"id":"grp281|cs","ok":"yes","why":"Hádanka o tichu funguje přesně takto – vyslovení slova ticho ticho přeruší."}
+{"id":"grp281|en","ok":"yes","why":"Riddle logic is accurate: saying 'silence' breaks the silence."}
+{"id":"grp282|cs","ok":"yes","why":"Jeden provaz 2 konce, po střihu 2 kusy = 4 konce, správně."}
+{"id":"grp282|en","ok":"yes","why":"Cutting a rope yields 2 pieces and 4 ends, correct."}
+{"id":"grp284|cs","ok":"yes","why":"Král z e1 na e4: e1-e2-e3-e4 = 3 tahy, minimum, přesné."}
+{"id":"grp284|en","ok":"yes","why":"King e1 to e4 needs exactly 3 moves, correct."}
+{"id":"grp285|cs","ok":"yes","why":"Hody kostkou jsou nezávislé, minulá řada neurčuje další hod, správně."}
+{"id":"grp285|en","ok":"yes","why":"Dice rolls are independent; past sequence doesn't predict next roll, correct."}
+{"id":"grp294|cs","ok":"no","why":"Mýtus – 28 dní má jen únor, ale 'jediný měsíc s 28 dny' je zavádějící formulace (únor má vždy aspoň 28; jiné měsíce mají víc, ale tvrzení je klasický chyták)."}
+{"id":"grp294|en","ok":"no","why":"Misleading myth phrasing – February is the only month that can have 28 days, but 'only month with 28 days' is the classic trick claim."}
+{"id":"grp295|cs","ok":"yes","why":"60sekundová minuta sahá k babylonské šedesátkové soustavě."}
+{"id":"grp295|en","ok":"yes","why":"60-second minute traces to Babylonian base-60 system."}
+{"id":"grp297|cs","ok":"no","why":"Přestupný rok se nepřidává přesně každé 4 roky (vynechává se ve stoletích nedělitelných 400)."}
+{"id":"grp297|en","ok":"no","why":"Leap year is not simply 'every 4 years' – century years not divisible by 400 are skipped."}
+{"id":"grp299|cs","ok":"yes","why":"24hodinový den i 60minutová hodina/minuta jsou standardní; 24hodinové dělení sahá k Egyptu."}
+{"id":"grp299|en","ok":"yes","why":"24-hour day and 60-minute units are standard; 24-hour division traces to Egypt."}
+{"id":"grp300|cs","ok":"yes","why":"Únor 28/29 dní, nejkratší měsíc – správně."}
+{"id":"grp300|en","ok":"yes","why":"February 28/29 days, shortest month – correct."}
+{"id":"grp301|cs","ok":"yes","why":"2000 je dělitelný 400, tedy přestupný – správně."}
+{"id":"grp301|en","ok":"yes","why":"2000 divisible by 400, hence leap year – correct."}
+{"id":"grp287|cs","ok":"yes","why":"Definice piškvorek 3×3 je správná."}
+{"id":"grp287|en","ok":"yes","why":"Correct definition of tic-tac-toe."}
+{"id":"grp288|cs","ok":"no","why":"Dáma není nejsilnější figurou — nejsilnější je král (nekonečná hodnota); dáma je nejsilnější „běžnou“ figurou. Zavádějící."}
+{"id":"grp288|en","ok":"no","why":"Queen is not the most powerful piece; the king is (infinite value). Misleading."}
+{"id":"grp290|cs","ok":"yes","why":"a1–h8 jezdcova cesta trvá minimálně 6 tahů (barva polí to potvrzuje)."}
+{"id":"grp290|en","ok":"yes","why":"Knight a1–h8 minimum is 6 moves; colour argument correct."}
+{"id":"grp291|cs","ok":"yes","why":"204 = 64+49+36+25+16+9+4+1, správně."}
+{"id":"grp291|en","ok":"yes","why":"204 squares sum is correct."}
+{"id":"grp292|cs","ok":"yes","why":"Klasická dáma 8×8: 12 kamenů na tmavých polích, 3 řady po 4."}
+{"id":"grp292|en","ok":"yes","why":"Correct: 12 pieces on dark squares, 3 rows of 4."}
+{"id":"grp293|cs","ok":"no","why":"24 h je definováno jako střední sluneční den, ne doba jedné rotace Země (ta je ~23 h 56 min). Nepřesné."}
+{"id":"grp293|en","ok":"no","why":"24 h is a mean solar day, not one rotation (~23h56m). Imprecise."}
+{"id":"grp302|cs","ok":"no","why":"„Vždy pravý úhel“ je nepřesné – jen přesně v 3:00 a 9:00; mezi nimi se úhel mění."}
+{"id":"grp302|en","ok":"no","why":"\"Always a right angle\" is wrong – only exactly at 3:00 and 9:00; in between the angle changes."}
+{"id":"grp303|cs","ok":"yes","why":"1440 min a 86400 s správně; 10000 s = 2 h 46 min 40 s, tedy necelé 3 hodiny."}
+{"id":"grp303|en","ok":"yes","why":"1440 min and 86400 s correct; 10,000 s = 2 h 46 min 40 s, i.e. under three hours."}
+{"id":"grp304|cs","ok":"yes","why":"Římský přestupný den se nazýval bissextus (24. únor počítaný dvakrát), odtud bis-."}
+{"id":"grp304|en","ok":"yes","why":"Roman leap day was called bissextus (24 Feb counted twice), hence the prefix bis-."}
+{"id":"grp306|cs","ok":"yes","why":"Všechny výpočty správné: 86400 s/den, 1440 min/den, 3600 s/hod."}
+{"id":"grp306|en","ok":"yes","why":"All figures correct: 86,400 s/day, 1,440 min/day, 3,600 s/hour."}
+{"id":"grp307|cs","ok":"yes","why":"Únor 28/29 dní dle přestupného roku; duben, červen, září mají 30 dní."}
+{"id":"grp307|en","ok":"yes","why":"February 28/29 by leap year; April, June, September have 30 days."}
+{"id":"grp308|cs","ok":"yes","why":"360°/12 = 30° na značku; ve 3:00 tři značky = 90°, přesně."}
+{"id":"grp308|en","ok":"yes","why":"360°/12 = 30° per mark; at 3:00 three marks = 90°, exact."}
+{"id":"grp310|cs","ok":"yes","why":"Elaborative encoding / propojení s existujícími znalostmi zlepšuje paměť – dobře podloženo."}
+{"id":"grp310|en","ok":"yes","why":"Elaborative encoding linking to prior knowledge improves memory – well supported."}
+{"id":"grp311|cs","ok":"yes","why":"Rozložené učení (spacing effect) je robustně potvrzeno."}
+{"id":"grp311|en","ok":"yes","why":"Distributed practice / spacing effect is robustly established."}
+{"id":"grp312|cs","ok":"yes","why":"Serial position effect (primacy+recency) platí pro seznamy i čísla."}
+{"id":"grp312|en","ok":"yes","why":"Serial position effect applies to lists and digits."}
+{"id":"grp313|cs","ok":"yes","why":"Spaced repetition je mezi nejúčinnějšími metodami učení – konsenzus."}
+{"id":"grp313|en","ok":"yes","why":"Spaced repetition is among the most effective methods – consensus."}
+{"id":"grp314|cs","ok":"yes","why":"Rekonsolidace: vybavení paměť modifikovatelné – podloženo."}
+{"id":"grp314|en","ok":"yes","why":"Reconsolidation: recall makes memory labile/modifiable – supported."}
+{"id":"grp315|cs","ok":"yes","why":"Primacy a recency efekt pro střední položky – klasický nález."}
+{"id":"grp315|en","ok":"yes","why":"Primacy and recency effects over middle items – classic finding."}
+{"id":"grp329|cs","ok":"yes","why":"REM spánek je spojen se živými sny, mozek aktivní, svalová atonie (ochrnutí)."}
+{"id":"grp329|en","ok":"yes","why":"REM sleep linked to vivid dreaming; brain active, muscle atonia."}
+{"id":"grp330|cs","ok":"yes","why":"Sny i v non-REM, nejživější v REM; aktivita mozku v REM blízká bdění."}
+{"id":"grp330|en","ok":"yes","why":"Dreams in non-REM too; most vivid in REM, brain nearly as active as awake."}
+{"id":"grp331|cs","ok":"yes","why":"Apnoe = pauzy dýchání ≥10 s; obstrukční je nejčastější forma."}
+{"id":"grp331|en","ok":"yes","why":"Apnea = breathing pauses ≥10 s; obstructive most common."}
+{"id":"grp333|cs","ok":"no","why":"Koktejlový efekt je jev selektivní pozornosti, ale není to její synonymum."}
+{"id":"grp333|en","ok":"no","why":"Cocktail party effect is a phenomenon of selective attention, not a synonym."}
+{"id":"grp334|cs","ok":"yes","why":"Change blindness je prokázaný jev; lidé přehlédnou i velké změny."}
+{"id":"grp334|en","ok":"yes","why":"Change blindness is a proven phenomenon."}
+{"id":"grp335|cs","ok":"yes","why":"Pro náročné úlohy platí přepínání, ne paralelní zpracování."}
+{"id":"grp335|en","ok":"yes","why":"Demanding tasks: brain switches, not parallel; slower, more errors."}
+{"id":"grp316|cs","ok":"yes","why":"Definice retroaktivní a proaktivní interference jsou správné."}
+{"id":"grp316|en","ok":"yes","why":"Definitions of retroactive and proactive interference correct."}
+{"id":"grp317|cs","ok":"yes","why":"Ebbinghaus 1885, nesmyslné slabiky, křivka zapomínání – správně."}
+{"id":"grp317|en","ok":"yes","why":"Ebbinghaus 1885 nonsense syllables, forgetting curve correct."}
+{"id":"grp318|cs","ok":"yes","why":"Primacy a recency efekt popsány správně."}
+{"id":"grp318|en","ok":"yes","why":"Primacy and recency effects described correctly."}
+{"id":"grp319|cs","ok":"yes","why":"Godden & Baddeley 1975, kontext-dependentní paměť u potápěčů – správně."}
+{"id":"grp319|en","ok":"yes","why":"Godden & Baddeley 1975 diver study correct."}
+{"id":"grp320|cs","ok":"yes","why":"Testing effect – aktivní vybavování posiluje paměť více než čtení."}
+{"id":"grp320|en","ok":"yes","why":"Testing effect accurately stated."}
+{"id":"grp321|cs","ok":"yes","why":"REM = rapid eye movement, oči se během snění pohybují – správně."}
+{"id":"grp321|en","ok":"yes","why":"REM stands for rapid eye movement; eye movements occur during dreaming."}
+{"id":"grp322|cs","ok":"yes","why":"Spánek upevňuje paměť a růstový hormon se vyplavuje ve spánku; děti mají delší potřebu spánku."}
+{"id":"grp322|en","ok":"yes","why":"Same claim, correct: sleep consolidates memory and supports growth; children need more sleep."}
+{"id":"grp323|cs","ok":"yes","why":"Konsolidace paměti ve spánku je etablovaný poznatek."}
+{"id":"grp323|en","ok":"yes","why":"Memory consolidation during sleep is well established."}
+{"id":"grp324|cs","ok":"yes","why":"REM = rapid eye movement + vysoká mozková aktivita; „dream sleep“ je běžné označení."}
+{"id":"grp324|en","ok":"yes","why":"REM defined by rapid eye movements and high brain activity; called dream sleep."}
+{"id":"grp325|cs","ok":"yes","why":"Melatonin tvoří šišinka, uvolňuje se ve tmě, řídí cirkadiánní rytmus."}
+{"id":"grp325|en","ok":"yes","why":"Melatonin from pineal gland, released in darkness, sets body clock."}
+{"id":"grp327|cs","ok":"no","why":"Delta 0,5–4 Hz je správně, ale v N3 netvoří „většinu záznamu“ – N3 tvoří ~13–23 % noci a delta aktivita je jen část i v N3."}
+{"id":"grp327|en","ok":"no","why":"Delta band correct, but N3 is only ~13–23% of sleep and delta isn't 'most of the recording'."}
+{"id":"grp328|cs","ok":"yes","why":"Apnoe = přerušení dechu ≥10 s opakovaně, fragmentuje spánek."}
+{"id":"grp328|en","ok":"yes","why":"Apnea = breathing pause ≥10 s, repeated, fragmenting sleep."}
+{"id":"grp337|cs","ok":"yes","why":"„Attention residue“ je zavedený termín (Leroy), přesné."}
+{"id":"grp337|en","ok":"yes","why":"Attention residue is an established term (Leroy), accurate."}
+{"id":"grp338|cs","ok":"yes","why":"Obecně potvrzený efekt distrakcí na čas a chyby."}
+{"id":"grp338|en","ok":"yes","why":"Well-supported effect of distraction on time and errors."}
+{"id":"grp340|cs","ok":"yes","why":"Miller 1956, Psychological Review, přesný název."}
+{"id":"grp340|en","ok":"yes","why":"Miller 1956, Psychological Review, exact title."}
+{"id":"grp341|cs","ok":"yes","why":"Triplett 1898, cyklisté, klasický první výzkum."}
+{"id":"grp341|en","ok":"yes","why":"Triplett 1898, cyclists, classic first study."}
+{"id":"grp342|cs","ok":"yes","why":"Pop-out efekt (Treisman) – přesné."}
+{"id":"grp342|en","ok":"yes","why":"Pop-out effect (Treisman) – accurate."}
+{"id":"grp345|cs","ok":"no","why":"Jastrow byl psycholog, ale ‚klamavé obrázky zkoumal už v 19. stol.‘ je vágní/nesedí k pop-outu."}
+{"id":"grp345|en","ok":"no","why":"Jastrow existed, but claim about studying deceptive images in 19th c. is vague/misattributed."}
+{"id":"grp346|cs","ok":"yes","why":"Měsíc nemění velikost ani vzdálenost; měsíční iluze je reálný jev."}
+{"id":"grp346|en","ok":"yes","why":"Moon's size/distance constant; Moon illusion is real."}
+{"id":"grp347|cs","ok":"yes","why":"Afterimage je správný termín; oko dočasně 'uchová' světlo."}
+{"id":"grp347|en","ok":"yes","why":"Afterimage is correct term for lingering light perception."}
+{"id":"grp348|cs","ok":"yes","why":"Čáry jsou stejně dlouhé; vysvětlení rohy/hrany je běžná (byť diskutovaná) teorie."}
+{"id":"grp348|en","ok":"yes","why":"Lines equal; corner/edge experience is standard explanation."}
+{"id":"grp350|cs","ok":"yes","why":"Mozek slepou skvrnu doplňuje z okolí – správně."}
+{"id":"grp350|en","ok":"yes","why":"Brain fills in blind spot from surroundings – correct."}
+{"id":"grp351|cs","ok":"yes","why":"Slepá skvrna = místo výstupu zrakového nervu; mozek ji doplňuje."}
+{"id":"grp351|en","ok":"yes","why":"Blind spot at optic nerve exit; brain fills it in."}
+{"id":"grp352|cs","ok":"yes","why":"Měsíční iluze souvisí s odhadem vzdálenosti a kontextem – správně."}
+{"id":"grp352|en","ok":"yes","why":"Moon illusion tied to distance estimation and context."}
+{"id":"grp369|cs","ok":"yes","why":"Žízeň je fyziologický signál regulace tekutin v těle."}
+{"id":"grp369|en","ok":"yes","why":"Thirst is a physiological signal of fluid regulation."}
+{"id":"grp370|cs","ok":"yes","why":"Cukr kazí zuby; voda cukr neobsahuje."}
+{"id":"grp370|en","ok":"yes","why":"Sugar damages teeth; water has no sugar."}
+{"id":"grp372|cs","ok":"yes","why":"Seligman je znám jako zakladatel pozitivní psychologie."}
+{"id":"grp372|en","ok":"yes","why":"Seligman is known as a founder of positive psychology."}
+{"id":"grp374|cs","ok":"yes","why":"Beta-karoten je oranžový pigment a prekurzor vitaminu A."}
+{"id":"grp374|en","ok":"yes","why":"Beta-carotene is the orange pigment and a vitamin A precursor."}
+{"id":"grp375|cs","ok":"yes","why":"Vláknina se téměř nestráví a podporuje pravidelnost."}
+{"id":"grp375|en","ok":"yes","why":"Fibre is largely undigested and aids regularity."}
+{"id":"grp376|cs","ok":"yes","why":"Plechovka slazené limonády běžně 30+ g cukru, kostka ~4 g."}
+{"id":"grp376|en","ok":"yes","why":"A can commonly has 30+ g sugar; cube ~4 g."}
+{"id":"grp353|cs","ok":"yes","why":"Change blindness / person-swap (Simons & Levin) is well established; brief occlusion masks the swap."}
+{"id":"grp353|en","ok":"yes","why":"Same as CS: person-swap change blindness is a robust, replicated finding."}
+{"id":"grp354|cs","ok":"yes","why":"Kanizsa triangle (1955) is a classic illusion; illusory contours exist only perceptually, page has only notches/pac-man angles."}
+{"id":"grp354|en","ok":"yes","why":"Correct description of the Kanizsa triangle and illusory contours."}
+{"id":"grp355|cs","ok":"yes","why":"Retinal image is inverted; inverting-goggle adaptation (Stratton, Kohler) is established."}
+{"id":"grp355|en","ok":"yes","why":"Accurate: inverted retinal image, perceptual uprightness, goggle-adaptation experiments."}
+{"id":"grp357|cs","ok":"no","why":"Oversimplified: habits can persist and are not simply erased by stopping; 'connection weakens' is pop-science framing, not precise."}
+{"id":"grp357|en","ok":"no","why":"Same overstatement: habit fading is context/automaticity dependent, not a simple weakening of a brain connection."}
+{"id":"grp358|cs","ok":"yes","why":"Positive reinforcement = adding a rewarding stimulus after a behaviour to strengthen it. Correct."}
+{"id":"grp358|en","ok":"yes","why":"Standard, accurate definition of positive reinforcement."}
+{"id":"grp359|cs","ok":"no","why":"Plausible but not uncontroversial: sub-goal effects (goal gradient) are context-dependent; 'keeps motivation' is an overgeneralization."}
+{"id":"grp359|en","ok":"no","why":"Sub-goal/motivation link is real but qualified; stated as universal fact it is an overgeneralization."}
+{"id":"grp362|cs","ok":"yes","why":"Implementation intentions (Gollwitzer) – dobře podložený efekt."}
+{"id":"grp362|en","ok":"yes","why":"Implementation intentions – well-supported effect."}
+{"id":"grp364|cs","ok":"yes","why":"Lepper, Greene & Nisbett 1973 – overjustification effect, přesně tak."}
+{"id":"grp364|en","ok":"yes","why":"Lepper, Greene & Nisbett 1973 – overjustification effect, accurate."}
+{"id":"grp365|cs","ok":"yes","why":"Základní atribuční chyba – definice správná."}
+{"id":"grp365|en","ok":"yes","why":"Fundamental attribution error – definition correct."}
+{"id":"grp366|cs","ok":"no","why":"Šípky mají vysoký vit. C, ale 'několikanásobně více než citron' je zavádějící a čaj se vaří i z jiných důvodů."}
+{"id":"grp366|en","ok":"no","why":"Rosehips are rich in vitamin C, but 'several times more than lemons' is misleading."}
+{"id":"grp367|cs","ok":"no","why":"Sklenice mléka (~240 ml, ~300 mg Ca) je spíš ~1/3–1/4; u dětí závisí na věku, tvrzení nepřesné."}
+{"id":"grp367|en","ok":"no","why":"A glass of milk (~300 mg Ca) is roughly a quarter to a third – imprecise for children."}
+{"id":"grp368|cs","ok":"yes","why":"Vláknina zvětšuje objem a podporuje peristaltiku – správně."}
+{"id":"grp368|en","ok":"yes","why":"Fibre adds bulk and aids intestinal movement – correct."}
+{"id":"grp385|cs","ok":"yes","why":"WHO doporučuje mytí rukou před jídlem a po toaletě."}
+{"id":"grp385|en","ok":"yes","why":"WHO recommends handwashing before eating and after toilet use."}
+{"id":"grp386|cs","ok":"yes","why":"Mýdlo narušuje membránu/obal mikrobů, snáze se smyjí."}
+{"id":"grp386|en","ok":"yes","why":"Soap disrupts microbial membranes/coating, aiding rinse-off."}
+{"id":"grp387|cs","ok":"yes","why":"Dezinfekce funguje hůře na viditelně špinavých rukou."}
+{"id":"grp387|en","ok":"yes","why":"Sanitizer is less effective on visibly dirty hands."}
+{"id":"grp389|cs","ok":"yes","why":"Funk izoloval thiamin z rýžových otrub a navrhl termín vitamin."}
+{"id":"grp389|en","ok":"yes","why":"Funk isolated thiamine from rice bran; coined 'vitamin'."}
+{"id":"grp390|cs","ok":"yes","why":"Hodnoty 9/4/2 kcal/g jsou standardní (Atwater)."}
+{"id":"grp390|en","ok":"yes","why":"9/4/2 kcal/g values are standard (Atwater)."}
+{"id":"grp391|cs","ok":"yes","why":"Jód je v hormonech štítné žlázy; WHO doporučuje jodizaci soli."}
+{"id":"grp391|en","ok":"yes","why":"Iodine is in thyroid hormones; WHO backs salt iodisation."}
+{"id":"grp377|cs","ok":"yes","why":"Mírná dehydratace prokazatelně snižuje kognitivní výkon i termoregulaci pocením."}
+{"id":"grp377|en","ok":"yes","why":"Mild dehydration impairs cognition and sweating/thermoregulation — well established."}
+{"id":"grp378|cs","ok":"yes","why":"Různé pigmenty (karotenoidy, antokyany, chlorofyl) = různé látky; pestrost pokrývá víc nutrientů."}
+{"id":"grp378|en","ok":"yes","why":"Different pigments are different compounds; dietary variety covers more nutrients."}
+{"id":"grp380|cs","ok":"yes","why":"Hydroxyapatit (Ca+P) je hlavní minerál kostí; tělo dospělého má ~1–1,2 kg vápníku, převážně v kostech."}
+{"id":"grp380|en","ok":"yes","why":"Bone mineral is calcium phosphate; adult body holds ~1–1.2 kg calcium, mostly in bone."}
+{"id":"grp381|cs","ok":"yes","why":"Plechovka (~330–500 ml) slazeného nápoje ≈ 8–12 kostek cukru, vitaminy/minerály prakticky žádné."}
+{"id":"grp381|en","ok":"yes","why":"A can of sugary soda ≈ 8–12 sugar cubes with negligible vitamins/minerals."}
+{"id":"grp383|cs","ok":"yes","why":"Žízeň i hlad řídí hypothalamus, ale přes odlišné mechanismy (osmolalita/objem vs. energetický stav)."}
+{"id":"grp383|en","ok":"yes","why":"Hypothalamus regulates thirst (fluid balance) and hunger (energy status) via separate signals."}
+{"id":"grp384|cs","ok":"no","why":"Dvě pomalá zpívání „Happy Birthday“ trvají ~20–30 s; 20 s je spíš jedno pomalé zpívání."}
+{"id":"grp384|en","ok":"no","why":"Two slow renditions of 'Happy Birthday' take ~20–30 s; 20 s ≈ one slow version, too imprecise."}
+{"id":"grp392|cs","ok":"yes","why":"Vláknina se v tenkém střevě nestráví, v tlustém střevě ji bakterie fermentují na SCFA – správně."}
+{"id":"grp392|en","ok":"yes","why":"Correct: fibre resists small-intestine digestion, colonic bacteria ferment it to SCFAs."}
+{"id":"grp394|cs","ok":"yes","why":"Amfifilní molekula mýdla – hydrofilní hlava, hydrofobní ocas; mechanizmus smáčení a odplavení je správně."}
+{"id":"grp394|en","ok":"yes","why":"Accurate description of soap's amphiphilic action."}
+{"id":"grp395|cs","ok":"yes","why":"Dvakrát „Happy Birthday“ ≈ 20 s – standardní doporučení WHO/CDC."}
+{"id":"grp395|en","ok":"yes","why":"Singing Happy Birthday twice ≈ 20 seconds – standard guidance."}
+{"id":"grp396|cs","ok":"yes","why":"Běžná hygienická doporučení (před jídlem, po toaletě, po kýchnutí, po příchodu domů) – přesné."}
+{"id":"grp396|en","ok":"yes","why":"Standard hand-hygiene key moments – accurate."}
+{"id":"grp397|cs","ok":"no","why":"Doba přežití je silně závislá na typu mikroba (hodiny až dny, ale u mnoha jen minuty–hodiny); „mnoho hodin až dní“ je zobecněné. Navíc věta „proto se klika dotýká každý“ je nelogická/nepřesná."}
+{"id":"grp397|en","ok":"no","why":"Survival varies hugely by pathogen; the sweeping claim plus the illogical 'that is why everyone touches the door handle' makes it imprecise."}
+{"id":"grp398|cs","ok":"yes","why":"Kapénky mohou doletět metry; zakrytí úst/lokte snižuje šíření – v souladu s doporučeními."}
+{"id":"grp398|en","ok":"yes","why":"Droplets can travel metres; covering with elbow reduces spread – accurate."}
+{"id":"grp399|cs","ok":"yes","why":"Amfifilní molekuly: hydrofilní a hydrofobní konec – přesné."}
+{"id":"grp399|en","ok":"yes","why":"Amphiphilic soap molecule – accurate."}
+{"id":"grp400|cs","ok":"yes","why":"Voda na usmrcení mikrobů by popálila kůži; rozhoduje mechanika a čas."}
+{"id":"grp400|en","ok":"yes","why":"Correct – friction and duration matter."}
+{"id":"grp401|cs","ok":"yes","why":"Dvě kola Happy Birthday ≈ 20 s – běžně uváděný údaj."}
+{"id":"grp401|en","ok":"yes","why":"Singing it twice ≈ 20 s – standard guidance."}
+{"id":"grp402|cs","ok":"yes","why":"Semmelweis, Vídeň, 1847 – porodnické oddělení, mytí rukou."}
+{"id":"grp402|en","ok":"yes","why":"Semmelweis maternity ward, 1840s – accurate."}
+{"id":"grp403|cs","ok":"yes","why":"Mikroby jsou neviditelné pouhým okem – správně."}
+{"id":"grp403|en","ok":"yes","why":"Microbes invisible – correct."}
+{"id":"grp407|cs","ok":"no","why":"Konečky prstů/nehty se opomíjejí, ale „nejvíce bakterií“ je nepřesné."}
+{"id":"grp407|en","ok":"no","why":"Fingertips/nails often missed, but „most bacteria“ claim is imprecise."}
+{"id":"grp408|cs","ok":"no","why":"FDA zákaz se týkal 19 přísad, ale šlo o bezpečnost/účinnost – triclosan nebyl 'zakázán' plošně; číslo i formulace zavádějící"}
+{"id":"grp408|en","ok":"no","why":"FDA rule covered 19 ingredients; triclosan not banned outright – overstated/imprecise"}
+{"id":"grp409|cs","ok":"yes","why":"zelená neznamená absolutní bezpečí, odbočující/nebrzdící auto – správně"}
+{"id":"grp409|en","ok":"yes","why":"green light doesn't guarantee safety; turning/non-stopping cars – correct"}
+{"id":"grp410|cs","ok":"yes","why":"cyklista při pravém okraji, chodci vlevo proti směru – správně"}
+{"id":"grp410|en","ok":"yes","why":"cyclist right edge, pedestrians walk against traffic on left – correct"}
+{"id":"grp411|cs","ok":"no","why":"zákon č. 361/2000: do 10 let jen v doprovodu osoby starší 15 let – ale 'starší 15 let' vs '15+' hraniční; číslo 10 let je správné, formulace sporná"}
+{"id":"grp411|en","ok":"no","why":"Czech law: under 10 only with person over 15 – borderline wording, 'older than 15' questionable"}
+{"id":"grp412|cs","ok":"no","why":"povinné je přední bílé světlo, zadní červené světlo/odrazka a odrazky v pedálech – ale 'zadní odrazka' i světlo zároveň je nepřesné"}
+{"id":"grp412|en","ok":"no","why":"required: white front, red rear light/reflector, pedal reflectors – 'rear reflector' wording imprecise"}
+{"id":"grp415|cs","ok":"yes","why":"na přechodu se nesmí přejíždět, cyklista sesedne – správně"}
+{"id":"grp415|en","ok":"yes","why":"must not ride across pedestrian crossing; dismount – correct"}
+{"id":"grp434|cs","ok":"yes","why":"112 funguje v celé EU, obsluha má umět anglicky (alespoň základně)."}
+{"id":"grp434|en","ok":"yes","why":"112 works EU-wide, operators should handle English."}
+{"id":"grp435|cs","ok":"yes","why":"Co se stalo a kde – standardní dvě klíčové otázky."}
+{"id":"grp435|en","ok":"yes","why":"What happened and where – standard key questions."}
+{"id":"grp436|cs","ok":"yes","why":"Stabilizovaná poloha na boku udržuje dýchací cesty volné."}
+{"id":"grp436|en","ok":"yes","why":"Recovery position keeps airway open, prevents tongue blockage."}
+{"id":"grp437|cs","ok":"no","why":"100–120/min = ~1,7–2 údery/s; 'dvě za sekundu' = 120, rozsah nesedí přesně."}
+{"id":"grp437|en","ok":"no","why":"100–120/min is ~1.7–2 beats/s; 'two per second' only fits the top end."}
+{"id":"grp438|cs","ok":"yes","why":"Údery mezi lopatky jsou první krok při plném udušení, učí se i u dětí."}
+{"id":"grp438|en","ok":"yes","why":"Back blows are first step for complete choking, taught for children too."}
+{"id":"grp439|cs","ok":"yes","why":"155 záchranka, 158 policie, 150 hasiči – správně."}
+{"id":"grp439|en","ok":"yes","why":"155 medical, 158 police, 150 fire – correct."}
+{"id":"grp426|cs","ok":"yes","why":"155 je správně pro ZZS ČR, 112 platí celoevropsky."}
+{"id":"grp426|en","ok":"yes","why":"Correct: 155 for Czech EMS, 112 valid across Europe."}
+{"id":"grp427|cs","ok":"yes","why":"Místo a druh události jsou klíčové pro výjezd."}
+{"id":"grp427|en","ok":"yes","why":"Location and type of emergency are the key questions."}
+{"id":"grp428|cs","ok":"yes","why":"Dispečer běžně doplňuje info a dává první pomoc po telefonu."}
+{"id":"grp428|en","ok":"yes","why":"Operators do give instructions and ask for more details."}
+{"id":"grp429|cs","ok":"yes","why":"50/90/130 km/h jsou správné obecné limity v ČR."}
+{"id":"grp429|en","ok":"yes","why":"50/90/130 km/h are the correct general Czech limits."}
+{"id":"grp430|cs","ok":"yes","why":"§ 57 zák. 361/2000: do 10 let jen s doprovodem osoby nad 15 let."}
+{"id":"grp430|en","ok":"yes","why":"Czech law: under 10 only with a companion over 15."}
+{"id":"grp433|cs","ok":"no","why":"Zákaz platí 5 m PŘED přechodem; formulace „ve vzdálenosti kratší než 5 m před“ je zmatečná, ale hlavně: zákaz je i 5 m za přechodem — fakt je neúplný/nepřesný."}
+{"id":"grp433|en","ok":"no","why":"Rule covers 5 m before AND after the crossing; stating only 'before' is imprecise."}
+{"id":"grp440|cs","ok":"yes","why":"150 hasiči, 155 záchranka, 158 policie, 156 městská policie – správně."}
+{"id":"grp440|en","ok":"yes","why":"Same mapping correct in English."}
+{"id":"grp441|cs","ok":"yes","why":"112 je jednotné evropské číslo, volatelné i bez SIM/kreditu."}
+{"id":"grp441|en","ok":"yes","why":"112 works without SIM/credit per EU rules."}
+{"id":"grp442|cs","ok":"yes","why":"100–120/min, hloubka 5–6 cm – odpovídá guidelines."}
+{"id":"grp442|en","ok":"yes","why":"Matches current CPR guidelines."}
+{"id":"grp443|cs","ok":"yes","why":"5–6 cm hloubka u dospělého; mělká masáž neúčinná – pravda."}
+{"id":"grp443|en","ok":"yes","why":"Correct adult compression depth and rationale."}
+{"id":"grp444|cs","ok":"yes","why":"155 záchranka, 150 hasiči, 158 policie – správně pro ČR."}
+{"id":"grp444|en","ok":"yes","why":"Correct for Czechia."}
+{"id":"grp445|cs","ok":"yes","why":"112 funguje v celé EU, zdarma i bez SIM/kreditu."}
+{"id":"grp445|en","ok":"yes","why":"112 works EU-wide, free without SIM/credit."}
+{"id":"grp446|cs","ok":"yes","why":"ERC/AHA guidelines: 5–6 cm, 30:2 pro dospělé."}
+{"id":"grp446|en","ok":"yes","why":"Guidelines: 5–6 cm depth, 30:2 ratio for adults."}
+{"id":"grp447|cs","ok":"no","why":"Zjednodušující mýtus – přesný čas nevratného poškození je individuální, obecně 4–6+ min."}
+{"id":"grp447|en","ok":"no","why":"Oversimplified myth; irreversible damage timing varies, commonly 4–6+ min."}
+{"id":"grp448|cs","ok":"no","why":"Prevence zranění protahováním není prokázána (statické před sportem spíš ne)."}
+{"id":"grp448|en","ok":"no","why":"Injury prevention by stretching is not supported by evidence."}
+{"id":"grp449|cs","ok":"yes","why":"GH se vyplavuje v hlubokém spánku; růst v noci je podložený."}
+{"id":"grp449|en","ok":"yes","why":"GH released during deep sleep; growth largely at night."}
+{"id":"grp450|cs","ok":"yes","why":"Standardní pravidlo 20-20-20; 20 stop ≈ 6 m."}
+{"id":"grp450|en","ok":"yes","why":"Standard 20-20-20 rule; 20 feet ≈ 6 m."}
+{"id":"grp451|cs","ok":"yes","why":"Denní světlo synchronizuje cirkadiánní rytmus."}
+{"id":"grp451|en","ok":"yes","why":"Daylight entrains circadian rhythm."}
+{"id":"grp417|cs","ok":"yes","why":"§58 zák.361/2000: za snížené viditelnosti bílé přední světlo, v noci i červené zadní."}
+{"id":"grp417|en","ok":"yes","why":"Matches Czech law §58: white front light in reduced visibility, red rear at night."}
+{"id":"grp420|cs","ok":"yes","why":"Od 1.7.2006 platí povinnost přilby pro cyklisty do 18 let, na silnici i cyklostezce."}
+{"id":"grp420|en","ok":"yes","why":"Helmet mandatory for under-18 cyclists since 1 July 2006, roads and cycle paths."}
+{"id":"grp421|cs","ok":"yes","why":"Cyklista je řidič nemotorového vozidla, obecná obecní 50 km/h platí i pro něj."}
+{"id":"grp421|en","ok":"yes","why":"Cyclist is a driver; general 50 km/h built-up limit applies."}
+{"id":"grp422|cs","ok":"yes","why":"Jezdí při pravém okraji, chodník jen výjimečně a s ohledem na chodce."}
+{"id":"grp422|en","ok":"yes","why":"Rides at right edge; pavement only exceptionally and with care for pedestrians."}
+{"id":"grp424|cs","ok":"yes","why":"112 funguje zdarma i bez kreditu a bez SIM karty."}
+{"id":"grp424|en","ok":"yes","why":"112 works free without credit and without SIM card."}
+{"id":"grp425|cs","ok":"yes","why":"150 pro hasiče platí v ČR i SR, zavedeno v roce 1927."}
+{"id":"grp425|en","ok":"yes","why":"150 for firefighters used in Czechia and Slovakia since 1927."}
+{"id":"grp452|cs","ok":"yes","why":"Modré světlo potlačuje melatonin; večer zhoršuje usínání."}
+{"id":"grp452|en","ok":"yes","why":"Blue light suppresses melatonin in the evening."}
+{"id":"grp453|cs","ok":"yes","why":"Replay v hipokampu během spánku je doložený."}
+{"id":"grp453|en","ok":"yes","why":"Hippocampal replay supports memory consolidation."}
+{"id":"grp454|cs","ok":"yes","why":"Kofein má poločas ~5 h, odpolední dávka ovlivní usínání."}
+{"id":"grp454|en","ok":"yes","why":"Caffeine half-life ~5 h; afternoon intake affects sleep."}
+{"id":"grp455|cs","ok":"yes","why":"Přestávky na protažení prospívají oběhu i zádům."}
+{"id":"grp455|en","ok":"yes","why":"Stretching breaks aid circulation and back."}
+{"id":"grp457|cs","ok":"no","why":"Odhad ~20 000 je uváděn, ale řídí cirkadiánní rytmus, ne „celý spánkový cyklus“ – nepřesné."}
+{"id":"grp457|en","ok":"no","why":"~20,000 neurons is cited, but it governs circadian rhythm, not the whole sleep cycle — imprecise."}
+{"id":"grp458|cs","ok":"yes","why":"Melatonin vzniká v šišince, večer stoupá, světlo ho tlumí."}
+{"id":"grp458|en","ok":"yes","why":"Pineal melatonin rises in evening; light suppresses it."}
+{"id":"grp459|cs","ok":"yes","why":"REM: mozek aktivní, svalová atonie (dočasná obrna) — přesné."}
+{"id":"grp459|en","ok":"yes","why":"REM: brain active, muscle atonia — accurate."}
+{"id":"grp460|cs","ok":"yes","why":"Modré světlo nejvíc ovlivňuje melatonin/cirkadiánní rytmus; tlumený režim účinek snižuje."}
+{"id":"grp460|en","ok":"yes","why":"Blue light strongest circadian effect; night mode reduces it."}
+{"id":"grp461|cs","ok":"yes","why":"Strečink zvyšuje flexibilitu, nebuduje svalovou hmotu — správně."}
+{"id":"grp461|en","ok":"yes","why":"Stretching improves flexibility, not muscle mass — correct."}
+{"id":"grp462|cs","ok":"yes","why":"Délka hesla zásadně zvyšuje počet kombinací — přesné."}
+{"id":"grp462|en","ok":"yes","why":"Longer password exponentially harder to guess — accurate."}
+{"id":"grp463|cs","ok":"yes","why":"Online identita nemusí být pravá; mluvit s dospělým — správné."}
+{"id":"grp463|en","ok":"yes","why":"Online identity may be false; talk to adult — correct."}
+{"id":"grp464|cs","ok":"yes","why":"Škola/adresa/logo prozrazuje pravidelný výskyt — správné."}
+{"id":"grp464|en","ok":"yes","why":"School/address/logo reveals routine location — correct."}
+{"id":"grp465|cs","ok":"yes","why":"Bezpečnostní poučka, přesná a nekontroverzní."}
+{"id":"grp465|en","ok":"yes","why":"Accurate safety rule, uncontroversial."}
+{"id":"grp467|cs","ok":"yes","why":"Šišinka, tma→vyplavování melatoninu, světlo oddaluje uspávání — správně."}
+{"id":"grp467|en","ok":"yes","why":"Pineal gland, darkness-driven release, light delays sleep — correct."}
+{"id":"grp469|cs","ok":"yes","why":"Pod 7 h spojováno s kardiometabolickým rizikem — konsenzus."}
+{"id":"grp469|en","ok":"yes","why":"Under 7 h linked to cardiometabolic risk — consensus."}
+{"id":"grp470|cs","ok":"yes","why":"REM: vysoká aktivita mozku + svalová atonie — správně."}
+{"id":"grp470|en","ok":"yes","why":"REM: high brain activity + muscle atonia — correct."}
+{"id":"grp471|cs","ok":"yes","why":"Pravidelný režim posiluje cirkadiánní rytmus a zlepšuje spánek."}
+{"id":"grp471|en","ok":"yes","why":"Regular schedule strengthens circadian rhythm, improves sleep."}
+{"id":"grp472|cs","ok":"yes","why":"HTTPS = šifrované spojení; zámek neověřuje pravdivost obsahu — správně."}
+{"id":"grp472|en","ok":"yes","why":"HTTPS encrypts; padlock ≠ truthful content — correct."}
+{"id":"grp473|cs","ok":"yes","why":"Správně popisuje 2FA (znalost + vlastnictví); samotné heslo nestačí."}
+{"id":"grp473|en","ok":"yes","why":"Accurate description of 2FA; password alone is insufficient."}
+{"id":"grp474|cs","ok":"yes","why":"Etymologie phishing/fishing je správná; ověření jinou cestou je platná rada."}
+{"id":"grp474|en","ok":"yes","why":"Correct etymology and sound advice."}
+{"id":"grp475|cs","ok":"yes","why":"Každé slovo násobí počet kombinací; passphrase je doporučovaná metoda."}
+{"id":"grp475|en","ok":"yes","why":"Correct: each word multiplies possibilities; passphrases recommended."}
+{"id":"grp476|cs","ok":"yes","why":"Adresa i telefon jsou osobní údaje zneužitelné cizími lidmi."}
+{"id":"grp476|en","ok":"yes","why":"Address and phone are personal data misuseable by strangers."}
+{"id":"grp477|cs","ok":"no","why":"„Děti snáz věří sobě“ je nepodložené psychologické tvrzení, ne fakt."}
+{"id":"grp477|en","ok":"no","why":"Claim about children trusting themselves is unverifiable psychological assertion."}
+{"id":"grp478|cs","ok":"no","why":"„Nejjednodušší způsob“ je subjektivní hodnocení, neověřitelný fakt."}
+{"id":"grp478|en","ok":"no","why":"\"Simplest way\" is subjective/unverifiable, not a fact."}
+{"id":"grp479|cs","ok":"yes","why":"Podloženo psychologií aktivního naslouchání; přiměřené, neexaktní tvrzení."}
+{"id":"grp479|en","ok":"yes","why":"Supported by active-listening research; reasonable claim."}
+{"id":"grp480|cs","ok":"yes","why":"S = secure, HTTPS šifruje přenos; přesné."}
+{"id":"grp480|en","ok":"yes","why":"S = secure, HTTPS encrypts traffic; accurate."}
+{"id":"grp481|cs","ok":"yes","why":"2FA blokuje přihlášení bez druhého faktoru; správně."}
+{"id":"grp481|en","ok":"yes","why":"2FA blocks login without second factor; correct."}
+{"id":"grp482|cs","ok":"yes","why":"Phishing skutečně z „fishing“; etymologie správná."}
+{"id":"grp482|en","ok":"yes","why":"Phishing from fishing; correct etymology."}
+{"id":"grp483|cs","ok":"yes","why":"Rodné číslo i číslo dokladu jsou jedinečné; adresa prozradí lokalitu."}
+{"id":"grp483|en","ok":"yes","why":"Unique identifiers enable identity theft; address reveals location."}
+{"id":"grp484|cs","ok":"no","why":"Příliš zjednodušené: HTTPS chrání i na otevřené síti; VPN není jediné řešení."}
+{"id":"grp484|en","ok":"no","why":"Oversimplified: HTTPS protects content even on open Wi-Fi; VPN not the only fix."}
+{"id":"grp485|cs","ok":"yes","why":"Etymologie phishing←fishing je standardně uváděna."}
+{"id":"grp485|en","ok":"yes","why":"Standard etymology phishing←fishing."}
+{"id":"grp486|cs","ok":"yes","why":"HTTPS = šifrovaný přenos, nezáruka bezpečnosti."}
+{"id":"grp486|en","ok":"yes","why":"HTTPS = encrypted transport, not a safety guarantee."}
+{"id":"grp488|cs","ok":"yes","why":"2FA prokazatelně snižuje riziko převzetí účtu."}
+{"id":"grp488|en","ok":"yes","why":"2FA demonstrably reduces account takeover risk."}
+{"id":"grp489|cs","ok":"yes","why":"Password reuse → credential stuffing, správně."}
+{"id":"grp489|en","ok":"yes","why":"Password reuse enables credential stuffing."}
+{"id":"grp491|cs","ok":"yes","why":"Gable & Reis – active-constructive responding, přesné."}
+{"id":"grp491|en","ok":"yes","why":"Gable & Reis active-constructive responding."}
+{"id":"grp492|cs","ok":"no","why":"„Odborníci se shodují“ je nepodložené zobecnění; formulace vágní."}
+{"id":"grp492|en","ok":"no","why":"Unverifiable appeal to consensus; vague claim."}
+{"id":"grp493|cs","ok":"yes","why":"Latané a Darley 1968 po případu Genovese 1964; difuze odpovědnosti platí."}
+{"id":"grp493|en","ok":"yes","why":"Latané & Darley 1968 following the 1964 Genovese case; diffusion of responsibility holds."}
+{"id":"grp494|cs","ok":"yes","why":"Titchener 1909 použil 'empathy' jako překlad 'Einfühlung'."}
+{"id":"grp494|en","ok":"yes","why":"Titchener 1909 coined 'empathy' as translation of 'Einfühlung'."}
+{"id":"grp496|cs","ok":"yes","why":"Standardní rozlišení vcítění/náklonnost/lhostejnost."}
+{"id":"grp496|en","ok":"yes","why":"Standard distinction: feeling with vs. for vs. indifference."}
+{"id":"grp498|cs","ok":"yes","why":"Goleman řadí sebeuvědomění mezi složky emoční inteligence."}
+{"id":"grp498|en","ok":"yes","why":"Goleman lists self-awareness among EI components."}
+{"id":"grp499|cs","ok":"yes","why":"Běžné a správné užití pozdravů."}
+{"id":"grp499|en","ok":"yes","why":"Standard correct usage of greetings."}
+{"id":"grp500|cs","ok":"yes","why":"Uznání, lítost, náprava – běžně uváděné složky omluvy."}
+{"id":"grp500|en","ok":"yes","why":"Admit, regret, repair – commonly cited apology components."}
+{"id":"grp510|cs","ok":"yes","why":"Spisovné oslovení pane/paní + příjmení i neformální pozdravy ahoj/čau – správně."}
+{"id":"grp510|en","ok":"yes","why":"Mr./Mrs.+surname formal; ahoj/čau informal – correct."}
+{"id":"grp511|cs","ok":"yes","why":"Bratranec/sestřenice = děti sourozenců rodičů – správně."}
+{"id":"grp511|en","ok":"yes","why":"Male/female cousin = children of parents' siblings – correct."}
+{"id":"grp513|cs","ok":"yes","why":"Vnuk = syn dítěte; dědeček = otec rodiče; strýc = bratr otce – správně."}
+{"id":"grp513|en","ok":"yes","why":"Grandson = son of your child; grandfather/uncle – correct."}
+{"id":"grp514|cs","ok":"yes","why":"Bratranec/sestřenice = děti strýce/tety; děti prarodičů = rodiče a jejich sourozenci – správně."}
+{"id":"grp514|en","ok":"yes","why":"Cousin = child of uncle/aunt; grandparents' children = parents and siblings – correct."}
+{"id":"grp515|cs","ok":"yes","why":"Tchyně = matka manžela/manželky; babička/teta – správně."}
+{"id":"grp515|en","ok":"yes","why":"Mother-in-law = mother of spouse; grandmother/aunt – correct."}
+{"id":"grp516|cs","ok":"yes","why":"Vnuk, synovec, bratranec, zeť – všechny vztahy správně."}
+{"id":"grp516|en","ok":"yes","why":"Grandson, nephew, cousin, son-in-law – all correct."}
+{"id":"grp501|cs","ok":"yes","why":"Obecně platný popis podání ruky jako přátelského a uctivého pozdravu."}
+{"id":"grp501|en","ok":"yes","why":"Standard description of handshake as friendly, respectful greeting."}
+{"id":"grp502|cs","ok":"yes","why":"„Dobrý den“ je v češtině univerzální zdvořilý pozdrav používaný přes den."}
+{"id":"grp502|en","ok":"yes","why":"Correct: \"Dobrý den\" is the universal polite Czech daytime greeting."}
+{"id":"grp504|cs","ok":"yes","why":"Rozlišení formálního „na shledanou“ a neformálního „ahoj/čau“ je správné."}
+{"id":"grp504|en","ok":"yes","why":"Correct distinction of formal vs. informal Czech partings."}
+{"id":"grp505|cs","ok":"yes","why":"Všechny čtyři překlady (konnichiwa, sayónara, arigató, ojasumi) jsou správné."}
+{"id":"grp505|en","ok":"yes","why":"All four Japanese translations are correct."}
+{"id":"grp507|cs","ok":"yes","why":"Španělské pozdravy podle denní doby jsou uvedeny správně."}
+{"id":"grp507|en","ok":"yes","why":"Spanish greetings by time of day are correct."}
+{"id":"grp509|cs","ok":"yes","why":"„Děkuji“ neutrální spisovné, „dík/díky“ hovorové – správné."}
+{"id":"grp509|en","ok":"yes","why":"Correct stylistic classification of Czech thank-you forms."}
+{"id":"grp525|cs","ok":"yes","why":"Obecné, podložené – skupinová spolupráce často vede k rychlejšímu/lepšímu řešení."}
+{"id":"grp525|en","ok":"yes","why":"General, well-supported claim about group problem-solving."}
+{"id":"grp527|cs","ok":"yes","why":"Kormidelník nevesluje, sedí na zádi, udává tempo/směr; v osmičce je zpravidla nejlehčí."}
+{"id":"grp527|en","ok":"yes","why":"Coxswain doesn't row, sits at stern, steers/sets rhythm, typically lightest."}
+{"id":"grp529|cs","ok":"yes","why":"Ringelmannův efekt – výkon na osobu klesá s počtem lidí (přetahování lana)."}
+{"id":"grp529|en","ok":"yes","why":"Ringelmann effect – per-person effort drops as group size grows."}
+{"id":"grp530|cs","ok":"yes","why":"Latané, Williams & Harkins 1979 – klasická studie sociálního zahálení."}
+{"id":"grp530|en","ok":"yes","why":"Latané, Williams & Harkins (1979) – canonical social loafing study."}
+{"id":"grp531|cs","ok":"yes","why":"Tuckman 1965 čtyři fáze; adjourning přidán později (1977)."}
+{"id":"grp531|en","ok":"yes","why":"Tuckman 1965 four stages; adjourning added later (1977)."}
+{"id":"grp532|cs","ok":"yes","why":"Obecné, rozumné – klidná komunikace usnadňuje řešení sporů."}
+{"id":"grp532|en","ok":"yes","why":"General, reasonable – calm discussion aids conflict resolution."}
+{"id":"grp518|cs","ok":"yes","why":"Správně: strýc = bratr rodiče, jeho syn = bratranec; čeština má teta/strýc/bratranec-sestřenice."}
+{"id":"grp518|en","ok":"yes","why":"Correct: uncle = parent's brother, his son = cousin; Czech has distinct words."}
+{"id":"grp519|cs","ok":"yes","why":"Synovec = syn sourozence, neteř = dcera sourozence; vnuk = syn mého dítěte, o generaci níž."}
+{"id":"grp519|en","ok":"yes","why":"Nephew/niece = sibling's son/daughter; grandson = child of my child, one generation lower."}
+{"id":"grp520|cs","ok":"yes","why":"Švagr skutečně označuje manžela sestry i bratra manžela/manželky."}
+{"id":"grp520|en","ok":"yes","why":"Czech 'švagr' covers both brother-in-law senses (sister's husband, spouse's brother)."}
+{"id":"grp522|cs","ok":"yes","why":"Prateta = sestra prarodiče; teta = sestra rodiče; 'pra-' posouvá o generaci výš."}
+{"id":"grp522|en","ok":"yes","why":"Great-aunt = grandparent's sister; aunt = parent's sister; 'pra-' shifts one generation up."}
+{"id":"grp523|cs","ok":"no","why":"Příliš obecné/neověřitelné tvrzení o výkonu celého týmu; chybí přesnost."}
+{"id":"grp523|en","ok":"no","why":"Overgeneralized, unverifiable claim about team performance."}
+{"id":"grp524|cs","ok":"no","why":"Neověřitelné zobecnění ('obvykle vyhraje častěji') bez zdroje."}
+{"id":"grp524|en","ok":"no","why":"Unverifiable generalization ('usually wins more often') without source."}
+{"id":"grp533|cs","ok":"yes","why":"Obnovení důvěry omluvou a nápravou je dobře podložené v psychologii vztahů."}
+{"id":"grp533|en","ok":"yes","why":"Apology plus repair behavior is well-established in relationship research."}
+{"id":"grp534|cs","ok":"yes","why":"Zpomalené dýchání aktivuje parasympatikus a snižuje vzrušení – standardní poznatek."}
+{"id":"grp534|en","ok":"yes","why":"Slow breathing activates parasympathetic response; well-supported."}
+{"id":"grp535|cs","ok":"yes","why":"Sherifův Robbers Cave experiment: superordinate goals vedly ke spolupráci."}
+{"id":"grp535|en","ok":"yes","why":"Sherif's Robbers Cave: superordinate goals reduced hostility and increased cooperation."}
+{"id":"grp536|cs","ok":"yes","why":"Flood a Dresher, RAND, 1950 – správně přiřazeno."}
+{"id":"grp536|en","ok":"yes","why":"Flood and Dresher formalized it at RAND in 1950."}
+{"id":"grp538|cs","ok":"yes","why":"Kompromis je běžně doporučovaná strategie řešení konfliktů."}
+{"id":"grp538|en","ok":"yes","why":"Compromise is a widely recommended conflict-resolution strategy."}
+{"id":"grp539|cs","ok":"yes","why":"„Já“ výroky snižující obranu jsou standardní doporučení v komunikaci."}
+{"id":"grp539|en","ok":"yes","why":"'I' statements are standard advice to reduce defensiveness."}
+{"id":"grp540|cs","ok":"yes","why":"Naslouchání jako první krok je obecně uznávaný přístup v mediaci a komunikaci."}
+{"id":"grp540|en","ok":"yes","why":"Listening as first step is broadly accepted in conflict resolution."}
+{"id":"grp541|cs","ok":"yes","why":"Thomas Gordon zavedl „I-messages“ v 70. letech (Parent Effectiveness Training, 1970)."}
+{"id":"grp541|en","ok":"yes","why":"Gordon popularized I-statements in the 1970s (P.E.T., 1970)."}
+{"id":"grp542|cs","ok":"yes","why":"Gottmanové označili pohrdání (contempt) za nejničivějšího ze čtyř jezdců."}
+{"id":"grp542|en","ok":"yes","why":"Gottmans called contempt the worst of the Four Horsemen."}
+{"id":"grp543|cs","ok":"yes","why":"Gordonova „no-lose method“ odpovídá win-win řešení bez poražených."}
+{"id":"grp543|en","ok":"yes","why":"Gordon's no-lose method is a win-win approach."}
+{"id":"grp544|cs","ok":"yes","why":"Definice já-výroku je přesná a používá se v mediaci."}
+{"id":"grp544|en","ok":"yes","why":"Definition of I-statement is accurate and commonly used."}
+{"id":"grp545|cs","ok":"yes","why":"Metoda bez poražených hledá oboustranně přijatelné řešení."}
+{"id":"grp545|en","ok":"yes","why":"No-lose method seeks mutually acceptable solution."}
+{"id":"grp555|cs","ok":"yes","why":"Proscénium i hlediště popsány správně."}
+{"id":"grp555|en","ok":"yes","why":"Correct definitions of proscenium and auditorium."}
+{"id":"grp556|cs","ok":"yes","why":"Suflér v budce šeptá text – správně."}
+{"id":"grp556|en","ok":"yes","why":"Prompter in box whispering lines – correct."}
+{"id":"grp558|cs","ok":"yes","why":"1783 i premiéra Dona Giovanniho 29.10.1787 s Mozartem – správně."}
+{"id":"grp558|en","ok":"yes","why":"1783 and 29 Oct 1787 Don Giovanni premiere – correct."}
+{"id":"grp560|cs","ok":"yes","why":"Zítek projektoval, Schulz po požáru 1881 dostavěl – správně."}
+{"id":"grp560|en","ok":"yes","why":"Zítek design, Schulz completed after 1881 fire – correct."}
+{"id":"grp563|cs","ok":"yes","why":"Primabalerína tančí hlavní role a stojí nejvýš – správně."}
+{"id":"grp563|en","ok":"yes","why":"Prima ballerina leads and ranks highest – correct."}
+{"id":"grp564|cs","ok":"yes","why":"Árie je sólová zpěvní část vyjadřující city – správně."}
+{"id":"grp564|en","ok":"yes","why":"Aria as solo vocal piece expressing feelings – correct."}
+{"id":"grp565|cs","ok":"no","why":"Pointe shoes have a stiffened box, but the dancer stands on the flat of the box, not literally on 'tips of prstů' (toes); phrasing misleading"}
+{"id":"grp565|en","ok":"no","why":"Ballet dancers stand on the flat of the hardened box, not on the tips of individual toes"}
+{"id":"grp566|cs","ok":"yes","why":"Conductor uses baton/gestures to set tempo and give cues"}
+{"id":"grp566|en","ok":"yes","why":"Conductor sets tempo and cues via baton and gestures"}
+{"id":"grp567|cs","ok":"yes","why":"Madama Butterfly premiered 1904; Cio-Cio-San sings 'Un bel dì'"}
+{"id":"grp567|en","ok":"yes","why":"Madama Butterfly premiered 1904; Cio-Cio-San sings 'Un bel dì'"}
+{"id":"grp568|cs","ok":"yes","why":"Nutcracker premiered Dec 1892 in St Petersburg; Dance of the Sugar Plum Fairy included"}
+{"id":"grp568|en","ok":"yes","why":"Nutcracker premiered 1892 in St Petersburg; includes Dance of the Sugar Plum Fairy"}
+{"id":"grp569|cs","ok":"yes","why":"My Fair Lady opened on Broadway March 1956, based on Shaw's Pygmalion"}
+{"id":"grp569|en","ok":"yes","why":"My Fair Lady premiered on Broadway 1956, based on Shaw's Pygmalion"}
+{"id":"grp570|cs","ok":"yes","why":"Magic Flute premiered 1791 in Vienna; Queen of the Night aria is coloratura soprano"}
+{"id":"grp570|en","ok":"yes","why":"Magic Flute premiered 1791 in Vienna; Queen of the Night aria is coloratura soprano"}
+{"id":"grp547|cs","ok":"yes","why":"Hlediště = prostor pro diváky, opak jeviště; správně."}
+{"id":"grp547|en","ok":"yes","why":"Auditorium is the seating area for the audience; correct."}
+{"id":"grp548|cs","ok":"yes","why":"Spadnutí opony značí konec představení; rčení je doložené."}
+{"id":"grp548|en","ok":"yes","why":"'The curtain falls' idiomatically marks the end; correct."}
+{"id":"grp549|cs","ok":"yes","why":"Nápovědna je budka u jeviště, kde sedí nápověda; přesné."}
+{"id":"grp549|en","ok":"yes","why":"Prompter sits in the prompt box by the stage; correct."}
+{"id":"grp551|cs","ok":"yes","why":"Nápovědna je u portálu, skrytá divákům, slyšitelná hercům; správně."}
+{"id":"grp551|en","ok":"yes","why":"Prompt box at stage side, hidden from audience, audible to actors; correct."}
+{"id":"grp553|cs","ok":"yes","why":"Premiéra Dona Giovanniho 29. 10. 1787 ve Stavovském divadle, Mozart v Praze; doloženo."}
+{"id":"grp553|en","ok":"yes","why":"World premiere 29 Oct 1787 at Estates Theatre with Mozart in Prague; correct."}
+{"id":"grp554|cs","ok":"yes","why":"Provaziště je prostor nad jevištěm pro spouštění kulis; přesné."}
+{"id":"grp554|en","ok":"yes","why":"Fly system is the space above the stage for lowering scenery; correct."}
+{"id":"grp572|cs","ok":"yes","why":"Louskáček měl premiéru 18.12.1892 v Mariinském divadle v Petrohradě spolu s Jolantou."}
+{"id":"grp572|en","ok":"yes","why":"Premiered 18 Dec 1892, Mariinsky Theatre, same evening as Iolanta."}
+{"id":"grp573|cs","ok":"yes","why":"Muzikál z Shawova Pygmalionu, film 1964 s Audrey Hepburn."}
+{"id":"grp573|en","ok":"yes","why":"Based on Shaw's Pygmalion; 1964 film starring Audrey Hepburn."}
+{"id":"grp575|cs","ok":"yes","why":"Aida měla premiéru 24.12.1871 v Káhirské opeře; honorář 150 000 franků je doložen."}
+{"id":"grp575|en","ok":"yes","why":"Premiered 24 Dec 1871, Cairo Opera House; Verdi's fee 150,000 francs documented."}
+{"id":"grp576|cs","ok":"yes","why":"Premiéra 20.2.1877 v Bolšom neúspěšná; slávu přinesla až Petipova verze 1895 po smrti 1893."}
+{"id":"grp576|en","ok":"yes","why":"20 Feb 1877 Bolshoi premiere flopped; fame came with 1895 revival after his 1893 death."}
+{"id":"grp578|cs","ok":"no","why":"Beňačková zpívala Jenůfu v Met i jinde, ale Grammy Award nezískala — tvrzení nepodložené."}
+{"id":"grp578|en","ok":"no","why":"She sang Jenůfa at the Met and major houses, but is not a Grammy winner."}
+{"id":"grp579|cs","ok":"yes","why":"Flamenco vzniklo v Andalusii, UNESCO zápis 2010."}
+{"id":"grp579|en","ok":"yes","why":"Originated in Andalusia; inscribed on UNESCO Intangible Heritage list in 2010."}
+{"id":"grp581|cs","ok":"no","why":"Kozáček je především ukrajinský tanec; označení 'ruský' je sporné/nepřesné."}
+{"id":"grp581|en","ok":"no","why":"Kozachok is primarily Ukrainian; calling it 'Russian' is disputed/inaccurate."}
+{"id":"grp583|cs","ok":"yes","why":"Flamenco z Andalusie, UNESCO 2010 – správně."}
+{"id":"grp583|en","ok":"yes","why":"Flamenco from Andalusia, UNESCO 2010 – correct."}
+{"id":"grp584|cs","ok":"yes","why":"Samba z Bahie z afrických rytmů, symbol karnevalu v Riu – správně."}
+{"id":"grp584|en","ok":"yes","why":"Samba from Bahia, African roots, Rio carnival symbol – correct."}
+{"id":"grp585|cs","ok":"no","why":"Čardáš proslavili spíš Liszt (Uherské rapsodie); Brahmsovy Uherské tance nejsou čardáše."}
+{"id":"grp585|en","ok":"no","why":"Csárdás is associated with Liszt's Hungarian Rhapsodies; Brahms' Hungarian Dances aren't csárdás."}
+{"id":"grp586|cs","ok":"yes","why":"Tarantela v 6/8, název spojen s Tarantem – správně."}
+{"id":"grp586|en","ok":"yes","why":"Tarantella in 6/8, name linked to Taranto – correct."}
+{"id":"grp587|cs","ok":"yes","why":"Flamenco z Andalusie, romské/andaluské/maurské vlivy – správně."}
+{"id":"grp587|en","ok":"yes","why":"Flamenco from Andalusia, Roma/Andalusian/Moorish influences – correct."}
+{"id":"grp588|cs","ok":"yes","why":"Capoeira je afro-brazilské bojové umění/tanec od otroků, spojuje hudbu, tanec, akrobacii."}
+{"id":"grp588|en","ok":"yes","why":"Accurate: Afro-Brazilian art from enslaved Africans, blends dance, music, acrobatics."}
+{"id":"grp589|cs","ok":"yes","why":"Valčík se z Vídně šířil po Evropě, ikona 19. století."}
+{"id":"grp589|en","ok":"yes","why":"Waltz spread from Vienna across Europe, emblem of the 19th century."}
+{"id":"grp590|cs","ok":"yes","why":"Bharatanatyam patří k nejstarším indickým stylům, kořeny v Natjašástře."}
+{"id":"grp590|en","ok":"yes","why":"Bharatanatyam among oldest Indian classical dances, rooted in Natya Shastra."}
+{"id":"grp591|cs","ok":"yes","why":"UNESCO zapsalo flamenco 2010; palmas drží rytmus s kytarou a zpěvem."}
+{"id":"grp591|en","ok":"yes","why":"Flamenco UNESCO-listed 2010; palmas keep rhythm with guitar and song."}
+{"id":"grp592|cs","ok":"yes","why":"Capoeira mísí tanec a boj; berimbau (luk) a atabaque (buben) ji doprovází."}
+{"id":"grp592|en","ok":"yes","why":"Capoeira blends dance and martial elements; berimbau and atabaque accompany."}
+{"id":"grp593|cs","ok":"no","why":"Legong vznikl na královském dvoře, ale dnes se tančí i mimo dvůr – 'dvorní tanec' je zavádějící."}
+{"id":"grp593|en","ok":"no","why":"Legong originated as a palace dance but is performed widely today; 'court dance' is misleading."}
+{"id":"grp594|cs","ok":"yes","why":"Premiéra na Eurovizi 1994 i nehybné paže stepu sedí."}
+{"id":"grp594|en","ok":"yes","why":"1994 Eurovision premiere and still arms correct."}
+{"id":"grp596|cs","ok":"yes","why":"Utzon Dán, střechy inspirovány skořápkami/plachtami."}
+{"id":"grp596|en","ok":"yes","why":"Danish Utzon; shell/sail inspiration correct."}
+{"id":"grp598|cs","ok":"yes","why":"Navrhl 1943, otevřeno 1959 půl roku po smrti."}
+{"id":"grp598|en","ok":"no","why":"'six months earlier' obrací směr – zavádějící."}
+{"id":"grp599|cs","ok":"no","why":"Měla být dočasná, ale konkrétní '20 let' je nepodložené."}
+{"id":"grp599|en","ok":"no","why":"Temporary yes, but specific '20 years' unverified."}
+{"id":"grp600|cs","ok":"yes","why":"Utzon odstoupil 1966, dostavěli jiní."}
+{"id":"grp600|en","ok":"yes","why":"Utzon resigned 1966, others finished."}
+{"id":"grp601|cs","ok":"yes","why":"Přezdívka Fred a Ginger dle Astairea a Rogersové."}
+{"id":"grp601|en","ok":"yes","why":"Nicknamed after Astaire and Rogers."}
+{"id":"grp602|cs","ok":"yes","why":"Eiffel navrhl vnitřní kostru Sochy Svobody – pravda."}
+{"id":"grp602|en","ok":"yes","why":"Eiffel designed Liberty's framework – true."}
+{"id":"grp603|cs","ok":"yes","why":"Gaudí pracoval na Sagrada Família 43 let (1883–1926), pohřben v kryptě – pravda."}
+{"id":"grp603|en","ok":"yes","why":"Gaudí worked over 40 years and is buried in the crypt – true."}
+{"id":"grp605|cs","ok":"yes","why":"Milunić + Gehry, přezdívka Ginger a Fred – pravda."}
+{"id":"grp605|en","ok":"yes","why":"Milunić + Gehry, \"Ginger and Fred\" – true."}
+{"id":"grp606|cs","ok":"yes","why":"Bartholdi plášť, Eiffel kostra, Lesseps Panama – pravda."}
+{"id":"grp606|en","ok":"yes","why":"Bartholdi shell, Eiffel skeleton, Lesseps Panama – true."}
+{"id":"grp607|cs","ok":"no","why":"Park Güell a krypta jsou UNESCO; Sagrada Família byla zapsána až 2005 jako součást stejné položky – formulace \"stejně jako\" je zavádějící, ale krypta je součástí zápisu; hraniční – hodnotím no pro nepřesnost."}
+{"id":"grp607|en","ok":"no","why":"Park Güell and crypt are UNESCO; Sagrada Família added only 2005 – wording imprecise."}
+{"id":"grp608|cs","ok":"yes","why":"Utzon vyhrál 1957, odstoupil 1966, dostavěl jiný tým – pravda."}
+{"id":"grp608|en","ok":"yes","why":"Utzon won 1957, resigned 1966, finished by others – true."}
+{"id":"grp616|cs","ok":"yes","why":"Kostel sv. Mikuláše na Malé Straně je barokní s velkou kupolí – správně."}
+{"id":"grp616|en","ok":"yes","why":"St. Nicholas Church in Lesser Town is Baroque with a large dome – correct."}
+{"id":"grp618|cs","ok":"yes","why":"Katedrála sv. Víta: založena 1344, dostavěna 1929 – správně."}
+{"id":"grp618|en","ok":"yes","why":"St. Vitus founded 1344, completed 1929 – correct."}
+{"id":"grp621|cs","ok":"yes","why":"Sv. Mikuláš na Malé Straně je považován za jednu z nejvýznamnějších barokních staveb – pravda."}
+{"id":"grp621|en","ok":"yes","why":"St. Nicholas in Malá Strana is considered one of the most important Baroque buildings – true."}
+{"id":"grp622|cs","ok":"yes","why":"Lomený oblouk jako znak gotiky, románský půlkruhový – správně."}
+{"id":"grp622|en","ok":"yes","why":"Pointed arch = Gothic, round arch = Romanesque – correct."}
+{"id":"grp624|cs","ok":"yes","why":"Rotunda sv. Martina na Vyšehradě z 11. stol., jedna z nejzachovalejších románských památek v Praze – pravda."}
+{"id":"grp624|en","ok":"yes","why":"11th-century Rotunda of St Martin at Vyšehrad, one of the best-preserved Romanesque buildings in Prague – true."}
+{"id":"grp625|cs","ok":"yes","why":"Karlštejn založen Karlem IV. roku 1348 k uložení korunovačních klenotů a relikvií – správně."}
+{"id":"grp625|en","ok":"yes","why":"Charles IV founded Karlštejn in 1348 to house crown jewels and relics – correct."}
+{"id":"grp609|cs","ok":"no","why":"Wright pracoval na Guggenheimu ~16 let, ale zemřel 9. 4. 1959, muzeum otevřelo 21. 10. 1959 – to je přes 6 měsíců, ne šest měsíců před ním; formulace zavádějící/nepřesná"}
+{"id":"grp609|en","ok":"no","why":"Died April 1959, opened Oct 1959 – over 6 months, not 'six months before'"}
+{"id":"grp610|cs","ok":"yes","why":"Zvíkov založen Přemyslem Otakarem II. ve 13. stol., jádro raně gotické – správně"}
+{"id":"grp610|en","ok":"yes","why":"Founded by Ottokar II in 13th c., Early Gothic core – correct"}
+{"id":"grp612|cs","ok":"yes","why":"Románské stavby: silné zdi, malá okna s půlkruhovými oblouky – správně"}
+{"id":"grp612|en","ok":"yes","why":"Romanesque: thick walls, small semicircular-arched windows – correct"}
+{"id":"grp613|cs","ok":"yes","why":"Katedrála sv. Víta je vrcholná gotika se síťovou klenbou – správně"}
+{"id":"grp613|en","ok":"yes","why":"St. Vitus Cathedral, Gothic masterpiece with net vaulting – correct"}
+{"id":"grp614|cs","ok":"yes","why":"Rotunda sv. Jiří na Řípu je jedna z nejstarších románských staveb v Česku – správně"}
+{"id":"grp614|en","ok":"yes","why":"Rotunda of St. George on Říp, one of oldest Romanesque buildings – correct"}
+{"id":"grp615|cs","ok":"yes","why":"Největší gotická katedrála v Česku – správně"}
+{"id":"grp615|en","ok":"yes","why":"Largest Gothic cathedral in Czechia – correct"}
+{"id":"grp626|cs","ok":"no","why":"Most měl rozpětí hlavního pole 486 m, ale celková délka 1 825 m je jen přibližná a 'nejdelší visutý most' platilo jen do 1889; přesnost sporná"}
+{"id":"grp626|en","ok":"no","why":"Main span 486 m; total length 1,825 m is only approximate and 'longest' only until 1889"}
+{"id":"grp627|cs","ok":"no","why":"330 m je dnešní výška s anténami; v roce 1889 měřila 300 m, takže spojení '330 m' a '1889' je nepřesné"}
+{"id":"grp627|en","ok":"no","why":"330 m is the current height with antennas; in 1889 it was 300 m — mixed facts"}
+{"id":"grp629|cs","ok":"yes","why":"Big Ben = zvon, věž od 2012 Elizabeth Tower — správně"}
+{"id":"grp629|en","ok":"yes","why":"Big Ben is the bell; tower renamed Elizabeth Tower in 2012 — correct"}
+{"id":"grp631|cs","ok":"yes","why":"V roce 1889 vysoká 300 m a nejvyšší stavba světa — správně"}
+{"id":"grp631|en","ok":"yes","why":"300 m in 1889 and tallest structure — correct"}
+{"id":"grp632|cs","ok":"no","why":"102 pater a 86. patro správně, ale 'výhled ~130 km' je nepodložené/optimalistické číslo"}
+{"id":"grp632|en","ok":"no","why":"102 floors and 86th floor correct, but '~130 km views' is unverifiable/marketing claim"}
+{"id":"grp633|cs","ok":"yes","why":"Přes milion dlaždic a architekt Jørn Utzon — správně"}
+{"id":"grp633|en","ok":"yes","why":"Over a million tiles and designed by Jørn Utzon — correct"}
+{"id":"grp634|cs","ok":"yes","why":"Most sources cite ~20–30 deaths, many from caisson disease; 'over 20' is safe."}
+{"id":"grp634|en","ok":"yes","why":"Same: over 20 deaths, many from caisson disease, is standard."}
+{"id":"grp635|cs","ok":"no","why":"CN Tower is 553.3 m, but surpassed in Sept 2007 by Burj Dubai at ~555 m — only ~2 m, not 10 m."}
+{"id":"grp635|en","ok":"no","why":"Surpassed by ~2 m, not 10 m (555 m vs 553.3 m)."}
+{"id":"grp636|cs","ok":"yes","why":"828 m, 163 floors, originally named Burj Dubai — correct."}
+{"id":"grp636|en","ok":"yes","why":"828 m, 163 floors, formerly Burj Dubai — correct."}
+{"id":"grp637|cs","ok":"no","why":"Bascules ~1,000 tonnes total (~500 t each); raising takes ~1 min, not 1.5."}
+{"id":"grp637|en","ok":"no","why":"Each bascule ~500 t (1,000 t total); lift time ~1 minute."}
+{"id":"grp638|cs","ok":"yes","why":"Antonio da Ponte won the 1588 competition; Palladio was among entrants."}
+{"id":"grp638|en","ok":"yes","why":"Da Ponte won the competition; Palladio submitted a proposal."}
+{"id":"grp640|cs","ok":"yes","why":"828 m, 160+ floors, surpassed Taipei 101 (2004 record) — correct."}
+{"id":"grp640|en","ok":"yes","why":"828 m, 160+ floors, broke Taipei 101's record — correct."}

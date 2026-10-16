@@ -37,7 +37,8 @@ ok.forEach((r, i) => {
 // ─── Tematické balíčky (content/packs-1.1.jsonl): verdikt ok, mimo ručně zamítnuté, bez duplicit ───
 // Duplicita = stejná správná odpověď a podobné zadání (≥ 35 % společných slov) jako už zařazená otázka.
 // zdroje: [soubor, klíč se zamítnutými řádky v gen-1.1-keep.json, předpona id pro kontrolu zajímavostí]
-const PACK_SOURCES = [['packs-1.1.jsonl', 'packs_reject', 'pack'], ['packs-1.1b.jsonl', 'packs2_reject', 'packb']];
+// groups-1.1.jsonl: doplnění skupin greamíků (knihy a pohádky, cizí jazyky, hádanky, mysl, zdraví a bezpečí, vztahy, divadlo a stavby)
+const PACK_SOURCES = [['packs-1.1.jsonl', 'packs_reject', 'pack'], ['packs-1.1b.jsonl', 'packs2_reject', 'packb'], ['groups-1.1.jsonl', 'groups_reject', 'grp']];
 const words = (t) => new Set(String(t).toLowerCase().normalize('NFC').replace(/[^\p{L}\p{N} ]/gu, ' ').split(/\s+/).filter(w => w.length > 3));
 const ansOf = (o) => o.kind === 'tf' ? o.correct : o.kind === 'estimate' ? String(o.answer) : o.kind === 'timeline' ? o.cs.items.join('|') : String(o.cs.choices?.[o.correct_index ?? 0] || '').toLowerCase().replace(/[^\p{L}\p{N}]/gu, '');
 const isDup = (a, b) => { if (ansOf(a) !== ansOf(b)) return false; const A = words(a.cs.text), B = words(b.cs.text); let n = 0; for (const w of A) if (B.has(w)) n++; return n / Math.max(1, Math.min(A.size, B.size)) >= 0.35; };
@@ -50,7 +51,7 @@ for (const [file, rejKey, fidPrefix] of PACK_SOURCES) {
   fs.readFileSync(PACKS_SRC, 'utf8').split('\n').filter(Boolean).forEach((line, i) => {
     const r = JSON.parse(line); if (r.verdict !== 'ok' || rej.has(i)) return;
     const q = r.q; if (!q?.cs?.choices || !q?.en?.choices || q.cs.choices.length !== q.en.choices.length || q.cs.choices.length < 3) return;
-    const item = { kind: 'choice', w: r.w, d: r.d, pack: r.pack, cs: q.cs, en: q.en, correct_index: q.correct_index ?? 0 };
+    const item = { kind: 'choice', w: r.w, d: r.d, ...(r.pack ? { pack: r.pack } : {}), cs: q.cs, en: q.en, correct_index: q.correct_index ?? 0 };
     if (q.fact_cs || q.fact_en) item.fact = { cs: String(q.fact_cs || '').slice(0, 220), en: String(q.fact_en || '').slice(0, 220), src: String(q.source || '').slice(0, 80) };
     if (out.some(o => isDup(o, item))) { dups++; return; }
     packFactIds.set(item, fidPrefix + i); out.push(item); added++;

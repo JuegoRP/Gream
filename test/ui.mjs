@@ -49,6 +49,12 @@ ok(document.getElementById('battleDiffRow')?.querySelectorAll('button').length =
 ok(document.getElementById('battlePackRow')?.querySelectorAll('button').length === 7, 'intro has 7 topic buttons (Vše + 6 balíčků)');
 { const { packPool, PACKS } = await import(new URL('battle.js', base));
   for (const k of PACKS) { const n = packPool(k, 'hard').length; ok(n >= 10, `balíček ${k} má aspoň 10 otázek do souboje (${n})`); } }
+// Souboj losuje rovnoměrně ze 24 skupin greamíků – i na lehké obtížnosti musí mít každá skupina otázky (přibere sousední obtížnost)
+{ const { pickQuestions } = await import(new URL('battle.js', base)); const { groupOf, GROUPS } = await import(new URL('subcats.js', base)); const { getLang } = await import(new URL('i18n.js', base));
+  for (const d of ['easy', 'extreme']) { const c = {}; for (let i = 0; i < 300; i++) for (const q of pickQuestions(d)) { const g = q.group; if (g) c[g] = (c[g] || 0) + 1; }
+    const n = Object.values(c), miss = Object.keys(GROUPS).filter(g => !c[g]);
+    if (process.env.DBG) console.log(d, JSON.stringify(c));
+    ok(!miss.length && Math.max(...n) / Math.min(...n) < 1.6, `${d}: všech 24 skupin v soubojích zhruba rovnoměrně (chybí ${miss.join(',') || '–'}, max/min ${(Math.max(...n) / Math.min(...n)).toFixed(2)})`); } }
 const startBtn = document.getElementById('battleStartBtn');
 ok(!!startBtn, 'intro has start button');
 ok(!startBtn.disabled, 'start button enabled (has seeds + premium)');

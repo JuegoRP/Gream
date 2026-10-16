@@ -6,6 +6,7 @@
 //  Greamík z odpovídajícího světa → delší čas. Vstup stojí 1/4 výhry (venku 1/8).
 // ═══════════════════════════════════
 
+import { shuffle } from './shuffle.js';
 import { tr, getLang } from './i18n.js';
 import { Profiles } from './profiles.js';
 import { Gream, ARCHETYPES } from './gream.js';
@@ -14,15 +15,14 @@ import { Subscription } from './subscription.js';
 import { Feedback } from './feedback.js';
 import { Audio } from './audio.js';
 import { Net, challengeId } from './net.js';
-import { RULES, SPECIALS, ARCH_WORLD, ARCHES, BASE_ARCHES, ARCH_SUB, domainWeightFor, newFighter, useSpecial, canSpecial, aiWantsSpecial, resolveRound, winner } from './battle-rules.js';
+import { RULES, SPECIALS, ARCH_WORLD, ARCH_GROUP, GROUP_IDS, GROUP_WORLD, ARCHES, BASE_ARCHES, domainWeightFor, newFighter, useSpecial, canSpecial, aiWantsSpecial, resolveRound, winner } from './battle-rules.js';
 import { Arena, drawFighter } from './arena.js';
 import { factFor } from './facts.js';
 import { numTolerance } from './validator.js';
-import { subcatOf } from './subcats.js';
+import { subcatOf, groupOf } from './subcats.js';
 import { Playtime } from './parents.js';
 const ARCHETYPE_NAME = (a) => ARCHETYPES[a]?.name?.[getLang() === 'cs' ? 'cs' : 'en'] || a;
 
-const WORLD_TO_ARCH = { nature:'lilek', language:'jiskra', logic:'kamen', feelings:'srodik', arts:'vlnka', world:'atlas' };
 const WORLDS = ['nature','language','logic','feelings','arts','world'];
 const WORLD_ICONS = { nature:'🌿', language:'📖', logic:'🧩', feelings:'💛', arts:'🎨', world:'🌍' };
 
@@ -40,9 +40,30 @@ const BOT_EDGE = 0.04, BOT_MIN = 0.4, BOT_MAX = 0.93, SKILL_ALPHA = 0.3;
 const KEY_STATS = 'gream_battle_stats';
 // 1 = otázka z mého světa (Super účinné), 0.5 = týká se mého světa zčásti přes podkategorii (Účinné), 0 = jinak
 // Greamíci podkategorií: 1 = jejich podkategorie, 0.5 = zbytek jejich světa (pravidla v battle-rules.js domainWeightFor)
+const CH_DIFF = new WeakMap();   // otázka → obtížnost, ze které pochází (souboj si může půjčit sousední)
 function domainFor(arch, world, ch, diff) {
-  const sc = ch?.text ? subcatOf(world, diff, ch.text, getLang()) : null;
-  return domainWeightFor(arch, { world, main: sc?.main || null, side: sc?.side || null, mainWorld: sc?.mainWorld || null, sideWorld: sc?.sideWorld || null });
+  const g = ch?.text ? groupOf(world, CH_DIFF.get(ch) || diff, ch.text, getLang()) : null;
+  return domainWeightFor(arch, { world, group: g?.group || null, side: g?.side || null });
+}
+// Otázky jedné skupiny pro obtížnost (souboj losuje skupinu rovnoměrně → žádný greamík není zvýhodněn velikostí svého tématu)
+function groupPool(group, difficulty) {
+  const t = tr(), lang = getLang(), out = [];
+  for (const world of WORLDS) for (const c of t.challenges?.[world]?.[difficulty] || [])
+    if (battleUsable(c) && groupOf(world, difficulty, c.text, lang)?.group === group) { CH_DIFF.set(c, difficulty); out.push({ world, ch: c }); }
+  return out;
+}
+// Má-li skupina na dané obtížnosti málo otázek (např. Věda nemá žádnou lehkou), přibere se nejbližší obtížnost –
+// jinak by její greamík v lehkém souboji nikdy nedostal „Super účinné“
+const NEAR_DIFF = { easy: ['medium', 'hard'], medium: ['easy', 'hard'], hard: ['medium', 'extreme'], extreme: ['hard', 'medium'] };
+const _gpCache = new Map();
+function groupPoolCached(group, difficulty) {
+  const k = getLang() + group + difficulty;
+  if (!_gpCache.has(k)) {
+    let pool = groupPool(group, difficulty);
+    for (const d of NEAR_DIFF[difficulty] || []) { if (pool.length >= 8) break; pool = pool.concat(groupPool(group, d)); }
+    _gpCache.set(k, pool);
+  }
+  return _gpCache.get(k);
 }
 const KEY_BADGES = 'gream_battle_badges';
 
@@ -102,23 +123,26 @@ function pickQuestions(difficulty, rng, pack) {
   const rand = rng || Math.random;
   if (pack) {
     const pool = packPool(pack, difficulty);
-    const exact = pool.filter(x => x.d === difficulty).sort(() => rand() - 0.5);
+    const exact = shuffle(pool.filter(x => x.d === difficulty), rand);
     const rest = pool.filter(x => x.d !== difficulty);   // už seřazené podle blízkosti obtížnosti
     return [...exact, ...rest].slice(0, ROUNDS).map(({ world, ch }) => ({ world, ch }));
   }
-  const out = [];
-  const worldBag = [...WORLDS, ...WORLDS.slice(0, ROUNDS - WORLDS.length)].slice(0, ROUNDS);
-  worldBag.sort(() => rand() - 0.5);
-  const usedText = new Set();
-  for (const world of worldBag) {
-    const pool = (t.challenges?.[world]?.[difficulty] || []).filter(c => battleUsable(c) && !usedText.has(c.text));
+  // 10 různých skupin (z 24) náhodně, z každé jedna otázka; prázdná skupina na této obtížnosti → zkusí se další
+  const out = [], usedText = new Set();
+  const bag = [...GROUP_IDS];   // Fisher–Yates (sort s náhodou míchá zaujatě a zvýhodňuje první skupiny)
+  for (let i = bag.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [bag[i], bag[j]] = [bag[j], bag[i]]; }
+  for (const g of bag) {
+    const pool = groupPoolCached(g, difficulty).filter(x => !usedText.has(x.ch.text));
     if (!pool.length) continue;
-    const c = pool[Math.floor(rand() * pool.length)];
-    usedText.add(c.text);
-    out.push({ world, ch: c });
+    const x = pool[Math.floor(rand() * pool.length)];
+    usedText.add(x.ch.text); out.push({ ...x, group: g });
     if (out.length >= ROUNDS) break;
   }
-  return out;
+  if (out.length < ROUNDS) for (const world of WORLDS) for (const c of t.challenges?.[world]?.[difficulty] || []) {   // pojistka
+    if (out.length >= ROUNDS) break;
+    if (battleUsable(c) && !usedText.has(c.text)) { usedText.add(c.text); out.push({ world, ch: c }); }
+  }
+  return out;   // pořadí je už náhodné (bag)
 }
 
 const todayISO = () => new Date().toISOString().slice(0, 10);
@@ -556,7 +580,7 @@ export const Battle = {
           wrap.append(input, ok); elC.appendChild(wrap); setTimeout(() => input.focus(), 150);
         } else {
           const correctVal = String(ch.check.correct).toLowerCase();
-          const shuffled = [...ch.choices].sort(() => Math.random() - 0.5);
+          const shuffled = shuffle(ch.choices);
           let removed = 0;
           shuffled.forEach(c => {
             const b = document.createElement('button'); b.className = 'bt-choice'; b.textContent = c.text;
@@ -577,13 +601,11 @@ export const Battle = {
         const pauseStart = Date.now();
         const ev = useSpecial(me, foe);
         Audio.playCry?.(me.arch, side === 0 ? this._me.stage : this._rival.stage);
-        if (me.ownWorldNext && world !== ARCH_WORLD[me.arch] && this._pack) {   // Kompas v balíčku: otázka zůstává (téma), bonus „svůj svět“ platí
-          world = ARCH_WORLD[me.arch];
-        } else if (me.ownWorldNext && world !== ARCH_WORLD[me.arch]) {   // Kompas: otázka z mého světa
-          const alt = pickQuestions(this._daily ? 'medium' : this._diff).find(x => x.world === ARCH_WORLD[me.arch]);
-          const pool = (tr().challenges?.[ARCH_WORLD[me.arch]]?.[this._daily ? 'medium' : this._diff] || []).filter(battleUsable);
-          const c = alt?.ch || pool[Math.floor(Math.random() * pool.length)];
-          if (c) { world = ARCH_WORLD[me.arch]; ch = c; }   // jen pro tohoto hráče
+        // Kompas a spol.: příští otázka z mé skupiny (v tematickém balíčku otázka zůstává, bonus platí)
+        if (me.ownWorldNext && !this._pack) {
+          const pool = groupPoolCached(ARCH_GROUP[me.arch], this._daily ? 'medium' : this._diff);
+          const x = pool[Math.floor(Math.random() * pool.length)];
+          if (x) { world = x.world; ch = x.ch; }   // jen pro tohoto hráče
         }
         await this._arena.special(side, ev, t.battle_special[ev.id].name);
         this._arena.update(this._f);
@@ -853,3 +875,4 @@ export const Battle = {
     return { win, pScore, bScore, entry, reward: win ? reward : 0, questions: q.length };
   },
 };
+export { pickQuestions };   // test rovnoměrného losování skupin (test/ui.mjs)

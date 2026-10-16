@@ -5,6 +5,7 @@
 //  + Skin unlock check after task completion
 // ═══════════════════════════════════
 
+import { shuffle } from './shuffle.js';
 import { factCard } from './facts.js';
 import { Expedition } from './expedition.js';
 import { Playtime } from './parents.js';
@@ -18,7 +19,7 @@ import { Feedback } from './feedback.js';
 import { Geo } from './geo.js';
 import { Skins } from './skins.js';
 import { Gream, ARCHETYPES, spritePath, eggLeaning } from './gream.js';
-import { subcatOf, subcatName } from './subcats.js';
+import { subcatOf, subcatName, groupOf, groupName } from './subcats.js';
 import { Subscription } from './subscription.js';
 import { Audio } from './audio.js';
 import { T } from './i18n.js';
@@ -102,11 +103,10 @@ export const Challenge = {
     const pet = Gream.active(p.id);
     if (pet && (pet.stage < 2 || !pet.archetype) && steps.length) {
       const lean = eggLeaning(pet);
-      const subWorld = lean?.sub && Object.values(ARCHETYPES).find(a => a.sub === lean.sub)?.primaryWorld;
-      if (subWorld === world && lean.subCount >= 2 && Math.random() < 0.35) {
-        for (let k = 0; k < Math.min(steps.length, 60); k++) {
+      if (lean?.world === world && lean.groupCount >= 2 && Math.random() < 0.35) {
+        for (let k = 0; k < Math.min(steps.length, 80); k++) {
           const j = (this._currentStep + k) % steps.length;
-          if (subcatOf(world, diffKey, steps[j].text, lang)?.main === lean.sub) { this._currentStep = j; break; }
+          if (groupOf(world, diffKey, steps[j].text, lang)?.group === lean.group) { this._currentStep = j; break; }
         }
       }
     }
@@ -304,7 +304,7 @@ export const Challenge = {
     container.appendChild(label);
 
     // Zamíchat možnosti – v datech je správná odpověď vždy první (keepOrder: Pravda/Mýtus apod.)
-    const choices = challenge.keepOrder ? challenge.choices : [...challenge.choices].sort(() => Math.random() - 0.5);
+    const choices = challenge.keepOrder ? challenge.choices : shuffle(challenge.choices);
     choices.forEach(choice => {
       const btn = document.createElement('button');
       btn.className = 'btn-action btn-choice';
@@ -453,7 +453,7 @@ export const Challenge = {
   // challenge.items = ['A','B','C'], challenge.check.correct = ['B','A','C']
   _renderSortUI(container, challenge, t) {
     const lang  = localStorage.getItem('gream_lang') || 'en';
-    const items = [...challenge.items].sort(() => Math.random() - 0.5); // shuffle
+    const items = shuffle(challenge.items); // shuffle
     const selected = [];
     const wrap = document.createElement('div');
     wrap.style.cssText = 'width:100%;max-width:420px';
@@ -531,7 +531,7 @@ export const Challenge = {
     colB.style.cssText = 'display:flex;flex-direction:column;gap:6px';
 
     // Shuffle column B
-    const shuffledB = [...pairs].sort(() => Math.random() - 0.5);
+    const shuffledB = shuffle(pairs);
 
     const checkComplete = () => {
       if (matched.size === pairs.length) {
@@ -1058,13 +1058,16 @@ export const Challenge = {
     // World titles — same meaning in CS and EN
     const worldTitles = {
       cs: { lilek:'Přírodní duch 🌿', jiskra:'Jazykový plamen ✨', kamen:'Logický strážce 🧩', srodik:'Citový průvodce 💛', vlnka:'Umělecká duše 🎨', atlas:'Světový badatel 🌍',
-            tlapka:'Přítel zvířat 🐾', kanka:'Strážce písmenek ✒️', poctik:'Mistr čísel 🔢', hrejik:'Hřejivé srdce ☀️', noticka:'Malá hvězda hudby 🎵', mapka:'Cestovatel po mapě 🐢' },
+            tlapka:'Přítel zvířat 🐾', kanka:'Strážce písmenek ✒️', poctik:'Mistr čísel 🔢', hrejik:'Hřejivé srdce ☀️', noticka:'Malá hvězda hudby 🎵', mapka:'Cestovatel po mapě 🐢',
+            hvezdik:'Hvězdný poutník 🌌', mnamka:'Malý kuchař 🍞', bajka:'Strážce pohádek 📖', ahojik:'Kamarád všech jazyků 💬', banka:'Malý vědec 🧪', hadak:'Luštitel hádanek 🧩', mozik:'Snílek a myslitel 💭', zdravik:'Strážce zdraví ⛑️', klapka:'Filmová hvězda 🎬', maska:'Herec a stavitel 🎭', micek:'Malý šampion ⚽', lvicek:'Český lvíček 🦁' },
       en: { lilek:'Nature Spirit 🌿', jiskra:'Language Flame ✨', kamen:'Logic Guardian 🧩', srodik:'Feelings Guide 💛', vlnka:'Art Soul 🎨', atlas:'World Explorer 🌍',
-            tlapka:'Animal Friend 🐾', kanka:'Keeper of Letters ✒️', poctik:'Number Master 🔢', hrejik:'Warm Heart ☀️', noticka:'Little Music Star 🎵', mapka:'Map Traveller 🐢' }
+            tlapka:'Animal Friend 🐾', kanka:'Keeper of Letters ✒️', poctik:'Number Master 🔢', hrejik:'Warm Heart ☀️', noticka:'Little Music Star 🎵', mapka:'Map Traveller 🐢',
+            hvezdik:'Star Wanderer 🌌', mnamka:'Little Chef 🍞', bajka:'Keeper of Tales 📖', ahojik:'Friend of All Languages 💬', banka:'Little Scientist 🧪', hadak:'Riddle Solver 🧩', mozik:'Dreamer & Thinker 💭', zdravik:'Health Guardian ⛑️', klapka:'Movie Star 🎬', maska:'Actor & Builder 🎭', micek:'Little Champion ⚽', lvicek:'Czech Lion Cub 🦁' }
     };
     // Suggested names — short, neutral, same for CS/EN
     const suggested = { lilek:['Sprout','Fern','Mossy'], jiskra:['Echo','Spark','Buzz'], kamen:['Cog','Byte','Pip'], srodik:['Blush','Rosy','Wink'], vlnka:['Hue','Dab','Ripple'], atlas:['Roam','Scout','Arc'],
-      tlapka:['Paws','Fluff','Teddy'], kanka:['Inky','Quill','Blot'], poctik:['Digit','Cubo','Plus'], hrejik:['Sunny','Glow','Ember'], noticka:['Tempo','Trill','Beat'], mapka:['Shelly','Globo','Compy'] };
+      tlapka:['Paws','Fluff','Teddy'], kanka:['Inky','Quill','Blot'], poctik:['Digit','Cubo','Plus'], hrejik:['Sunny','Glow','Ember'], noticka:['Tempo','Trill','Beat'], mapka:['Shelly','Globo','Compy'],
+      hvezdik:['Nova','Orbit','Luna'], mnamka:['Bun','Muffin','Crumb'], bajka:['Page','Fable','Tale'], ahojik:['Hola','Ciao','Hey'], banka:['Fizz','Bubbly','Ion'], hadak:['Quiz','Riddle','Puzzo'], mozik:['Dreamy','Idea','Pip'], zdravik:['Minty','Vita','Patch'], klapka:['Clap','Reel','Scene'], maska:['Mask','Encore','Bravo'], micek:['Bounce','Goaly','Sprint'], lvicek:['Leo','Lvík','Roary'] };
     const archTitle = worldTitles[lang]?.[arch] || '';
     const defaultName = (suggested[arch] || ['Gream'])[Math.floor(Math.random() * 3)];
 
@@ -1082,7 +1085,7 @@ export const Challenge = {
         <div style="font-size:20px;font-weight:900;color:white;margin-bottom:6px;animation:slideUp 0.4s ease 0.5s both">${defaultName}</div>
         <div style="font-size:14px;font-weight:700;color:rgba(135,194,109,0.9);margin-bottom:8px;animation:fadeIn 0.3s ease 0.65s both">${archTitle}</div>
         <div style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.75);margin-bottom:8px;animation:fadeIn 0.3s ease 0.7s both">🐣 ${greamResult.birthPlace ? tr().birth_at(greamResult.birthPlace) : tr().birth_home}</div>
-        ${ARCHETYPES[arch]?.sub ? `<div style="font-size:12px;font-weight:800;color:#ffe27a;margin-bottom:10px;animation:fadeIn 0.3s ease 0.75s both">${tr().hatch_sub_why(subcatName(ARCHETYPES[arch].sub, lang))}</div>` : ''}
+        ${ARCHETYPES[arch]?.group ? `<div style="font-size:12px;font-weight:800;color:#ffe27a;margin-bottom:10px;animation:fadeIn 0.3s ease 0.75s both">${tr().hatch_sub_why(groupName(ARCHETYPES[arch].group, lang))}</div>` : ''}
         ${greamResult.isShiny ? `<div style="font-size:13px;font-weight:800;color:#f5d020;margin-bottom:14px">✨ ${lang === 'cs' ? 'A je VZÁCNÝ!' : "And it's SHINY!"}</div>` : ''}
         <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:20px;animation:fadeIn 0.3s ease 0.8s both">
           ${lang === 'cs' ? '(Klepni na jméno v zahradě pro přejmenování)' : '(Tap the name in garden to rename)'}

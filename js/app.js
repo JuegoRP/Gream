@@ -21,7 +21,7 @@ import { hasProfanity } from './profanity.js';
 import { shinySource } from './shiny.js';
 import { GardenLife } from './garden-life.js';
 import { SPECIALS } from './battle-rules.js';
-import { SUBCAT_TAXONOMY, subcatName } from './subcats.js';
+import { SUBCAT_TAXONOMY, subcatName, groupName } from './subcats.js';
 
 // Rozmístění ve 2D zahradě (% světa; y = spodní hrana předmětu, čím víc, tím blíž).
 // Sladěno s pozadím garden_wide.jpg: nic nestojí na cestičce (vede zleva y≈55 esíčkem dolů doprava y≈90),
@@ -38,7 +38,7 @@ const GARDEN_LAYOUT = {
   deco_rainbow:   { x: 62, y: 36, base: 0 },
 };
 const DECOR_ASPECT = { nest: 46 / 78, deco_flowerbed: 0.67, deco_bench: 0.75, deco_lantern: 1.67, deco_birdhouse: 2.77, deco_pond: 0.64, deco_mushroom: 1.14, deco_rainbow: 0.53 };
-import { Gream, ARCHETYPES, eggLeaning, spritePath, smartSpritePath } from './gream.js';
+import { Gream, ARCHETYPES, BASE_ARCHETYPES, eggLeaning, spritePath, smartSpritePath } from './gream.js';
 import { Subscription, FREE_DAILY_INDOOR, PREMIUM_DAILY_INDOOR, INDOOR_MAX_TOTAL, FREE_DAILY_OUTDOOR, SEED_COST_EXTRA_TASK } from './subscription.js';
 import { Ranking } from './ranking.js';
 import { Audio } from './audio.js';
@@ -3617,7 +3617,7 @@ window.App = {
 
     const owned = Gream.ownedArchetypes(profileId);
     const WC = { nature:'#4a8a2e', language:'#5a4a8a', logic:'#2d7abf', feelings:'#d46d94', arts:'#c87030', world:'#a8743c' };
-    const allArchetypes = Object.values(ARCHETYPES).filter(a => !a.sub);   // greamíci podkategorií se jen líhnou z vajíčka
+    const allArchetypes = BASE_ARCHETYPES.map(id => ARCHETYPES[id]);   // výběr druhého greamíka: původních šest, ostatní jen z vajíčka
     const available = allArchetypes.filter(a => !owned.includes(a.id));
 
     // Find a good container to prepend to
@@ -3914,7 +3914,7 @@ window.App = {
     // Add new gream button if eligible
     if (Gream.canAddMore(p.id)) {
       const owned = Gream.ownedArchetypes(p.id);
-      const available = Object.values(ARCHETYPES).filter(a => !a.sub && !owned.includes(a.id));   // podkategorie jen vylíhnutím
+      const available = BASE_ARCHETYPES.map(id => ARCHETYPES[id]).filter(a => !owned.includes(a.id));   // ostatní jen vylíhnutím
       const addCard = document.createElement('div');
       addCard.style.cssText = 'background:linear-gradient(135deg,#fff9e6,#ffedb0);border-radius:18px;padding:14px 16px;border:2px dashed #f5c842';
       addCard.innerHTML = `
@@ -3947,20 +3947,20 @@ window.App = {
     if (egg) {
       // Vajíčko: kolik zbývá, co „cítí“ (svět + podkategorie) a co by se z něj teď vylíhlo
       const lean = eggLeaning(g);
-      const subName = lean?.sub ? subcatName(lean.sub, lang) : '';
-      const candName = lean?.candidate ? (ARCHETYPES[lean.candidate]?.name?.[lang] || lean.candidate) : '';
+      const subName = lean ? groupName(lean.group, lang) : '';
       const willName = lean?.willBe ? (ARCHETYPES[lean.willBe]?.name?.[lang] || lean.willBe) : '';
       box.innerHTML = `<img src="img/greamici/seed_1.png" alt="" class="gd-egg"><p class="gd-hint">${t.greams_egg_hint(Math.max(0, 12 - (g.tasksFor || 0)))}</p>
-        ${lean ? `<div class="gd-row"><span>🥚</span><b>${t.egg_feels(`${WORLD_EMOJIS[lean.world] || ''} ${t.worlds?.[lean.world] || lean.world} (${lean.worldCount})`, lean.subCount ? `${subName} (${lean.subCount})` : '')}</b></div>
+        ${lean ? `<div class="gd-row"><span>🥚</span><b>${t.egg_feels(`${WORLD_EMOJIS[lean.world] || ''} ${subName} (${lean.groupCount})`, lean.second ? `${groupName(lean.second.group, lang)} (${lean.second.count})` : '')}</b></div>
         <div class="gd-row"><span>🔮</span><b>${t.egg_will(willName)}</b></div>
-        ${lean.candidate ? `<p class="gd-hint" style="font-size:12px">${t.egg_rule(subName, candName)}</p>` : ''}` : ''}`;
+        <p class="gd-hint" style="font-size:12px">${t.egg_rule}</p>` : `<p class="gd-hint" style="font-size:12px">${t.egg_rule}</p>`}`;
     } else {
       const arch = ARCHETYPES[g.archetype] || {}, world = arch.primaryWorld;
       const sp = SPECIALS[g.archetype], spT = sp && t.battle_special?.[sp.id];
       const STAGE = { cs: ['', 'Vajíčko', 'Mládě', 'Dospívající', 'Dospělý'], en: ['', 'Egg', 'Baby', 'Teen', 'Adult'] }[lang] || [];
       const nextAt = { 2: 60, 3: 250 }[g.stage];
-      const mySub = arch.sub;   // greamík podkategorie: Super účinný jen v ní, Účinný v celém světě
-      const subs = mySub ? `${WORLD_EMOJIS[world] || ''} ${t.worlds?.[world] || world}` : Object.keys(SUBCAT_TAXONOMY[world] || {}).map(id => subcatName(id, lang)).join(', ');
+      // každý greamík patří k jedné skupině: v ní Super účinný, ve zbytku svého světa Účinný
+      const myGroup = arch.group;
+      const subs = `${WORLD_EMOJIS[world] || ''} ${t.worlds?.[world] || world}`;
       const born = g.birth ? t.birth_line(g.birth.place, new Date(g.birth.at).toLocaleDateString(lang === 'cs' ? 'cs-CZ' : 'en-GB')) : '—';
       const row = (k, v) => `<div class="gd-row"><span>${k}</span><b>${v}</b></div>`;
       box.innerHTML = `
@@ -3970,7 +3970,8 @@ window.App = {
         ${row(t.greams_stage, `${STAGE[g.stage] || ''} · ${nextAt ? t.greams_next(Math.max(0, nextAt - (g.tasksFor || 0)), STAGE[g.stage + 1]) : t.greams_max}`)}
         ${row(t.greams_born, born)}
         ${spT ? row(t.greams_special, `${spT.name} – ${spT.desc}`) : ''}
-        ${row(t.greams_bonus, mySub ? subcatName(mySub, lang) : `${WORLD_EMOJIS[world] || ''} ${t.worlds?.[world] || world}`)}
+        ${row(t.greams_topic, groupName(myGroup, lang))}
+        ${row(t.greams_bonus, groupName(myGroup, lang))}
         ${row(t.greams_half, subs)}
         <div class="gd-actions"></div>`;
       const act = box.querySelector('.gd-actions');

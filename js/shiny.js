@@ -6,7 +6,8 @@
 
 // Posun odstínu podle druhu (vybráno tak, aby varianta působila záměrně, ne jako chyba)
 export const SHINY_HUE = { lilek: -80, jiskra: 150, kamen: 170, srodik: -75, vlnka: 175, atlas: 125,
-  tlapka: 160, kanka: -120, poctik: 140, hrejik: 150, noticka: -140, mapka: 110 };
+  tlapka: 160, kanka: -120, poctik: 140, hrejik: 150, noticka: -140, mapka: 110,
+  hvezdik: 120, mnamka: 150, bajka: -110, ahojik: 140, banka: -100, hadak: 120, mozik: 140, zdravik: -130, klapka: 40, maska: 110, micek: -150, lvicek: 50 };
 
 const cache = new Map();
 

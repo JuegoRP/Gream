@@ -152,7 +152,9 @@ export const Audio = {
     try {
       const el = _cryEl || (_cryEl = new window.Audio());
       // greamíci podkategorií mají hlas rodiče ze stejného světa, jen ještě o kousek výš
-      const CRY = { tlapka: 'lilek', kanka: 'jiskra', poctik: 'kamen', hrejik: 'srodik', noticka: 'vlnka', mapka: 'atlas' };
+      const CRY = { tlapka: 'lilek', micek: 'lilek', klapka: 'lilek', kanka: 'jiskra', ahojik: 'jiskra', hvezdik: 'jiskra',
+        poctik: 'kamen', banka: 'kamen', maska: 'kamen', hrejik: 'srodik', zdravik: 'srodik', mnamka: 'srodik',
+        noticka: 'vlnka', hadak: 'vlnka', bajka: 'vlnka', mapka: 'atlas', lvicek: 'atlas', mozik: 'atlas' };
       if (CRY[archetype]) { rate *= 1.12; archetype = CRY[archetype]; }
       el.src = `audio/cry_${archetype}.mp3`;
       // bez toho prohlížeč při změně rychlosti drží výšku tónu → stádia by zněla stejně

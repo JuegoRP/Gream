@@ -5,7 +5,7 @@
 from PIL import Image
 from collections import deque
 SIZE = {2: 98, 3: 106, 4: 114}
-NAMES = 'tlapka kanka poctik hrejik noticka mapka'.split()
+NAMES = 'tlapka kanka poctik hrejik noticka mapka hvezdik mnamka bajka ahojik banka hadak mozik zdravik klapka maska micek lvicek'.split()
 def holes(px, N=128):
     tr = lambda x, y: px[x, y][3] < 200
     q = deque(p for p in [(x, y) for x in range(N) for y in (0, N - 1)] + [(x, y) for y in range(N) for x in (0, N - 1)] if tr(*p)); seen = set(q)

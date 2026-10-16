@@ -1,5 +1,4 @@
-// Líhnutí greamíků podkategorií: vajíčko „slyší“ podkategorie otázek; specialista se vylíhne,
-// když jeho podkategorie tvoří ≥ 40 % odpovědí v nejčastějším světě (a aspoň 4). Jinak greamík světa.
+// Líhnutí: vajíčko „slyší“ podkategorie otázek; vylíhne se greamík skupiny (24), na kterou padlo nejvíc odpovědí.
 const store = new Map();
 globalThis.localStorage = { getItem: k => store.has(k) ? store.get(k) : null, setItem: (k, v) => store.set(k, String(v)), removeItem: k => store.delete(k), clear: () => store.clear() };
 const { Gream, eggLeaning } = await import('../js/gream.js');
@@ -16,9 +15,11 @@ function hatch(feed) {
 // 12 úkolů: 8 příroda (6 zvířata) + 4 jiné → Tlapka
 let r = hatch([...Array(6).fill(['nature', 'animals']), ['nature', 'plants'], ['nature', 'space'], ...Array(4).fill(['logic', 'math'])]);
 ok(r.archetypeResolved && r.resolvedArchetype === 'tlapka', `čekal jsem tlapka, je ${r.resolvedArchetype}`);
-// 12 úkolů: příroda smíšeně (zvířata jen 2 z 8) → Lilek
+// rostliny 6 → Lilek; slova+rčení dohromady (skupina) → Jiskra
 r = hatch([['nature', 'animals'], ['nature', 'animals'], ...Array(6).fill(['nature', 'plants']), ...Array(4).fill(['arts', 'music'])]);
 ok(r.resolvedArchetype === 'lilek', `čekal jsem lilek, je ${r.resolvedArchetype}`);
+r = hatch([...Array(4).fill(['language', 'words']), ...Array(3).fill(['language', 'sayings']), ...Array(5).fill(['logic', 'math'])]);
+ok(r.resolvedArchetype === 'jiskra', `čekal jsem jiskra (slova 4 + rčení 3 > počítání 5), je ${r.resolvedArchetype}`);
 // hudba v umění → Notička
 r = hatch([...Array(9).fill(['arts', 'music']), ...Array(3).fill(['world', 'history'])]);
 ok(r.resolvedArchetype === 'noticka', `čekal jsem noticka, je ${r.resolvedArchetype}`);
@@ -26,7 +27,7 @@ ok(r.resolvedArchetype === 'noticka', `čekal jsem noticka, je ${r.resolvedArche
 store.clear(); Gream.createStarter('p2');
 for (let i = 0; i < 5; i++) Gream.feedFromTask('p2', 'world', false, 'geography');
 const lean = eggLeaning(Gream.active('p2'));
-ok(lean.world === 'world' && lean.sub === 'geography' && lean.subCount === 5 && lean.willBe === 'mapka', 'eggLeaning: ' + JSON.stringify(lean));
+ok(lean.world === 'world' && lean.group === 'geography' && lean.groupCount === 5 && lean.willBe === 'mapka', 'eggLeaning: ' + JSON.stringify(lean));
 // jen jedno vajíčko v košíčku; vajíčko se krmí přednostně
 store.clear(); Gream.createStarter('p3');
 ok(Gream.dropEgg('p3') === null, 'druhé vajíčko se nesmí přidat, dokud je jedno v košíčku');

@@ -77,7 +77,8 @@ function corsHeaders(res) {
 }
 function send(res, code, obj) { res.writeHead(code); res.end(JSON.stringify(obj)); }
 
-const ARCHES = ['lilek', 'jiskra', 'kamen', 'srodik', 'vlnka', 'atlas', 'tlapka', 'kanka', 'poctik', 'hrejik', 'noticka', 'mapka'];   // + greamíci podkategorií (1.1)
+const ARCHES = ['lilek', 'jiskra', 'kamen', 'srodik', 'vlnka', 'atlas', 'tlapka', 'kanka', 'poctik', 'hrejik', 'noticka', 'mapka',
+  'hvezdik', 'mnamka', 'bajka', 'ahojik', 'banka', 'hadak', 'mozik', 'zdravik', 'klapka', 'maska', 'micek', 'lvicek'];   // 24 greamíků (1.1)
 // Nahrávka souboje (1.1): greamík + odpovědi a časy po kolech → přehraje se soupeři
 function cleanAnswers(a) {
   if (!Array.isArray(a)) return null;

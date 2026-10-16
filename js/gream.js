@@ -4,77 +4,55 @@
 // ═══════════════════════════════════
 
 import { Profiles } from './profiles.js';
+import { GROUPS, groupOfSub } from './subcats.js';
 
 const KEY_GREAMS = 'gream_pets';
 
 // Archetype definitions
-export const ARCHETYPES = {
-  lilek:  { id: 'lilek',  name: { cs: 'Lilek',  en: 'Lilek'  }, primaryWorld: 'nature',   sprite: 'lilek'  },
-  jiskra: { id: 'jiskra', name: { cs: 'Jiskra', en: 'Jiskra' }, primaryWorld: 'language', sprite: 'jiskra' },
-  kamen:  { id: 'kamen',  name: { cs: 'Kámen',  en: 'Kámen'  }, primaryWorld: 'logic',    sprite: 'kamen'  },
-  srodik: { id: 'srodik', name: { cs: 'Srdík',  en: 'Srdík'  }, primaryWorld: 'feelings', sprite: 'srodik' },
-  vlnka:  { id: 'vlnka',  name: { cs: 'Vlnka',  en: 'Vlnka'  }, primaryWorld: 'arts',     sprite: 'vlnka'  },
-  atlas:  { id: 'atlas',  name: { cs: 'Atlas',  en: 'Atlas'  }, primaryWorld: 'world',    sprite: 'atlas'  },
-  // Greamíci podkategorií (2026-10): vylíhnou se, když vajíčko „slyší“ hlavně otázky jedné podkategorie (viz resolveArchetype)
-  tlapka:  { id: 'tlapka',  name: { cs: 'Tlapka',  en: 'Tlapka'  }, primaryWorld: 'nature',   sprite: 'tlapka',  sub: 'animals',   parent: 'lilek'  },
-  kanka:   { id: 'kanka',   name: { cs: 'Kaňka',   en: 'Kaňka'   }, primaryWorld: 'language', sprite: 'kanka',   sub: 'grammar',   parent: 'jiskra' },
-  poctik:  { id: 'poctik',  name: { cs: 'Počtík',  en: 'Počtík'  }, primaryWorld: 'logic',    sprite: 'poctik',  sub: 'math',      parent: 'kamen'  },
-  hrejik:  { id: 'hrejik',  name: { cs: 'Hřejík',  en: 'Hřejík'  }, primaryWorld: 'feelings', sprite: 'hrejik',  sub: 'emotions',  parent: 'srodik' },
-  noticka: { id: 'noticka', name: { cs: 'Notička', en: 'Notička' }, primaryWorld: 'arts',     sprite: 'noticka', sub: 'music',     parent: 'vlnka'  },
-  mapka:   { id: 'mapka',   name: { cs: 'Mapka',   en: 'Mapka'   }, primaryWorld: 'world',    sprite: 'mapka',   sub: 'geography', parent: 'atlas'  },
-};
+// 24 greamíků – každý patří k jedné skupině podkategorií (js/subcats.js GROUPS), 4 v každém světě
+const NAMES = { lilek: 'Lilek', jiskra: 'Jiskra', kamen: 'Kámen', srodik: 'Srdík', vlnka: 'Vlnka', atlas: 'Atlas',
+  tlapka: 'Tlapka', kanka: 'Kaňka', poctik: 'Počtík', hrejik: 'Hřejík', noticka: 'Notička', mapka: 'Mapka',
+  hvezdik: 'Hvězdík', mnamka: 'Mňamka', bajka: 'Bajka', ahojik: 'Ahojík', banka: 'Baňka', hadak: 'Hádák',
+  mozik: 'Mozík', zdravik: 'Zdravík', klapka: 'Klapka', maska: 'Maska', micek: 'Míček', lvicek: 'Lvíček' };
+export const ARCHETYPES = Object.fromEntries(Object.entries(GROUPS).map(([g, v]) => [v.arch,
+  { id: v.arch, name: { cs: NAMES[v.arch], en: NAMES[v.arch] }, primaryWorld: v.world, sprite: v.arch, group: g }]));
+// Původních šest (výběr druhého greamíka, výpůjčka do souboje)
 export const BASE_ARCHETYPES = ['lilek', 'jiskra', 'kamen', 'srodik', 'vlnka', 'atlas'];
-export const SUB_TO_ARCHETYPE = Object.fromEntries(Object.values(ARCHETYPES).filter(a => a.sub).map(a => [a.sub, a.id]));
-// Kolik odpovědí vajíčka musí být z jedné podkategorie, aby se vylíhl její greamík (podíl ze všech odpovědí v jeho světě + minimum)
-export const SUB_HATCH_SHARE = 0.4, SUB_HATCH_MIN = 4;
 
-// World → archetype mapping
-const WORLD_TO_ARCHETYPE = {
-  nature:   'lilek',
-  language: 'jiskra',
-  logic:    'kamen',
-  feelings: 'srodik',
-  arts:     'vlnka',
-  world:    'atlas'
-};
-
-// Resolve archetype from taskByWorld (used at hatching)
 const isEggG = (g) => g.stage < 2 || !g.archetype;
 
+// Počty odpovědí vajíčka podle skupin (ze subkategorií otázek)
+function groupCounts(taskBySub = {}) {
+  const c = {};
+  for (const [sub, n] of Object.entries(taskBySub || {})) { const g = groupOfSub(sub); if (g) c[g] = (c[g] || 0) + n; }
+  return c;
+}
+// Vylíhne se greamík skupiny, na kterou vajíčko slyšelo nejvíc otázek (remíza = náhoda).
+// Bez údajů o podkategoriích (staré vajíčko) → náhodná skupina z nejčastějšího světa.
 function resolveArchetype(taskByWorld, taskBySub = {}) {
-  const base = resolveBase(taskByWorld);
-  // Podkategorie: vylíhne se „specialista“, když tvoří aspoň 40 % odpovědí vajíčka v tomto světě (a aspoň 4)
-  const world = ARCHETYPES[base]?.primaryWorld, inWorld = taskByWorld?.[world] || 0;
-  const cand = Object.values(ARCHETYPES).find(a => a.sub && a.primaryWorld === world);
-  const n = cand ? (taskBySub?.[cand.sub] || 0) : 0;
-  return cand && n >= SUB_HATCH_MIN && n >= SUB_HATCH_SHARE * inWorld ? cand.id : base;
+  const gc = Object.entries(groupCounts(taskBySub)).sort((a, b) => b[1] - a[1]);
+  if (gc.length) { const top = gc.filter(([, n]) => n === gc[0][1]); return GROUPS[top[Math.floor(Math.random() * top.length)][0]].arch; }
+  const world = resolveWorld(taskByWorld);
+  const inWorld = Object.values(GROUPS).filter(v => v.world === world);
+  return inWorld[Math.floor(Math.random() * inWorld.length)].arch;
 }
 
-// Co vajíčko „cítí“: nejčastější svět a v něm podkategorie (pro nápovědu hráči a výběr otázek)
+// Co vajíčko „cítí“ (nápověda hráči + výběr otázek): nejčastější skupina a kolik do ní odpovědí padlo
 export function eggLeaning(g) {
-  const tw = g?.taskByWorld || {}, ts = g?.taskBySub || {};
-  const top = Object.entries(tw).sort((a, b) => b[1] - a[1])[0];
-  if (!top) return null;
-  const [world, worldCount] = top;
-  const cand = Object.values(ARCHETYPES).find(a => a.sub && a.primaryWorld === world);
-  const subCount = cand ? (ts[cand.sub] || 0) : 0;
-  return { world, worldCount, sub: cand?.sub || null, subCount, candidate: cand?.id || null,
-           willBe: resolveArchetype(tw, ts) };
+  const gc = Object.entries(groupCounts(g?.taskBySub)).sort((a, b) => b[1] - a[1]);
+  if (!gc.length) return null;
+  const [group, groupCount] = gc[0];
+  return { group, groupCount, world: GROUPS[group].world, second: gc[1] ? { group: gc[1][0], count: gc[1][1] } : null,
+           willBe: GROUPS[group].arch };
 }
 
-function resolveBase(taskByWorld) {
+const WORLDS6 = ['nature', 'language', 'logic', 'feelings', 'arts', 'world'];
+function resolveWorld(taskByWorld) {
   const entries = Object.entries(taskByWorld || {});
-  if (!entries.length) {
-    // No data yet → random
-    const keys = Object.keys(WORLD_TO_ARCHETYPE);
-    return WORLD_TO_ARCHETYPE[keys[Math.floor(Math.random() * keys.length)]];
-  }
-  // Sort by count descending, pick top world
+  if (!entries.length) return WORLDS6[Math.floor(Math.random() * 6)];
   entries.sort((a, b) => b[1] - a[1]);
-  const topCount = entries[0][1];
-  const tied = entries.filter(([, v]) => v === topCount).map(([k]) => k);
-  const winner = tied[Math.floor(Math.random() * tied.length)];
-  return WORLD_TO_ARCHETYPE[winner] || 'lilek';
+  const tied = entries.filter(([, v]) => v === entries[0][1]).map(([k]) => k);
+  return tied[Math.floor(Math.random() * tied.length)];
 }
 
 export { resolveArchetype };
