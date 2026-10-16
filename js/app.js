@@ -38,7 +38,9 @@ const GARDEN_LAYOUT = {
 };
 const DECOR_ASPECT = { nest: 46 / 78, deco_flowerbed: 0.67, deco_bench: 0.75, deco_lantern: 1.67, deco_birdhouse: 2.77, deco_pond: 0.64, deco_mushroom: 1.14 };
 import { Gream, ARCHETYPES, BASE_ARCHETYPES, eggLeaning, spritePath, smartSpritePath } from './gream.js';
-import { Subscription, FREE_DAILY_INDOOR, PREMIUM_DAILY_INDOOR, INDOOR_MAX_TOTAL, FREE_DAILY_OUTDOOR, SEED_COST_EXTRA_TASK } from './subscription.js';
+import { Subscription, FREE } from './subscription.js';
+import { Paywall } from './paywall.js';
+import { Billing } from './billing.js';
 import { Ranking } from './ranking.js';
 import { Audio } from './audio.js';
 import { fillIcons } from './icons.js';
@@ -307,6 +309,9 @@ window.App = {
     Router.prefetch(['challenge', 'step-done', 'badge-earned', 'home', 'map', 'hub']);
     console.log('[Gream] Init complete.');
     try { window.Dev = Dev; Dev.init(); } catch (e) { console.warn('[Gream] Dev init skipped:', e); }
+    // Gream Plus: obchod Google Play (jen v aplikaci se zapnutým placením) + upozornění na konec týdne zdarma
+    try { Billing.init(() => this.renderMap?.()); } catch (e) { console.warn('[Gream] Billing init:', e); }
+    if (active) setTimeout(() => { try { Paywall.trialNotice(); } catch {} }, 3000);
   },
 
   // ─── Parallax clouds on scroll ───
@@ -462,13 +467,11 @@ window.App = {
       ? `🔥 ${streak} ${cs ? (streak === 1 ? 'den v řadě' : streak < 5 ? 'dny v řadě' : 'dní v řadě') : (streak === 1 ? 'day streak' : 'day streak')}`
       : (cs ? 'Začni svou sérii!' : 'Start your streak!'));
 
-    // Subscribe section — hide when paywall off (v1) or already paid
-    const sub = Subscription.get(p.id);
+    // Gream Plus — skryté, dokud není zapnuté placení (nebo testovací režim)
     const subSec = document.getElementById('hubSubscribeSection');
     if (subSec) {
-      const hide = !Subscription.paywallEnabled() || !!sub.premiumSince;
-      subSec.style.display = hide ? 'none' : 'block';
-      this._setText('hubSubscribeLbl', cs ? 'Předplatit Premium ⭐' : 'Subscribe to Premium ⭐');
+      subSec.style.display = Subscription.paywallEnabled() ? 'block' : 'none';
+      this._setText('hubSubscribeLbl', tr().plus_title + (Subscription.get().paid ? ' ✓' : ''));
     }
 
     // Labels (bilingual)
@@ -909,50 +912,30 @@ window.App = {
     // Trial banner (first 7 days)
     this._renderTrialBanner(p.id, lang);
 
-    // Daily limit pills — indoor and outdoor
-    const sub         = Subscription.get(p.id);
-    const indoorDone  = Subscription.getIndoorToday(p.id);
-    const outdoorDone = Subscription.getOutdoorToday(p.id);
-    const freeIndoor  = sub.isPremium ? PREMIUM_DAILY_INDOOR : FREE_DAILY_INDOOR;
-
-    // Indoor pill on the start-challenge button
+    // Denní limit výzev doma (jen zdarma verze po týdnu zdarma); venku bez limitu
+    const sub        = Subscription.get();
+    const indoorDone = Subscription.getIndoorToday();
+    const limited    = Subscription.paywallEnabled() && !sub.isPremium;
     const hcIndoor = document.querySelector('.home-choice-indoor');
     if (hcIndoor) {
       let pill = document.getElementById('indoorPill');
-      if (!pill) {
+      if (!pill && limited) {
         pill = document.createElement('div');
         pill.id = 'indoorPill';
         pill.style.cssText = 'position:absolute;top:8px;right:8px;font-size:10px;font-weight:800;padding:2px 8px;border-radius:50px;color:white';
         hcIndoor.style.position = 'relative';
         hcIndoor.appendChild(pill);
       }
-      const extraBought = Math.max(0, indoorDone - freeIndoor);
-      pill.textContent = `🏠 ${indoorDone}/${INDOOR_MAX_TOTAL}`;
-      pill.style.background = indoorDone >= INDOOR_MAX_TOTAL ? 'rgba(200,70,50,0.75)' : indoorDone >= freeIndoor ? 'rgba(245,166,35,0.85)' : 'rgba(0,0,0,0.15)';
-    }
-
-    // Outdoor pill — only show for free users with a limit
-    const hcOutdoor = document.querySelector('.home-choice-outdoor');
-    if (hcOutdoor) {
-      let opill = document.getElementById('outdoorPill');
-      if (!opill) {
-        opill = document.createElement('div');
-        opill.id = 'outdoorPill';
-        opill.style.cssText = 'position:absolute;top:8px;right:8px;font-size:10px;font-weight:800;padding:2px 8px;border-radius:50px;color:white';
-        hcOutdoor.style.position = 'relative';
-        hcOutdoor.appendChild(opill);
-      }
-      if (sub.isPremium) {
-        opill.textContent = '∞';
-        opill.style.background = 'rgba(74,138,46,0.6)';
-      } else {
-        opill.textContent = `🌳 ${outdoorDone}/${FREE_DAILY_OUTDOOR}`;
-        opill.style.background = outdoorDone >= FREE_DAILY_OUTDOOR ? 'rgba(200,70,50,0.75)' : 'rgba(0,0,0,0.15)';
+      if (pill) {
+        pill.style.display = limited ? '' : 'none';
+        pill.textContent = `🏠 ${Math.min(indoorDone, FREE.homeTasks)}/${FREE.homeTasks}`;
+        pill.style.background = indoorDone >= FREE.homeTasks ? 'rgba(200,70,50,0.75)' : 'rgba(0,0,0,0.15)';
       }
     }
+    document.getElementById('outdoorPill')?.remove();
 
     // Toggle indoor/outdoor button: show outdoor when indoor is exhausted
-    const indoorExhausted = indoorDone >= INDOOR_MAX_TOTAL;
+    const indoorExhausted = limited && indoorDone >= FREE.homeTasks;
     const gardenIndoorBtn  = document.getElementById('gardenIndoorBtn');
     const gardenOutdoorBtn = document.getElementById('gardenOutdoorBtn');
     if (gardenIndoorBtn)  gardenIndoorBtn.style.display  = indoorExhausted ? 'none' : '';
@@ -1834,26 +1817,8 @@ window.App = {
     const check = Subscription.canStartIndoor(p.id, seeds);
 
     if (!check.allowed) {
-      this._showToast(check.reason);
       Feedback.error();
-      return;
-    }
-
-    // Needs to buy extra task with seeds?
-    if (check.isPurchase && check.seedCost > 0) {
-      const cost = check.seedCost;
-      const msg  = lang === 'cs'
-        ? `Koupit extra úkol za ${cost} 🌱?`
-        : `Buy extra task for ${cost} 🌱?`;
-      this._confirmSeedSpend(msg, cost, () => {
-        if (!Skins.spendSeeds(p.id, cost)) {
-          const lang2 = localStorage.getItem('gream_lang') || 'en';
-          this._showToast?.(lang2 === 'cs' ? 'Nemáš dost semínek!' : 'Not enough seeds!');
-          return;
-        }
-        this._setText('seedNum', Skins.getSeeds(p.id));
-        this._showDifficultyPicker(() => this._doStartIndoor(p));
-      });
+      if (!Paywall.open(check.paywall)) this._showToast(check.reason);
       return;
     }
 
@@ -1864,13 +1829,13 @@ window.App = {
   _showDifficultyPicker(onConfirm) {
     const lang = getLang();
     const p    = Profiles.active();
-    const cur  = p?.difficulty || 'medium';
-    const extremeLocked = !(p && Subscription.get(p.id).isPremium);
+    const locked = (d) => !Subscription.difficultyAllowed(d);   // zdarma: lehká + střední
+    const cur  = locked(p?.difficulty || 'medium') ? 'medium' : (p?.difficulty || 'medium');
     const diffs = [
       { id:'easy',    emoji:'🟢', cs:'Snadné',   en:'Easy' },
       { id:'medium',  emoji:'🟡', cs:'Střední',  en:'Medium' },
-      { id:'hard',    emoji:'🔴', cs:'Těžké',    en:'Hard' },
-      { id:'extreme', emoji: extremeLocked ? '🔒' : '⚡', cs:'Extrémní', en:'Extreme', locked: extremeLocked },
+      { id:'hard',    emoji: locked('hard') ? '🔒' : '🔴', cs:'Těžké',    en:'Hard' },
+      { id:'extreme', emoji: locked('extreme') ? '🔒' : '⚡', cs:'Extrémní', en:'Extreme' },
     ];
     const overlay = document.createElement('div');
     overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;z-index:999;padding:20px';
@@ -1892,7 +1857,7 @@ window.App = {
       </div>`;
     let selected = cur;
     window._dpSel = (diff) => {
-      if (diff === 'extreme' && extremeLocked) { this.openSubscription(); return; }
+      if (locked(diff)) { this.openSubscription('difficulty'); return; }
       selected = diff;
       overlay.querySelectorAll('[data-d]').forEach(b => {
         const active = b.dataset.d === diff;
@@ -2343,75 +2308,31 @@ window.App = {
   // ─── First-run hint pulse on choice buttons ───
   _renderTrialBanner(profileId, lang) {
     const existing = document.getElementById('trialBanner');
-    const sub = Subscription.get(profileId);
-
-    // Remove if premium (not trial)
-    if (sub.isPremium && !sub.inTrial) { existing?.remove(); return; }
-    // Remove if trial expired
-    if (!sub.isPremium && !sub.inTrial) { existing?.remove(); return; }
-
-    if (sub.inTrial) {
-      if (existing) { existing.querySelector('#trialDays').textContent = sub.trialDaysLeft; return; }
-      const banner = document.createElement('div');
-      banner.id = 'trialBanner';
-      banner.style.cssText = 'background:linear-gradient(135deg,#fde7a8,#f5c842);border-radius:14px;padding:10px 14px;margin-bottom:10px;display:flex;align-items:center;gap:10px;max-width:380px;margin-left:auto;margin-right:auto';
-      banner.innerHTML = `
-        <div style="font-size:22px">⭐</div>
-        <div style="flex:1">
-          <div style="font-size:13px;font-weight:800;color:#7a3d00">${lang==='cs'?'Premium trial':'Premium trial'}</div>
-          <div style="font-size:11px;color:#a05000">${lang==='cs'?`Zbývá <strong id="trialDays">${sub.trialDaysLeft}</strong> dní zdarma`:`<strong id="trialDays">${sub.trialDaysLeft}</strong> days free left`}</div>
-        </div>
-        <button onclick="App.openSubscription()" style="padding:6px 12px;border-radius:50px;border:none;background:#f5a623;color:white;font-weight:800;font-size:11px;cursor:pointer;font-family:inherit">${lang==='cs'?'Předplatit':'Subscribe'}</button>`;
-      // Insert before home-choices
-      const choices = document.querySelector('.home-choices');
-      choices?.parentNode?.insertBefore(banner, choices);
-    }
+    const sub = Subscription.get();
+    if (!Subscription.paywallEnabled() || !sub.inTrial) { existing?.remove(); return; }
+    const t = tr();
+    if (existing) { existing.querySelector('.tb-days').textContent = t.plus_trial_banner(sub.trialDaysLeft); return; }
+    const banner = document.createElement('div');
+    banner.id = 'trialBanner';
+    banner.style.cssText = 'background:linear-gradient(135deg,#fde7a8,#f5c842);border-radius:14px;padding:8px 12px;margin:8px auto 2px;display:flex;align-items:center;gap:10px;width:calc(100% - 32px);max-width:448px;box-sizing:border-box';
+    banner.innerHTML = `
+      <div style="font-size:22px">⭐</div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:800;color:#7a3d00">${t.plus_trial_title}</div>
+        <div class="tb-days" style="font-size:11px;color:#a05000">${t.plus_trial_banner(sub.trialDaysLeft)}</div>
+      </div>
+      <button onclick="App.openSubscription()" style="padding:6px 12px;border-radius:50px;border:none;background:#f5a623;color:white;font-weight:800;font-size:11px;cursor:pointer;font-family:inherit">${t.plus_badge}</button>`;
+    const choices = document.querySelector('.home-actions') || document.querySelector('.home-choices');
+    choices?.parentNode?.insertBefore(banner, choices);
   },
 
-  openSubscription() {
-    if (!Subscription.paywallEnabled()) return; // v1 ships free — no paywall
-    const lang = getLang();
-    const p    = Profiles.active();
-    const sub  = p ? Subscription.get(p.id) : null;
-    const overlay = document.createElement('div');
-    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(10,20,5,0.7);display:flex;align-items:flex-end;justify-content:center;z-index:999';
-    overlay.onclick = e => { if (e.target === overlay) overlay.remove(); };
-    const cs = lang === 'cs';
-    overlay.innerHTML = `
-      <div style="background:white;border-radius:24px 24px 0 0;padding:24px 20px 40px;max-width:480px;width:100%;box-shadow:0 -6px 30px rgba(0,0,0,0.2)">
-        <div style="width:36px;height:4px;background:rgba(0,0,0,0.12);border-radius:2px;margin:0 auto 20px"></div>
-        <div style="text-align:center;margin-bottom:20px">
-          <div style="font-size:40px;margin-bottom:8px">⭐</div>
-          <div style="font-size:22px;font-weight:900;color:var(--green-deep);margin-bottom:4px">${cs?'Gream Premium':'Gream Premium'}</div>
-          <div style="font-size:14px;color:#888">${cs?'99 Kč / měsíc · 7 dní zdarma':'99 CZK / month · 7 days free'}</div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
-          ${[
-            [cs?'6 domácích úkolů denně':'6 indoor tasks per day', '🏠'],
-            [cs?'Venku neomezeně':'Unlimited outdoor tasks', '🌳'],
-            [cs?'Extra úkoly za semínka (neomezeně)':'Extra tasks with seeds (unlimited)', '🌱'],
-            [cs?'Podpora vývoje Gream':'Support Gream development', '💚'],
-          ].map(([t,e]) => `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#f8fdf4;border-radius:12px;font-size:14px;font-weight:700;color:var(--green-deep)"><span style="font-size:20px">${e}</span>${t}</div>`).join('')}
-        </div>
-        <button onclick="App._activatePremium(this.closest('[style*=fixed]'))" style="width:100%;padding:16px;border-radius:16px;border:none;background:linear-gradient(135deg,#4a8a2e,#2d6518);color:white;font-family:inherit;font-weight:900;font-size:16px;cursor:pointer;margin-bottom:10px">
-          ${cs?'Aktivovat Premium ⭐':'Activate Premium ⭐'}
-        </button>
-        <div style="text-align:center;font-size:11px;color:#aaa">${cs?'Platba přes App Store / Google Play · Kdykoli zruš':'Payment via App Store / Google Play · Cancel anytime'}</div>
-      </div>`;
-    document.body.appendChild(overlay);
-  },
+  // Nabídka Gream Plus (reason = proč se ukazuje: home/battle/difficulty/profile/…)
+  openSubscription(reason) { return Paywall.open(reason); },
 
-  _activatePremium(overlay) {
-    const p = Profiles.active();
-    if (!p) return;
-    // In production: trigger in-app purchase here
-    // For now: simulate activation
-    Subscription.activatePremium(p.id);
-    overlay?.remove();
-    Feedback.celebrate();
-    const lang = getLang();
-    this._showToast(lang === 'cs' ? '⭐ Premium aktivováno!' : '⭐ Premium activated!');
-    this.renderMap();
+  // Další profil: zdarma jen jeden (po týdnu zdarma)
+  addProfile() {
+    if (!Subscription.canAddProfile(Profiles.all().length)) { if (Paywall.open('profile')) return; }
+    this.goTo('onboarding');
   },
 
   // ─── Feed button overlay on garden stage ───

@@ -26,6 +26,14 @@ try {
   ok((await post('/spots/claim', { id: 'node/9', arch: 'tlapka', stage: 3, score: 70, tok: 'ddd' })).held === true, 'místo: greamík podkategorie (tlapka) je povolený');
   const sp = await fetch(B + '/spots?ids=node/1,node/2').then(r => r.json());
   ok(sp['node/1']?.arch === 'vlnka' && sp['node/1'].score === 95 && !('name' in sp['node/1']) && !('pid' in sp['node/1']) && !sp['node/2'], 'místo: vrací greamíka a skóre, žádné jméno ani ID');
+  // Promo kódy: neplatný, platný, limit použití, vypnutý kód; bez identifikace zařízení
+  fs.writeFileSync(path.join(dir, 'promo.json'), JSON.stringify({ 'ZNAMI-2026': { max: 2 }, 'STARY': { max: 5, off: true } }));
+  ok((await post('/promo', { code: 'nic' })).ok === false, 'promo: neplatný kód');
+  ok((await post('/promo', { code: 'znami 2026' })).ok === true, 'promo: platný kód (velikost písmen a mezery nevadí)');
+  ok((await post('/promo', { code: 'ZNAMI-2026' })).ok === true, 'promo: 2. použití');
+  ok((await post('/promo', { code: 'ZNAMI-2026' })).error === 'used', 'promo: 3. použití – vyčerpaný');
+  ok((await post('/promo', { code: 'STARY' })).ok === false, 'promo: vypnutý kód');
+  ok(JSON.parse(fs.readFileSync(path.join(dir, 'promo.json'), 'utf8'))['ZNAMI-2026'].used === 2, 'promo: počítadlo uložené');
   await sleep(1200);
   const f = path.join(dir, 'league.json'); const d = JSON.parse(fs.readFileSync(f, 'utf8')); d.week = '2020-W01'; fs.writeFileSync(f, JSON.stringify(d));
   srv.kill(); await sleep(300); srv = start(); await sleep(800);

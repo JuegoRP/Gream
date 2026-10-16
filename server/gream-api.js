@@ -46,6 +46,15 @@ function rateLimited(ip) {
   return arr.length > RL_BURST;
 }
 
+// Promo kódy: max 6 pokusů za 10 minut z jedné IP (proti hádání)
+const PL = new Map();
+function promoLimited(ip) {
+  const now = Date.now(), arr = (PL.get(ip) || []).filter(t => now - t < 600000);
+  arr.push(now); PL.set(ip, arr);
+  if (PL.size > 2000) for (const [k, v] of PL) if (!v.length || now - v[v.length - 1] > 600000) PL.delete(k);
+  return arr.length > 6;
+}
+
 const timers = {};
 function persist(name, file, obj) {
   if (timers[name]) return;
@@ -206,6 +215,25 @@ const server = http.createServer((req, res) => {
       .map(x => ({ name: x.name, score: x.score }));
     return send(res, 200, board);
   }
+
+  // ─── Gream Plus promo kódy (pro známé / testery): promo.json se čte při každém pokusu, takže kód jde
+  //     přidat nebo zrušit úpravou souboru bez restartu. { "KOD": { "max": 20, "used": 0, "off": false, "note": "" } }
+  //     Bez identifikace zařízení ani hráče – jen počet použití kódu (soukromí, Families policy).
+  if (req.method === 'POST' && p === '/promo') return readBody(req, (d) => {
+    const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket.remoteAddress || 'x';
+    if (!process.env.GREAM_RL_OFF && promoLimited(ip)) return send(res, 429, { ok: false, error: 'rate-limited' });
+    const code = String(d?.code || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 40);
+    if (!code) return send(res, 400, { ok: false, error: 'bad' });
+    const codes = loadJSON(F('promo.json'), {});
+    const key = Object.keys(codes).find(k => k.toUpperCase().replace(/[^A-Z0-9]/g, '') === code);
+    const c = key && codes[key];
+    if (!c || c.off) return send(res, 200, { ok: false, error: 'invalid' });
+    if ((c.used || 0) >= (c.max || 1)) return send(res, 200, { ok: false, error: 'used' });
+    c.used = (c.used || 0) + 1;
+    try { const tmp = F('promo.json.tmp'); fs.writeFileSync(tmp, JSON.stringify(codes, null, 1)); fs.renameSync(tmp, F('promo.json')); }
+    catch (e) { console.error('promo', e.message); return send(res, 500, { ok: false, error: 'server' }); }
+    return send(res, 200, { ok: true });
+  });
 
   if (req.method === 'POST' && p === '/report') return readBody(req, (d) => {
     if (!d) return send(res, 400, { error: 'bad-json' });

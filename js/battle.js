@@ -11,7 +11,8 @@ import { tr, getLang } from './i18n.js';
 import { Profiles } from './profiles.js';
 import { Gream, ARCHETYPES } from './gream.js';
 import { Skins } from './skins.js';
-import { Subscription } from './subscription.js';
+import { Subscription, FREE } from './subscription.js';
+import { Paywall } from './paywall.js';
 import { Feedback } from './feedback.js';
 import { Audio } from './audio.js';
 import { Net, challengeId } from './net.js';
@@ -160,9 +161,8 @@ export const Battle = {
     const cs = getLang() === 'cs';
     const outdoor = !!opts.outdoor;
     const stats = loadStats(p.id);
-    const premium = Subscription.get(p.id).isPremium;
-    // Home battles: 6/day and premium-only. Outdoor (battle spots): unlimited.
-    const doneToday = stats.date === today() ? (stats.count || 0) : 0;
+    // Gream Plus: zdarma 1 souboj denně (doma i venku), lehká + střední, bez balíčků, ligy a rodinného souboje
+    const plus = Subscription.isPremium(), limited = Subscription.paywallEnabled() && !plus;
 
     const hatched = Gream.all(p.id).filter(g => g.stage >= 2 && g.archetype);
     const worldsCovered = [...new Set(hatched.map(g => ARCH_WORLD[g.archetype]))].filter(Boolean);
@@ -213,7 +213,7 @@ export const Battle = {
     // Téma (balíček) – pamatuje se pro profil
     const packKey = 'gream_battle_pack_' + p.id;
     let pack = ''; try { pack = localStorage.getItem(packKey) || ''; } catch {}
-    if (pack && !PACKS.includes(pack)) pack = '';
+    if ((pack && !PACKS.includes(pack)) || !plus) pack = '';
     const packRow = ov.querySelector('#battlePackRow');
     const paintPacks = () => {
       packRow.innerHTML = '';
@@ -221,7 +221,8 @@ export const Battle = {
         const b = document.createElement('button');
         b.className = 'bt-pack' + (k === pack ? ' on' : '');
         b.textContent = tr().pack_names[k || 'all'];
-        b.onclick = () => { pack = k; try { localStorage.setItem(packKey, k); } catch {} paintPacks(); };
+        if (k && !plus) b.textContent = '🔒 ' + b.textContent;
+        b.onclick = () => { if (k && !plus) { Paywall.open('pack'); return; } pack = k; try { localStorage.setItem(packKey, k); } catch {} paintPacks(); };
         packRow.appendChild(b);
       });
     };
@@ -241,17 +242,15 @@ export const Battle = {
       econ.textContent = (cs
         ? `Vstup ${entry} 🌱 · výhra +${winR} 🌱 (máš ${seeds})`
         : `Entry ${entry} 🌱 · win +${winR} 🌱 (you have ${seeds})`) + ' · ' + (fullLeft ? tr().battle_full_left(fullLeft) : tr().battle_full_none);
-      const extremeLocked = diff === 'extreme' && !premium;
       let blocked = false, reason = '';
-      if (extremeLocked) { blocked = true; reason = cs?'⚡ Extrémní jen v Premium':'⚡ Extreme is Premium'; }
-      else if (!outdoor && !premium) { blocked = true; reason = cs?'🏠 Domácí souboje jen v Premium (venku pro všechny)':'🏠 Home battles are Premium (outdoor for all)'; }
-      else if (!outdoor && doneToday >= 6) { blocked = true; reason = cs?'Denní limit 6 domácích soubojů':'Daily limit of 6 home battles'; }
+      startBtn._paywall = '';
+      if (!Subscription.difficultyAllowed(diff)) { blocked = true; reason = '🔒 ' + tr().plus_reason.difficulty; startBtn._paywall = 'difficulty'; }
+      else if (!Subscription.canStartBattle().allowed) { blocked = true; reason = '🔒 ' + tr().plus_reason.battle; startBtn._paywall = 'battle'; }
       else if (seeds < entry) { blocked = true; reason = cs?`Potřebuješ ${entry} 🌱`:`You need ${entry} 🌱`; }
-      daily.textContent = outdoor ? (cs?'Venkovní souboj — neomezeně':'Outdoor battle — unlimited')
-                                  : (cs?`Domácí souboje dnes: ${doneToday}/6`:`Home battles today: ${doneToday}/6`);
-      startBtn.disabled = blocked;
+      daily.textContent = limited ? tr().plus_battles_left(Math.min(Subscription.getBattlesToday(), FREE.battles), FREE.battles) : '';
+      startBtn.disabled = blocked && !startBtn._paywall;   // zamčené Gream Plus → klepnutí ukáže nabídku
       startBtn.style.opacity = blocked ? '0.5' : '1';
-      startBtn.style.cursor = blocked ? 'default' : 'pointer';
+      startBtn.style.cursor = startBtn.disabled ? 'default' : 'pointer';
       startBtn.textContent = blocked ? reason : (cs?`Zahájit (−${entry} 🌱) ⚔️`:`Start (−${entry} 🌱) ⚔️`);
       startBtn._entry = entry; startBtn._reward = reward; startBtn._diff = diff;
     };
@@ -259,7 +258,7 @@ export const Battle = {
       const active = sel[0] === d.id;
       const b = document.createElement('button');
       b.style.cssText = `padding:11px;border-radius:12px;border:2px solid ${active?'var(--green-mid)':'rgba(0,0,0,0.1)'};background:${active?'var(--green-pale)':'#fff'};font-family:inherit;font-weight:800;font-size:13px;cursor:pointer;color:var(--green-deep)`;
-      b.textContent = `${d.emoji} ${cs?d.cs:d.en}`;
+      b.textContent = `${Subscription.difficultyAllowed(d.id) ? d.emoji : '🔒'} ${cs?d.cs:d.en}`;
       b.onclick = () => { sel[0] = d.id; row.querySelectorAll('button').forEach((x,i)=>{ const on=DIFFS[i].id===d.id; x.style.borderColor=on?'var(--green-mid)':'rgba(0,0,0,0.1)'; x.style.background=on?'var(--green-pale)':'#fff'; }); refresh(); };
       row.appendChild(b);
     });
@@ -287,33 +286,31 @@ export const Battle = {
     showSkill();
 
     startBtn.onclick = () => {
+      if (startBtn._paywall) { Paywall.open(startBtn._paywall); return; }
       if (startBtn.disabled) return;
       this._spot = opts.spot || null;
       this._start(startBtn._diff, outdoor, startBtn._entry, startBtn._reward, pick);
     };
     ov.querySelector('#battleDailyBtn').onclick = () => this.daily(pick);
-    ov.querySelector('#battleFamilyBtn').onclick = () => this.familySetup(pick, sel[0]);
+    const famBtn = ov.querySelector('#battleFamilyBtn');
+    if (!plus) famBtn.textContent = '🔒 ' + famBtn.textContent;
+    famBtn.onclick = () => plus ? this.familySetup(pick, sel[0]) : Paywall.open('family');
     // Liga: štítek + po novém týdnu oznámení o postupu/sestupu (jednou)
     Net.league(p.id).then(L => {
       if (!L || !document.getElementById('battleLeague')) return;
       const chip = ov.querySelector('#battleLeague'), t = tr();
       chip.hidden = false;
       chip.innerHTML = `${LEAGUE_ICON[L.tier]} <b>${t.league_name[L.tier]}</b> · ${L.me ? `${L.me.pts} ${t.league_pts} · ${L.me.rank}.` : t.league_none}`;
-      chip.onclick = () => this.showLeague(L);
+      chip.onclick = () => plus ? this.showLeague(L) : Paywall.open('league');
       this._leagueNews(L);
     });
   },
 
   _start(diff, outdoor, entry, reward, pick) {
     const p = Profiles.active(); if (!p) return;
+    if (!Subscription.canStartBattle().allowed) { Paywall.open('battle'); return; }
     if (!Skins.spendSeeds(p.id, entry)) return;
-    // count a home battle
-    if (!outdoor) {
-      const s = loadStats(p.id);
-      if (s.date !== today()) { s.date = today(); s.count = 0; }
-      s.count = (s.count || 0) + 1;
-      saveStats(p.id, s);
-    }
+    Subscription.recordBattle();   // denní počítadlo (zdarma 1 souboj denně)
     this._daily = false;
     this._diff = diff; this._outdoor = outdoor; this._entry = entry; this._reward = reward;
     this._pack = this._packSel?.() || '';
@@ -439,7 +436,7 @@ export const Battle = {
       const name2 = p2 ? p2.name : (guest.value.trim() || t.family_guest);
       const f2 = fighterOf(p2?.id);
       this._family = { names: [p.name || t.battle_you, name2], pids: [p.id, p2?.id || null] };
-      this._daily = false; this._diff = diff === 'extreme' && !Subscription.get(p.id).isPremium ? 'hard' : diff; this._outdoor = false; this._reward = 0; this._entry = 0;
+      this._daily = false; this._diff = Subscription.difficultyAllowed(diff) ? diff : 'medium'; this._outdoor = false; this._reward = 0; this._entry = 0;
       this._pack = this._packSel?.() || '';
       this._q = pickQuestions(this._diff, null, this._pack);
       this._rival = { ...f2, name: name2, bot: false, family: true };
