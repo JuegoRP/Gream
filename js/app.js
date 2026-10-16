@@ -23,17 +23,21 @@ import { GardenLife } from './garden-life.js';
 import { SPECIALS } from './battle-rules.js';
 import { SUBCAT_TAXONOMY, subcatName } from './subcats.js';
 
-// Rozmístění ve 2D zahradě (% světa; y = spodní hrana předmětu, čím víc, tím blíž)
+// Rozmístění ve 2D zahradě (% světa; y = spodní hrana předmětu, čím víc, tím blíž).
+// Sladěno s pozadím garden_wide.jpg: nic nestojí na cestičce (vede zleva y≈55 esíčkem dolů doprava y≈90),
+// lavička a lucerna na jejím okraji, jezírko a hříbek na trávě vpravo, košíček a záhonek vlevo dole.
+// base = podíl výšky obrázku, který tvoří podstavu (přes ni se nechodí)
 const GARDEN_LAYOUT = {
-  nest:           { x: 18, y: 80 },
-  deco_flowerbed: { x: 6,  y: 99 },
-  deco_bench:     { x: 31, y: 81 },
-  deco_birdhouse: { x: 45, y: 74 },
-  deco_lantern:   { x: 57, y: 83 },
-  deco_pond:      { x: 72, y: 99 },
-  deco_mushroom:  { x: 89, y: 79 },
-  deco_rainbow:   { x: 62, y: 36 },
+  nest:           { x: 24, y: 92, base: 0.5 },
+  deco_flowerbed: { x: 9,  y: 99, base: 0.55 },
+  deco_bench:     { x: 45, y: 75, base: 0.35 },
+  deco_lantern:   { x: 55, y: 79, base: 0.15 },
+  deco_birdhouse: { x: 63, y: 67, base: 0.06 },
+  deco_pond:      { x: 81, y: 77, base: 0.85 },
+  deco_mushroom:  { x: 94, y: 71, base: 0.3 },
+  deco_rainbow:   { x: 62, y: 36, base: 0 },
 };
+const DECOR_ASPECT = { nest: 46 / 78, deco_flowerbed: 0.67, deco_bench: 0.75, deco_lantern: 1.67, deco_birdhouse: 2.77, deco_pond: 0.64, deco_mushroom: 1.14, deco_rainbow: 0.53 };
 import { Gream, ARCHETYPES, eggLeaning, spritePath, smartSpritePath } from './gream.js';
 import { Subscription, FREE_DAILY_INDOOR, PREMIUM_DAILY_INDOOR, INDOOR_MAX_TOTAL, FREE_DAILY_OUTDOOR, SEED_COST_EXTRA_TASK } from './subscription.js';
 import { Ranking } from './ranking.js';
@@ -1081,7 +1085,7 @@ window.App = {
     let scroll = stage.querySelector('.garden-scroll');
     if (!scroll) {
       scroll = document.createElement('div'); scroll.className = 'garden-scroll';
-      const world = document.createElement('div'); world.className = 'garden-world';
+      const world = document.createElement('div'); world.className = 'garden-world'; world.dataset.wide = '1';   // všechna pozadí jsou panoramata – šířka musí sedět už při rozmístění greamíků
       scroll.appendChild(world);
       (stage.querySelector('.gream-floor') || stage.firstChild)?.after(scroll);
       if (!this._gardenResize) {
@@ -1109,7 +1113,7 @@ window.App = {
       let b = stage.querySelector('.garden-arrow.' + side);
       if (!b) {
         b = document.createElement('button'); b.className = 'garden-arrow ' + side; b.type = 'button';
-        b.setAttribute('aria-label', side === 'left' ? '←' : '→'); b.textContent = side === 'left' ? '‹' : '›';
+        b.setAttribute('aria-label', side === 'left' ? '←' : '→');
         b.onclick = (e) => { e.stopPropagation(); scroll.scrollBy({ left: (side === 'left' ? -1 : 1) * scroll.clientWidth * 0.7, behavior: 'smooth' }); };
         stage.appendChild(b);
       }
@@ -1123,6 +1127,7 @@ window.App = {
     const stage = document.getElementById('greamStage');
     const world = this._gardenWorld();
     if (!stage || !world) return;
+    const prevPos = this._gardenLife?.positions?.() || {};   // po klepnutí / výběru zůstanou greamíci, kde byli
     this._gardenLife?.stop();
     world.querySelectorAll('.garden-gream-slot, .garden-nest, .gw-fx').forEach(el => el.remove());
     stage.querySelectorAll(':scope > .garden-gream-slot, :scope > .garden-nest').forEach(el => el.remove());   // starý 1D rozvrh
@@ -1189,12 +1194,16 @@ window.App = {
 
     // Chování: greamíci chodí k předmětům v zahradě (výzdoba + košíček, když v něm je vejce)
     const p = Profiles.active();
-    const props = (p ? Skins.shownDecor(p.id) : []).map(it => ({ id: it.id, ...(GARDEN_LAYOUT[it.id] || { x: it.x, y: it.y }) }));
-    if (eggs.length) props.push({ id: 'nest', ...NEST });
+    // rozměry předmětů v % světa (šířka) a % výšky scény (podstava) – greamíci je obcházejí
+    const sw = stage.clientWidth || 360, sh = stage.clientHeight || 440, ww = world.clientWidth || sw;
+    const dims = (id, wPctOfStage) => { const L = GARDEN_LAYOUT[id] || {}, wpx = wPctOfStage / 100 * sw;
+      return { w: wpx / ww * 100, d: wpx * (DECOR_ASPECT[id] || 0.7) * (L.base ?? 0.4) / sh * 100 }; };
+    const props = (p ? Skins.shownDecor(p.id) : []).map(it => ({ id: it.id, ...(GARDEN_LAYOUT[it.id] || { x: it.x, y: it.y }), ...dims(it.id, it.w) }));
+    props.push({ id: 'nest', ...NEST, ...dims('nest', hatched.length ? 20 : 30), egg: eggs.length > 0 });
     const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     this._gardenLife = new GardenLife(world, { reduced });
     this._gardenLife.setProps(props);
-    this._gardenLife.setActors(actors);
+    this._gardenLife.setActors(actors, prevPos);
     this._gardenLife.start();
 
     // Na začátku ukázat aktivního greamíka (nebo vejce) uprostřed rámu

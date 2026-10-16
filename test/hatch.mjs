@@ -27,5 +27,14 @@ store.clear(); Gream.createStarter('p2');
 for (let i = 0; i < 5; i++) Gream.feedFromTask('p2', 'world', false, 'geography');
 const lean = eggLeaning(Gream.active('p2'));
 ok(lean.world === 'world' && lean.sub === 'geography' && lean.subCount === 5 && lean.willBe === 'mapka', 'eggLeaning: ' + JSON.stringify(lean));
+// jen jedno vajíčko v košíčku; vajíčko se krmí přednostně
+store.clear(); Gream.createStarter('p3');
+ok(Gream.dropEgg('p3') === null, 'druhé vajíčko se nesmí přidat, dokud je jedno v košíčku');
+for (let i = 0; i < 12; i++) Gream.feedFromTask('p3', 'nature', false, 'plants');
+ok(Gream.dropEgg('p3') !== null, 'po vylíhnutí se vajíčko přidat smí');
+ok(Gream.dropEgg('p3') === null, 'třetí ne');
+const egg = Gream.all('p3').find(g => g.stage < 2);
+Gream.feedFromTask('p3', 'logic', false, 'math');
+ok(Gream.all('p3').find(g => g.id === egg.id).tasksFor === 1, 'nové vajíčko dostává úkoly přednostně');
 console.log(fail ? `✗ ${fail} selhalo, ${pass} prošlo` : `✓ Líhnutí: ${pass} prošlo`);
 process.exit(fail ? 1 : 0);

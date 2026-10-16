@@ -1643,9 +1643,15 @@ canvas.aura, #greamSpriteCanvas.aura { filter:drop-shadow(0 0 4px #ffd84d) drop-
 .evo-reduced .evo-after { animation:none; opacity:1; }
 /* Pohupování bez posunu do strany (greamIdle počítá s left:50% + translateX(-50%) v zahradě) */
 @keyframes greamBob { 0%, 100% { transform:translateY(0); } 50% { transform:translateY(-4px); } }
-.garden-arrow { position:absolute; top:50%; z-index:9; width:30px; height:44px; margin-top:-22px; border:none; border-radius:14px; background:rgba(255,255,255,.72); color:var(--green-deep); font:900 26px/1 var(--font, sans-serif); box-shadow:0 2px 8px rgba(0,0,0,.15); opacity:0; pointer-events:none; transition:opacity .3s; cursor:pointer; }
-.garden-arrow.left { left:6px; } .garden-arrow.right { right:6px; }
-.garden-arrow.show { opacity:.9; pointer-events:auto; }
+.garden-arrow { position:absolute; top:0; bottom:0; z-index:9; width:44px; border:none; padding:0; background:none; opacity:0; pointer-events:none; transition:opacity .3s; cursor:pointer; -webkit-tap-highlight-color:transparent; }
+.garden-arrow.left { left:0; background:linear-gradient(90deg, rgba(255,255,255,.35), transparent); }
+.garden-arrow.right { right:0; background:linear-gradient(270deg, rgba(255,255,255,.35), transparent); }
+.garden-arrow::after { content:''; position:absolute; top:50%; left:50%; width:30px; height:30px; margin:-15px 0 0 -15px; border-radius:50%; background:rgba(255,255,255,.92) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M9 5l7 7-7 7' fill='none' stroke='%232d5a1b' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/18px no-repeat; box-shadow:0 2px 8px rgba(0,0,0,.18); }
+.garden-arrow.left::after { transform:scaleX(-1); }
+.garden-arrow.show { opacity:1; pointer-events:auto; }
+.garden-arrow.show::after { animation:arrowNudge 2.4s ease-in-out 1s 2; }
+@keyframes arrowNudge { 50% { margin-left:-11px; } }
+.garden-arrow.left.show::after { animation:none; }
 
 /* ─── Záložka Já: jednotné dlaždice ─── */
 .hub-big, .hub-grid { width:100%; max-width:420px; display:grid; gap:10px; margin-bottom:10px; }

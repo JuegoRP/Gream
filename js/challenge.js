@@ -838,8 +838,8 @@ export const Challenge = {
     // ─── Check skin unlocks ───
     const newlyUnlocked = Skins.checkUnlocks(p.id);
 
-    // 5% egg drop on perfect (no wrong answers) full badge completion
-    if (result.stepsComplete && (this._wrongCount || 0) === 0 && Math.random() < 0.05) {
+    // Nové vajíčko: 8 % po bezchybně splněném odznaku, jen když je košíček prázdný (dropEgg to hlídá)
+    if (result.stepsComplete && (this._wrongCount || 0) === 0 && Math.random() < 0.08) {
       const { Gream: G } = await import('./gream.js');
       const newEgg = G.dropEgg(p.id);
       if (newEgg) {

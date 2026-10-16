@@ -39,6 +39,8 @@ const WORLD_TO_ARCHETYPE = {
 };
 
 // Resolve archetype from taskByWorld (used at hatching)
+const isEggG = (g) => g.stage < 2 || !g.archetype;
+
 function resolveArchetype(taskByWorld, taskBySub = {}) {
   const base = resolveBase(taskByWorld);
   // Podkategorie: vylíhne se „specialista“, když tvoří aspoň 40 % odpovědí vajíčka v tomto světě (a aspoň 4)
@@ -172,7 +174,8 @@ export const Gream = {
     const data = load();
     const list = data[profileId] || [];
     const active = list.filter(x => !x.archived);
-    if (active.length >= 4) return null;
+    if (active.length >= 6) return null;
+    if (active.some(isEggG)) return null;   // v košíčku je místo jen pro jedno vajíčko – další až po vylíhnutí
     const egg = {
       id: 'gream_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
       archetype: null,
@@ -234,7 +237,9 @@ export const Gream = {
     const data = load();
     const list = data[profileId] || [];
     const activeId = data[`${profileId}_activeId`];
-    const g = (activeId ? list.find(x => x.id === activeId && !x.archived) : null)
+    // Vajíčko v košíčku má přednost: poslouchá všechny otázky a vylíhne se po 12 (jinak by čekalo, až ho hráč vybere)
+    const g = list.find(x => !x.archived && isEggG(x))
+              || (activeId ? list.find(x => x.id === activeId && !x.archived) : null)
               || list.find(x => !x.archived);
     if (!g) return null;
 
@@ -455,7 +460,7 @@ export const Gream = {
   canAddMore(profileId) {
     const active = this.all(profileId).filter(g => !g.archived);
     const primary = active.find(g => !g.archived);
-    return primary?.stage === 4 && primary?.tasksFor >= UNLOCK_NEXT_GREAM_TASKS && active.length < 6;
+    return primary?.stage === 4 && primary?.tasksFor >= UNLOCK_NEXT_GREAM_TASKS && active.length < 6 && !active.some(isEggG);   // košíček musí být volný
   },
 
   // ─── Which archetypes are already owned? ───
