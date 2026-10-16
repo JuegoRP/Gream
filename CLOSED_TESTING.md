@@ -20,14 +20,27 @@ Balíček aplikace: `com.gream.app` · Opt-in URL testerů (po publikaci tracku)
 4. **Testers → Create email list** → vlož ≥12 e-mailů (Gmail účty testerů). Ulož.
    - Tip: nahraj rovnou **15–16 lidí**, ať máš rezervu, kdyby se dva nepřihlásili.
 5. **Create new release** → Play nabídne **Play App Signing** (přijmout – Google drží
-   podpisový klíč aplikace, my jen upload klíč) → nahraj **`gream-1.0.0.aab`** z GDrive
-   `Gream/vydani/1.0.0/` (sestavuje server, viz `CAPACITOR.md`). versionCode = 1.
-   Obrázky do obchodu jsou tamtéž ve složce `obchod/`.
+   podpisový klíč aplikace, my jen upload klíč) → nahraj **`gream-1.1.0.aab`** z GDrive
+   `Gream/vydani/1.1.0/` (sestavuje server, viz `CAPACITOR.md`). versionCode = 2.
+   Obrázky do obchodu: GDrive `Gream/store/` (snímky 1080×2160 CZ/EN, feature graphic, ikona 512), texty `STORE_LISTING.md`.
 6. Release name + krátký changelog → **Review release → Start rollout to Closed testing**.
 7. Po publikaci se aktivuje **opt-in URL** výše — tu pošli testerům.
 8. **Den 0 = kdy jsou testeři opt-in a test běží.** Od té chvíle počítej 14 dní.
 
-> ⏱️ Dřív spustíš = dřív produkce. Balíček 1.0.0 je sestavený a otestovaný v emulátoru Androidu 16 (15. 10. 2026).
+> ⏱️ Dřív spustíš = dřív produkce. Balíček 1.1.0 je sestavený a otestovaný v emulátoru Androidu 16 (16.–17. 10. 2026).
+
+### A2) Předplatné Gream Plus (jde až PO nahrání prvního AAB – obsahuje oprávnění BILLING)
+1. **Setup → Payments profile** (platební profil): OSVČ, IČ, bankovní účet. Bez něj nejde nic prodávat. Daně/DPH probrat s účetní (neplátce DPH – Google odvádí DPH za zákazníky v EU sám).
+2. **Monetize → Products → Subscriptions → Create subscription:**
+   - `gream_plus_monthly` – název „Gream Plus (měsíčně)“, base plan auto-renewing 1 měsíc, **89 Kč**
+   - `gream_plus_yearly` – název „Gream Plus (ročně)“, base plan auto-renewing 1 rok, **749 Kč**
+   - **bez free trial v Play** (7 dní zdarma řeší hra sama, bez karty) · Activate
+3. **Setup → License testing:** přidej e-maily testerů (i svůj) → jejich nákupy jsou zkušební, nic se neplatí. Vyzkoušej nákup sám.
+4. Kdo má promo kód (3R Control → Gream → Nový kód), odemkne si Plus v Já → Gream Plus → Mám kód. **Kódy nikdy neprodávat** (pravidla Google Play: placený digitální obsah jen přes Play Billing) – jen darovat.
+
+### A3) Testeři a zpětná vazba
+- Testerům pošli i stránku **https://3rstudio.eu/gream-test.html** (návod + dotazník → 3R Control → Gream → Zpětná vazba) a klidně promo kód, ať nenarazí na limity zdarma verze.
+- Nahlášené otázky ze hry: 3R Control → Gream → Nahlášené otázky.
 
 ---
 
