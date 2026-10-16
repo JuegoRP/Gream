@@ -1,7 +1,7 @@
 // ═══════════════════════════════════
 //  GREAM — subscription.js   (Gream Plus – odsouhlaseno Romanem 2026-10-16)
 //  Prvních 7 dní: vše odemčené (bez karty, ve hře – ne trial Google Play).
-//  Potom zdarma (osekané): 3 výzvy doma denně, venku neomezeně, 1 souboj denně (i doma),
+//  Potom zdarma (osekané): 4 výzvy doma denně (Roman 2026-10-16: 3 → 4, ať je hra hratelná), venku neomezeně, 1 souboj denně (i doma),
 //    obtížnost lehká + střední, 1 profil, bez ligy, tematických balíčků a rodinného souboje.
 //    Greamíci, zahrada, výprava dne a vajíčka na mapě zůstávají – nic se nemaže (Families policy).
 //  Gream Plus: vše neomezeně, všechny obtížnosti, až 6 profilů, rodinný souboj, liga, balíčky.
@@ -13,7 +13,7 @@ const KEY_SUB = 'gream_sub_device';
 
 export const PAYWALL_ENABLED = true;   // zapnuto 2026-10-16 (Roman); bez Google Play jde Plus odemknout promo kódem
 export const TRIAL_DAYS = 7;
-export const FREE = { homeTasks: 3, battles: 1, difficulties: ['easy', 'medium'], profiles: 1 };
+export const FREE = { homeTasks: 4, battles: 1, difficulties: ['easy', 'medium'], profiles: 1 };
 export const PRICES = { monthly: '89 Kč', yearly: '749 Kč', yearlyPerMonth: '62 Kč', yearlySave: 30 };
 export const PRODUCT_IDS = { monthly: 'gream_plus_monthly', yearly: 'gream_plus_yearly' };
 

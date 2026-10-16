@@ -34,7 +34,7 @@ Privacy policy URL do listingu: **https://3rstudio.eu/gream-privacy.html**
 ```
 Vylušti. Vylíhni. Vyraž ven.
 Gream je kvízová hra pro celou rodinu. Přes 2 500 ověřených otázek od úplně
-snadných po expertní – a každý týden nové. Zábava pro děti i dospělé.
+snadných po expertní – a pravidelně přibývají nové. Zábava pro děti i dospělé.
 
 🧠 KVÍZY, KTERÉ BAVÍ
 Šest světů a 33 témat: zvířata, vesmír, pravopis, hádanky, historie, film, Česko
@@ -65,7 +65,7 @@ pro celou rodinu. Venkovní výzvy, výpravy a vajíčka zůstávají zdarma nav
 ```
 Quiz. Hatch. Explore.
 Gream is a quiz game for the whole family. Over 2,500 fact-checked questions from
-very easy to expert – and new ones every week. Fun for kids and adults alike.
+very easy to expert – and new ones added regularly. Fun for kids and adults alike.
 
 🧠 QUIZZES THAT ARE ACTUALLY FUN
 Six worlds and 33 topics: animals, space, spelling, riddles, history, film and more.
