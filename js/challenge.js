@@ -775,6 +775,8 @@ export const Challenge = {
     // ─── Archetype reveal overlay at hatching ───
     if (greamResult?.archetypeResolved && greamResult.resolvedArchetype) {
       setTimeout(() => this._showArchetypeReveal(greamResult), 600);
+    } else if (greamResult?.evolved && greamResult.gream?.archetype) {
+      setTimeout(() => this._showEvolution(greamResult), 600);
     }
 
     // ─── Creature cry on hatch / evolve (deeper the bigger it grows) ───
@@ -973,13 +975,15 @@ export const Challenge = {
 
     // Show sprite — egg image if not yet hatched, otherwise archetype
     const arch = greamResult.gream.archetype;
-    const spriteSrc = spritePath(arch, greamResult.gream.stage);
-    const sprite = document.createElement('img');
-    sprite.src = spriteSrc;
-    sprite.style.cssText = 'width:48px;height:48px;image-rendering:pixelated';
-    sprite.onerror = () => { sprite.style.fontSize = '36px'; sprite.textContent = '🥚'; };
+    // spritePath je list 2×2 – vykreslit jen buňku greamíka (jako všude jinde), ne celý obrázek
+    const sprite = document.createElement('canvas');
+    sprite.dataset.spriteSheet = spritePath(arch, greamResult.gream.stage);
+    sprite.dataset.spriteMood = 'happy';
+    sprite.width = sprite.height = 48;
+    sprite.style.cssText = 'width:48px;height:48px;image-rendering:pixelated;flex-shrink:0';
     if (greamResult.isShiny) sprite.style.filter = 'drop-shadow(0 0 6px gold)';
     banner.appendChild(sprite);
+    if (window.App?._initSpriteCanvases) App._initSpriteCanvases(banner);
 
     const text = document.createElement('div');
     text.style.cssText = 'flex:1;text-align:left;font-weight:800;color:var(--green-deep)';
@@ -994,6 +998,40 @@ export const Challenge = {
     }
     banner.appendChild(text);
     card.appendChild(banner);
+  },
+
+  // ─── Vývoj (stádium 3 a 4): stará podoba bliká jako silueta → záblesk → nová podoba ───
+  _showEvolution(greamResult) {
+    const g = greamResult.gream, arch = g.archetype;
+    if (!arch) return;
+    const t = tr();
+    const from = Math.max(2, Math.min(4, greamResult.fromStage || 2)), to = Math.min(4, greamResult.toStage || g.stage);
+    const name = g.name || ARCHETYPES[arch]?.name?.[localStorage.getItem('gream_lang') === 'en' ? 'en' : 'cs'] || 'Gream';
+    const esc = (x) => String(x).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    const overlay = document.createElement('div');
+    overlay.id = 'evoOverlay';
+    overlay.className = 'evo-overlay' + (reduced ? ' evo-reduced' : '');
+    overlay.innerHTML = `
+      <div class="evo-box">
+        <div class="evo-kicker">${t.evo_kicker}</div>
+        <div class="evo-stage${greamResult.isShiny ? ' evo-shiny' : ''}">
+          <div class="evo-rays"></div>
+          <canvas class="evo-old" data-sprite-sheet="img/greamici/${arch}_${from}.png" data-sprite-mood="happy" width="150" height="150"></canvas>
+          <canvas class="evo-new" data-sprite-sheet="img/greamici/${arch}_${to}.png" data-sprite-mood="happy" width="150" height="150"></canvas>
+          <div class="evo-flash"></div>
+        </div>
+        <div class="evo-after">
+          <div class="evo-title">${esc(t.evo_title.replace('{name}', name))}</div>
+          <div class="evo-sub">${to >= 4 ? t.evo_final : t.evo_stage.replace('{n}', to)}</div>
+          ${greamResult.isShiny ? `<div class="evo-shiny-txt">${t.evo_shiny}</div>` : ''}
+          <button class="evo-btn">${t.evo_btn}</button>
+        </div>
+      </div>`;
+    overlay.querySelector('.evo-btn').onclick = () => overlay.remove();
+    if (window.App?._initSpriteCanvases) App._initSpriteCanvases(overlay);
+    document.body.appendChild(overlay);
+    setTimeout(() => { try { Feedback.celebrate(); } catch {} }, reduced ? 0 : 2300);
   },
 
   // ─── Archetype reveal: fullscreen moment when egg hatches ───
@@ -1020,7 +1058,7 @@ export const Challenge = {
         </div>
         <canvas data-sprite-sheet="img/greamici/${arch}_2.png" data-sprite-mood="happy"
           width="120" height="120"
-          style="width:120px;height:120px;image-rendering:pixelated;display:block;margin:0 auto 12px;animation:scaleIn 0.5s cubic-bezier(0.2,0.8,0.3,1.2) 0.3s both,greamIdle 2s ease-in-out 0.8s infinite"></canvas>
+          style="width:120px;height:120px;image-rendering:pixelated;display:block;margin:0 auto 12px;animation:scaleIn 0.5s cubic-bezier(0.2,0.8,0.3,1.2) 0.3s both,greamBob 2s ease-in-out 0.8s infinite"></canvas>
         <div style="font-size:20px;font-weight:900;color:white;margin-bottom:6px;animation:slideUp 0.4s ease 0.5s both">${defaultName}</div>
         <div style="font-size:14px;font-weight:700;color:rgba(135,194,109,0.9);margin-bottom:8px;animation:fadeIn 0.3s ease 0.65s both">${archTitle}</div>
         ${greamResult.isShiny ? `<div style="font-size:13px;font-weight:800;color:#f5d020;margin-bottom:14px">✨ ${lang === 'cs' ? 'A je VZÁCNÝ!' : "And it's SHINY!"}</div>` : ''}

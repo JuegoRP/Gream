@@ -6,6 +6,7 @@
 // ═══════════════════════════════════
 
 import { Profiles } from './profiles.js';
+import { T } from './i18n.js';
 
 const KEY_SEEDS         = 'gream_seeds';            // map { profileId: number }
 const KEY_UNLOCKED      = 'gream_unlocked_skins';   // map { profileId: [skinId,...] }
@@ -428,7 +429,8 @@ export const Skins = {
     if (u.type === 'totalTasks')
       return lang === 'cs' ? `Splň ${u.count} výzev`        : `Complete ${u.count} tasks`;
     if (u.type === 'world')
-      return lang === 'cs' ? `${u.count} výzev v ${u.world}` : `${u.count} tasks in ${u.world}`;
+    { const w = T[lang]?.worlds?.[u.world] || u.world;
+      return lang === 'cs' ? `${u.count} výzev ve světě ${w}` : `${u.count} tasks in ${w}`; }
     if (u.type === 'streak')
       return lang === 'cs' ? `Série ${u.count} dnů`         : `${u.count}-day streak`;
     return '';

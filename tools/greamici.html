@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- Vývojářská galerie: všechna stádia greamíků a jejich animace. Do aplikace se nebalí (build-www bere jen runtime složky).
+     Používá skutečný kód hry (arena.js, accessories.js, challenge.js), takže ukazuje přesně to, co uvidí hráč. -->
+<base href="../">
+<title>Greamíci – galerie</title>
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/components.css">
+<style>
+  :root { --sat: 0px; --sab: 0px; }
+  html, body { height:auto; overflow:auto; position:static; }
+  body { background:#f0f8e8; color:#1f3a12; font-family:Nunito, system-ui, sans-serif; margin:0; padding:16px 16px 60px; }
+  .wrap { max-width:960px; margin:0 auto; }
+  h1 { font-size:24px; font-weight:900; margin:4px 0 2px; }
+  h2 { font-size:18px; font-weight:900; margin:28px 0 6px; }
+  p.lead { margin:0 0 12px; color:#4b6a3a; font-weight:700; font-size:14px; }
+  .ctrl { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:8px 0 12px; }
+  .ctrl label { font-size:13px; font-weight:800; display:flex; align-items:center; gap:6px; background:#fff; padding:6px 10px; border-radius:12px; box-shadow:0 1px 4px rgba(0,0,0,.06); }
+  select, .btn { font-family:inherit; font-weight:800; font-size:13px; border-radius:12px; border:2px solid rgba(74,138,46,.25); background:#fff; padding:6px 10px; color:#1f3a12; }
+  .btn { cursor:pointer; padding:9px 14px; }
+  .btn.pri { background:#4a8a2e; color:#fff; border-color:#4a8a2e; }
+  .grid { display:grid; grid-template-columns:72px repeat(4, 1fr); gap:8px; }
+  .grid .hd { font-size:12px; font-weight:900; text-align:center; color:#4b6a3a; align-self:end; }
+  .grid .rowname { font-weight:900; font-size:14px; align-self:center; }
+  .grid .rowname small { display:block; font-size:11px; color:#6b8a5a; font-weight:700; }
+  .cell { position:relative; background:linear-gradient(180deg,#dff0cf,#bfe0a4); border-radius:16px; height:150px; overflow:hidden; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,.06); }
+  .cell::after { content:''; position:absolute; left:50%; bottom:14px; width:56px; height:10px; transform:translateX(-50%); border-radius:50%; background:rgba(0,0,0,.14); }
+  .cell .lbl { position:absolute; left:8px; top:6px; font-size:11px; font-weight:800; color:#3d6a28; }
+  /* Stejné jako #greamSpriteCanvas v zahradě: left:50% + translateX(-50%), chůze 1,1 s, záře 3 s */
+  .spr { position:absolute; left:50%; bottom:18px; transform:translateX(-50%); image-rendering:pixelated; z-index:2; filter:drop-shadow(0 4px 8px rgba(0,0,0,.3)); }
+  .m-walk .spr { animation:greamWalk 1.1s ease-in-out infinite; }
+  .m-idle .spr { animation:greamIdle 2s ease-in-out infinite; }
+  .m-walk .spr.shiny { animation:greamWalk 1.1s ease-in-out infinite, greamShinyGlow 3s ease-in-out infinite; }
+  .m-idle .spr.shiny { animation:greamIdle 2s ease-in-out infinite, greamShinyGlow 3s ease-in-out infinite; }
+  .m-stand .spr.shiny { animation:greamShinyGlow 3s ease-in-out infinite; }
+  .spr.tapped { animation:greamPop .4s ease !important; }
+  .spr.aura { filter:drop-shadow(0 0 6px #ffe27a) drop-shadow(0 0 14px rgba(255,214,90,.7)); animation:auraPulse 2.4s ease-in-out infinite; }
+  .m-walk .spr.aura { animation:greamWalk 1.1s ease-in-out infinite, auraPulse 2.4s ease-in-out infinite; }
+  .note { font-size:12px; color:#6b8a5a; font-weight:700; margin-top:6px; }
+  .arena { max-width:440px; }
+  .ar-wrap { margin:10px 0; }
+  .list { font-size:13px; font-weight:700; color:#3d5a2c; line-height:1.55; margin:6px 0 0; padding-left:18px; }
+  @media (max-width:560px) {
+    .grid { grid-template-columns:52px repeat(4, 1fr); gap:5px; }
+    .cell { height:124px; border-radius:12px; }
+    .cell .lbl { font-size:10px; left:5px; top:4px; }
+    .grid .rowname { font-size:12px; }
+    .grid .rowname small { display:none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Greamíci – stádia a animace</h1>
+  <p class="lead">Vejce → stádium 2 (vylíhnutí po 12 výzvách) → 3 (po 60) → 4 (po 250). Klepni na greamíka = reakce na dotek a jeho hlas.</p>
+
+  <div class="ctrl" id="ctrl">
+    <label>Pohyb <select id="mv"><option value="walk">chůze (zahrada)</option><option value="idle">pohupování</option><option value="stand">stojí</option></select></label>
+    <label>Nálada <select id="mood"><option value="happy">veselý</option><option value="sad">smutný (porážka v aréně)</option></select></label>
+    <label><input type="checkbox" id="shiny"> zářivý (1 : 100)</label>
+    <label>Doplněk <select id="acc"><option value="">žádný</option></select></label>
+  </div>
+  <div class="grid" id="grid"></div>
+  <div class="note">Velikost odpovídá zahradě: stádium 3 je o 20 % a stádium 4 o 56 % větší než stádium 2.</div>
+
+  <h2>Velké chvíle</h2>
+  <div class="ctrl">
+    <label>Greamík <select id="evArch"></select></label>
+    <button class="btn pri" id="btnHatch">🥚 Vylíhnutí</button>
+    <button class="btn pri" id="btnEvo3">⬆️ Vývoj 2 → 3</button>
+    <button class="btn pri" id="btnEvo4">⬆️ Vývoj 3 → 4</button>
+    <label><input type="checkbox" id="evShiny"> zářivý</label>
+  </div>
+
+  <h2>Aréna soubojů</h2>
+  <div class="arena">
+    <div class="ctrl">
+      <label>Ty <select id="meArch"></select><select id="meStage"><option>2</option><option>3</option><option selected>4</option></select></label>
+      <label>Soupeř <select id="opArch"></select><select id="opStage"><option>2</option><option selected>3</option><option>4</option></select></label>
+    </div>
+    <div class="ar-wrap" id="arWrap"></div>
+    <div class="ctrl">
+      <button class="btn" data-a="hit">Útok</button>
+      <button class="btn" data-a="crit">Kritický zásah</button>
+      <button class="btn" data-a="dom">Super účinný</button>
+      <button class="btn" data-a="boost">Posílený (2×)</button>
+      <button class="btn" data-a="block">Útok do zdi</button>
+      <button class="btn" data-a="opHit">Soupeř útočí</button>
+      <button class="btn pri" data-a="sp">Můj speciál</button>
+      <button class="btn pri" data-a="opSp">Speciál soupeře</button>
+      <button class="btn" data-a="win">Výhra</button>
+      <button class="btn" data-a="lose">Prohra</button>
+      <button class="btn" data-a="reset">↺ Znovu</button>
+      <button class="btn" data-a="all">▶ Přehrát vše</button>
+    </div>
+    <ul class="list" id="spList"></ul>
+  </div>
+</div>
+
+<script type="module">
+import { Arena, ARCH_STYLE } from './js/arena.js';
+import { RULES, SPECIALS, newFighter } from './js/battle-rules.js';
+import { drawAccessory, preloadAccessories } from './js/accessories.js';
+import { SKIN_CATALOG } from './js/skins.js';
+import { ARCHETYPES } from './js/gream.js';
+import { T } from './js/i18n.js';
+import { Audio } from './js/audio.js';
+
+localStorage.setItem('gream_lang', localStorage.getItem('gream_lang') || 'cs');
+const lang = localStorage.getItem('gream_lang') === 'en' ? 'en' : 'cs';
+const ARCH = Object.keys(ARCHETYPES);
+const SCALE = { 1: 0.85, 2: 1.0, 3: 1.2, 4: 1.56 };           // jako zahrada (app.js STAGE_SCALE)
+const NEED = { 1: 'start', 2: '12 výzev', 3: '60 výzev', 4: '250 výzev' };
+const $ = (id) => document.getElementById(id);
+preloadAccessories();
+
+// ─── Kreslení buňky listu 2×2 (pravý sloupec: nahoře smutný, dole veselý) jako App._drawSpriteCell ───
+const imgs = {};
+const load = (src) => imgs[src] ||= new Promise(r => { const i = new Image(); i.onload = () => r(i); i.onerror = () => r(null); i.src = src; });
+async function drawCell(cv, src, { mood = 'happy', acc = null, arch = null, whole = false } = {}) {
+  const img = await load(src); if (!img) return;
+  const dpr = Math.min(devicePixelRatio || 1, 3), W = cv.clientWidth || 80, H = cv.clientHeight || 80;
+  cv.width = W * dpr; cv.height = H * dpr;
+  const ctx = cv.getContext('2d'); ctx.imageSmoothingEnabled = false; ctx.clearRect(0, 0, cv.width, cv.height);
+  const sx = whole ? 0 : 128, sy = whole ? 0 : (mood === 'sad' ? 0 : 128), sw = whole ? img.width : 128;
+  const off = document.createElement('canvas'); off.width = off.height = sw;
+  const o = off.getContext('2d'); o.drawImage(img, sx, sy, sw, sw, 0, 0, sw, sw);
+  const d = o.getImageData(0, 0, sw, sw).data; let x0 = sw, y0 = sw, x1 = 0, y1 = 0;
+  for (let y = 0; y < sw; y++) for (let x = 0; x < sw; x++) if (d[(y * sw + x) * 4 + 3] > 15) { x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
+  if (x1 < x0) return;
+  const w = x1 - x0 + 1, h = y1 - y0 + 1, s = Math.min(cv.width * 0.92 / w, cv.height * 0.92 / h);
+  const dw = Math.round(w * s), dh = Math.round(h * s), dx = Math.round((cv.width - dw) / 2), dy = cv.height - dh;
+  ctx.drawImage(off, x0, y0, w, h, dx, dy, dw, dh);
+  if (acc && arch) drawAccessory(ctx, { x: dx, y: dy, w: dw, h: dh }, acc, arch, () => drawCell(cv, src, { mood, acc, arch, whole }));
+}
+// Shim pro overlaye z challenge.js (vylíhnutí, vývoj) – ty volají App._initSpriteCanvases
+window.App = { _initSpriteCanvases(root) {
+  root.querySelectorAll('canvas[data-sprite-sheet]').forEach(cv => {
+    cv.style.width = cv.getAttribute('width') + 'px'; cv.style.height = cv.getAttribute('height') + 'px';
+    drawCell(cv, cv.dataset.spriteSheet, { mood: 'happy' });
+  });
+} };
+
+// ─── Mřížka stádií ───
+SKIN_CATALOG.accessories.forEach(a => $('acc').insertAdjacentHTML('beforeend', `<option value="${a.id}">${a.emoji} ${a.name[lang]}</option>`));
+const optArch = ARCH.map(a => `<option value="${a}">${ARCHETYPES[a].name[lang]}</option>`).join('');
+['evArch', 'meArch', 'opArch'].forEach(id => $(id).innerHTML = optArch);
+$('opArch').value = 'kamen';
+
+function renderGrid() {
+  const g = $('grid'), mood = $('mood').value, shiny = $('shiny').checked, acc = $('acc').value || null;
+  g.className = 'grid m-' + $('mv').value;
+  g.innerHTML = '<div></div>' + [1, 2, 3, 4].map(n => `<div class="hd">${n === 1 ? 'Vejce' : 'Stádium ' + n}</div>`).join('');
+  const base = innerWidth < 560 ? 52 : 80;
+  ARCH.forEach(a => {
+    g.insertAdjacentHTML('beforeend', `<div class="rowname">${ARCHETYPES[a].name[lang]}<small>${T[lang].worlds[ARCHETYPES[a].primaryWorld]}</small></div>`);
+    [1, 2, 3, 4].forEach(n => {
+      const sz = Math.round(base * SCALE[n]);
+      const cell = document.createElement('div'); cell.className = 'cell';
+      cell.innerHTML = `<span class="lbl">${NEED[n]}</span><canvas class="spr${shiny && n > 1 ? ' shiny' : ''}${acc === 'acc_star' && n > 1 ? ' aura' : ''}" style="width:${sz}px;height:${sz}px"></canvas>`;
+      const cv = cell.querySelector('canvas');
+      if (n === 1) drawCell(cv, 'img/greamici/seed_1.png', { whole: true });
+      else drawCell(cv, `img/greamici/${a}_${n}.png`, { mood, acc: acc === 'acc_star' ? null : acc, arch: a });
+      cell.onclick = () => { cv.classList.remove('tapped'); void cv.offsetWidth; cv.classList.add('tapped'); setTimeout(() => cv.classList.remove('tapped'), 420); try { Audio.playCry(a, Math.max(2, n)); } catch {} };
+      g.appendChild(cell);
+    });
+  });
+}
+['mv', 'mood', 'shiny', 'acc'].forEach(id => $(id).onchange = renderGrid);
+renderGrid();
+
+// ─── Vylíhnutí a vývoj: skutečné overlaye z challenge.js ───
+const { Challenge } = await import('./js/challenge.js');
+$('btnHatch').onclick = () => Challenge._showArchetypeReveal({ resolvedArchetype: $('evArch').value, isShiny: $('evShiny').checked });
+const evo = (from, to) => Challenge._showEvolution({ gream: { archetype: $('evArch').value, stage: to, name: '' }, fromStage: from, toStage: to, isShiny: $('evShiny').checked, evolved: true });
+$('btnEvo3').onclick = () => evo(2, 3);
+$('btnEvo4').onclick = () => evo(3, 4);
+
+// ─── Aréna ───
+const L = T[lang];
+let arena, f;
+function newArena() {
+  arena?.destroy();
+  const me = { arch: $('meArch').value, stage: +$('meStage').value, name: `${lang === 'cs' ? 'Ty' : 'You'} · ${ARCHETYPES[$('meArch').value].name[lang]}` };
+  const op = { arch: $('opArch').value, stage: +$('opStage').value, name: `Bot · ${ARCHETYPES[$('opArch').value].name[lang]}` };
+  arena = new Arena($('arWrap'), { me, op, labels: { energy: L.battle_energy, superEffective: L.battle_super_eff, crit: L.battle_crit } });
+  f = [newFighter(me.arch, { energy: RULES.ENERGY_COST }), newFighter(op.arch, { energy: 1 })];
+  arena.update(f);
+  $('spList').innerHTML = [me.arch, op.arch].map(a => `<li><b>${ARCHETYPES[a].name[lang]}</b> – ${L.battle_special[SPECIALS[a].id].name}: ${L.battle_special[SPECIALS[a].id].desc}</li>`).join('');
+}
+['meArch', 'meStage', 'opArch', 'opStage'].forEach(id => $(id).onchange = newArena);
+newArena();
+
+const hp = (i, d) => { f[i].hp = Math.max(0, Math.min(RULES.HP, f[i].hp + d)); };
+const act = {
+  hit:   async () => { await arena.attack({ from: 0, dmg: 10 }); hp(1, -10); f[0].energy = Math.min(RULES.ENERGY_COST, f[0].energy + 1); },
+  crit:  async () => { await arena.attack({ from: 0, dmg: 14, crit: true }); hp(1, -14); },
+  dom:   async () => { await arena.attack({ from: 0, dmg: 15, domain: true }); hp(1, -15); },
+  boost: async () => { await arena.attack({ from: 0, dmg: 20, boosted: true }); hp(1, -20); },
+  block: async () => { await arena.attack({ from: 0, dmg: 8, blocked: true }); hp(1, -8); },
+  opHit: async () => { await arena.attack({ from: 1, dmg: 10 }); hp(0, -10); f[1].energy = Math.min(RULES.ENERGY_COST, f[1].energy + 1); },
+  sp:    async () => { const s = SPECIALS[f[0].arch]; await arena.special(0, { dmg: s.dmg || 0, heal: s.heal || 0 }, L.battle_special[s.id].name); hp(1, -(s.dmg || 0)); hp(0, s.heal || 0); f[0].energy = 0; if (s.id === 'wall') f[0].wall = 2; if (s.mult) f[0].mult = s.mult; },
+  opSp:  async () => { const s = SPECIALS[f[1].arch]; await arena.special(1, { dmg: s.dmg || 0, heal: s.heal || 0 }, L.battle_special[s.id].name); hp(0, -(s.dmg || 0)); hp(1, s.heal || 0); f[1].energy = 0; if (s.id === 'bolt') f[0].stun = s.stun; },
+  win:   async () => { f[1].hp = 0; arena.update(f); await arena.finish(0); },
+  lose:  async () => { f[0].hp = 0; arena.update(f); await arena.finish(1); },
+  reset: async () => newArena(),
+};
+let busy = false;
+document.querySelectorAll('[data-a]').forEach(b => b.onclick = async () => {
+  if (busy) return; busy = true;
+  try {
+    if (b.dataset.a === 'all') {
+      for (const k of ['hit', 'opHit', 'crit', 'dom', 'sp', 'opSp', 'boost', 'block', 'win']) { await act[k](); arena.update(f); await new Promise(r => setTimeout(r, 450)); }
+      await new Promise(r => setTimeout(r, 900)); newArena();
+    } else { await act[b.dataset.a](); if (b.dataset.a !== 'reset') arena.update(f); }
+  } finally { busy = false; }
+});
+</script>
+</body>
+</html>

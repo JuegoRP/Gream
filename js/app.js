@@ -1084,7 +1084,7 @@ window.App = {
       if (showJar) {
         slot.innerHTML = `
           <div style="width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,0.25);border:2px solid rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;
-            ${g.tasksFor >= 8 ? 'animation:greamIdle 1s ease-in-out infinite;' : ''}
+            ${g.tasksFor >= 8 ? 'animation:greamBob 1s ease-in-out infinite;' : ''}
           ">
             <img src="img/greamici/seed_1.png" style="width:38px;height:38px;image-rendering:pixelated" onerror="this.style.display='none';this.nextSibling.style.display='block'">
             <span style="font-size:28px;display:none">🥚</span>
@@ -3555,6 +3555,11 @@ window.App = {
     document.querySelectorAll('.ward-tab').forEach(b => {
       b.classList.toggle('active', b.dataset.tab === tab);
     });
+    // Vybraná záložka vždy viditelná (lišta se posouvá do strany), nový seznam od začátku
+    const bar = document.querySelector('.shop-tabs'), act = bar?.querySelector('.ward-tab.active');
+    if (bar && act) bar.scrollLeft = Math.max(0, act.offsetLeft - (bar.clientWidth - act.offsetWidth) / 2);
+    const scr = document.getElementById('screen-wardrobe');
+    if (scr) scr.scrollTop = 0;
     // Show/hide bgShopGrid vs wardGrid
     const wardGrid = document.getElementById('wardGrid');
     const bgGrid = document.getElementById('bgShopGrid');
