@@ -57,9 +57,9 @@ function promoLimited(ip) {
 
 // Obsah (nové otázky): čte se podle času změny souboru, ať publikace z 3R Control platí hned bez restartu
 const CONTENT_FILE = process.env.GREAM_CONTENT_FILE || '/content/questions.json';
-let _content = { mtime: 0, data: { version: 0, items: [] } };
+let _content = { mtime: 0, data: { version: 0, items: [], blocked: [] } };
 function loadContent() {
-  try { const st = fs.statSync(CONTENT_FILE); if (st.mtimeMs !== _content.mtime) { const d = JSON.parse(fs.readFileSync(CONTENT_FILE, 'utf8')); _content = { mtime: st.mtimeMs, data: { version: Number(d.version) || 0, items: Array.isArray(d.items) ? d.items : [] } }; } }
+  try { const st = fs.statSync(CONTENT_FILE); if (st.mtimeMs !== _content.mtime) { const d = JSON.parse(fs.readFileSync(CONTENT_FILE, 'utf8')); _content = { mtime: st.mtimeMs, data: { version: Number(d.version) || 0, items: Array.isArray(d.items) ? d.items : [], blocked: Array.isArray(d.blocked) ? d.blocked.map(String).slice(0, 5000) : [] } }; } }
   catch { /* zatím žádný obsah */ }
   return _content.data;
 }
@@ -204,7 +204,8 @@ const server = http.createServer((req, res) => {
     const c = loadContent(), since = Number(u.searchParams.get('since')) || 0;
     res.setHeader('Cache-Control', 'public, max-age=300');
     // jen přírůstek: otázky zveřejněné po verzi, kterou aplikace má (pole v = verze zveřejnění)
-    return send(res, 200, { version: c.version, items: c.version > since ? c.items.filter(q => (Number(q?.v) || 0) > since) : [] });
+    // blocked = otázky vyřazené po nahlášení (challengeId) – vždy celý seznam, ať aplikace i odblokuje
+    return send(res, 200, { version: c.version, items: c.version > since ? c.items.filter(q => (Number(q?.v) || 0) > since) : [], blocked: c.blocked });
   }
 
   // Rate limit writes (anti-spam / anti-inflation).
@@ -280,6 +281,8 @@ const server = http.createServer((req, res) => {
       world: String(d.world || '').slice(0, 20),
       difficulty: String(d.difficulty || '').slice(0, 10),
       text: String(d.text || '').slice(0, 300),
+      textCs: String(d.textCs || '').slice(0, 300),
+      answer: String(d.answer || '').slice(0, 200),
       lang: String(d.lang || '').slice(0, 4),
       reason: String(d.reason || '').slice(0, 40),
       note: String(d.note || '').slice(0, 500),

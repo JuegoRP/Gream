@@ -6,6 +6,7 @@
 // ═══════════════════════════════════
 
 import { shuffle, stripEmoji, playerOrder } from './shuffle.js';
+import { notBlocked } from './content.js';
 import { PROXIMITY_M } from './mapview.js';
 import { factCard } from './facts.js';
 import { Expedition } from './expedition.js';
@@ -86,9 +87,10 @@ export const Challenge = {
     const diffKey = DIFF_KEY[difficulty] || 'medium';
 
     let challenges = t.challenges[world];
-    let steps = Array.isArray(challenges)
+    let allSteps = Array.isArray(challenges)
       ? challenges
       : (challenges?.[diffKey] || challenges?.['medium'] || challenges?.['easy'] || []);
+    const steps = notBlocked(allSteps);   // vyřazené po nahlášení se přeskočí
 
     // Cycle through the WHOLE pool: window advances with total tasks done in this
     // world, so all challenges get used (badge progress alone resets every 3 steps
@@ -98,6 +100,7 @@ export const Challenge = {
     // Pořadí otázek je pro každého hráče jiné (Roman 2026-10-16: dva noví hráči měli stejné otázky → stejného
     // prvního greamíka). Permutace i ↦ (start + i·krok) mod n z ID profilu: bez opakování, dokud se neprojde celá sada.
     this._currentStep = steps.length ? playerOrder(p.id, world + diffKey, steps.length, totalDone) : 0;
+    // (index níže se převede na index v celé sadě – nahlášení podle anglického znění na stejném místě)
     // Vajíčko „přitahuje“ otázky ze svého tématu: když v tomto světě cítí podkategorii (aspoň 2 odpovědi),
     // ve 35 % vybere nejbližší otázku z ní – hráč tak vidí, kam se vajíčko vyvíjí, a může ho cíleně krmit
     const pet = Gream.active(p.id);
@@ -111,6 +114,7 @@ export const Challenge = {
       }
     }
     const challenge   = steps[this._currentStep];
+    this._currentStep = Math.max(0, allSteps.indexOf(challenge));
     if (!challenge) return;
     this._currentChallenge = challenge;
 
@@ -717,7 +721,10 @@ export const Challenge = {
     const idx   = this._currentStep || 0;
     const ch    = this._currentChallenge || {};
     const enText = T.en?.challenges?.[world]?.[diff]?.[idx]?.text || ch.text || '';
-    return { world, difficulty: diff, text: ch.text || '', enText, id: challengeId(world, diff, enText) };
+    const c = ch.check || {};
+    const answer = c.type === 'choice' ? (ch.choices || []).find(x => String(x.value ?? x.text).toLowerCase() === String(c.correct).toLowerCase())?.text
+      : c.type === 'number' ? (c.answer != null ? `${c.answer}${c.unit ? ' ' + c.unit : ''}` : '') : c.type === 'fill_blank' ? c.correct : c.type === 'sort' ? (c.correct || []).join(' → ') : '';
+    return { world, difficulty: diff, text: ch.text || '', enText, answer: answer || '', id: challengeId(world, diff, enText) };
   },
 
   _showToast(message) {

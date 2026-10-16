@@ -103,9 +103,9 @@ function timeBonusForWorld(pid, world) {
 
 // A question is battle-usable if it can be answered fast & scored: choice, or a
 // number with a defined answer (open observation numbers are excluded).
-const battleUsable = c =>
+const battleUsable = c => !c.blocked && (   // vyřazené po nahlášení ne
   (c.check?.type === 'choice' && Array.isArray(c.choices) && c.choices.length >= 2) ||
-  (c.check?.type === 'number' && c.check.answer != null);
+  (c.check?.type === 'number' && c.check.answer != null));
 
 // Seeded RNG (mulberry32) so the daily round is identical for everyone.
 function seededRng(seedStr) {
@@ -164,7 +164,7 @@ const escHtml = (x) => String(x ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', 
 if (typeof document !== 'undefined') document.addEventListener('click', (e) => {
   const b = e.target.closest?.('[data-report-missed]'); if (!b) return;
   const m = Battle._missed?.[Number(b.dataset.reportMissed)]; if (!m) return;
-  try { window.App?.reportChallenge({ world: m.world, difficulty: m.diff, text: m.q, enText: m.q, id: challengeId(m.world, m.diff, m.q) }); } catch {}
+  try { window.App?.reportChallenge({ world: m.world, difficulty: m.diff, text: m.q, enText: m.q, answer: m.a || '', id: challengeId(m.world, m.diff, m.q) }); } catch {}
 });
 
 export const Battle = {
