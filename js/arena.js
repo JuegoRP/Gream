@@ -19,6 +19,12 @@ export const ARCH_STYLE = {
   srodik:  { color: '#f07aa8', light: '#ffd1e4', glyphs: null,                 shape: 'heart'  },
   vlnka:  { color: '#f2a93b', light: '#ffe08a', glyphs: null,                 shape: 'paint'  },
   atlas:  { color: '#3f8a5a', light: '#f3d27a', glyphs: null,                 shape: 'star'   },
+  tlapka:  { color: '#a8743c', light: '#f1d3a0', glyphs: null,                shape: 'leaf'   },
+  kanka:   { color: '#5b4fd6', light: '#c9c3ff', glyphs: 'AÁBCČDEĚŘŠŽ.,!?',    shape: 'letter' },
+  poctik:  { color: '#2bb3a8', light: '#c2f2ec', glyphs: '0123456789+−×÷',     shape: 'cube'   },
+  hrejik:  { color: '#f28c28', light: '#ffe08a', glyphs: null,                shape: 'heart'  },
+  noticka: { color: '#e0503a', light: '#ffb199', glyphs: '♪♫♩♬',              shape: 'letter' },
+  mapka:   { color: '#2f9e8f', light: '#f0d48a', glyphs: null,                shape: 'star'   },
 };
 const PAINT = ['#ff5a5f', '#ffb400', '#3ec1d3', '#7b61ff', '#4cd964', '#ff7ac6'];
 

@@ -12,14 +12,23 @@ const P = {
   srodik:  { A: ['heal', 2, 50], B: null },  // vrácená energie je skoková → necháváme 0
   vlnka:  { A: ['dmg', 0, 30],  B: ['mult', 1, 3, +1] },
   atlas:  { A: ['dmg', 0, 30],  B: null },
+  tlapka:  { A: ['dmg', 0, 20],  B: ['mult', 1, 4, +1] },
+  kanka:   { A: ['dmg', 0, 30],  B: ['stun', 0.15, 1, -1] },
+  poctik:  { A: ['dmg', 0, 20],  B: ['block', 0.05, 0.95, +1] },
+  hrejik:  { A: ['heal', 2, 50], B: null },
+  noticka: { A: ['dmg', 0, 30],  B: ['mult', 1, 3, +1] },
+  mapka:   { A: ['dmg', 0, 30],  B: null },
 };
+// ONLY=new → ladí jen greamíky podkategorií (původní čísla zůstávají)
+const TUNE = process.env.ONLY === 'new' ? ['tlapka', 'kanka', 'poctik', 'hrejik', 'noticka', 'mapka'] : null;
 const Ks = [0.45, 0.65, 0.85];
-const avgOf = (m) => Object.fromEntries(ARCHES.map(a => [a, ARCHES.filter(b => b !== a).reduce((s, b) => s + m[a][b], 0) / 5]));
+const avgOf = (m) => Object.fromEntries(ARCHES.map(a => [a, ARCHES.filter(b => b !== a).reduce((s, b) => s + m[a][b], 0) / (ARCHES.length - 1)]));
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
 for (let it = 0; it < +(process.env.IT || 16); it++) {
   const avgs = Ks.map(K => avgOf(winMatrix(K, +(process.env.N || 1500))));
   const line = [];
   for (const a of ARCHES) {
+    if (TUNE && !TUNE.includes(a)) { line.push(`${a} ${(avgs.reduce((s, x) => s + x[a], 0) / Ks.length).toFixed(1)}`); continue; }
     const mean = avgs.reduce((s, x) => s + x[a], 0) / Ks.length;
     const slope = avgs[2][a] - avgs[0][a];             // + = silnější u expertů
     line.push(`${a} ${mean.toFixed(1)} [${avgs.map(x => x[a].toFixed(0)).join('/')}]`);

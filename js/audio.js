@@ -148,9 +148,12 @@ export const Audio = {
   playCry(archetype, stage = 2) {
     if (!archetype) return;
     try { if (localStorage.getItem('gream_sound') === 'off') return; } catch {}
-    const rate = stage >= 4 ? 0.94 : stage === 3 ? 1.0 : 1.1;
+    let rate = stage >= 4 ? 0.94 : stage === 3 ? 1.0 : 1.1;
     try {
       const el = _cryEl || (_cryEl = new window.Audio());
+      // greamíci podkategorií mají hlas rodiče ze stejného světa, jen ještě o kousek výš
+      const CRY = { tlapka: 'lilek', kanka: 'jiskra', poctik: 'kamen', hrejik: 'srodik', noticka: 'vlnka', mapka: 'atlas' };
+      if (CRY[archetype]) { rate *= 1.12; archetype = CRY[archetype]; }
       el.src = `audio/cry_${archetype}.mp3`;
       // bez toho prohlížeč při změně rychlosti drží výšku tónu → stádia by zněla stejně
       el.preservesPitch = false; el.mozPreservesPitch = false; el.webkitPreservesPitch = false;

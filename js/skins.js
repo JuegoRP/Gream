@@ -49,6 +49,12 @@ export const SKIN_CATALOG = {
     { id: 'gream_srodik', archetype: 'srodik', name: { cs: 'Srdík',  en: 'Srdík'  } },
     { id: 'gream_vlnka',  archetype: 'vlnka',  name: { cs: 'Vlnka',  en: 'Vlnka'  } },
     { id: 'gream_atlas',  archetype: 'atlas',  name: { cs: 'Atlas',  en: 'Atlas'  } },
+    { id: 'gream_tlapka', archetype: 'tlapka', name: { cs: 'Tlapka', en: 'Tlapka' } },
+    { id: 'gream_kanka',  archetype: 'kanka',  name: { cs: 'Kaňka',  en: 'Kaňka'  } },
+    { id: 'gream_poctik', archetype: 'poctik', name: { cs: 'Počtík', en: 'Počtík' } },
+    { id: 'gream_hrejik', archetype: 'hrejik', name: { cs: 'Hřejík', en: 'Hřejík' } },
+    { id: 'gream_noticka', archetype: 'noticka', name: { cs: 'Notička', en: 'Notička' } },
+    { id: 'gream_mapka',  archetype: 'mapka',  name: { cs: 'Mapka',  en: 'Mapka'  } },
   ],
 
   // ─── AVATAR SKINS — milestone-unlocked + purchasable emoji ───

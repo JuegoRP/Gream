@@ -31,7 +31,8 @@
 - [x] Boti v souboji: síla podle hráče (klouzavý průměr úspěšnosti), přezdívky „🤖 Zvídavý Brouk“ (2026-10-16)
 - [x] Podkategorie otázek (32, jen klasifikace): content/subcats-*, js/subcats.js, kontrola v npm test (2026-10-16)
 - [x] Souboj „Účinné!“: poloviční bonus světa přes podkategorii, balanc ověřen (N=20000), Objetí 14 (2026-10-16)
-- [ ] Noví greamíci podle podkategorií
+- [x] Noví greamíci podle podkategorií: Tlapka (zvířata), Kaňka (pravopis), Počtík (počítání), Hřejík (emoce), Notička (hudba), Mapka (zeměpis) – líhnou se podle odpovědí vajíčka (≥ 40 % odpovědí ve světě z jejich podkategorie), vajíčko přitahuje otázky svého tématu, vlastní speciály, balanc 12 greamíků ověřen (2026-10-16)
+- [x] Hlasy greamíků výš, nové odznaky, menu hudba, kreslené postavičky (avatary) (2026-10-16)
 - [x] Záložka Já přeskládaná: Greamíci (vlastní obrazovka s detailem) a Obchůdek zvlášť, Statistiky viditelně vedle Odznaků (2026-10-16)
 - [x] Obchůdek: jednotná karta ve všech záložkách; pozadí předělána na panoramata ve stylu zahrady (+ Zimní zahrada, Zahrada u moře) (2026-10-16)
 - [x] Vajíčko sedí v košíčku viditelně (2026-10-16)

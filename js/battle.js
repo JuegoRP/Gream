@@ -14,7 +14,7 @@ import { Subscription } from './subscription.js';
 import { Feedback } from './feedback.js';
 import { Audio } from './audio.js';
 import { Net, challengeId } from './net.js';
-import { RULES, SPECIALS, ARCH_WORLD, ARCHES, newFighter, useSpecial, canSpecial, aiWantsSpecial, resolveRound, winner } from './battle-rules.js';
+import { RULES, SPECIALS, ARCH_WORLD, ARCHES, BASE_ARCHES, ARCH_SUB, domainWeightFor, newFighter, useSpecial, canSpecial, aiWantsSpecial, resolveRound, winner } from './battle-rules.js';
 import { Arena, drawFighter } from './arena.js';
 import { factFor } from './facts.js';
 import { numTolerance } from './validator.js';
@@ -39,11 +39,10 @@ export const FULL_REWARD_WINS = 5;
 const BOT_EDGE = 0.04, BOT_MIN = 0.4, BOT_MAX = 0.93, SKILL_ALPHA = 0.3;
 const KEY_STATS = 'gream_battle_stats';
 // 1 = otázka z mého světa (Super účinné), 0.5 = týká se mého světa zčásti přes podkategorii (Účinné), 0 = jinak
+// Greamíci podkategorií: 1 = jejich podkategorie, 0.5 = zbytek jejich světa (pravidla v battle-rules.js domainWeightFor)
 function domainFor(arch, world, ch, diff) {
-  const mine = ARCH_WORLD[arch];
-  if (world === mine) return 1;
   const sc = ch?.text ? subcatOf(world, diff, ch.text, getLang()) : null;
-  return sc && (sc.mainWorld === mine || sc.sideWorld === mine) ? 0.5 : 0;
+  return domainWeightFor(arch, { world, main: sc?.main || null, side: sc?.side || null, mainWorld: sc?.mainWorld || null, sideWorld: sc?.sideWorld || null });
 }
 const KEY_BADGES = 'gream_battle_badges';
 
@@ -64,8 +63,7 @@ const today = () => new Date().toDateString();
 
 // Time bonus from the player's hatched Greams for a given world.
 function timeBonusForWorld(pid, world) {
-  const arch = WORLD_TO_ARCH[world];
-  const list = Gream.all(pid).filter(g => g.stage >= 2 && g.archetype === arch);
+  const list = Gream.all(pid).filter(g => g.stage >= 2 && g.archetype && ARCH_WORLD[g.archetype] === world);   // i greamíci podkategorií ze stejného světa
   if (!list.length) return 0;
   let b = MATCH_BONUS_MS;
   if (list.some(g => g.stage >= 3)) b += MATCH_EVOLVED_BONUS_MS;
@@ -143,7 +141,7 @@ export const Battle = {
     const doneToday = stats.date === today() ? (stats.count || 0) : 0;
 
     const hatched = Gream.all(p.id).filter(g => g.stage >= 2 && g.archetype);
-    const worldsCovered = [...new Set(hatched.map(g => Object.keys(WORLD_TO_ARCH).find(w => WORLD_TO_ARCH[w] === g.archetype)))].filter(Boolean);
+    const worldsCovered = [...new Set(hatched.map(g => ARCH_WORLD[g.archetype]))].filter(Boolean);
 
     document.getElementById('battleOverlay')?.remove();
     const ov = document.createElement('div');
@@ -246,7 +244,7 @@ export const Battle = {
     // Výběr greamíka: vylíhnutí (stádium ≥ 2), jinak všech šest „na zkoušku“
     const roster = hatched.length
       ? hatched.map(g => ({ arch: g.archetype, stage: g.stage, shiny: !!g.isShiny, id: g.id, name: g.name }))
-      : ARCHES.map(a => ({ arch: a, stage: 2, loan: true }));
+      : BASE_ARCHES.map(a => ({ arch: a, stage: 2, loan: true }));
     const prev = localStorage.getItem('gream_battle_pick_' + p.id);
     let pick = roster.find(r => (r.id || r.arch) === prev) || roster[0];
     const pickEl = ov.querySelector('#battlePick'), skillEl = ov.querySelector('#battleSkill');

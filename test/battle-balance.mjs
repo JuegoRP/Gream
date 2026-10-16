@@ -9,7 +9,7 @@ const PAIR = N >= 10000 ? 59 : 61;
 let fail = 0;
 for (const [name, K] of Object.entries(LEVELS)) {
   const m = winMatrix(K, N);
-  const avg = Object.fromEntries(ARCHES.map(a => [a, ARCHES.filter(b => b !== a).reduce((s, b) => s + m[a][b], 0) / 5]));
+  const avg = Object.fromEntries(ARCHES.map(a => [a, ARCHES.filter(b => b !== a).reduce((s, b) => s + m[a][b], 0) / (ARCHES.length - 1)]));
   let worst = ['', 0];
   for (const a of ARCHES) for (const b of ARCHES) if (a !== b && m[a][b] > worst[1]) worst = [`${a}>${b}`, m[a][b]];
   const bad = ARCHES.filter(a => avg[a] < AVG[0] || avg[a] > AVG[1]);

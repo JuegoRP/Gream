@@ -14,8 +14,19 @@ export const ARCHETYPES = {
   kamen:  { id: 'kamen',  name: { cs: 'Kámen',  en: 'Kámen'  }, primaryWorld: 'logic',    sprite: 'kamen'  },
   srodik: { id: 'srodik', name: { cs: 'Srdík',  en: 'Srdík'  }, primaryWorld: 'feelings', sprite: 'srodik' },
   vlnka:  { id: 'vlnka',  name: { cs: 'Vlnka',  en: 'Vlnka'  }, primaryWorld: 'arts',     sprite: 'vlnka'  },
-  atlas:  { id: 'atlas',  name: { cs: 'Atlas',  en: 'Atlas'  }, primaryWorld: 'world',    sprite: 'atlas'  }
+  atlas:  { id: 'atlas',  name: { cs: 'Atlas',  en: 'Atlas'  }, primaryWorld: 'world',    sprite: 'atlas'  },
+  // Greamíci podkategorií (2026-10): vylíhnou se, když vajíčko „slyší“ hlavně otázky jedné podkategorie (viz resolveArchetype)
+  tlapka:  { id: 'tlapka',  name: { cs: 'Tlapka',  en: 'Tlapka'  }, primaryWorld: 'nature',   sprite: 'tlapka',  sub: 'animals',   parent: 'lilek'  },
+  kanka:   { id: 'kanka',   name: { cs: 'Kaňka',   en: 'Kaňka'   }, primaryWorld: 'language', sprite: 'kanka',   sub: 'grammar',   parent: 'jiskra' },
+  poctik:  { id: 'poctik',  name: { cs: 'Počtík',  en: 'Počtík'  }, primaryWorld: 'logic',    sprite: 'poctik',  sub: 'math',      parent: 'kamen'  },
+  hrejik:  { id: 'hrejik',  name: { cs: 'Hřejík',  en: 'Hřejík'  }, primaryWorld: 'feelings', sprite: 'hrejik',  sub: 'emotions',  parent: 'srodik' },
+  noticka: { id: 'noticka', name: { cs: 'Notička', en: 'Notička' }, primaryWorld: 'arts',     sprite: 'noticka', sub: 'music',     parent: 'vlnka'  },
+  mapka:   { id: 'mapka',   name: { cs: 'Mapka',   en: 'Mapka'   }, primaryWorld: 'world',    sprite: 'mapka',   sub: 'geography', parent: 'atlas'  },
 };
+export const BASE_ARCHETYPES = ['lilek', 'jiskra', 'kamen', 'srodik', 'vlnka', 'atlas'];
+export const SUB_TO_ARCHETYPE = Object.fromEntries(Object.values(ARCHETYPES).filter(a => a.sub).map(a => [a.sub, a.id]));
+// Kolik odpovědí vajíčka musí být z jedné podkategorie, aby se vylíhl její greamík (podíl ze všech odpovědí v jeho světě + minimum)
+export const SUB_HATCH_SHARE = 0.4, SUB_HATCH_MIN = 4;
 
 // World → archetype mapping
 const WORLD_TO_ARCHETYPE = {
@@ -28,7 +39,28 @@ const WORLD_TO_ARCHETYPE = {
 };
 
 // Resolve archetype from taskByWorld (used at hatching)
-function resolveArchetype(taskByWorld) {
+function resolveArchetype(taskByWorld, taskBySub = {}) {
+  const base = resolveBase(taskByWorld);
+  // Podkategorie: vylíhne se „specialista“, když tvoří aspoň 40 % odpovědí vajíčka v tomto světě (a aspoň 4)
+  const world = ARCHETYPES[base]?.primaryWorld, inWorld = taskByWorld?.[world] || 0;
+  const cand = Object.values(ARCHETYPES).find(a => a.sub && a.primaryWorld === world);
+  const n = cand ? (taskBySub?.[cand.sub] || 0) : 0;
+  return cand && n >= SUB_HATCH_MIN && n >= SUB_HATCH_SHARE * inWorld ? cand.id : base;
+}
+
+// Co vajíčko „cítí“: nejčastější svět a v něm podkategorie (pro nápovědu hráči a výběr otázek)
+export function eggLeaning(g) {
+  const tw = g?.taskByWorld || {}, ts = g?.taskBySub || {};
+  const top = Object.entries(tw).sort((a, b) => b[1] - a[1])[0];
+  if (!top) return null;
+  const [world, worldCount] = top;
+  const cand = Object.values(ARCHETYPES).find(a => a.sub && a.primaryWorld === world);
+  const subCount = cand ? (ts[cand.sub] || 0) : 0;
+  return { world, worldCount, sub: cand?.sub || null, subCount, candidate: cand?.id || null,
+           willBe: resolveArchetype(tw, ts) };
+}
+
+function resolveBase(taskByWorld) {
   const entries = Object.entries(taskByWorld || {});
   if (!entries.length) {
     // No data yet → random
@@ -198,7 +230,7 @@ export const Gream = {
   // ─── Feed Gream when a task is completed ───
   // world: 'nature'/'language'/etc. → maps to a specific need
   // Returns { evolved: bool, fromStage, toStage, isShiny, gream }
-  feedFromTask(profileId, world, isOutdoor = false) {
+  feedFromTask(profileId, world, isOutdoor = false, sub = null) {
     const data = load();
     const list = data[profileId] || [];
     const activeId = data[`${profileId}_activeId`];
@@ -221,6 +253,7 @@ export const Gream = {
 
     // Increment per-world counter
     g.taskByWorld[world] = (g.taskByWorld[world] || 0) + 1;
+    if (sub) { g.taskBySub = g.taskBySub || {}; g.taskBySub[sub] = (g.taskBySub[sub] || 0) + 1; }   // podkategorie otázky (líhnutí greamíků podkategorií)
     g.tasksFor = (g.tasksFor || 0) + 1;
     g.lastFedAt = Date.now();
     g.mood = 'happy';
@@ -242,7 +275,7 @@ export const Gream = {
         // The archetype is determined by which world the user played most.
         // Ties are broken randomly — every play pattern is valid.
         if (toStage === 2 && !g.archetype) {
-          g.archetype = resolveArchetype(g.taskByWorld);
+          g.archetype = resolveArchetype(g.taskByWorld, g.taskBySub);
           g._archetypeJustResolved = true; // flag for UI reveal animation
         }
 

@@ -17,7 +17,8 @@ import { MapQuiz } from './mapquiz.js';
 import { Feedback } from './feedback.js';
 import { Geo } from './geo.js';
 import { Skins } from './skins.js';
-import { Gream, ARCHETYPES, spritePath } from './gream.js';
+import { Gream, ARCHETYPES, spritePath, eggLeaning } from './gream.js';
+import { subcatOf, subcatName } from './subcats.js';
 import { Subscription } from './subscription.js';
 import { Audio } from './audio.js';
 import { T } from './i18n.js';
@@ -96,6 +97,19 @@ export const Challenge = {
     const stepsDone   = Profiles.getBadgeProgress(p.id, world);
     const totalDone   = p.worldTasks?.[world] || 0;
     this._currentStep = steps.length ? (totalDone % steps.length) : 0;
+    // Vajíčko „přitahuje“ otázky ze svého tématu: když v tomto světě cítí podkategorii (aspoň 2 odpovědi),
+    // ve 35 % vybere nejbližší otázku z ní – hráč tak vidí, kam se vajíčko vyvíjí, a může ho cíleně krmit
+    const pet = Gream.active(p.id);
+    if (pet && (pet.stage < 2 || !pet.archetype) && steps.length) {
+      const lean = eggLeaning(pet);
+      const subWorld = lean?.sub && Object.values(ARCHETYPES).find(a => a.sub === lean.sub)?.primaryWorld;
+      if (subWorld === world && lean.subCount >= 2 && Math.random() < 0.35) {
+        for (let k = 0; k < Math.min(steps.length, 60); k++) {
+          const j = (this._currentStep + k) % steps.length;
+          if (subcatOf(world, diffKey, steps[j].text, lang)?.main === lean.sub) { this._currentStep = j; break; }
+        }
+      }
+    }
     const challenge   = steps[this._currentStep];
     if (!challenge) return;
     this._currentChallenge = challenge;
@@ -770,7 +784,8 @@ export const Challenge = {
     Feedback.egg();
 
     // ─── Feed the Gream ───
-    const greamResult = Gream.feedFromTask(p.id, this._world, this._wasOutdoor);
+    const sub = subcatOf(this._world, this._difficulty || p.difficulty || 'medium', this._currentChallenge?.text, lang)?.main || null;
+    const greamResult = Gream.feedFromTask(p.id, this._world, this._wasOutdoor, sub);
 
     // ─── Archetype reveal overlay at hatching ───
     if (greamResult?.archetypeResolved && greamResult.resolvedArchetype) {
@@ -1042,11 +1057,14 @@ export const Challenge = {
     const arch = greamResult.resolvedArchetype;
     // World titles — same meaning in CS and EN
     const worldTitles = {
-      cs: { lilek:'Přírodní duch 🌿', jiskra:'Jazykový plamen ✨', kamen:'Logický strážce 🧩', srodik:'Citový průvodce 💛', vlnka:'Umělecká duše 🎨', atlas:'Světový badatel 🌍' },
-      en: { lilek:'Nature Spirit 🌿', jiskra:'Language Flame ✨', kamen:'Logic Guardian 🧩', srodik:'Feelings Guide 💛', vlnka:'Art Soul 🎨', atlas:'World Explorer 🌍' }
+      cs: { lilek:'Přírodní duch 🌿', jiskra:'Jazykový plamen ✨', kamen:'Logický strážce 🧩', srodik:'Citový průvodce 💛', vlnka:'Umělecká duše 🎨', atlas:'Světový badatel 🌍',
+            tlapka:'Přítel zvířat 🐾', kanka:'Strážce písmenek ✒️', poctik:'Mistr čísel 🔢', hrejik:'Hřejivé srdce ☀️', noticka:'Malá hvězda hudby 🎵', mapka:'Cestovatel po mapě 🐢' },
+      en: { lilek:'Nature Spirit 🌿', jiskra:'Language Flame ✨', kamen:'Logic Guardian 🧩', srodik:'Feelings Guide 💛', vlnka:'Art Soul 🎨', atlas:'World Explorer 🌍',
+            tlapka:'Animal Friend 🐾', kanka:'Keeper of Letters ✒️', poctik:'Number Master 🔢', hrejik:'Warm Heart ☀️', noticka:'Little Music Star 🎵', mapka:'Map Traveller 🐢' }
     };
     // Suggested names — short, neutral, same for CS/EN
-    const suggested = { lilek:['Sprout','Fern','Mossy'], jiskra:['Echo','Spark','Buzz'], kamen:['Cog','Byte','Pip'], srodik:['Blush','Rosy','Wink'], vlnka:['Hue','Dab','Ripple'], atlas:['Roam','Scout','Arc'] };
+    const suggested = { lilek:['Sprout','Fern','Mossy'], jiskra:['Echo','Spark','Buzz'], kamen:['Cog','Byte','Pip'], srodik:['Blush','Rosy','Wink'], vlnka:['Hue','Dab','Ripple'], atlas:['Roam','Scout','Arc'],
+      tlapka:['Paws','Fluff','Teddy'], kanka:['Inky','Quill','Blot'], poctik:['Digit','Cubo','Plus'], hrejik:['Sunny','Glow','Ember'], noticka:['Tempo','Trill','Beat'], mapka:['Shelly','Globo','Compy'] };
     const archTitle = worldTitles[lang]?.[arch] || '';
     const defaultName = (suggested[arch] || ['Gream'])[Math.floor(Math.random() * 3)];
 
@@ -1064,6 +1082,7 @@ export const Challenge = {
         <div style="font-size:20px;font-weight:900;color:white;margin-bottom:6px;animation:slideUp 0.4s ease 0.5s both">${defaultName}</div>
         <div style="font-size:14px;font-weight:700;color:rgba(135,194,109,0.9);margin-bottom:8px;animation:fadeIn 0.3s ease 0.65s both">${archTitle}</div>
         <div style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.75);margin-bottom:8px;animation:fadeIn 0.3s ease 0.7s both">🐣 ${greamResult.birthPlace ? tr().birth_at(greamResult.birthPlace) : tr().birth_home}</div>
+        ${ARCHETYPES[arch]?.sub ? `<div style="font-size:12px;font-weight:800;color:#ffe27a;margin-bottom:10px;animation:fadeIn 0.3s ease 0.75s both">${tr().hatch_sub_why(subcatName(ARCHETYPES[arch].sub, lang))}</div>` : ''}
         ${greamResult.isShiny ? `<div style="font-size:13px;font-weight:800;color:#f5d020;margin-bottom:14px">✨ ${lang === 'cs' ? 'A je VZÁCNÝ!' : "And it's SHINY!"}</div>` : ''}
         <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:20px;animation:fadeIn 0.3s ease 0.8s both">
           ${lang === 'cs' ? '(Klepni na jméno v zahradě pro přejmenování)' : '(Tap the name in garden to rename)'}

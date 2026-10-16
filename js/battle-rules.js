@@ -17,7 +17,7 @@ export const RULES = {
 };
 
 // Speciály – témata podle světa. Čísla ověřená simulací (test/battle-balance.mjs, 2,16 mil. zápasů):
-// každý greamík vyhrává 47,6–51,9 % na úrovni začátečník / průměr / expert, nejsilnější dvojice 57 : 43
+// 12 greamíků (6 + 6 podkategorií) vyhrává 47,0–52,2 % na úrovni začátečník / průměr / expert (N=20000), nejsilnější dvojice 57 : 43
 // (od 2026-10-16 včetně „Účinné!“ – poloviční bonus světa přes podkategorii, HALF_SHARE).
 export const SPECIALS = {
   lilek:  { id: 'leafstorm', mult: 2, dmg: 2 },            // Listová smršť: 2 poškození hned + příští zásah 2×
@@ -26,9 +26,23 @@ export const SPECIALS = {
   srodik:  { id: 'hug', heal: 14, energy: 0 },              // Objetí: vyléčí 14 (2026-10-16: 13 → 14 po zavedení „Účinné!“ z podkategorií)
   vlnka:  { id: 'wave', dmg: 1, mult: 2 },                 // Barevná vlna: 1 poškození + příští otázka bez jedné špatné možnosti + příští zásah 2×
   atlas:  { id: 'compass', dmg: 10 },                      // Kompas: 10 poškození + příští otázka z mého světa (jistý „Super účinné!“)
+  // Greamíci podkategorií (2026-10): stejná mechanika jako rodič ze stejného světa, vlastní název a čísla (ladí tune-battle.mjs)
+  tlapka:  { id: 'pounce', mult: 2, dmg: 3 },
+  kanka:   { id: 'inkblot', dmg: 12, stun: 0.85 },
+  poctik:  { id: 'numshield', block: 0.25, hits: 2, dmg: 8 },
+  hrejik:  { id: 'warmhug', heal: 15, energy: 0 },
+  noticka: { id: 'solo', dmg: 3, mult: 2 },
+  mapka:   { id: 'expedition', dmg: 11 },
 };
 
+// Rodina = rodič ze stejného světa (mechanika speciálu, svět, AI); ARCH_SUB = podkategorie, ve které je greamík „Super účinný“
+export const FAMILY = { tlapka: 'lilek', kanka: 'jiskra', poctik: 'kamen', hrejik: 'srodik', noticka: 'vlnka', mapka: 'atlas' };
+export const ARCH_SUB = { tlapka: 'animals', kanka: 'grammar', poctik: 'math', hrejik: 'emotions', noticka: 'music', mapka: 'geography' };
+export const fam = (a) => FAMILY[a] || a;
+
+export const BASE_ARCHES = ['lilek', 'jiskra', 'kamen', 'srodik', 'vlnka', 'atlas'];
 export const ARCH_WORLD = { lilek: 'nature', jiskra: 'language', kamen: 'logic', srodik: 'feelings', vlnka: 'arts', atlas: 'world' };
+Object.keys(FAMILY).forEach(a => { ARCH_WORLD[a] = ARCH_WORLD[FAMILY[a]]; });
 export const ARCHES = Object.keys(ARCH_WORLD);
 
 export function newFighter(arch, extra = {}) {
@@ -43,10 +57,10 @@ export function useSpecial(me, op) {
   const s = SPECIALS[me.arch]; if (!s) return null;
   me.energy -= RULES.ENERGY_COST;
   const ev = { arch: me.arch, id: s.id, dmg: 0, heal: 0 };
-  switch (me.arch) {
+  switch (fam(me.arch)) {
     case 'lilek':  me.mult = s.mult; if (s.dmg) { op.hp -= s.dmg; ev.dmg = s.dmg; } break;
     case 'jiskra': op.hp -= s.dmg; ev.dmg = s.dmg; op.stun = s.stun; break;
-    case 'kamen':  me.wall = s.hits; if (s.dmg) { op.hp -= s.dmg; ev.dmg = s.dmg; } break;
+    case 'kamen':  me.wall = s.hits; me.wallBlock = s.block; if (s.dmg) { op.hp -= s.dmg; ev.dmg = s.dmg; } break;
     case 'srodik':  { const h = Math.min(RULES.HP - me.hp, s.heal); me.hp += h; ev.heal = h; me.energy += s.energy; break; }
     case 'vlnka':  op.hp -= s.dmg; ev.dmg = s.dmg; me.fiftyNext = true; me.mult = s.mult; break;
     case 'atlas':  op.hp -= s.dmg; ev.dmg = s.dmg; me.ownWorldNext = true; break;
@@ -57,7 +71,7 @@ export function useSpecial(me, op) {
 // Jednoduchá AI soupeře/bota: použij speciál hned, Srdík až když léčení nepropadne.
 export function aiWantsSpecial(me) {
   if (!canSpecial(me)) return false;
-  if (me.arch === 'srodik') return me.hp <= RULES.HP - SPECIALS.srodik.heal * 0.8;
+  if (fam(me.arch) === 'srodik') return me.hp <= RULES.HP - SPECIALS[me.arch].heal * 0.8;
   return true;
 }
 
@@ -81,7 +95,7 @@ export function resolveRound(f, a, b) {
       me.energy++;
       let d = attackDamage(me, r);
       let blocked = false;
-      if (op.wall > 0) { d *= 1 - SPECIALS.kamen.block; op.wall--; blocked = true; }
+      if (op.wall > 0) { d *= 1 - (op.wallBlock ?? SPECIALS.kamen.block); op.wall--; blocked = true; }
       op.hp -= d;
       const dw = domainWeight(r.domain);
       hits.push({ from: i, dmg: Math.round(d), crit: (r.speedFrac || 0) >= RULES.CRIT_SPEED, domain: dw >= 1, half: dw > 0 && dw < 1, blocked, boosted: usedMult });
@@ -104,17 +118,27 @@ export function winner(f) {
 // K = pravděpodobnost, že hráč odpověď zná; jinak tipuje mezi `choices` možnostmi.
 // HALF_SHARE = podíl otázek, které se přes podkategorii týkají i jiného světa (změřeno na datech 1.1: 26 %)
 export const HALF_SHARE = 0.26;
+// Podíl otázek světa, jejichž hlavní podkategorie je ta „greamíkova“ (změřeno na datech 1.1)
+export const SUB_SHARE = { animals: 0.29, grammar: 0.37, math: 0.46, emotions: 0.43, music: 0.38, geography: 0.19 };
+// Váha bonusu pro greamíka: základní = svůj svět 1 / přesah 0,5; podkategoriový = svá podkategorie 1 / zbytek svého světa 0,5
+export function domainWeightFor(arch, q) {
+  const sub = ARCH_SUB[arch];
+  if (sub) return q.main === sub ? 1 : (q.world === ARCH_WORLD[arch] || q.side === sub) ? 0.5 : 0;
+  return q.world === ARCH_WORLD[arch] ? 1 : (q.mainWorld === ARCH_WORLD[arch] || q.sideWorld === ARCH_WORLD[arch]) ? 0.5 : 0;
+}
 export function simulate(archA, archB, K, rnd = Math.random, choices = 3) {
   const f = [newFighter(archA), newFighter(archB)];
   for (let r = 0; r < RULES.ROUNDS; r++) {
     for (let i = 0; i < 2; i++) if (aiWantsSpecial(f[i])) useSpecial(f[i], f[1 - i]);
     if (f[0].hp <= 0 || f[1].hp <= 0) break;
-    const qWorld = ARCHES[Math.floor(rnd() * 6)];
-    const halfWorld = rnd() < HALF_SHARE ? ARCHES.filter(a => a !== qWorld)[Math.floor(rnd() * 5)] : null;
+    const qBase = BASE_ARCHES[Math.floor(rnd() * 6)], world = ARCH_WORLD[qBase];
+    const subHere = Object.keys(ARCH_SUB).find(a => ARCH_WORLD[a] === world);
+    const q = { world, main: rnd() < SUB_SHARE[ARCH_SUB[subHere]] ? ARCH_SUB[subHere] : null, side: null, mainWorld: null, sideWorld: null };
+    if (rnd() < HALF_SHARE) q.sideWorld = ARCH_WORLD[BASE_ARCHES.filter(a => a !== qBase)[Math.floor(rnd() * 5)]];
     const ans = f.map(me => {
       const knows = rnd() < K;
       const ok = knows || rnd() < (me.fiftyNext ? 1 / (choices - 1) : 1 / choices);
-      const domain = me.ownWorldNext || qWorld === me.arch ? 1 : halfWorld === me.arch ? 0.5 : 0;
+      const domain = me.ownWorldNext ? 1 : domainWeightFor(me.arch, q);
       me.fiftyNext = false; me.ownWorldNext = false;
       return { ok, domain, speedFrac: ok ? (knows ? 0.4 + rnd() * 0.6 : rnd() * 0.35) : 0 };
     });
