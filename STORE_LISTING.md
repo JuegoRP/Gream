@@ -2,7 +2,7 @@
 
 Hotové texty a přesné odpovědi do formulářů. Vše odpovídá REÁLNému chování hry
 (souboje/leaderboard posílají přezdívku+skóre; kvůli mapě jde na náš server přibližná poloha ≈ 500 m,
-přesná poloha a fotky NIKDY neopouští zařízení). Aktualizováno 2026-10-15 (verze 1.0).
+přesná poloha a fotky NIKDY neopouští zařízení). Aktualizováno 2026-10-16 (verze 1.1: Gream Plus, promo kódy, nové otázky ze serveru).
 Privacy policy URL do listingu: **https://3rstudio.eu/gream-privacy.html**
 
 ---
@@ -18,76 +18,78 @@ Privacy policy URL do listingu: **https://3rstudio.eu/gream-privacy.html**
 | Web | https://3rstudio.eu/gream.html |
 | Privacy Policy | https://3rstudio.eu/gream-privacy.html |
 | Kontakt | romanpavlorek@gmail.com |
-| In-app purchases | **NE ve verzi 1.0 (hra zdarma).** Premium (69 Kč/měs · 599 Kč/rok, product IDy `gream_premium_monthly`, `gream_premium_yearly`) přijde v aktualizaci přes Google Play Billing za rodičovskou bránou. |
+| In-app purchases | **ANO – předplatné Gream Plus** přes Google Play Billing za rodičovskou bránou: `gream_plus_monthly` (89 Kč/měs), `gream_plus_yearly` (749 Kč/rok). Bez trialu v Play (7 dní zdarma řeší hra sama, bez karty). Pro celé zařízení. |
 | Reklamy | NE |
 
 ---
 
 ## 2. Krátký popis (Play: ≤ 80 znaků)
 
-- **CS:** `Kvízová hra pro celou rodinu — venku, se sbíratelným mazlíčkem a souboji.`
-- **EN:** `Family quiz game — explore outdoors, raise a pet, battle other players.`
+- **CS:** `Vylušti. Vylíhni. Vyraž ven. Kvíz pro celou rodinu s 24 greamíky.` (68)
+- **EN:** `Quiz. Hatch. Explore. A family quiz game with 24 Greams to collect.` (67)
 
 ## 3. Dlouhý popis (Play: ≤ 4000 znaků)
 
 ### CS
 ```
-Gream je kvízová hra pro celou rodinu. Otázky od úplně snadných po expertní —
-zábava pro děti i dospělé, každý si najde svou obtížnost.
+Vylušti. Vylíhni. Vyraž ven.
+Gream je kvízová hra pro celou rodinu. Přes 2 500 ověřených otázek od úplně
+snadných po expertní – a každý týden nové. Zábava pro děti i dospělé.
 
 🧠 KVÍZY, KTERÉ BAVÍ
-Šest světů: příroda, jazyk, logika, pocity, umění a svět kolem nás. Pestré typy
-otázek — výběr, počítání, doplňování, řazení i párování. Žádné nudné opakování.
+Šest světů a 33 témat: zvířata, vesmír, pravopis, hádanky, historie, film, Česko
+a další. Pestré typy otázek — výběr, psaní, odhad, řazení, párování i „Kde to je?“.
 
 🐣 SBÍREJ A VYCHOVEJ GREAMÍKY
-Za plnění výzev líhneš vajíčka a vychováváš svoje greamíky. Vyvíjejí se, jak se
-zlepšuješ — a v soubojích ti dávají bonusový čas ve svém oboru.
+Z vajíčka se vylíhne greamík podle témat, na která nejčastěji odpovídáš. Je jich 24
+a každý roste ve třech stádiích – v souboji má výhodu ve svém tématu a vlastní schopnost.
 
 🗺️ OBJEVUJ SVĚT VENKU
-Volitelné venkovní výzvy tě pošlou do parku, na hřiště nebo za roh. Přesná poloha
-zůstává v telefonu — kvůli mapě posíláme jen přibližnou polohu a neukládáme ji.
-Na mapě uvidíš, kolik hráčů které místo splnilo.
+Kompas tě dovede k výzvám kolem tebe. Venku čeká výprava dne, nová vajíčka a vzácná
+místa soubojů – a greamíci tam rostou dvakrát rychleji. Přesná poloha zůstává
+v telefonu — kvůli mapě posíláme jen přibližnou polohu a neukládáme ji.
 
 ⚔️ SOUBOJE A ŽEBŘÍČKY
-Změř síly v časově omezených soubojích proti záznamům jiných hráčů. Každý den
-navíc denní kolo — všichni mají stejných 10 otázek a společný žebříček.
+Souboje proti nahrávkám jiných hráčů, denní kolo se stejnými otázkami pro všechny,
+týdenní liga od bronzu po diamant a rodinný souboj na jednom telefonu.
 
 🔒 BEZPEČNÉ I PRO DĚTI
 Žádné reklamy. Žádné sledování. Bezpečný obsah a rodičovská obrazovka na úvod.
-Kids-first, ale kvízy baví každého.
+Rodičovská brána u nákupů a denní limit hraní.
 
-Celá hra je zdarma.
+Hra je zdarma. Prvních 7 dní je odemčené vše; potom volitelné předplatné Gream Plus
+pro celou rodinu. Venkovní výzvy, výpravy a vajíčka zůstávají zdarma navždy.
 ```
 
 ### EN
 ```
-Gream is a quiz game for the whole family. Questions from very easy to expert —
-fun for kids and adults alike, everyone finds their difficulty.
+Quiz. Hatch. Explore.
+Gream is a quiz game for the whole family. Over 2,500 fact-checked questions from
+very easy to expert – and new ones every week. Fun for kids and adults alike.
 
 🧠 QUIZZES THAT ARE ACTUALLY FUN
-Six worlds: nature, language, logic, feelings, arts and the world around us.
-Varied question types — choice, counting, fill-in, sorting and matching.
-No boring repetition.
+Six worlds and 33 topics: animals, space, spelling, riddles, history, film and more.
+Varied question types — choice, typing, estimates, sorting, matching and “Where is it?”.
 
 🐣 COLLECT AND RAISE GREAMÍCI
-Completing challenges hatches eggs and grows your greamíci (pets). They evolve as
-you improve — and give you bonus time in their field during battles.
+Your egg hatches into a Gream based on the topics you answer most. There are 24,
+each grows through three stages – with an edge on its topic and its own special move.
 
 🗺️ EXPLORE THE WORLD OUTDOORS
-Optional outdoor challenges send you to a park, playground or around the corner.
-Your precise location stays on your phone — for the map we only send an approximate
-location and never store it.
-On the map you can see how many players completed each place.
+The compass guides you to challenges nearby. Outside await the daily trip, new eggs
+and rare battle spots – and Greams grow twice as fast. Your precise location stays
+on your phone — for the map we only send an approximate location and never store it.
 
 ⚔️ BATTLES AND LEADERBOARDS
-Test yourself in timed battles against other players' recorded runs. Plus a daily
-round — everyone gets the same 10 questions and a shared leaderboard.
+Battles against other players' recordings, a daily round with the same questions
+for everyone, a weekly league from bronze to diamond and a family battle on one phone.
 
 🔒 SAFE FOR KIDS TOO
 No ads. No tracking. Safe content and a parent screen at the start.
-Kids-first, but the quizzes are fun for everyone.
+Parental gate for purchases and a daily play-time limit.
 
-The whole game is free.
+The game is free. Everything is unlocked for the first 7 days; after that an optional
+Gream Plus subscription for the whole family. Outdoor challenges, trips and eggs stay free forever.
 ```
 
 ---
@@ -111,6 +113,12 @@ The whole game is free.
 - Týdenní liga: body ze soubojů pod náhodným ID hráče + přezdívka v tabulce ligy.
 - Bitevní místa: u místa (id POI) server drží jen greamíka, skóre a náhodný žeton držitele, 14 dní – bez přezdívky a ID hráče.
 - Jen v zařízení: prozkoumané okolí (buňky 200 m), výprava dne, denní čas hraní (rodič), otázka „Kde to je?“ (polohu nepoužívá).
+
+**Verze 1.1+ (16. 10.) – beze změny kategorií:**
+- Nahrávka souboje (odpovědi správně/špatně + čas + greamík) – App activity, zobrazí se soupeři s přezdívkou.
+- Nové otázky: aplikace posílá jen číslo verze obsahu (žádná data o uživateli).
+- Promo kód: posílá se jen kód; server ukládá jen počet použití (žádné ID).
+- **Gream Plus přes Google Play Billing:** platbu a historii nákupů zpracovává Google, na náš server nic nejde → *Financial info* NEdeklarujeme jako sbírané naší aplikací. **Ověřit v Play Console** nápovědu k Data safety pro Play Billing při vyplňování.
 
 ### NEsbírané / NEsdílené (explicitně)
 - **Location → Precise location** → NE. Přesné souřadnice zůstávají v zařízení (vzdálenost k místům se počítá v telefonu).
@@ -179,7 +187,9 @@ na mixed v updatu — ale default je mixed.)
 
 ## 7. Screenshoty (co nafotit)
 
-Telefon (povinné, min. 2, ideál 8) + 7" a 10" tablet. Návrh 8 záběrů:
+**Hotové snímky (16. 10.):** GDrive `Gream/store/` – CZ i EN, 1080×2160 (poměr 1:2 = limit Google Play), zahrada, výzva, souboj, mapa s kompasem, sbírka greamíků. Ikona 512 px: `Assety/brand/play-store-icon-512.png`, feature graphic 1024×500: GDrive `Gream/store/feature-graphic-cs.png` / `-en.png`, ikona tamtéž `icon-512.png`.
+
+Telefon (povinné, min. 2, ideál 8) + 7" a 10" tablet. Původní návrh 8 záběrů:
 1. Onboarding — vajíčko/„Tvůj greamík" (wow moment)
 2. Domů — zahrada s greamíky + 3 tlačítka (Domácí výzva / Pojď ven / Souboj)
 3. Výzva typu choice (otázka + odpovědi)
@@ -201,6 +211,6 @@ Feature graphic 1024×500, ikona 512×512 (z `icons/`).
 - [ ] Vložit privacy URL: https://3rstudio.eu/gream-privacy.html
 - [ ] Data Safety dle §4 (NE „no collection")
 - [ ] Content rating dle §5
-- [ ] Premium až v aktualizaci (1.0 je zdarma, žádné in-app produkty)
+- [ ] Předplatné: v Play Console založit `gream_plus_monthly` (89 Kč) a `gream_plus_yearly` (749 Kč), bez Play trialu; otestovat nákup na interním testu
 - [ ] Screenshoty §7 + popisy §2/§3
 - [ ] Interní test track → poté produkce

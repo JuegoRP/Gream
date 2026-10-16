@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "test": "node test/content.mjs && node test/sim.mjs && node test/ui.mjs && node test/hatch.mjs && node test/battle-balance.mjs && node test/subscription.mjs && node test/bot.mjs && node test/remote-content.mjs",
+    "test": "node test/content.mjs && node test/sim.mjs && node test/ui.mjs && node test/hatch.mjs && node test/battle-balance.mjs && node test/subscription.mjs && node test/bot.mjs && node test/remote-content.mjs && node test/order.mjs",
     "build:www": "node scripts/build-www.mjs",
     "build:android": "node scripts/build-www.mjs && npx cap sync android",
     "test:server": "node test/server.mjs"

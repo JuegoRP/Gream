@@ -21,6 +21,9 @@ const audioNode = new Proxy({}, { get: (_, k) => (k === 'frequency' || k === 'ga
 window.AudioContext = function(){ return new Proxy({ currentTime: 0, destination: {}, state: 'running', resume: noop, createOscillator: () => audioNode, createGain: () => audioNode }, { get: (t, k) => k in t ? t[k] : noop }); };
 window.webkitAudioContext = window.AudioContext;
 try { navigator.vibrate = () => {}; } catch {}
+// Testy NESMÍ volat ostrý server (dřív se souboje „UI“ zapisovaly do žebříčků a nahrávek) → síť je vypnutá
+def('fetch', async () => new Response('{}', { status: 503, headers: { 'Content-Type': 'application/json' } }));
+window.fetch = globalThis.fetch;
 
 let errors = [];
 window.addEventListener('error', e => errors.push(e.message));

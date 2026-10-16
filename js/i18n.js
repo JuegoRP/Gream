@@ -45,7 +45,7 @@ export const T = {
     ob_v4_legal_loc_name:   "Precise location stays on the device",
     ob_v4_legal_loc_desc:   "The map and nearby places get only an approximate location (≈ 500 m). It is not stored and not shared with anyone.",
     ob_v4_legal_cam_name:   "Safe for kids",
-    ob_v4_legal_cam_desc:   "No chat and no in-app purchases. Nicknames are checked by a filter.",
+    ob_v4_legal_cam_desc:   "No chat. Optional Gream Plus subscription only behind a question for adults. Nicknames are checked by a filter.",
     ob_v4_legal_ads_name:   "No ads, tracking or analytics",
     ob_v4_legal_ads_desc:   "No advertising and no third parties. Data is never sold.",
     ob_v4_legal_fineprint:  "Players under 15 need a parent's consent (GDPR). Young children should set up the game together with an adult.",
@@ -60,7 +60,7 @@ export const T = {
     ob_v4_step4_sub:   "Two optional things. Change anytime in settings.",
 
     ob_v4_step5_title: "Welcome, friend",
-    ob_v4_step5_sub:   "Pick a nickname and avatar. Others see your nickname on leaderboards, so don't use your real name.",
+    ob_v4_step5_sub:   "Pick a nickname and avatar. Others see it on leaderboards, so don't use your real name. Choose well – changing it later costs seeds.",
 
     ob_v4_step6_title: "A mystery egg 🥚",
     ob_v4_step6_sub:   "Your Gream is hiding inside — complete 12 tasks and it will hatch. The way you play will reveal who it is!",
@@ -161,6 +161,7 @@ export const T = {
     // Settings v5 — Privacy + GDPR
     ss_privacy_title:   "Privacy & legal",
     ss_privacy_lbl:     "Privacy policy",
+    ss_feedback_lbl:    "Send feedback (testing)",
     ss_terms_lbl:       "Terms of use",
     ss_data_info:       "Your data is stored only on this device. Tap below to permanently delete everything (GDPR right to erasure).",
     // Stats
@@ -283,7 +284,7 @@ export const T = {
     badges_n: n => `${n} badge${n === 1 ? '' : 's'}`,
     poi_challenge_title: "Challenge", poi_challenge_sub: "Pick a world and answer questions on the spot.",
     poi_battle_title: "Battle spot", poi_battle_sub: "A rare place – win the battle and your Gream guards it.",
-    poi_battle_btn: "Battle here", poi_outdoors: "outdoors",
+    poi_battle_btn: "Battle here", poi_outdoors: "outdoors", poi_come_closer: (m) => `Come within ${m} m to play here. For now, let me guide you.`,
     bp_question: (n) => `Question ${n} of 3`, bp_progress: (lvl, have, need, left) => `Badge ${lvl}: ${have} / ${need} · ${left} to go`, bp_max: (n) => `Top badge level · ${n} challenges`,
     nav_warm: { cold: "❄️ Cold", warm: "🌤️ Getting warmer", hot: "🔥 Hot!" }, nav_closer: "closer", nav_farther: "colder", nav_here: "📍 You're here!",
     name_change_btn: (c) => `Change · ${c} 🌱`, name_change_title: "Change name",
@@ -1548,7 +1549,7 @@ export const T = {
     ob_v4_legal_loc_name:   "Přesná poloha zůstává v zařízení",
     ob_v4_legal_loc_desc:   "Mapa a místa v okolí dostanou jen přibližnou polohu (≈ 500 m). Neukládá se a nikomu se nepředává.",
     ob_v4_legal_cam_name:   "Bezpečné pro děti",
-    ob_v4_legal_cam_desc:   "Žádný chat ani nákupy v aplikaci. Přezdívky hlídá filtr.",
+    ob_v4_legal_cam_desc:   "Žádný chat. Volitelné předplatné Gream Plus jen za otázkou pro dospělé. Přezdívky hlídá filtr.",
     ob_v4_legal_ads_name:   "Žádné reklamy, sledování ani analytika",
     ob_v4_legal_ads_desc:   "Žádná reklama ani třetí strany. Data se nikdy neprodávají.",
     ob_v4_legal_fineprint:  "Hráči do 15 let potřebují souhlas rodiče (GDPR). Malé děti by měly hru nastavit spolu s dospělým.",
@@ -1563,7 +1564,7 @@ export const T = {
     ob_v4_step4_sub:   "Dvě nepovinné věci. Můžeš kdykoliv změnit v nastavení.",
 
     ob_v4_step5_title: "Vítej, kamaráde",
-    ob_v4_step5_sub:   "Vyber si přezdívku a avatara. Přezdívku uvidí ostatní v žebříčcích, tak nepoužívej svoje pravé jméno.",
+    ob_v4_step5_sub:   "Vyber si přezdívku a avatara. Uvidí ji ostatní v žebříčcích, tak nepoužívej svoje pravé jméno. Vyber dobře – změna pak stojí semínka.",
 
     ob_v4_step6_title: "Záhadné vajíčko 🥚",
     ob_v4_step6_sub:   "Tvůj Greamík se skrývá uvnitř — splň 12 úkolů a vylíhne se. Způsob, jakým hraješ, odhalí, kdo to je!",
@@ -1654,6 +1655,7 @@ export const T = {
     // Settings v5
     ss_privacy_title:   "Soukromí a právní",
     ss_privacy_lbl:     "Zásady ochrany soukromí",
+    ss_feedback_lbl:    "Napsat zpětnou vazbu (testování)",
     ss_terms_lbl:       "Podmínky použití",
     ss_data_info:       "Tvá data jsou uložena pouze v tomto zařízení. Klepnutím níže je trvale smažeš (právo na výmaz dle GDPR).",
     // Souboje 1.1 — aréna
@@ -1775,7 +1777,7 @@ export const T = {
     badges_n: n => `${n} ${n === 1 ? 'odznak' : (n >= 2 && n <= 4) ? 'odznaky' : 'odznaků'}`,
     poi_challenge_title: "Výzva", poi_challenge_sub: "Vyber svět a odpovídej přímo na místě.",
     poi_battle_title: "Místo souboje", poi_battle_sub: "Vzácné místo – vyhraj souboj a tvůj greamík ho bude hlídat.",
-    poi_battle_btn: "Souboj tady", poi_outdoors: "venku",
+    poi_battle_btn: "Souboj tady", poi_outdoors: "venku", poi_come_closer: (m) => `Přijď blíž (do ${m} m) a můžeš tu hrát. Zatím tě sem navedu.`,
     bp_question: (n) => `Otázka ${n} ze 3`, bp_progress: (lvl, have, need, left) => `Odznak ${lvl}: ${have} / ${need} · chybí ${left}`, bp_max: (n) => `Nejvyšší úroveň odznaku · ${n} výzev`,
     nav_warm: { cold: "❄️ Studeno", warm: "🌤️ Přihořívá", hot: "🔥 Hoří!" }, nav_closer: "blíž", nav_farther: "vzdaluješ se", nav_here: "📍 Jsi na místě!",
     name_change_btn: (c) => `Změnit · ${c} 🌱`, name_change_title: "Změna jména",

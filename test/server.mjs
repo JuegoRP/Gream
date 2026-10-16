@@ -26,6 +26,11 @@ try {
   ok((await post('/spots/claim', { id: 'node/9', arch: 'tlapka', stage: 3, score: 70, tok: 'ddd' })).held === true, 'místo: greamík podkategorie (tlapka) je povolený');
   const sp = await fetch(B + '/spots?ids=node/1,node/2').then(r => r.json());
   ok(sp['node/1']?.arch === 'vlnka' && sp['node/1'].score === 95 && !('name' in sp['node/1']) && !('pid' in sp['node/1']) && !sp['node/2'], 'místo: vrací greamíka a skóre, žádné jméno ani ID');
+  // Zpětná vazba testerů: uloží se, prázdná ne, HTML značky pryč
+  ok((await post('/feedback', { fun: 4, liked: 'Souboje <b>super</b>', problems: 'nic', who: 'Pepa', lang: 'cs' })).ok === true, 'feedback: uloženo');
+  ok((await post('/feedback', { who: 'x' })).error === 'empty', 'feedback: prázdný se neuloží');
+  const fb = fs.readFileSync(path.join(dir, 'feedback.jsonl'), 'utf8').trim().split('\n').map(l => JSON.parse(l));
+  ok(fb.length === 1 && fb[0].fun === 4 && !/[<>]/.test(fb[0].liked), 'feedback: jeden záznam, bez HTML');
   // Nové otázky: bez souboru prázdné, po zveřejnění nová verze, se starou verzí nic navíc
   let c = await fetch(B + '/content/questions?since=0').then(r => r.json());
   ok(c.version === 0 && c.items.length === 0, 'obsah: zatím prázdný');

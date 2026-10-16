@@ -5,7 +5,8 @@
 //  + Skin unlock check after task completion
 // ═══════════════════════════════════
 
-import { shuffle, stripEmoji } from './shuffle.js';
+import { shuffle, stripEmoji, playerOrder } from './shuffle.js';
+import { PROXIMITY_M } from './mapview.js';
 import { factCard } from './facts.js';
 import { Expedition } from './expedition.js';
 import { Playtime } from './parents.js';
@@ -94,7 +95,9 @@ export const Challenge = {
     // and would loop indexes 0-2 forever).
     const stepsDone   = Profiles.getBadgeProgress(p.id, world);
     const totalDone   = p.worldTasks?.[world] || 0;
-    this._currentStep = steps.length ? (totalDone % steps.length) : 0;
+    // Pořadí otázek je pro každého hráče jiné (Roman 2026-10-16: dva noví hráči měli stejné otázky → stejného
+    // prvního greamíka). Permutace i ↦ (start + i·krok) mod n z ID profilu: bez opakování, dokud se neprojde celá sada.
+    this._currentStep = steps.length ? playerOrder(p.id, world + diffKey, steps.length, totalDone) : 0;
     // Vajíčko „přitahuje“ otázky ze svého tématu: když v tomto světě cítí podkategorii (aspoň 2 odpovědi),
     // ve 35 % vybere nejbližší otázku z ní – hráč tak vidí, kam se vajíčko vyvíjí, a může ho cíleně krmit
     const pet = Gream.active(p.id);
@@ -598,8 +601,11 @@ export const Challenge = {
       return;
     }
 
-    // Choice wrong answer: deduct seeds, kick back to home, try again
-    if (!result.passed && check?.type === 'choice') {
+    // Špatná odpověď (výběr, psaná doplňovačka, číslo se správnou hodnotou, bod na mapě): semínka dolů, správná
+    // odpověď, domů. Dřív se psané/číselné/mapové špatné odpovědi počítaly jako splněné (Roman 2026-10-16: „napsal
+    // jsem nesmysl a stejně to prošlo“). Otázky bez správné hodnoty (pozorování venku) dál projdou.
+    const HARD = check?.type === 'choice' || check?.type === 'fill_blank' || check?.type === 'map_pin' || (check?.type === 'number' && check.answer != null);
+    if (!result.passed && HARD) {
       this._wrongCount = (this._wrongCount || 0) + 1;
       Feedback.error();
       const card = document.querySelector('.card');
@@ -621,7 +627,11 @@ export const Challenge = {
 
       // Špatně: ukaž správnou odpověď a zajímavost (učí i chyba), pak domů
       const ch = this._currentChallenge;
-      const right = (ch?.choices || []).find(c => String(c.value ?? c.text).toLowerCase() === String(check.correct).toLowerCase());
+      const unit = check.unit ? ' ' + check.unit : '';
+      const right = check.type === 'choice' ? (ch?.choices || []).find(c => String(c.value ?? c.text).toLowerCase() === String(check.correct).toLowerCase())
+        : check.type === 'fill_blank' ? { text: String(check.correct) }
+        : check.type === 'number' ? { text: `${check.answer}${unit}` }
+        : null;   // mapa: správné místo už hráč viděl na mapě
       setTimeout(() => {
         this._showToast(msg);
         const t = tr();
@@ -656,13 +666,13 @@ export const Challenge = {
         // Never block the answer flow on GPS — cap the wait so a stalled
         // geolocation prompt can't freeze the whole challenge.
         const r = await Promise.race([
-          Geo.checkAtPOI(this._targetPOI, 50), // 50m tolerance
+          Geo.checkAtPOI(this._targetPOI, PROXIMITY_M + 30), // stejný dosah jako na mapě (+ rezerva na kolísání GPS)
           new Promise(res => setTimeout(() => res({ atPOI: true, timeout: true }), 2500))
         ]);
         if (!r.atPOI) {
           Feedback.error();
           const t = tr();
-          this._showToast(`${t.geo_walk_to} ${this._targetPOI.name} (${r.dist || '?'} m)`);
+          this._showToast(`${t.geo_walk_to} ${t.poi_challenge_title} (${r.dist || '?'} m)`);
           _release();
           return;
         }

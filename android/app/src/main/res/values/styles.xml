@@ -21,7 +21,9 @@
     <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
         <item name="android:background">@drawable/splash</item>
         <item name="windowSplashScreenBackground">#CBE3A0</item>
-        <item name="windowSplashScreenIconBackgroundColor">#4A8A2E</item>
+        <item name="windowSplashScreenIconBackgroundColor">#5E9A32</item>
+        <!-- Android 12+: ikona Gream (líhnoucí se vajíčko) na úvodní obrazovce místo prázdné plochy -->
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_foreground</item>
         <item name="postSplashScreenTheme">@style/AppTheme.NoActionBar</item>
     </style>
 </resources>

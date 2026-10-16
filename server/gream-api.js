@@ -258,6 +258,20 @@ const server = http.createServer((req, res) => {
     return send(res, 200, { ok: true });
   });
 
+  // ─── Zpětná vazba od testerů (stránka 3rstudio.eu/gream-test.html): jen to, co vyplní, bez IP a ID ───
+  if (req.method === 'POST' && p === '/feedback') return readBody(req, (d) => {
+    const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket.remoteAddress || 'x';
+    if (!process.env.GREAM_RL_OFF && promoLimited(ip)) return send(res, 429, { ok: false, error: 'rate-limited' });
+    if (!d) return send(res, 400, { ok: false, error: 'bad' });
+    const S = (x, n) => String(x ?? '').replace(/[<>]/g, '').trim().slice(0, n);
+    const rec = { ts: new Date().toISOString(), lang: S(d.lang, 4), who: S(d.who, 40), age: S(d.age, 20), device: S(d.device, 60),
+      fun: Math.max(0, Math.min(5, Math.round(Number(d.fun) || 0))), liked: S(d.liked, 1500), problems: S(d.problems, 2000),
+      ideas: S(d.ideas, 1500), pay: S(d.pay, 20), days: S(d.days, 20) };
+    if (!rec.liked && !rec.problems && !rec.ideas && !rec.fun) return send(res, 400, { ok: false, error: 'empty' });
+    try { fs.appendFileSync(F('feedback.jsonl'), JSON.stringify(rec) + '\n'); } catch (e) { return send(res, 500, { ok: false, error: 'server' }); }
+    return send(res, 200, { ok: true });
+  });
+
   if (req.method === 'POST' && p === '/report') return readBody(req, (d) => {
     if (!d) return send(res, 400, { error: 'bad-json' });
     const rec = {
