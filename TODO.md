@@ -73,7 +73,7 @@
 
 - [x] **Oprava výběru výzev** — hráč dřív viděl jen indexy 0–2 (badge progress se resetuje po 3 krocích), takže z ~568 výzev bylo reálně dostupných jen ~72 (18 na obtížnost). Teď se okno posouvá podle `worldTasks[world] % pool.length` → procyklují se VŠECHNY výzvy. (challenge.js) — příčina pocitu „málo výzev"
 - [x] **Sladění EN/CZ poolů** — doplněny 2 chybějící CZ výzvy (nature medium „býložravci", nature extreme „genom"); všechny pooly EN=CZ, jinak by index-výběr v CZ tiše šlápl mimo pole
-- [x] **Gream Plus zapnutý** (2026-10-16): týden zdarma → zdarma 3 výzvy doma/1 souboj denně/lehká+střední/1 profil, venku vše; 89 Kč/měs, 749 Kč/rok (Google Play, `cordova-plugin-purchase`), promo kódy přes server `/promo` (`gream-data/promo.json`). Zbývá: produkty v Play Console + interní test nákupu, nasadit server s `/promo`
+- [x] **Gream Plus zapnutý** (2026-10-16): týden zdarma → zdarma 4 výzvy doma (od 16. 10., dřív 3)/1 souboj denně/lehká+střední/1 profil, venku vše; 89 Kč/měs, 749 Kč/rok (Google Play, `cordova-plugin-purchase`), promo kódy přes server `/promo` (`gream-data/promo.json`). Zbývá: produkty v Play Console + interní test nákupu, nasadit server s `/promo`
 - [x] ~~**Vypnutý paywall pro v1**~~ (nahrazeno Gream Plus) — `PAYWALL_ENABLED=false` v subscription.js: všichni premium, žádný trial banner, skrytá subscribe UI, fake „Aktivovat Premium" nedosažitelný. Store by falešný IAP zamítl; reálné IAP (RevenueCat/Capacitor) až po vydání a za parent gate
 - [x] **Perzistence dat** — `navigator.storage.persist()` při startu (app.js init), aby iOS/Android nevymazaly profily a mazlíčka pod tlakem na místo
 - [x] Historie aktivit teď ukládá i text výzvy (dřív jen obecný „Krok 1")
