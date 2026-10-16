@@ -642,9 +642,11 @@ export const Challenge = {
           <div class="wrong-title">${t.wrong_title}</div>
           ${right ? `<div class="wrong-answer">${t.wrong_correct} <b></b></div>` : ''}
           ${factCard(this._world, this._difficulty || 'medium', ch)}
-          <button class="btn-primary">${t.wrong_next}</button></div>`;
+          <button class="btn-primary">${t.wrong_next}</button>
+          <button class="report-link">${t.report_q}</button></div>`;
         if (right) ov.querySelector('.wrong-answer b').textContent = right.text;
-        ov.querySelector('button').onclick = () => { ov.remove(); Router.show('home'); };
+        ov.querySelector('.btn-primary').onclick = () => { ov.remove(); Router.show('home'); };
+        ov.querySelector('.report-link').onclick = () => window.App?.reportCurrentChallenge();   // nahlásit i po odpovědi
         document.body.appendChild(ov);
       }, 300);
       return;
@@ -858,6 +860,7 @@ export const Challenge = {
     const t = tr();
     await Router.show('step-done');
     try { const el = document.getElementById('sdFact'); if (el) el.innerHTML = factCard(this._world, this._difficulty || 'medium', this._currentChallenge); } catch {}
+    try { const r = document.getElementById('sdReport'); if (r) r.textContent = tr().report_q; } catch {}
 
     const icons = ['🌱','🌿','🌳'];
     this._set('sdIcon',     icons[stepsDone - 1] || '🌟');

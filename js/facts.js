@@ -25,6 +25,7 @@ export function factCard(world, difficulty, ch) {
   const f = factFor(world, difficulty, ch);
   if (!f) return '';
   const esc = (s) => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-  // Zdroj se hráčům neukazuje (Roman 2026-10-16: Wikipedie není relevantní zdroj) – zůstává v datech pro kontrolu
-  return `<div class="fact-card"><div class="fact-title">💡 ${tr().fact_title}</div><div class="fact-text">${esc(f.text)}</div></div>`;
+  // Zdroj jen když to není Wikipedie (Roman 2026-10-16: Wikipedie není relevantní zdroj; Britannica, NASA, ÚJČ… ano)
+  const src = f.src && !/wiki/i.test(f.src) ? `<div class="fact-src">${esc(f.src)}</div>` : '';
+  return `<div class="fact-card"><div class="fact-title">💡 ${tr().fact_title}</div><div class="fact-text">${esc(f.text)}</div>${src}</div>`;
 }

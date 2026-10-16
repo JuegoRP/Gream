@@ -160,6 +160,13 @@ const LEAGUE_ICON = { bronze: '🥉', silver: '🥈', gold: '🥇', diamond: '�
 const TIERS_ORDER = ['bronze', 'silver', 'gold', 'diamond'];
 const escHtml = (x) => String(x ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
+// Nahlášení otázky i po souboji (přehled chybných odpovědí)
+if (typeof document !== 'undefined') document.addEventListener('click', (e) => {
+  const b = e.target.closest?.('[data-report-missed]'); if (!b) return;
+  const m = Battle._missed?.[Number(b.dataset.reportMissed)]; if (!m) return;
+  try { window.App?.reportChallenge({ world: m.world, difficulty: m.diff, text: m.q, enText: m.q, id: challengeId(m.world, m.diff, m.q) }); } catch {}
+});
+
 export const Battle = {
   _q: [], _i: 0, _pScore: 0, _bScore: 0, _diff: 'medium', _outdoor: false, _timer: null, _entry: 0, _reward: 0,
 
@@ -686,7 +693,7 @@ export const Battle = {
     document.getElementById('battleRound')?.remove();
     const myCorrect = this._correct[0];
     const review = this._missed.length ? `<div style="font-size:12px;font-weight:900;color:#888;margin-top:6px">${t.battle_review}</div>
-      <div class="bt-review">${this._missed.map(m => `<div>${m.who ? `<b>${escHtml(m.who)}:</b> ` : ''}${escHtml(m.q)}${m.a ? `<br><b>${t.battle_correct_is}${escHtml(m.a)}</b>` : ''}${(() => { const f = factFor(m.world, m.diff, m.ch); return f ? `<br><span style="color:#b07800">💡 ${escHtml(f.text)}</span>` : ''; })()}</div>`).join('')}</div>` : '';
+      <div class="bt-review">${this._missed.map((m, i) => `<div>${m.who ? `<b>${escHtml(m.who)}:</b> ` : ''}${escHtml(m.q)}${m.a ? `<br><b>${t.battle_correct_is}${escHtml(m.a)}</b>` : ''}${(() => { const f = factFor(m.world, m.diff, m.ch); return f ? `<br><span style="color:#b07800">💡 ${escHtml(f.text)}</span>` : ''; })()}<br><button class="report-link small" data-report-missed="${i}">${t.report_q}</button></div>`).join('')}</div>` : '';
 
     if (this._family) {
       const fam = this._family; this._family = null;
