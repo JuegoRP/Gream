@@ -2793,6 +2793,7 @@ window.App = {
     this._setText('ss-parents-title', t.parents_title);
     this._setText('parentsOpenBtn', '🔒 ' + t.parents_open);
     this._setText('ss-privacy-lbl',   t.ss_privacy_lbl);
+    this._setText('ss-feedback-lbl',  t.ss_feedback_lbl);
     this._setText('ss-terms-lbl',     t.ss_terms_lbl);
     // Player ID
     const csId = getLang() === 'cs';
