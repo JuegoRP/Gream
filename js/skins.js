@@ -19,6 +19,9 @@ const KEY_DECOR         = 'gream_decor';            // map { profileId: { owned:
 // ─── Skin catalog: unlocked by milestones ───
 // Each skin specifies what it takes to unlock.
 // type = 'avatar' (replaces emoji), 'frame' (border around avatar), 'bg' (background pattern)
+// Ceny zrušených doplňků (jen pro vrácení semínek – refundAccessories)
+const ACC_REFUND = {'acc_bow': 50, 'acc_cap': 60, 'acc_glasses': 70, 'acc_scarf': 70, 'acc_hat': 80, 'acc_flowers': 90, 'acc_wizard': 120, 'acc_star': 120, 'acc_crown': 160};
+
 export const SKIN_CATALOG = {
   // ─── GREAM AVATARS — unlocked by having that greamík at stage ≥ 2 ───
   // ─── POSTAVIČKY: kreslené avatary ve stylu hry (Assety/avatary-1.1), 6 zdarma, ostatní za semínka ───
@@ -114,17 +117,6 @@ export const SKIN_CATALOG = {
 
   // ─── GREAM ACCESSORIES — doplňky viditelné na greamíkovi (zahrada, aréna, výběr do souboje) ───
   // slot: head = na hlavě, face = přes oči, neck = na krku, aura = záře kolem (bez obrázku)
-  accessories: [
-    { id: 'acc_bow',     name: { cs: 'Mašlička',       en: 'Bow' },          emoji: '🎀', cost: 50,  slot: 'head', img: 'img/doplnky/acc_bow.png' },
-    { id: 'acc_cap',     name: { cs: 'Kšiltovka',      en: 'Cap' },          emoji: '🧢', cost: 60,  slot: 'head', img: 'img/doplnky/acc_cap.png' },
-    { id: 'acc_glasses', name: { cs: 'Brýle',          en: 'Glasses' },      emoji: '🕶️', cost: 70,  slot: 'face', img: 'img/doplnky/acc_glasses.png' },
-    { id: 'acc_scarf',   name: { cs: 'Šála',           en: 'Scarf' },        emoji: '🧣', cost: 70,  slot: 'neck', img: 'img/doplnky/acc_scarf.png' },
-    { id: 'acc_hat',     name: { cs: 'Cylindr',        en: 'Top hat' },      emoji: '🎩', cost: 80,  slot: 'head', img: 'img/doplnky/acc_hat.png' },
-    { id: 'acc_flowers', name: { cs: 'Věneček',        en: 'Flower crown' }, emoji: '🌸', cost: 90,  slot: 'head', img: 'img/doplnky/acc_flowers.png' },
-    { id: 'acc_wizard',  name: { cs: 'Kouzelnický klobouk', en: 'Wizard hat' }, emoji: '🧙', cost: 120, slot: 'head', img: 'img/doplnky/acc_wizard.png' },
-    { id: 'acc_star',    name: { cs: 'Hvězdná záře',   en: 'Star aura' },    emoji: '⭐', cost: 120,  slot: 'aura' },
-    { id: 'acc_crown',   name: { cs: 'Korunka',        en: 'Crown' },        emoji: '👑', cost: 160,  slot: 'head', img: 'img/doplnky/acc_crown.png' },
-  ],
 
   // ─── VÝZDOBA ZAHRADY — vše koupené se ukáže v zahradě (jde vypnout); x/y = % scény, w = % šířky ───
   decor: [
@@ -364,32 +356,18 @@ export const Skins = {
     return true;
   },
 
-  // ─── ACCESSORIES: equip/get ───
-  getEquippedAccessory(profileId) {
-    const m = loadMap(KEY_EQUIPPED);
-    return (m[profileId] && m[profileId].accessory) || null;
-  },
-
-  setEquippedAccessory(profileId, accId) {
-    const m = loadMap(KEY_EQUIPPED);
-    if (!m[profileId]) m[profileId] = { avatar: 'av_default', frame: 'fr_none', bg: 'bg_default', accessory: null };
-    m[profileId].accessory = accId;
-    saveMap(KEY_EQUIPPED, m);
-  },
-
-  buyAccessory(profileId, accId) {
-    const acc = SKIN_CATALOG.accessories.find(a => a.id === accId);
-    if (!acc) return { ok: false, reason: 'not-found' };
-    if (!this.spendSeeds(profileId, acc.cost)) return { ok: false, reason: 'not-enough-seeds' };
+  // ─── DOPLŇKY: zrušeny 2026-10-16 (nešly napasovat na 12 greamíků × 3 stádia) ───
+  // Kdo si nějaký koupil, dostane semínka zpět. Vrací počet vrácených semínek (0 = nic).
+  refundAccessories(profileId) {
     const m = loadMap(KEY_OWNED_COSMETIC);
-    if (!m[profileId]) m[profileId] = [];
-    if (!m[profileId].includes(accId)) m[profileId].push(accId);
-    saveMap(KEY_OWNED_COSMETIC, m);
-    this.setEquippedAccessory(profileId, accId);
-    return { ok: true, acc };
+    const owned = (m[profileId] || []).filter(id => id.startsWith('acc_'));
+    if (!owned.length) return 0;
+    const back = owned.reduce((s, id) => s + (ACC_REFUND[id] || 0), 0);
+    m[profileId] = m[profileId].filter(id => !id.startsWith('acc_')); saveMap(KEY_OWNED_COSMETIC, m);
+    const e = loadMap(KEY_EQUIPPED); if (e[profileId]) { delete e[profileId].accessory; saveMap(KEY_EQUIPPED, e); }
+    this.addSeeds(profileId, back);
+    return back;
   },
-
-  unequipAccessory(profileId) { this.setEquippedAccessory(profileId, null); },
 
   // ─── VÝZDOBA ZAHRADY ───
   getDecor(profileId) {
@@ -418,11 +396,6 @@ export const Skins = {
     return SKIN_CATALOG.decor.filter(x => d.owned.includes(x.id) && !d.hidden.includes(x.id));
   },
 
-  getOwnedAccessories(profileId) {
-    const m = loadMap(KEY_OWNED_COSMETIC);
-    return new Set((m[profileId] || []).filter(id => SKIN_CATALOG.accessories.some(a => a.id === id)));
-  },
-
   // ─── Aliases for backward compatibility ───
   getBoosts(profileId) {
     // Returns { boostId: count } — pending boost counts (1 if active, 0 otherwise)
@@ -433,23 +406,6 @@ export const Skins = {
     const hints = this.getHintCharges(profileId);
     if (hints > 0) result['boost_hint'] = hints;
     return result;
-  },
-
-  getAccessory(profileId) {
-    return this.getEquippedAccessory(profileId);
-  },
-
-  isAccessoryOwned(profileId, accId) {
-    return this.getOwnedAccessories(profileId).has(accId);
-  },
-
-  equipAccessory(profileId, accId) {
-    // If already owned, just equip. Otherwise try to buy first.
-    if (this.isAccessoryOwned(profileId, accId)) {
-      this.setEquippedAccessory(profileId, accId);
-      return true;
-    }
-    return this.buyAccessory(profileId, accId);
   },
 
   // ─── Utility: human-readable unlock text ───

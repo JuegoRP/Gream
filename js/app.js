@@ -39,10 +39,8 @@ import { Subscription, FREE_DAILY_INDOOR, PREMIUM_DAILY_INDOOR, INDOOR_MAX_TOTAL
 import { Ranking } from './ranking.js';
 import { Audio } from './audio.js';
 import { fillIcons } from './icons.js';
-import { drawAccessory, preloadAccessories } from './accessories.js';
 import { Expedition, REWARD as EXP_REWARD } from './expedition.js';
 import { ParentGate, Playtime } from './parents.js';
-preloadAccessories();
 window.__greamLoaded = true;
 const escAttr = (x) => String(x ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); // modul hry se načetl (index.html pak neukáže „Failed to start“)
 
@@ -282,6 +280,11 @@ window.App = {
     console.log('[Gream] Profiles:', profiles.length, 'Active:', active?.name || 'none');
 
     if (active) this.applyCosmetics();
+    // Doplňky byly zrušeny (2026-10-16): kdo nějaký koupil, dostane semínka zpět
+    try {
+      let back = 0; Profiles.all().forEach(pr => { back += Skins.refundAccessories(pr.id); });
+      if (back) setTimeout(() => this._showToast(tr().acc_refund(back)), 2500);
+    } catch {}
 
     if (!profiles.length) {
       console.log('[Gream] → onboarding');
@@ -1156,15 +1159,13 @@ window.App = {
         // Větší stádium → viditelně větší (stádium 2 = základ)
         const STAGE_SCALE = { 1: 0.85, 2: 1.0, 3: 1.2, 4: 1.56 };
         const gSize = Math.round(76 * (STAGE_SCALE[stageN] || 1));
-        const accId = isActive ? (Skins.getAccessory(Profiles.active()?.id) || '') : '';
-        const aura = accId === 'acc_star';
-        const an = [g.isShiny && 'greamShinyGlow 3s ease-in-out infinite', aura && 'auraPulse 2.4s ease-in-out infinite'].filter(Boolean);
+        const an = g.isShiny ? ['greamShinyGlow 3s ease-in-out infinite'] : [];
         slot.innerHTML = `
           <div class="gw-body"><div class="gw-hop"><div class="gw-bob">
             <canvas data-sprite-sheet="img/greamici/${arch}_${stageN}.png"
-              data-sprite-mood="${g.mood || 'happy'}" data-arch="${arch}" data-shiny="${g.isShiny ? '1' : ''}" ${accId ? `data-acc="${accId}"` : ''}
+              data-sprite-mood="${g.mood || 'happy'}" data-arch="${arch}" data-shiny="${g.isShiny ? '1' : ''}"
               width="${gSize}" height="${gSize}"
-              style="width:${gSize}px;height:${gSize}px;image-rendering:pixelated;display:block;${an.length ? `animation:${an.join(', ')};` : ''}${aura ? 'filter:drop-shadow(0 0 4px #ffd84d) drop-shadow(0 0 12px rgba(255,196,40,.95)) drop-shadow(0 0 24px rgba(255,214,90,.7));' : 'filter:drop-shadow(0 4px 6px rgba(0,0,0,0.22));'}"></canvas>
+              style="width:${gSize}px;height:${gSize}px;image-rendering:pixelated;display:block;${an.length ? `animation:${an.join(', ')};` : ''}filter:drop-shadow(0 4px 6px rgba(0,0,0,0.22));"></canvas>
           </div></div></div>
           <div class="gw-shadow" style="width:${Math.round(gSize * 0.6)}px"></div>`;
         actors.push({ el: slot, id: g.id, active: isActive });
@@ -1263,7 +1264,8 @@ window.App = {
   },
 
   // Draw sprite sheet cell onto canvas, cropped to content and centered
-  _drawSpriteCell(ctx, img, sx, sy, canvasW, canvasH, acc = null, arch = null, shiny = false) {
+  // 7. parametr byl doplněk (zrušeno 2026-10-16) – zůstává kvůli pořadí argumentů
+  _drawSpriteCell(ctx, img, sx, sy, canvasW, canvasH, _acc = null, arch = null, shiny = false) {
     if (shiny && arch) img = shinySource(img, arch);
     // Use offscreen canvas to detect content bbox
     const off = document.createElement('canvas');
@@ -1308,9 +1310,6 @@ window.App = {
       sx + minX - PAD, sy + minY - PAD, cw, ch,  // source: content bbox + padding
       dx, dy, dw, dh                               // dest: centered on canvas
     );
-    // Doplněk (čepice, brýle…) přes greamíka
-    if (acc) drawAccessory(ctx, { x: dx + PAD * scale, y: dy + PAD * scale, w: dw - 2 * PAD * scale, h: dh - 2 * PAD * scale }, acc, arch,
-      () => this._drawSpriteCell(ctx, img, sx, sy, canvasW, canvasH, acc, arch, shiny), +((img.src || '').match(/_(\d)\.png/)?.[1] || 2));
   },
 
   _initSpriteCanvases(root) {
@@ -1328,11 +1327,9 @@ window.App = {
       canvas.style.height = cssH + 'px';
       const img = new Image();
       img.src = src;
-      const acc = canvas.dataset.acc || null;
-      canvas.classList.toggle('aura', acc === 'acc_star');
       const draw = () => {
         const ctx = canvas.getContext('2d');
-        this._drawSpriteCell(ctx, img, sx, sy, cssW * dpr, cssH * dpr, acc, canvas.dataset.arch || null, canvas.dataset.shiny === '1');
+        this._drawSpriteCell(ctx, img, sx, sy, cssW * dpr, cssH * dpr, null, canvas.dataset.arch || null, canvas.dataset.shiny === '1');
       };
       if (img.complete) draw();
       else { img.onload = draw; img.onerror = () => {}; }
@@ -1405,17 +1402,14 @@ window.App = {
     if (canvas.width !== bufW) { canvas.width = bufW; canvas.height = bufW; }
     canvas.classList.toggle('shiny', spriteEl.classList.contains('shiny'));
 
-    const accId = Skins.getAccessory(Profiles.active()?.id) || '';
-    canvas.classList.toggle('aura', accId === 'acc_star');
-    const redraw = canvas.dataset.src !== src || canvas.dataset.mood !== mood || canvas.dataset.acc !== accId || canvas.dataset.shiny !== (pet.isShiny ? '1' : '');
+    const redraw = canvas.dataset.src !== src || canvas.dataset.mood !== mood || canvas.dataset.shiny !== (pet.isShiny ? '1' : '');
     if (redraw) {
       canvas.dataset.src  = src;
       canvas.dataset.mood = mood;
-      canvas.dataset.acc  = accId;
       canvas.dataset.shiny = pet.isShiny ? '1' : '';
       const img = new Image();
       img.src = src;
-      const draw = () => this._drawSpriteCell(canvas.getContext('2d'), img, sx, sy, bufW, bufW, accId, pet.archetype, !!pet.isShiny);
+      const draw = () => this._drawSpriteCell(canvas.getContext('2d'), img, sx, sy, bufW, bufW, null, pet.archetype, !!pet.isShiny);
       img.onerror = () => {
         // Stage 3/4 not uploaded yet — fall back to stage 2
         const fallback = new Image();
@@ -2876,6 +2870,8 @@ window.App = {
         const card = document.createElement('div');
         card.className = 'bdg-world';
         card.style.setProperty('--wc', WC[w]);
+        // průhledné odstíny barvy světa (místo color-mix – ten starší Android WebView / Safari < 16.2 neumí)
+        card.style.setProperty('--wc-soft', WC[w] + '59'); card.style.setProperty('--wc-mid', WC[w] + 'b3'); card.style.setProperty('--wc-faint', WC[w] + '2e');
         card.innerHTML = `
           <div class="bdg-medal lvl${lvl}"><span>${cur.e || '🏅'}</span><i>${lvl + 1}</i></div>
           <div class="bdg-info">
@@ -2931,6 +2927,8 @@ window.App = {
       ? 'Tvoje jedinečné ID pro párování soupeřů a žebříčky. Klepnutím zkopíruješ.'
       : 'Your unique ID for matchmaking and leaderboards. Tap to copy.');
     this._setText('ssPlayerId',  p?.id || '—');
+    // Číslo sestavení = verze service workeru (sw.js VERSION) → hned je vidět, jestli telefon nemá starou verzi
+    window.caches?.keys?.().then(k => { const v = (k.find(x => /^gream-v\d+-static$/.test(x)) || '').replace('-static', ''); this._setText('ssBuild', `Gream 1.1 · ${v || 'web'}`); }).catch(() => {});
     // Difficulty section
     const cs = getLang() === 'cs';
     this._setText('ss-diff-title', cs ? 'Obtížnost' : 'Difficulty');
@@ -3312,7 +3310,7 @@ window.App = {
     const mine = (JSON.parse(localStorage.getItem('gream_spot_tokens') || '[]')).includes(h.tok);
     el.innerHTML = `<canvas width="44" height="44"></canvas><div><b>${mine ? t.spot_mine : t.spot_held}</b><br>${ARCHETYPES[h.arch]?.name?.[getLang()] || h.arch} · ${h.score} ${t.spot_pts}${mine ? '' : ` · ${t.spot_beat}`}</div>`;
     const { drawFighter } = await import('./arena.js');
-    drawFighter(el.querySelector('canvas'), h.arch, h.stage, { acc: h.acc });
+    drawFighter(el.querySelector('canvas'), h.arch, h.stage);
   },
 
   // ─── Výprava dne: štítek na mapě + seznam míst s navigací ───
@@ -3569,7 +3567,7 @@ window.App = {
   // ═══════════════════════════════════
   //  WARDROBE
   // ═══════════════════════════════════
-  _wardTab: 'acc',
+  _wardTab: 'decor',
   _wardAvatarSub: 'chars',   // avatars sub-tab: 'chars' | 'greams' | 'emoji'
 
   wardAvatarSub(sub) {
@@ -3589,7 +3587,7 @@ window.App = {
     this._setText('wardTitle', tr().ward_title);
     document.querySelectorAll('.shop-tabs [data-l]').forEach(el => { el.textContent = t[el.dataset.l] || ''; });
 
-    const safeTab = ['acc','decor','boosts','avatars','frames','bg'].includes(this._wardTab) ? this._wardTab : 'acc';
+    const safeTab = ['decor','boosts','avatars','frames','bg'].includes(this._wardTab) ? this._wardTab : 'decor';
     this.wardSwitchTab(safeTab);
   },
 
@@ -3684,8 +3682,6 @@ window.App = {
       this._renderWardrobeGreams();
     } else if (tab === 'boosts') {
       this._renderWardrobeBoosts();
-    } else if (tab === 'acc') {
-      this._renderWardrobeAccessories();
     } else if (tab === 'decor') {
       this._renderWardrobeDecor();
     } else if (tab === 'bg') {
@@ -3729,34 +3725,6 @@ window.App = {
       Feedback.error();
       this._showToast(lang === 'cs' ? 'Nedostatek semínek 🌱' : 'Not enough seeds 🌱');
     }
-  },
-
-  _renderWardrobeAccessories() {
-    const p = Profiles.active();
-    if (!p) return;
-    const t = tr(), lang = getLang();
-    const grid = document.getElementById('wardGrid');
-    if (!grid) return;
-    grid.style.cssText = 'display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:420px;margin:0 auto';
-    grid.innerHTML = `<div class="shop-hint" style="grid-column:1/-1">${t.shop_acc_hint}</div>`;
-    const seeds = Skins.getSeeds(p.id);
-    const equipped = Skins.getAccessory(p.id);
-    SKIN_CATALOG.accessories.forEach(acc => {
-      const owned = Skins.isAccessoryOwned(p.id, acc.id);
-      const isOn = equipped === acc.id;
-      const card = document.createElement('button');
-      card.className = 'shop-item' + (isOn ? ' on' : owned ? ' owned' : '') + (!owned && seeds < acc.cost ? ' poor' : '');
-      card.innerHTML = `${acc.img ? `<img src="${acc.img}" alt="">` : `<span class="shop-emoji">${acc.emoji}</span>`}
-        <span class="shop-name">${acc.name[lang] || acc.name.cs}</span>
-        <span class="shop-state">${isOn ? t.shop_equipped : owned ? t.shop_owned : '🌱 ' + acc.cost}</span>`;
-      card.onclick = () => {
-        if (isOn) { Skins.unequipAccessory(p.id); Feedback.tap(); this._renderWardrobeAccessories(); return; }
-        if (Skins.equipAccessory(p.id, acc.id)) {
-          Feedback.success(); this._setText('wardSeeds', Skins.getSeeds(p.id)); this._renderWardrobeAccessories();
-        } else { Feedback.error(); this._showToast(t.shop_no_seeds); }
-      };
-      grid.appendChild(card);
-    });
   },
 
   // ─── Výzdoba v zahradě (za greamíkem) ───
@@ -3987,7 +3955,7 @@ window.App = {
       const born = g.birth ? t.birth_line(g.birth.place, new Date(g.birth.at).toLocaleDateString(lang === 'cs' ? 'cs-CZ' : 'en-GB')) : '—';
       const row = (k, v) => `<div class="gd-row"><span>${k}</span><b>${v}</b></div>`;
       box.innerHTML = `
-        <div class="gd-hero"><canvas data-sprite-sheet="img/greamici/${g.archetype}_${Math.min(g.stage, 4)}.png" data-sprite-mood="happy" data-arch="${g.archetype}" data-shiny="${g.isShiny ? '1' : ''}" ${isActive && Skins.getAccessory(p.id) ? `data-acc="${Skins.getAccessory(p.id)}"` : ''} width="132" height="132" class="${g.isShiny ? 'shiny' : ''}"></canvas></div>
+        <div class="gd-hero"><canvas data-sprite-sheet="img/greamici/${g.archetype}_${Math.min(g.stage, 4)}.png" data-sprite-mood="happy" data-arch="${g.archetype}" data-shiny="${g.isShiny ? '1' : ''}" width="132" height="132" class="${g.isShiny ? 'shiny' : ''}"></canvas></div>
         ${g.isShiny ? `<div class="gd-shiny">${t.greams_shiny}</div>` : ''}
         ${row(t.greams_world, `${WORLD_EMOJIS[world] || ''} ${t.worlds?.[world] || world}`)}
         ${row(t.greams_stage, `${STAGE[g.stage] || ''} · ${nextAt ? t.greams_next(Math.max(0, nextAt - (g.tasksFor || 0)), STAGE[g.stage + 1]) : t.greams_max}`)}
@@ -4406,7 +4374,7 @@ window.App = {
     const toast = document.createElement('div');
     toast.id = 'app-feedback-toast';
     toast.style.cssText = `
-      position:fixed; bottom:120px; left:50%; transform:translateX(-50%);
+      position:fixed; bottom:calc(120px + env(safe-area-inset-bottom)); left:16px; right:16px; margin:0 auto; width:fit-content;   /* bez translateX – animace slideUp by ho přepsala a hláška by ujela doprava */
       background:#1a3d0a; color:white; padding:14px 22px;
       border-radius:50px; font-family:'Nunito',sans-serif;
       font-size:15px; font-weight:700; z-index:999;

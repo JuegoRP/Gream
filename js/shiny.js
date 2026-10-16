@@ -38,7 +38,7 @@ export function shinySource(img, arch) {
       if (o) { d[i] = o[0]; d[i + 1] = o[1]; d[i + 2] = o[2]; }
     }
     ctx.putImageData(im, 0, 0);
-    c.src = img.src;                                   // aby šlo podle src poznat stádium (accessories)
+    c.src = img.src;                                   // aby šlo podle src poznat stádium (_drawSpriteCell)
     cache.set(key, c);
     return c;
   } catch { return img; }

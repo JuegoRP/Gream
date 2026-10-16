@@ -258,7 +258,7 @@ export const Battle = {
       b.innerHTML = `<canvas></canvas>${r.name || ARCHETYPE_NAME(r.arch)}${r.loan ? `<span class="loan">${tr().battle_loan}</span>` : ''}`;
       b.onclick = () => { pick = r; pickEl.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); showSkill(); try { localStorage.setItem('gream_battle_pick_' + p.id, r.id || r.arch); } catch {} };
       pickEl.appendChild(b);
-      requestAnimationFrame(() => drawFighter(b.querySelector('canvas'), r.arch, r.stage, { shiny: r.shiny, acc: Skins.getAccessory(p.id) }));
+      requestAnimationFrame(() => drawFighter(b.querySelector('canvas'), r.arch, r.stage, { shiny: r.shiny }));
     });
     showSkill();
 
@@ -414,11 +414,11 @@ export const Battle = {
       const p2 = second ? Profiles.all().find(x => x.id === second) : null;
       const name2 = p2 ? p2.name : (guest.value.trim() || t.family_guest);
       const f2 = fighterOf(p2?.id);
-      this._family = { names: [p.name || t.battle_you, name2], pids: [p.id, p2?.id || null], acc: [Skins.getAccessory(p.id), p2 ? Skins.getAccessory(p2.id) : null] };
+      this._family = { names: [p.name || t.battle_you, name2], pids: [p.id, p2?.id || null] };
       this._daily = false; this._diff = diff === 'extreme' && !Subscription.get(p.id).isPremium ? 'hard' : diff; this._outdoor = false; this._reward = 0; this._entry = 0;
       this._pack = this._packSel?.() || '';
       this._q = pickQuestions(this._diff, null, this._pack);
-      this._rival = { ...f2, name: name2, acc: this._family.acc[1], bot: false, family: true };
+      this._rival = { ...f2, name: name2, bot: false, family: true };
       ov.remove();
       this._run(pick1 || fighterOf(p.id));
     };
@@ -461,8 +461,8 @@ export const Battle = {
       <button class="bt-report" id="btReport">🚩 ${cs ? 'Nahlásit otázku' : 'Report question'}</button>`;
     document.body.appendChild(scr);
     this._arena = new Arena(scr.querySelector('.ar-wrap'), {
-      me: { ...pick, acc: this._family ? this._family.acc[0] : Skins.getAccessory(p.id), name: `${this._family ? this._family.names[0] : t.battle_you} · ${pick.name || ARCHETYPE_NAME(pick.arch)}` },
-      op: { arch: rival.arch, stage: rival.stage, shiny: !!rival.shiny, acc: rival.acc || null, name: `${rival.name} · ${ARCHETYPE_NAME(rival.arch)}` },
+      me: { ...pick, name: `${this._family ? this._family.names[0] : t.battle_you} · ${pick.name || ARCHETYPE_NAME(pick.arch)}` },
+      op: { arch: rival.arch, stage: rival.stage, shiny: !!rival.shiny, name: `${rival.name} · ${ARCHETYPE_NAME(rival.arch)}` },
       labels: { energy: t.battle_energy, superEffective: t.battle_super_eff, effective: t.battle_half_eff, crit: t.battle_crit },
     });
     this._arena.update(this._f);
@@ -693,7 +693,7 @@ export const Battle = {
       let toks = []; try { toks = JSON.parse(localStorage.getItem('gream_spot_tokens') || '[]'); } catch {}
       const tok = Math.random().toString(36).slice(2, 12);
       const spotId = this._spot.id;
-      Net.spotClaim({ id: spotId, arch: this._me.arch, stage: this._me.stage || 2, acc: Skins.getAccessory(p.id) || null, score, tok }).then(r => {
+      Net.spotClaim({ id: spotId, arch: this._me.arch, stage: this._me.stage || 2, score, tok }).then(r => {
         if (r?.held) { toks.push(tok); try { localStorage.setItem('gream_spot_tokens', JSON.stringify(toks.slice(-200))); } catch {} window.App?._showToast?.(`👑 ${t.spot_won(score)}`); }
         else if (r) window.App?._showToast?.(t.spot_not_enough(score, r.best));
       });
@@ -704,7 +704,7 @@ export const Battle = {
     Net.battleResult({
       pid: p.id, name: p.name || 'Hráč', difficulty: this._diff,
       score: myCorrect, oppScore: this._correct[1], win, oppRating: rival.rating || 1000,
-      arch: this._me.arch, stage: this._me.stage || 2, acc: Skins.getAccessory(p.id) || null, answers: this._log.slice(0, ROUNDS), ko: win && this._f[1].hp <= 0,
+      arch: this._me.arch, stage: this._me.stage || 2, answers: this._log.slice(0, ROUNDS), ko: win && this._f[1].hp <= 0,
     }).then(r => { if (r && r.rating) { const st = loadStats(p.id); st.rating = r.rating; st.rank = r.rank; saveStats(p.id, st); } });
 
     const hpLeft = Math.max(0, Math.round(this._f[0].hp)), opLeft = Math.max(0, Math.round(this._f[1].hp));
@@ -728,7 +728,7 @@ export const Battle = {
         <button id="battleClose" style="width:100%;padding:11px;border:none;background:none;color:#999;font-family:inherit;font-weight:700;font-size:13px;cursor:pointer">${cs?'Zpět do zahrady':'Back to garden'}</button>
       </div>`;
     document.body.appendChild(ov);
-    drawFighter(ov.querySelector('#brSprite'), this._me.arch, this._me.stage, { mood: win ? 'happy' : 'sad', shiny: this._me.shiny, acc: Skins.getAccessory(p.id) });
+    drawFighter(ov.querySelector('#brSprite'), this._me.arch, this._me.stage, { mood: win ? 'happy' : 'sad', shiny: this._me.shiny });
     ov.querySelector('#battleAgain').onclick = () => { ov.remove(); this.intro({ outdoor: this._outdoor }); };
     ov.querySelector('#battleBoard').onclick = () => this.showLeaderboard();
     ov.querySelector('#battleClose').onclick = () => { ov.remove(); Audio.switchScene?.('menu'); try { window.App?.renderMap?.(); } catch {} };

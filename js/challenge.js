@@ -736,7 +736,7 @@ export const Challenge = {
     const toast = document.createElement('div');
     toast.id = 'gream-feedback-toast';
     toast.style.cssText = `
-      position:fixed; bottom:120px; left:50%; transform:translateX(-50%);
+      position:fixed; bottom:calc(120px + env(safe-area-inset-bottom)); left:16px; right:16px; margin:0 auto; width:fit-content;
       background:#1a3d0a; color:white; padding:14px 22px;
       border-radius:50px; font-family:'Nunito',sans-serif;
       font-size:15px; font-weight:700; z-index:999;

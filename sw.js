@@ -1,10 +1,12 @@
 // ═══════════════════════════════════
 //  GREAM — sw.js  v3
-//  Strategy: network-first for app code (always fresh)
-//            cache-first for media (audio, images, fonts, MapLibre, map tiles from our server)
+//  Strategy: network-first for app code + CSS, vždy s ověřením na serveru (cache:'no-cache' → 304, levné)
+//            cache-first for media (audio, images, fonts, MapLibre, map tiles); po nové verzi se média
+//            stahují znovu s ověřením, takže opravený obrázek nezůstane viset ze staré mezipaměti prohlížeče.
+//  2026-10-16: dřív CSS cache-first + přednačtení z HTTP mezipaměti → po aktualizaci se ukazoval starý vzhled/obrázky.
 // ═══════════════════════════════════
 
-const VERSION = 'gream-v27';
+const VERSION = 'gream-v29';
 const STATIC_CACHE = `${VERSION}-static`;
 const TILES_CACHE  = `gream-tiles-v2`;   // vektorové dlaždice z 3rstudio.eu/api/gream/tiles
 
@@ -22,7 +24,7 @@ const STATIC_ASSETS = [
 self.addEventListener('install', e => {
   e.waitUntil(
     caches.open(STATIC_CACHE)
-      .then(c => c.addAll(STATIC_ASSETS).catch(err => console.warn('SW install partial:', err)))
+      .then(c => c.addAll(STATIC_ASSETS.map(u => new Request(u, { cache: 'reload' }))).catch(err => console.warn('SW install partial:', err)))
       .then(() => self.skipWaiting())
   );
 });
@@ -56,14 +58,14 @@ self.addEventListener('fetch', e => {
   }
   if (url.hostname !== self.location.hostname) return;   // nic jiného cizího aplikace nenačítá
 
-  // Local: JS modules / screens / json → network-first (always fresh code)
-  if (url.pathname.match(/\.(js|json)$/) || url.pathname.startsWith('/screens/')) {
+  // Local: JS modules / screens / json / CSS / HTML → network-first (always fresh code)
+  if (url.pathname.match(/\.(js|json|css|html)$/) || url.pathname.includes('/screens/')) {
     e.respondWith(networkFirst(e.request));
     return;
   }
 
-  // Local: images, audio, css → cache-first
-  if (url.pathname.match(/\.(png|jpg|jpeg|svg|webp|gif|wav|mp3|ogg|css|woff2)$/)) {
+  // Local: images, audio, fonts → cache-first
+  if (url.pathname.match(/\.(png|jpg|jpeg|svg|webp|gif|wav|mp3|ogg|woff2)$/)) {
     e.respondWith(cacheFirst(e.request, STATIC_CACHE));
     return;
   }
@@ -78,7 +80,7 @@ async function cacheFirst(req, cacheName) {
   const cached = await cache.match(req);
   if (cached) return cached;
   try {
-    const res = await fetch(req);
+    const res = await fetch(req, { cache: 'no-cache' });   // první stažení v této verzi vždy ověřit na serveru
     if (res.ok && res.type !== 'opaque') {
       cache.put(req, res.clone()).catch(() => {});
     }
@@ -90,7 +92,7 @@ async function cacheFirst(req, cacheName) {
 
 async function networkFirst(req) {
   try {
-    const res = await fetch(req);
+    const res = await fetch(req, { cache: 'no-cache' });
     // Cache successful responses for offline fallback
     if (res.ok) {
       const cache = await caches.open(STATIC_CACHE);

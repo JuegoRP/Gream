@@ -56,7 +56,6 @@
   .spr.aura { animation:auraPulse 2.4s ease-in-out infinite; }
   .m-walk .spr.aura { animation:greamWalk 1.1s ease-in-out infinite, auraPulse 2.4s ease-in-out infinite; }
   .spr.tapped { animation:greamPop .4s ease !important; }
-  .acc-grid .cell { height:132px; }
   .garden-frame { width:100%; max-width:430px; height:min(820px, 88vh); border:0; border-radius:22px; box-shadow:0 6px 24px rgba(0,0,0,.18); background:#cbe3a0; display:block; }
   .arena { max-width:440px; }
   .ar-wrap { margin:10px 0; }
@@ -65,7 +64,6 @@
   @media (max-width:560px) {
     .grid { grid-template-columns:52px repeat(var(--cols,4), 1fr); gap:5px; }
     .cell { height:124px; border-radius:12px; }
-    .acc-grid .cell { height:112px; }
     .cell .lbl { font-size:10px; left:5px; top:4px; }
     .grid .rowname { font-size:12px; }
     .grid .rowname small { display:none; }
@@ -75,7 +73,6 @@
 <body>
 <nav><div class="wrap">
   <a href="tools/greamici.html#stadia">🥚 Stádia</a>
-  <a href="tools/greamici.html#doplnky">🎩 Doplňky</a>
   <a href="tools/greamici.html#zahrada">🏡 Zahrada</a>
   <a href="tools/greamici.html#chvile">✨ Velké chvíle</a>
   <a href="tools/greamici.html#arena">⚔️ Aréna</a>
@@ -91,28 +88,17 @@
       <label>Pohyb <select id="mv"><option value="walk">chůze (zahrada)</option><option value="idle">pohupování</option><option value="stand">stojí</option></select></label>
       <label>Nálada <select id="mood"><option value="happy">veselý</option><option value="sad">smutný (porážka v aréně)</option></select></label>
       <label><input type="checkbox" id="shiny"> zářivý (1 : 100)</label>
-      <label>Doplněk <select id="acc"><option value="">žádný</option></select></label>
     </div>
     <div class="grid" id="grid"></div>
   </section>
 
-  <section id="doplnky">
-    <h2>🎩 Doplňky</h2>
-    <p class="note">Každý doplněk na každém greamíkovi ve všech stádiích. Hvězdná záře = zlatá svatozář, zářivý greamík = jiné barvy a stříbrné jiskření.</p>
-    <div class="ctrl">
-      <label>Doplněk <select id="acc2"></select></label>
-      <button class="btn" id="accNext">Další ▶</button>
-      <label><input type="checkbox" id="shiny2"> zářivý</label>
-    </div>
-    <div class="grid acc-grid m-stand" id="accGrid" style="--cols:3"></div>
-  </section>
 
   <section id="zahrada">
     <h2>🏡 Zahrada</h2>
     <p class="note">Skutečná hra s ukázkovým profilem (jen v paměti). Klepni na greamíka v zahradě.</p>
     <div class="ctrl">
       <button class="btn pri" data-g="full">Plná zahrada</button>
-      <button class="btn" data-g="three">3 greamíci + doplněk</button>
+      <button class="btn" data-g="three">3 greamíci + vejce</button>
       <button class="btn" data-g="egg">Začátek (vejce)</button>
     </div>
     <iframe class="garden-frame" id="gardenFrame" title="Zahrada"></iframe>
@@ -163,8 +149,15 @@
 import { T } from './js/i18n.js';
 import { ARCHETYPES } from './js/gream.js';
 import { SKIN_CATALOG } from './js/skins.js';
-import { drawAccessory, preloadAccessories } from './js/accessories.js';
 import { shinySource } from './js/shiny.js';
+// Vše staticky: Safari u dynamického import() ignoruje <base href> a hledal by tools/js/… (404)
+import { Profiles } from './js/profiles.js';
+import { Gream } from './js/gream.js';
+import { Skins } from './js/skins.js';
+import { Challenge } from './js/challenge.js';
+import { Arena } from './js/arena.js';
+import { RULES, SPECIALS, newFighter } from './js/battle-rules.js';
+import { Audio } from './js/audio.js';
 
 const lang = 'cs', L = T[lang];
 const ARCH = Object.keys(ARCHETYPES);
@@ -172,12 +165,11 @@ const SCALE = { 1: 0.85, 2: 1.0, 3: 1.2, 4: 1.56 };           // jako zahrada (a
 const NEED = { 1: 'start', 2: '12 výzev', 3: '60 výzev', 4: '250 výzev' };
 const $ = (id) => document.getElementById(id);
 const fail = (sec, e) => { console.error(e); $(sec).insertAdjacentHTML('beforeend', `<div class="err">Tahle část se nenačetla: ${String(e && (e.stack || e.message) || e).slice(0, 400)}</div>`); };
-preloadAccessories();
 
 // ─── Kreslení buňky listu 2×2 (pravý sloupec: nahoře smutný, dole veselý) – stejný ořez jako ve hře ───
 const imgs = {};
 const load = (src) => imgs[src] ||= new Promise(r => { const i = new Image(); i.onload = () => r(i); i.onerror = () => r(null); i.src = src; });
-async function drawCell(cv, src, { mood = 'happy', acc = null, arch = null, whole = false, stage = 2, shiny = false } = {}) {
+async function drawCell(cv, src, { mood = 'happy', arch = null, whole = false, shiny = false } = {}) {
   let img = await load(src); if (!img) return;
   if (shiny && arch) img = shinySource(img, arch);
   const dpr = Math.min(devicePixelRatio || 1, 3), W = cv.clientWidth || 80, H = cv.clientHeight || 80;
@@ -193,7 +185,6 @@ async function drawCell(cv, src, { mood = 'happy', acc = null, arch = null, whol
   const w = x1 - x0 + 1, h = y1 - y0 + 1, s = Math.min(cv.width * 0.92 / w, cv.height * 0.92 / h);
   const dw = Math.round(w * s), dh = Math.round(h * s), dx = Math.round((cv.width - dw) / 2), dy = cv.height - dh;
   ctx.drawImage(off, x0, y0, w, h, dx, dy, dw, dh);
-  if (acc && arch) drawAccessory(ctx, { x: dx, y: dy, w: dw, h: dh }, acc, arch, () => drawCell(cv, src, { mood, acc, arch, whole, stage, shiny }), stage);
 }
 // Shim pro overlaye z challenge.js (vylíhnutí, vývoj) – ty volají App._initSpriteCanvases
 window.App = { _initSpriteCanvases(root) {
@@ -205,13 +196,11 @@ window.App = { _initSpriteCanvases(root) {
 } };
 
 const optArch = ARCH.map(a => `<option value="${a}">${ARCHETYPES[a].name[lang]}</option>`).join('');
-const accOpts = SKIN_CATALOG.accessories.map(a => `<option value="${a.id}">${a.emoji} ${a.name[lang]}</option>`).join('');
 
 // ─── 1. Stádia ───
 try {
-  $('acc').insertAdjacentHTML('beforeend', accOpts);
   const renderGrid = () => {
-    const g = $('grid'), mood = $('mood').value, shiny = $('shiny').checked, acc = $('acc').value || null;
+    const g = $('grid'), mood = $('mood').value, shiny = $('shiny').checked;
     g.className = 'grid m-' + $('mv').value;
     g.innerHTML = '<div></div>' + [1, 2, 3, 4].map(n => `<div class="hd">${n === 1 ? 'Vejce' : 'Stádium ' + n}</div>`).join('');
     const base = innerWidth < 560 ? 52 : 80;
@@ -220,47 +209,22 @@ try {
       [1, 2, 3, 4].forEach(n => {
         const sz = Math.round(base * SCALE[n]);
         const cell = document.createElement('div'); cell.className = 'cell';
-        cell.innerHTML = `<span class="lbl">${NEED[n]}</span><canvas class="spr${shiny && n > 1 ? ' shiny' : ''}${acc === 'acc_star' && n > 1 ? ' aura' : ''}" style="width:${sz}px;height:${sz}px"></canvas>`;
+        cell.innerHTML = `<span class="lbl">${NEED[n]}</span><canvas class="spr${shiny && n > 1 ? ' shiny' : ''}" style="width:${sz}px;height:${sz}px"></canvas>`;
         const cv = cell.querySelector('canvas');
         if (n === 1) drawCell(cv, 'img/greamici/seed_1.png', { whole: true });
-        else drawCell(cv, `img/greamici/${a}_${n}.png`, { mood, acc: acc === 'acc_star' ? null : acc, arch: a, stage: n, shiny });
+        else drawCell(cv, `img/greamici/${a}_${n}.png`, { mood, arch: a, stage: n, shiny });
         cell.onclick = async () => { cv.classList.remove('tapped'); void cv.offsetWidth; cv.classList.add('tapped'); setTimeout(() => cv.classList.remove('tapped'), 420);
-          try { const { Audio } = await import('./js/audio.js'); Audio.onUserGesture?.(); Audio.playCry(a, Math.max(2, n)); } catch {} };
+          try { Audio.onUserGesture?.(); Audio.playCry(a, Math.max(2, n)); } catch {} };
         g.appendChild(cell);
       });
     });
   };
-  ['mv', 'mood', 'shiny', 'acc'].forEach(id => $(id).onchange = renderGrid);
+  ['mv', 'mood', 'shiny'].forEach(id => $(id).onchange = renderGrid);
   renderGrid();
 } catch (e) { fail('stadia', e); }
 
-// ─── 2. Doplňky ───
-try {
-  $('acc2').innerHTML = accOpts;
-  const renderAcc = () => {
-    const g = $('accGrid'), acc = $('acc2').value, shiny = $('shiny2').checked;
-    g.innerHTML = '<div></div>' + [2, 3, 4].map(n => `<div class="hd">Stádium ${n}</div>`).join('');
-    const sz = innerWidth < 560 ? 84 : 110;
-    ARCH.forEach(a => {
-      g.insertAdjacentHTML('beforeend', `<div class="rowname">${ARCHETYPES[a].name[lang]}</div>`);
-      [2, 3, 4].forEach(n => {
-        const cell = document.createElement('div'); cell.className = 'cell';
-        cell.innerHTML = `<canvas class="spr${acc === 'acc_star' ? ' aura' : ''}${shiny ? ' shiny' : ''}" style="width:${sz}px;height:${sz}px"></canvas>`;
-        drawCell(cell.querySelector('canvas'), `img/greamici/${a}_${n}.png`, { acc: acc === 'acc_star' ? null : acc, arch: a, stage: n, shiny });
-        g.appendChild(cell);
-      });
-    });
-  };
-  $('acc2').onchange = renderAcc; $('shiny2').onchange = renderAcc;
-  $('accNext').onclick = () => { const s = $('acc2'); s.selectedIndex = (s.selectedIndex + 1) % s.options.length; renderAcc(); };
-  renderAcc();
-} catch (e) { fail('doplnky', e); }
-
 // ─── 3. Zahrada: ukázkový profil vytvořený skutečnými moduly → předá se hře v iframe (index.html?demo=1) ───
 try {
-  const { Profiles } = await import('./js/profiles.js');
-  const { Gream } = await import('./js/gream.js');
-  const { Skins } = await import('./js/skins.js');
   const build = (kind) => {
     localStorage.clear(); localStorage.setItem('gream_lang', 'cs'); localStorage.setItem('gream_tutorial_v1', '1');
     const p = Profiles.create({ name: 'Ema', avatar: '🦊', lang: 'cs' }); Profiles.setActive(p.id);
@@ -275,7 +239,6 @@ try {
       if (kind === 'three') Gream.dropEgg(p.id);
       const d2 = data(); add.forEach(([a, st, sh]) => { const g = d2[p.id].find(x => x.archetype === a); grow(g, a, st, { isShiny: sh }); }); put(d2);
       Skins.addSeeds(p.id, 5000);
-      Skins.buyAccessory(p.id, kind === 'full' ? 'acc_crown' : 'acc_cap');
       if (kind === 'full') SKIN_CATALOG.decor.forEach(x => Skins.buyDecor(p.id, x.id));
     }
     sessionStorage.setItem('gream_demo', JSON.stringify(localStorage._dump()));
@@ -288,7 +251,6 @@ try {
 // ─── 4. Velké chvíle: skutečné overlaye z challenge.js ───
 try {
   $('evArch').innerHTML = optArch;
-  const { Challenge } = await import('./js/challenge.js');
   $('btnHatch').onclick = () => Challenge._showArchetypeReveal({ resolvedArchetype: $('evArch').value, isShiny: $('evShiny').checked });
   const evo = (from, to) => Challenge._showEvolution({ gream: { archetype: $('evArch').value, stage: to, name: '', isShiny: $('evShiny').checked }, fromStage: from, toStage: to, isShiny: $('evShiny').checked, evolved: true });
   $('btnEvo3').onclick = () => evo(2, 3);
@@ -297,8 +259,6 @@ try {
 
 // ─── 5. Aréna ───
 try {
-  const { Arena } = await import('./js/arena.js');
-  const { RULES, SPECIALS, newFighter } = await import('./js/battle-rules.js');
   ['meArch', 'opArch'].forEach(id => $(id).innerHTML = optArch);
   $('opArch').value = 'kamen';
   let arena, f;

@@ -6,7 +6,6 @@
 // ═══════════════════════════════════
 
 import { RULES } from './battle-rules.js';
-import { drawAccessory } from './accessories.js';
 import { shinySource } from './shiny.js';
 
 const REDUCED = () => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
@@ -40,7 +39,7 @@ export function spriteSrc(arch, stage) {
   return `img/greamici/${arch}_${Math.max(2, Math.min(4, stage || 2))}.png`;
 }
 // mood: 'happy' (spodní buňka) | 'sad' (horní buňka)
-export async function drawFighter(canvas, arch, stage, { mood = 'happy', flip = false, shiny = false, acc = null } = {}) {
+export async function drawFighter(canvas, arch, stage, { mood = 'happy', flip = false, shiny = false } = {}) {
   let img = await loadImg(spriteSrc(arch, stage));
   if (!img || !canvas?.getContext) return;
   if (shiny) img = shinySource(img, arch);
@@ -64,10 +63,8 @@ export async function drawFighter(canvas, arch, stage, { mood = 'happy', flip = 
   ctx.save();
   if (flip) { ctx.translate(W, 0); ctx.scale(-1, 1); }
   ctx.drawImage(off, x0, y0, w, h, Math.round((W - dw) / 2), W - dh, dw, dh);
-  if (acc) drawAccessory(ctx, { x: Math.round((W - dw) / 2), y: W - dh, w: dw, h: dh }, acc, arch, () => drawFighter(canvas, arch, stage, { mood, flip, shiny, acc }), stage);
   ctx.restore();
   canvas.classList.toggle('shiny', !!shiny);
-  canvas.classList.toggle('aura', acc === 'acc_star');
 }
 
 // ─── Aréna ───
@@ -104,8 +101,8 @@ export class Arena {
     };
     this.parts = []; this._raf = null;
     this.sprite = this.el.side.map(s => s.querySelector('.ar-sprite'));
-    drawFighter(this.sprite[0], me.arch, me.stage, { shiny: me.shiny, acc: me.acc });
-    drawFighter(this.sprite[1], op.arch, op.stage, { flip: true, shiny: op.shiny, acc: op.acc });
+    drawFighter(this.sprite[0], me.arch, me.stage, { shiny: me.shiny });
+    drawFighter(this.sprite[1], op.arch, op.stage, { flip: true, shiny: op.shiny });
     this._resizeFx();
     this._onResize = () => this._resizeFx();
     window.addEventListener('resize', this._onResize);
@@ -202,7 +199,7 @@ export class Arena {
     const win = this.el.side[winnerIdx].querySelector('.ar-mon');
     lose.classList.add('ko'); win.classList.add('victory');
     const loserArch = winnerIdx === 0 ? this.op : this.me;
-    drawFighter(this.sprite[1 - winnerIdx], loserArch.arch, loserArch.stage, { mood: 'sad', flip: winnerIdx === 0, shiny: loserArch.shiny, acc: loserArch.acc });
+    drawFighter(this.sprite[1 - winnerIdx], loserArch.arch, loserArch.stage, { mood: 'sad', flip: winnerIdx === 0, shiny: loserArch.shiny });
     if (!REDUCED()) {
       const arch = winnerIdx === 0 ? this.me.arch : this.op.arch;
       const W = this.el.fx.width;
