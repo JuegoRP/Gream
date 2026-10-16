@@ -35,7 +35,7 @@ export function challengeId(world, difficulty, enText) {
 export const Net = {
   base: BASE,
   report:         (data)              => req('POST', '/report', data),
-  battleOpponent: (difficulty, rating, pid) => req('POST', '/battle/opponent', { difficulty, rating, pid }),
+  battleOpponent: (difficulty, rating, pid) => req('POST', '/battle/opponent', { difficulty, rating, pid }, 10000),
   battleResult:   (data)              => req('POST', '/battle/result', data),
   spots:          (ids)               => req('GET', '/spots?ids=' + encodeURIComponent(ids.join(','))),
   spotClaim:      (data)              => req('POST', '/spots/claim', data),
@@ -47,4 +47,5 @@ export const Net = {
   poiCounts:      (ids)              => req('GET', '/poi/counts?ids=' + encodeURIComponent((ids || []).join(','))),
   rankSubmit:     (data)             => req('POST', '/rank/submit', data),
   rankTop:        ()                 => req('GET', '/rank/top'),
+  promo:          (code)             => req('POST', '/promo', { code }),
 };

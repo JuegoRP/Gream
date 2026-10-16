@@ -75,13 +75,10 @@ export const Challenge = {
       if (picked) { Skins.consumePendingBoost(p.id); difficulty = picked; }
     }
 
-    // Extreme is a Premium-only difficulty. Free users fall back to Hard.
-    // (When PAYWALL_ENABLED is off, isPremium is always true → extreme stays open.)
-    if (difficulty === 'extreme' && !Subscription.get(p.id).isPremium) {
-      difficulty = 'hard';
-      this._showToast(lang === 'cs'
-        ? '⚡ Extrémní obtížnost je součást Premium — hraješ Těžké'
-        : '⚡ Extreme is a Premium difficulty — playing Hard');
+    // Zdarma (po týdnu zdarma) jen lehká a střední obtížnost; bez zapnutého placení vše otevřené
+    if (!Subscription.difficultyAllowed(difficulty)) {
+      difficulty = 'medium';
+      this._showToast(tr().plus_reason.difficulty);
     }
 
     this._difficulty = difficulty;
@@ -820,6 +817,11 @@ export const Challenge = {
         const lang = localStorage.getItem('gream_lang') || 'en';
         setTimeout(() => this._showToast(lang === 'cs' ? `🌟 +5 semínek za správné místo!` : `🌟 +5 bonus seeds for the right spot!`), 600);
       }
+      // Vajíčko na mapě: stačí splnit jednu výzvu na místě s vajíčkem
+      if (Expedition.takeEgg(p.id, this._targetPOI.id)) {
+        const egg = Gream.dropEgg(p.id);
+        if (egg) setTimeout(() => this._showToast(tr().egg_found), 1800);
+      }
       // Výprava dne / vzácné místo
       if (result.stepsComplete) {
         const ex = Expedition.complete(p.id, this._targetPOI.id);
@@ -838,17 +840,7 @@ export const Challenge = {
     // ─── Check skin unlocks ───
     const newlyUnlocked = Skins.checkUnlocks(p.id);
 
-    // Nové vajíčko: 8 % po bezchybně splněném odznaku, jen když je košíček prázdný (dropEgg to hlídá)
-    if (result.stepsComplete && (this._wrongCount || 0) === 0 && Math.random() < 0.08) {
-      const { Gream: G } = await import('./gream.js');
-      const newEgg = G.dropEgg(p.id);
-      if (newEgg) {
-        const lang = localStorage.getItem('gream_lang') || 'cs';
-        setTimeout(() => this._showToast(
-          lang === 'cs' ? '🥚 Záhadné vajíčko se přidalo do tvé zahrady!' : '🥚 A mystery egg appeared in your garden!'
-        ), 2500);
-      }
-    }
+    // Nová vajíčka se od 2026-10 nachází jen venku na mapě (Expedition.eggSpot) – za odznak doma už nepadají
 
     if (result.stepsComplete) {
       Feedback.celebrate();

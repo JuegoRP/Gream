@@ -5,7 +5,7 @@
 //  Navigace (index.html) network-first. PŘI KAŽDÉ ZMĚNĚ APLIKACE ZVÝŠIT VERSION.
 // ═══════════════════════════════════
 
-const VERSION = 'gream-v32';
+const VERSION = 'gream-v37';
 const STATIC_CACHE = `${VERSION}-static`;
 const TILES_CACHE  = `gream-tiles-v2`;   // vektorové dlaždice z 3rstudio.eu/api/gream/tiles
 
@@ -18,6 +18,7 @@ const STATIC_ASSETS = [
   'css/components.css',
   'css/themes.css',
   'css/fonts.css',
+  'img/logo/gream-logo.png',
 ];
 
 self.addEventListener('install', e => {

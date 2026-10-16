@@ -37,5 +37,15 @@ ok(Gream.dropEgg('p3') === null, 'třetí ne');
 const egg = Gream.all('p3').find(g => g.stage < 2);
 Gream.feedFromTask('p3', 'logic', false, 'math');
 ok(Gream.all('p3').find(g => g.id === egg.id).tasksFor === 1, 'nové vajíčko dostává úkoly přednostně');
+// Vajíčko na mapě: jen při prázdném košíčku, místo do 1 km, splněním se vyzvedne
+{ const { Expedition } = await import('../js/expedition.js');
+  const pos = { lat: 50.08, lon: 14.42 }, pois = Array.from({ length: 12 }, (_, i) => ({ id: 'n' + i, lat: 50.08 + i * 0.001, lon: 14.42, kind: 'park' }));
+  Expedition.ensure('p9', pois, pos);
+  ok(Expedition.eggSpot('p9', pois, pos, false) === null, 'plný košíček → žádné vajíčko na mapě');
+  const id = Expedition.eggSpot('p9', pois, pos, true);
+  ok(!!id && Expedition.eggSpot('p9', pois, pos, true) === id, 'prázdný košíček → vajíčko na stálém místě');
+  ok(Expedition.takeEgg('p9', id) && !Expedition.takeEgg('p9', id), 'vajíčko jde vyzvednout jen jednou');
+  store.clear(); Gream.createStarter('p10'); for (let i = 0; i < 6; i++) Gream.feedFromTask('p10', 'nature', true, 'plants');
+  ok(Gream.active('p10').stage === 2, 'venku roste 2× rychleji (6 výzev venku = vylíhnutí)'); }
 console.log(fail ? `✗ ${fail} selhalo, ${pass} prošlo` : `✓ Líhnutí: ${pass} prošlo`);
 process.exit(fail ? 1 : 0);

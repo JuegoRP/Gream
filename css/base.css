@@ -65,8 +65,9 @@
   --t-fast: 0.15s; --t-base: 0.25s; --t-slow: 0.4s;
 
   /* Safe areas */
-  --sat: env(safe-area-inset-top, 0px);
-  --sab: env(safe-area-inset-bottom, 0px);
+  /* Android (Capacitor 8 SystemBars) nastavuje --safe-area-inset-*, i když WebView env() nezná; jinak env() (iPhone, novější WebView) */
+  --sat: var(--safe-area-inset-top, env(safe-area-inset-top, 0px));
+  --sab: var(--safe-area-inset-bottom, env(safe-area-inset-bottom, 0px));
 }
 
 /* ─── RESET ─── */
@@ -227,9 +228,7 @@ input, textarea, [contenteditable="true"] {
   -webkit-tap-highlight-color: transparent;
 }
 /* Safe-area insets for iPhone notch */
-body {
-  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-}
+/* (Obrazovky a lišta jsou position:fixed a okraje si počítají samy přes --sat/--sab; body bez odsazení, ať se nic nepočítá dvakrát) */
 
 /* ─── Safari < 15 fallbacks ─── */
 /* aspect-ratio: 1 → fallback for Safari 14 and older */

@@ -46,6 +46,15 @@ function rateLimited(ip) {
   return arr.length > RL_BURST;
 }
 
+// Promo kódy: max 6 pokusů za 10 minut z jedné IP (proti hádání)
+const PL = new Map();
+function promoLimited(ip) {
+  const now = Date.now(), arr = (PL.get(ip) || []).filter(t => now - t < 600000);
+  arr.push(now); PL.set(ip, arr);
+  if (PL.size > 2000) for (const [k, v] of PL) if (!v.length || now - v[v.length - 1] > 600000) PL.delete(k);
+  return arr.length > 6;
+}
+
 const timers = {};
 function persist(name, file, obj) {
   if (timers[name]) return;
@@ -86,7 +95,11 @@ function cleanAnswers(a) {
   return out.length >= 5 ? out : null;
 }
 function pickOpponent(diff, rating, pid) {
-  const pool = (battle.runs[diff] || []).filter(r => r.rating != null && (!pid || r.pid !== pid));
+  let pool = (battle.runs[diff] || []).filter(r => r.rating != null && (!pid || r.pid !== pid));
+  // Přednostně nahrávka hráče ze stejné ligy (stejná obtížnost je daná už výběrem); jinak kdokoli podle hodnocení, nakonec bot
+  const myTier = league.tier[pid] || 'bronze';
+  const sameTier = pool.filter(r => (league.tier[r.pid] || 'bronze') === myTier);
+  if (sameTier.length) pool = sameTier;
   if (pool.length) {
     // closest by rating, small randomness so it's not always the same
     pool.sort((a, b) => Math.abs(a.rating - rating) - Math.abs(b.rating - rating));
@@ -206,6 +219,26 @@ const server = http.createServer((req, res) => {
       .map(x => ({ name: x.name, score: x.score }));
     return send(res, 200, board);
   }
+
+  // ─── Gream Plus promo kódy (pro známé / testery): promo.json se čte při každém pokusu, takže kód jde
+  //     přidat nebo zrušit bez restartu. Generátor: scripts/promo-codes.mjs (jednorázové kódy, max 1).
+  //     { "GREAM-XXXX-XXXX": { "max": 1, "used": 0, "off": false, "note": "", "created": "RRRR-MM-DD" } }
+  //     Bez identifikace zařízení ani hráče – jen počet použití kódu (soukromí, Families policy).
+  if (req.method === 'POST' && p === '/promo') return readBody(req, (d) => {
+    const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket.remoteAddress || 'x';
+    if (!process.env.GREAM_RL_OFF && promoLimited(ip)) return send(res, 429, { ok: false, error: 'rate-limited' });
+    const code = String(d?.code || '').toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 40);
+    if (!code) return send(res, 400, { ok: false, error: 'bad' });
+    const codes = loadJSON(F('promo.json'), {});
+    const key = Object.keys(codes).find(k => k.toUpperCase().replace(/[^A-Z0-9]/g, '') === code);
+    const c = key && codes[key];
+    if (!c || c.off) return send(res, 200, { ok: false, error: 'invalid' });
+    if ((c.used || 0) >= (c.max || 1)) return send(res, 200, { ok: false, error: 'used' });
+    c.used = (c.used || 0) + 1;
+    try { const tmp = F('promo.json.tmp'); fs.writeFileSync(tmp, JSON.stringify(codes, null, 1)); fs.renameSync(tmp, F('promo.json')); }
+    catch (e) { console.error('promo', e.message); return send(res, 500, { ok: false, error: 'server' }); }
+    return send(res, 200, { ok: true });
+  });
 
   if (req.method === 'POST' && p === '/report') return readBody(req, (d) => {
     if (!d) return send(res, 400, { error: 'bad-json' });
@@ -366,9 +399,10 @@ const roundCoord = (v) => Math.round(v / 0.005) * 0.005;
 const POI_TAGS = ['leisure=park', 'leisure=garden', 'leisure=nature_reserve', 'leisure=playground', 'natural=tree', 'natural=spring', 'natural=peak', 'natural=wood', 'natural=water',
   'historic=monument', 'historic=memorial', 'historic=castle', 'historic=ruins', 'historic=wayside_cross', 'historic=boundary_stone', 'amenity=place_of_worship', 'tourism=attraction', 'tourism=viewpoint',
   'amenity=library', 'tourism=museum', 'amenity=planetarium', 'amenity=school', 'amenity=university', 'amenity=post_office', 'information=board', 'information=map',
-  'tourism=artwork', 'tourism=gallery', 'amenity=theatre', 'amenity=arts_centre', 'amenity=cinema', 'amenity=music_venue',
+  'tourism=artwork', 'tourism=gallery', 'amenity=theatre', 'amenity=arts_centre', 'amenity=cinema',
   'amenity=fountain', 'tourism=information', 'amenity=clock', 'amenity=telephone', 'man_made=tower',
-  'amenity=bench', 'amenity=social_centre', 'amenity=community_centre', 'amenity=cafe', 'leisure=sports_centre', 'amenity=hospital', 'amenity=pub', 'amenity=bar'];
+  'amenity=bench', 'amenity=social_centre', 'amenity=community_centre', 'leisure=sports_centre'];
+// Dětská hra: žádné hospody, bary, kavárny, kluby ani nemocnice (2026-10-16 – výprava dne posílala děti do baru)
 const OVERPASS = ['https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter', 'https://overpass.openstreetmap.fr/api/interpreter'];
 const poiCache = new Map(); // klíč buňky → { t, data }
 async function poiCell(lat, lon) {

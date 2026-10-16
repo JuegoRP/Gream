@@ -51,6 +51,7 @@ const GREAM_STYLE = {
 let _mlReady = null;
 let _map = null, _mapHost = null, _userMarker = null, _userPos = null, _userEl = null;
 let _poiLayers = [];          // { poi, el, marker }
+const ADULT_KINDS = new Set(['pub', 'bar', 'cafe', 'music_venue', 'hospital', 'nightclub', 'casino', 'biergarten']);
 let _watchId = null, _onPoiTap = null, _activePoi = null, _allPois = [];
 let _heading = null, _headingOn = false, _destination = null, _destMarker = null;
 let _following = true, _lastFetchCenter = null, _lastOpts = null, _filterWorld = null;
@@ -126,6 +127,7 @@ function stylePoi(wrap, poi) {
   el.querySelector('.gm-poi-icon').textContent = isBattleSpot(poi) && !done ? '⚔️' : (WORLD_EMOJIS[world] || '•');
   el.classList.toggle('exp', !!poi._exp && !poi._expDone);
   el.classList.toggle('rare', !!poi._rare && !poi._rareDone);
+  el.classList.toggle('egg', !!poi._egg);
 }
 
 // ─── Území: sloučené „bubliny“ kolem splněných míst (stabilní tvar podle souřadnic) ───
@@ -234,6 +236,8 @@ function injectStyles() {
     .gm-poi.rare{opacity:1;box-shadow:0 0 0 3px #e7b6ff,0 0 14px 4px rgba(190,120,255,.8);animation:rareGlow 1.6s ease-in-out infinite}
     .gm-poi.rare::after{content:'✦';position:absolute;top:-10px;left:-10px;width:20px;height:20px;border-radius:50%;background:#b77cff;color:#fff;font:900 12px/20px 'Nunito',sans-serif;text-align:center}
     @keyframes rareGlow{50%{box-shadow:0 0 0 4px #f2d6ff,0 0 22px 7px rgba(190,120,255,.9)}}
+    .gm-poi.egg{opacity:1;box-shadow:0 0 0 3px #fff3c4,0 0 14px 4px rgba(255,214,90,.85);animation:rareGlow 1.6s ease-in-out infinite}
+    .gm-poi.egg::before{content:'🥚';position:absolute;top:-14px;right:-12px;font-size:20px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.3));animation:eggWobble 1.6s ease-in-out infinite;transform-origin:50% 90%}
     .gm-poi-badge{position:absolute;top:-10px;right:-14px;background:#1a3d0a;color:#fff;border-radius:10px;font:800 10px 'Nunito',sans-serif;padding:1px 6px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.3)}
     .gm-dest{font-size:28px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.4));pointer-events:none}
     .gm-nav{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);z-index:600;background:rgba(26,61,10,.94);color:#fff;border-radius:16px;padding:12px 16px;display:flex;align-items:center;gap:14px;box-shadow:0 4px 18px rgba(0,0,0,.3);font-family:Nunito,sans-serif;max-width:88%}
@@ -359,7 +363,8 @@ export const MapView = {
 
   async _loadPOI(_unused, center, opts) {
     try {
-      const pois = await Geo.fetchAllPOI(center, opts.radius || 1500);
+      // Dětská hra: místa pro dospělé vyřadit i z odpovědí staršího serveru / mezipaměti
+      const pois = (await Geo.fetchAllPOI(center, opts.radius || 1500)).filter(p => !ADULT_KINDS.has(p.kind));
       _allPois = pois;
       if (!_map) return;
       _lastFetchCenter = center;
@@ -400,7 +405,7 @@ export const MapView = {
   // Výprava dne / vzácné místo (z Expedition) → zvýraznit
   markExpedition(st) {
     if (!st) return;
-    _allPois.forEach(p => { p._exp = st.ids.includes(p.id); p._expDone = st.done.includes(p.id); p._rare = st.rare === p.id; p._rareDone = !!st.rareDone; });
+    _allPois.forEach(p => { p._exp = st.ids.includes(p.id); p._expDone = st.done.includes(p.id); p._rare = st.rare === p.id; p._rareDone = !!st.rareDone; p._egg = st.egg === p.id; });
     this._refreshDotStyles();
   },
   userPos() { return _userPos; },

@@ -8,6 +8,7 @@ const KEY_EXPLORED = 'gream_explored'; // [ "lat,lon" buněk 0,002° (~200 m) ]
 const CELL = 0.002, MAX_CELLS = 4000;
 export const EXP_COUNT = 3, EXP_RADIUS = 1500, RARE_RADIUS = 2500;
 export const REWARD = { place: 5, all: 15, rare: 10 };
+export const EGG_RADIUS = 1000;   // vajíčko leží na místě do 1 km (jen když je košíček prázdný)
 
 const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } };
 const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
@@ -39,6 +40,27 @@ export const Expedition = {
     return st;
   },
   get(pid) { const st = load(KEY_EXP, {})[pid]; return st && st.date === today() ? st : null; },
+
+  // Vajíčko na mapě: nová vajíčka se nachází JEN venku. Je-li košíček prázdný, leží jedno na místě do 1 km
+  // (stejné celý den v okolí, jiné než místa výpravy). Splnění výzvy na tom místě → vajíčko do košíčku.
+  eggSpot(pid, pois, pos, basketEmpty) {
+    const all = load(KEY_EXP, {}); const st = all[pid];
+    if (!st) return null;
+    if (!basketEmpty) { if (st.egg) { st.egg = null; save(KEY_EXP, all); } return null; }
+    if (st.egg && pois.some(p => p.id === st.egg)) return st.egg;
+    const area = `${Math.round(pos.lat * 50) / 50},${Math.round(pos.lon * 50) / 50}`;
+    const r = rng('egg|' + today() + '|' + area + '|' + (st.eggsFound || 0));
+    const pool = pois.filter(p => p.id && !st.ids.includes(p.id) && p.id !== st.rare && dist(pos, p) <= EGG_RADIUS).sort((a, b) => a.id < b.id ? -1 : 1);
+    st.egg = pool.length ? pool[Math.floor(r() * pool.length)].id : null;
+    all[pid] = st; save(KEY_EXP, all);
+    return st.egg;
+  },
+  takeEgg(pid, poiId) {
+    const all = load(KEY_EXP, {}); const st = all[pid];
+    if (!st || !st.egg || st.egg !== poiId) return false;
+    st.egg = null; st.eggsFound = (st.eggsFound || 0) + 1; all[pid] = st; save(KEY_EXP, all);
+    return true;
+  },
 
   // Splněné místo → odměny: místo výpravy +5, celá výprava +15, vzácné +10. Vrací { seeds, all, rare, place }
   complete(pid, poiId) {

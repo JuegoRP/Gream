@@ -8,7 +8,7 @@
 import { Profiles } from './profiles.js';
 import { Gream } from './gream.js';
 import { Skins } from './skins.js';
-import { Subscription } from './subscription.js';
+import { Subscription, PAYWALL_ENABLED } from './subscription.js';
 import { Router } from './router.js';
 
 const WORLDS = ['nature','language','logic','feelings','arts','world'];
@@ -38,7 +38,7 @@ function statusLine() {
   const sub = Subscription.get(p.id);
   const seeds = Skins.getSeeds(p.id);
   const stage = g ? `${g.archetype || 'vejce'} · stage ${g.stage}${g.isShiny ? ' ✨' : ''} · ${g.tasksFor||0} úk.` : '—';
-  return `${p.name} · 🌱 ${seeds} · ${sub.isPremium ? '⭐ Premium' : 'Free'} · ${p.difficulty||'medium'}\n🐣 ${stage}`;
+  return `${p.name} · 🌱 ${seeds} · ${!Subscription.paywallEnabled() ? 'vše odemčeno' : sub.paid ? '⭐ Plus' : sub.inTrial ? `týden zdarma ${sub.trialDaysLeft} d` : 'zdarma (limity)'} · ${p.difficulty||'medium'}\n🐣 ${stage}`;
 }
 
 function btn(label, onClick, bg = '#4a8a2e') {
@@ -102,12 +102,23 @@ function renderPanel() {
     Skins.awardForTask(p.id, false, 1);
     toast(`+1 úkol (${_world})`); refresh();
   }));
-  const sub = Subscription.get(p.id);
-  grid.appendChild(btn(sub.isPremium ? '⭐ Premium: ZAP' : 'Premium: VYP', () => {
-    if (Subscription.get(p.id).premiumSince) Subscription.cancelPremium(p.id);
-    else Subscription.activatePremium(p.id);
-    toast('Premium přepnuto'); refresh();
-  }, sub.isPremium ? '#c8860a' : '#555'));
+  // Gream Plus: testovací režim limitů (bez placení), konec / restart týdne zdarma, simulace předplatného
+  const sub = Subscription.get();
+  if (!PAYWALL_ENABLED) grid.appendChild(btn(Subscription.testMode() ? '💳 Test limitů: ZAP' : '💳 Test limitů: VYP', () => {
+    try { if (Subscription.testMode()) localStorage.removeItem('gream_paywall_test'); else localStorage.setItem('gream_paywall_test', '1'); } catch {}
+    toast('Test limitů přepnut'); refresh(); window.App?.renderMap?.();
+  }, Subscription.testMode() ? '#c8860a' : '#555'));
+  if (Subscription.paywallEnabled()) {
+    grid.appendChild(btn(sub.inTrial ? `⏩ Ukončit týden zdarma (${sub.trialDaysLeft} d)` : '🔄 Znovu týden zdarma', () => {
+      if (Subscription.get().inTrial) Subscription.endTrialNow(); else Subscription.restartTrial();
+      toast('Týden zdarma přepnut'); refresh(); window.App?.renderMap?.();
+    }, '#555'));
+    grid.appendChild(btn(sub.paid ? '⭐ Plus (simulace): ZAP' : 'Plus (simulace): VYP', () => {
+      if (Subscription.get().paid) Subscription.restartTrial(), Subscription.endTrialNow(); else Subscription.activatePremium(null, { product: 'dev' });
+      toast('Plus přepnuto'); refresh(); window.App?.renderMap?.();
+    }, sub.paid ? '#c8860a' : '#555'));
+    grid.appendChild(btn('🧾 Nabídka Plus', () => window.App?.openSubscription?.()));
+  }
 
   body.appendChild(grid);
 

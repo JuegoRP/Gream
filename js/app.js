@@ -38,7 +38,9 @@ const GARDEN_LAYOUT = {
 };
 const DECOR_ASPECT = { nest: 46 / 78, deco_flowerbed: 0.67, deco_bench: 0.75, deco_lantern: 1.67, deco_birdhouse: 2.77, deco_pond: 0.64, deco_mushroom: 1.14 };
 import { Gream, ARCHETYPES, BASE_ARCHETYPES, eggLeaning, spritePath, smartSpritePath } from './gream.js';
-import { Subscription, FREE_DAILY_INDOOR, PREMIUM_DAILY_INDOOR, INDOOR_MAX_TOTAL, FREE_DAILY_OUTDOOR, SEED_COST_EXTRA_TASK } from './subscription.js';
+import { Subscription, FREE } from './subscription.js';
+import { Paywall } from './paywall.js';
+import { Billing } from './billing.js';
 import { Ranking } from './ranking.js';
 import { Audio } from './audio.js';
 import { fillIcons } from './icons.js';
@@ -307,6 +309,9 @@ window.App = {
     Router.prefetch(['challenge', 'step-done', 'badge-earned', 'home', 'map', 'hub']);
     console.log('[Gream] Init complete.');
     try { window.Dev = Dev; Dev.init(); } catch (e) { console.warn('[Gream] Dev init skipped:', e); }
+    // Gream Plus: obchod Google Play (jen v aplikaci se zapnutým placením) + upozornění na konec týdne zdarma
+    try { Billing.init(() => this.renderMap?.()); } catch (e) { console.warn('[Gream] Billing init:', e); }
+    if (active) setTimeout(() => { try { Paywall.trialNotice(); } catch {} }, 3000);
   },
 
   // ─── Parallax clouds on scroll ───
@@ -462,13 +467,11 @@ window.App = {
       ? `🔥 ${streak} ${cs ? (streak === 1 ? 'den v řadě' : streak < 5 ? 'dny v řadě' : 'dní v řadě') : (streak === 1 ? 'day streak' : 'day streak')}`
       : (cs ? 'Začni svou sérii!' : 'Start your streak!'));
 
-    // Subscribe section — hide when paywall off (v1) or already paid
-    const sub = Subscription.get(p.id);
+    // Gream Plus — skryté, dokud není zapnuté placení (nebo testovací režim)
     const subSec = document.getElementById('hubSubscribeSection');
     if (subSec) {
-      const hide = !Subscription.paywallEnabled() || !!sub.premiumSince;
-      subSec.style.display = hide ? 'none' : 'block';
-      this._setText('hubSubscribeLbl', cs ? 'Předplatit Premium ⭐' : 'Subscribe to Premium ⭐');
+      subSec.style.display = Subscription.paywallEnabled() ? 'block' : 'none';
+      this._setText('hubSubscribeLbl', tr().plus_title + (Subscription.get().paid ? ' ✓' : ''));
     }
 
     // Labels (bilingual)
@@ -512,7 +515,7 @@ window.App = {
     this._renderObStep();
 
     // Step 1
-    this._setText('obTitle1', t.ob_v4_step1_title);
+    this._setText('obTitle1', t.slogan);   // oficiální podtitul pod logem (logo nese název hry)
     this._setText('obSub1',   t.ob_v4_step1_sub);
     this._setText('obBtn1',   t.ob_v4_step1_btn);
 
@@ -808,7 +811,7 @@ window.App = {
       const remaining = Math.max(0, 12 - tasksDone);
       let stageInfo = '';
       if (remaining > 0) {
-        stageInfo = lang === 'cs' ? `Ještě ${remaining} úkolů do vylíhnutí` : `${remaining} more tasks to hatch`;
+        stageInfo = lang === 'cs' ? `Ještě ${remaining} úkolů do vylíhnutí (venku 2×)` : `${remaining} more tasks to hatch (2× outdoors)`;
         if (tasksDone >= 4 && pet.taskByWorld) {
           const entries = Object.entries(pet.taskByWorld).sort((a,b) => b[1]-a[1]);
           const topWorld = entries[0]?.[0];
@@ -909,50 +912,30 @@ window.App = {
     // Trial banner (first 7 days)
     this._renderTrialBanner(p.id, lang);
 
-    // Daily limit pills — indoor and outdoor
-    const sub         = Subscription.get(p.id);
-    const indoorDone  = Subscription.getIndoorToday(p.id);
-    const outdoorDone = Subscription.getOutdoorToday(p.id);
-    const freeIndoor  = sub.isPremium ? PREMIUM_DAILY_INDOOR : FREE_DAILY_INDOOR;
-
-    // Indoor pill on the start-challenge button
+    // Denní limit výzev doma (jen zdarma verze po týdnu zdarma); venku bez limitu
+    const sub        = Subscription.get();
+    const indoorDone = Subscription.getIndoorToday();
+    const limited    = Subscription.paywallEnabled() && !sub.isPremium;
     const hcIndoor = document.querySelector('.home-choice-indoor');
     if (hcIndoor) {
       let pill = document.getElementById('indoorPill');
-      if (!pill) {
+      if (!pill && limited) {
         pill = document.createElement('div');
         pill.id = 'indoorPill';
         pill.style.cssText = 'position:absolute;top:8px;right:8px;font-size:10px;font-weight:800;padding:2px 8px;border-radius:50px;color:white';
         hcIndoor.style.position = 'relative';
         hcIndoor.appendChild(pill);
       }
-      const extraBought = Math.max(0, indoorDone - freeIndoor);
-      pill.textContent = `🏠 ${indoorDone}/${INDOOR_MAX_TOTAL}`;
-      pill.style.background = indoorDone >= INDOOR_MAX_TOTAL ? 'rgba(200,70,50,0.75)' : indoorDone >= freeIndoor ? 'rgba(245,166,35,0.85)' : 'rgba(0,0,0,0.15)';
-    }
-
-    // Outdoor pill — only show for free users with a limit
-    const hcOutdoor = document.querySelector('.home-choice-outdoor');
-    if (hcOutdoor) {
-      let opill = document.getElementById('outdoorPill');
-      if (!opill) {
-        opill = document.createElement('div');
-        opill.id = 'outdoorPill';
-        opill.style.cssText = 'position:absolute;top:8px;right:8px;font-size:10px;font-weight:800;padding:2px 8px;border-radius:50px;color:white';
-        hcOutdoor.style.position = 'relative';
-        hcOutdoor.appendChild(opill);
-      }
-      if (sub.isPremium) {
-        opill.textContent = '∞';
-        opill.style.background = 'rgba(74,138,46,0.6)';
-      } else {
-        opill.textContent = `🌳 ${outdoorDone}/${FREE_DAILY_OUTDOOR}`;
-        opill.style.background = outdoorDone >= FREE_DAILY_OUTDOOR ? 'rgba(200,70,50,0.75)' : 'rgba(0,0,0,0.15)';
+      if (pill) {
+        pill.style.display = limited ? '' : 'none';
+        pill.textContent = `🏠 ${Math.min(indoorDone, FREE.homeTasks)}/${FREE.homeTasks}`;
+        pill.style.background = indoorDone >= FREE.homeTasks ? 'rgba(200,70,50,0.75)' : 'rgba(0,0,0,0.15)';
       }
     }
+    document.getElementById('outdoorPill')?.remove();
 
     // Toggle indoor/outdoor button: show outdoor when indoor is exhausted
-    const indoorExhausted = indoorDone >= INDOOR_MAX_TOTAL;
+    const indoorExhausted = limited && indoorDone >= FREE.homeTasks;
     const gardenIndoorBtn  = document.getElementById('gardenIndoorBtn');
     const gardenOutdoorBtn = document.getElementById('gardenOutdoorBtn');
     if (gardenIndoorBtn)  gardenIndoorBtn.style.display  = indoorExhausted ? 'none' : '';
@@ -1113,13 +1096,34 @@ window.App = {
       if (!b) {
         b = document.createElement('button'); b.className = 'garden-arrow ' + side; b.type = 'button';
         b.setAttribute('aria-label', side === 'left' ? '←' : '→');
-        b.onclick = (e) => { e.stopPropagation(); scroll.scrollBy({ left: (side === 'left' ? -1 : 1) * scroll.clientWidth * 0.7, behavior: 'smooth' }); };
+        // Vlastní animace místo scrollBy smooth: na iPhonu klepnutí během dojezdu po swipu jen zastavilo pohyb / smooth se přepsal.
+        // Reaguje hned na dotyk (pointerdown), dojezd zastaví (overflow hidden na okamžik) a opakované klepnutí navazuje na cíl.
+        const go = (e) => { e.preventDefault(); e.stopPropagation(); this._gardenScrollBy(scroll, (side === 'left' ? -1 : 1) * scroll.clientWidth * 0.7); };
+        b.addEventListener('pointerdown', go);
+        b.onclick = (e) => { e.stopPropagation(); if (!e.detail) go(e); };   // klávesnice / čtečka (bez ukazatele)
         stage.appendChild(b);
       }
       const more = side === 'left' ? scroll.scrollLeft > 8 : scroll.scrollLeft < scroll.scrollWidth - scroll.clientWidth - 8;
       b.classList.toggle('show', more);
     });
     if (!scroll._arrows) { scroll._arrows = true; scroll.addEventListener('scroll', () => this._updateGardenArrows(), { passive: true }); }
+  },
+
+  _gardenScrollBy(scroll, dx) {
+    const max = scroll.scrollWidth - scroll.clientWidth;
+    const from = scroll.scrollLeft;
+    const to = Math.max(0, Math.min(max, (scroll._target ?? from) + dx));
+    scroll._target = to;
+    scroll.style.overflowX = 'hidden';                 // zastaví setrvačný dojezd swipu (iOS)
+    cancelAnimationFrame(scroll._raf);
+    const t0 = performance.now(), dur = 320;
+    const step = (now) => {
+      const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+      scroll.scrollLeft = from + (to - from) * e;
+      if (k < 1) scroll._raf = requestAnimationFrame(step);
+      else { scroll._target = null; scroll.style.overflowX = ''; this._updateGardenArrows(); }
+    };
+    scroll._raf = requestAnimationFrame(step);
   },
 
   // Počká na obrázky aktuální obrazovky (img i pozadí zahrady i zdroje sprite canvasů), nejdéle maxMs
@@ -1834,26 +1838,8 @@ window.App = {
     const check = Subscription.canStartIndoor(p.id, seeds);
 
     if (!check.allowed) {
-      this._showToast(check.reason);
       Feedback.error();
-      return;
-    }
-
-    // Needs to buy extra task with seeds?
-    if (check.isPurchase && check.seedCost > 0) {
-      const cost = check.seedCost;
-      const msg  = lang === 'cs'
-        ? `Koupit extra úkol za ${cost} 🌱?`
-        : `Buy extra task for ${cost} 🌱?`;
-      this._confirmSeedSpend(msg, cost, () => {
-        if (!Skins.spendSeeds(p.id, cost)) {
-          const lang2 = localStorage.getItem('gream_lang') || 'en';
-          this._showToast?.(lang2 === 'cs' ? 'Nemáš dost semínek!' : 'Not enough seeds!');
-          return;
-        }
-        this._setText('seedNum', Skins.getSeeds(p.id));
-        this._showDifficultyPicker(() => this._doStartIndoor(p));
-      });
+      if (!Paywall.open(check.paywall)) this._showToast(check.reason);
       return;
     }
 
@@ -1864,13 +1850,13 @@ window.App = {
   _showDifficultyPicker(onConfirm) {
     const lang = getLang();
     const p    = Profiles.active();
-    const cur  = p?.difficulty || 'medium';
-    const extremeLocked = !(p && Subscription.get(p.id).isPremium);
+    const locked = (d) => !Subscription.difficultyAllowed(d);   // zdarma: lehká + střední
+    const cur  = locked(p?.difficulty || 'medium') ? 'medium' : (p?.difficulty || 'medium');
     const diffs = [
       { id:'easy',    emoji:'🟢', cs:'Snadné',   en:'Easy' },
       { id:'medium',  emoji:'🟡', cs:'Střední',  en:'Medium' },
-      { id:'hard',    emoji:'🔴', cs:'Těžké',    en:'Hard' },
-      { id:'extreme', emoji: extremeLocked ? '🔒' : '⚡', cs:'Extrémní', en:'Extreme', locked: extremeLocked },
+      { id:'hard',    emoji: locked('hard') ? '🔒' : '🔴', cs:'Těžké',    en:'Hard' },
+      { id:'extreme', emoji: locked('extreme') ? '🔒' : '⚡', cs:'Extrémní', en:'Extreme' },
     ];
     const overlay = document.createElement('div');
     overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.55);display:flex;align-items:center;justify-content:center;z-index:999;padding:20px';
@@ -1892,7 +1878,7 @@ window.App = {
       </div>`;
     let selected = cur;
     window._dpSel = (diff) => {
-      if (diff === 'extreme' && extremeLocked) { this.openSubscription(); return; }
+      if (locked(diff)) { this.openSubscription('difficulty'); return; }
       selected = diff;
       overlay.querySelectorAll('[data-d]').forEach(b => {
         const active = b.dataset.d === diff;
@@ -2343,75 +2329,28 @@ window.App = {
   // ─── First-run hint pulse on choice buttons ───
   _renderTrialBanner(profileId, lang) {
     const existing = document.getElementById('trialBanner');
-    const sub = Subscription.get(profileId);
-
-    // Remove if premium (not trial)
-    if (sub.isPremium && !sub.inTrial) { existing?.remove(); return; }
-    // Remove if trial expired
-    if (!sub.isPremium && !sub.inTrial) { existing?.remove(); return; }
-
-    if (sub.inTrial) {
-      if (existing) { existing.querySelector('#trialDays').textContent = sub.trialDaysLeft; return; }
-      const banner = document.createElement('div');
-      banner.id = 'trialBanner';
-      banner.style.cssText = 'background:linear-gradient(135deg,#fde7a8,#f5c842);border-radius:14px;padding:10px 14px;margin-bottom:10px;display:flex;align-items:center;gap:10px;max-width:380px;margin-left:auto;margin-right:auto';
-      banner.innerHTML = `
-        <div style="font-size:22px">⭐</div>
-        <div style="flex:1">
-          <div style="font-size:13px;font-weight:800;color:#7a3d00">${lang==='cs'?'Premium trial':'Premium trial'}</div>
-          <div style="font-size:11px;color:#a05000">${lang==='cs'?`Zbývá <strong id="trialDays">${sub.trialDaysLeft}</strong> dní zdarma`:`<strong id="trialDays">${sub.trialDaysLeft}</strong> days free left`}</div>
-        </div>
-        <button onclick="App.openSubscription()" style="padding:6px 12px;border-radius:50px;border:none;background:#f5a623;color:white;font-weight:800;font-size:11px;cursor:pointer;font-family:inherit">${lang==='cs'?'Předplatit':'Subscribe'}</button>`;
-      // Insert before home-choices
-      const choices = document.querySelector('.home-choices');
-      choices?.parentNode?.insertBefore(banner, choices);
-    }
+    const sub = Subscription.get();
+    if (!Subscription.paywallEnabled() || !sub.inTrial) { existing?.remove(); return; }
+    const t = tr();
+    if (existing) { existing.querySelector('.tb-days').textContent = t.plus_trial_banner(sub.trialDaysLeft); return; }
+    const banner = document.createElement('div');
+    banner.id = 'trialBanner';
+    banner.style.cssText = 'background:linear-gradient(135deg,#fde7a8,#f5c842);border-radius:12px;padding:5px 8px 5px 12px;margin:4px auto 0;display:flex;align-items:center;gap:8px;width:100%;max-width:480px;box-sizing:border-box;flex-shrink:0';
+    banner.innerHTML = `
+      <div style="font-size:16px">⭐</div>
+      <div style="flex:1;min-width:0;font-size:12px;line-height:1.25;color:#7a3d00"><b>${t.plus_trial_title}</b> · <span class="tb-days">${t.plus_trial_banner(sub.trialDaysLeft)}</span></div>
+      <button onclick="App.openSubscription()" style="padding:6px 12px;border-radius:50px;border:none;background:#f5a623;color:white;font-weight:800;font-size:11px;cursor:pointer;font-family:inherit">${t.plus_badge}</button>`;
+    const choices = document.querySelector('.home-actions') || document.querySelector('.home-choices');
+    choices?.parentNode?.insertBefore(banner, choices);
   },
 
-  openSubscription() {
-    if (!Subscription.paywallEnabled()) return; // v1 ships free — no paywall
-    const lang = getLang();
-    const p    = Profiles.active();
-    const sub  = p ? Subscription.get(p.id) : null;
-    const overlay = document.createElement('div');
-    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(10,20,5,0.7);display:flex;align-items:flex-end;justify-content:center;z-index:999';
-    overlay.onclick = e => { if (e.target === overlay) overlay.remove(); };
-    const cs = lang === 'cs';
-    overlay.innerHTML = `
-      <div style="background:white;border-radius:24px 24px 0 0;padding:24px 20px 40px;max-width:480px;width:100%;box-shadow:0 -6px 30px rgba(0,0,0,0.2)">
-        <div style="width:36px;height:4px;background:rgba(0,0,0,0.12);border-radius:2px;margin:0 auto 20px"></div>
-        <div style="text-align:center;margin-bottom:20px">
-          <div style="font-size:40px;margin-bottom:8px">⭐</div>
-          <div style="font-size:22px;font-weight:900;color:var(--green-deep);margin-bottom:4px">${cs?'Gream Premium':'Gream Premium'}</div>
-          <div style="font-size:14px;color:#888">${cs?'99 Kč / měsíc · 7 dní zdarma':'99 CZK / month · 7 days free'}</div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px">
-          ${[
-            [cs?'6 domácích úkolů denně':'6 indoor tasks per day', '🏠'],
-            [cs?'Venku neomezeně':'Unlimited outdoor tasks', '🌳'],
-            [cs?'Extra úkoly za semínka (neomezeně)':'Extra tasks with seeds (unlimited)', '🌱'],
-            [cs?'Podpora vývoje Gream':'Support Gream development', '💚'],
-          ].map(([t,e]) => `<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:#f8fdf4;border-radius:12px;font-size:14px;font-weight:700;color:var(--green-deep)"><span style="font-size:20px">${e}</span>${t}</div>`).join('')}
-        </div>
-        <button onclick="App._activatePremium(this.closest('[style*=fixed]'))" style="width:100%;padding:16px;border-radius:16px;border:none;background:linear-gradient(135deg,#4a8a2e,#2d6518);color:white;font-family:inherit;font-weight:900;font-size:16px;cursor:pointer;margin-bottom:10px">
-          ${cs?'Aktivovat Premium ⭐':'Activate Premium ⭐'}
-        </button>
-        <div style="text-align:center;font-size:11px;color:#aaa">${cs?'Platba přes App Store / Google Play · Kdykoli zruš':'Payment via App Store / Google Play · Cancel anytime'}</div>
-      </div>`;
-    document.body.appendChild(overlay);
-  },
+  // Nabídka Gream Plus (reason = proč se ukazuje: home/battle/difficulty/profile/…)
+  openSubscription(reason) { return Paywall.open(reason); },
 
-  _activatePremium(overlay) {
-    const p = Profiles.active();
-    if (!p) return;
-    // In production: trigger in-app purchase here
-    // For now: simulate activation
-    Subscription.activatePremium(p.id);
-    overlay?.remove();
-    Feedback.celebrate();
-    const lang = getLang();
-    this._showToast(lang === 'cs' ? '⭐ Premium aktivováno!' : '⭐ Premium activated!');
-    this.renderMap();
+  // Další profil: zdarma jen jeden (po týdnu zdarma)
+  addProfile() {
+    if (!Subscription.canAddProfile(Profiles.all().length)) { if (Paywall.open('profile')) return; }
+    this.goTo('onboarding');
   },
 
   // ─── Feed button overlay on garden stage ───
@@ -2515,65 +2454,9 @@ window.App = {
     if (localStorage.getItem('gream_tutorial_v1')) return;
     localStorage.setItem('gream_tutorial_v1', '1');
 
-    const cs = lang === 'cs';
-    const steps = [
-      {
-        sel: '#greamStage',
-        icon: '🌱',
-        title: cs ? 'Tvoje zahrada' : 'Your garden',
-        text: cs
-          ? 'Tady bydlí tvoji Greamíci a vajíčka. Zahrada se mění podle denní doby — v noci svítí hvězdy, někdy prší. Čím víc výzev splníš, tím více Greamíků přibyde!'
-          : 'Your Greams live here. The garden changes with time of day — stars at night, sometimes rain. Complete more challenges to grow your flock!',
-      },
-      {
-        sel: '.garden-gream-slot, #homeJarWrap',
-        icon: '🥚',
-        title: cs ? 'Greamík' : 'Your Gream',
-        text: cs
-          ? 'Tohle je tvoje záhadné vajíčko! Splň 12 výzev a vejce se vylíhne — jeho charakter závisí na tom, která témata hraješ nejradši. Klepnutím na Greamíka ho potěšíš!'
-          : 'This is your mystery egg! Complete 12 challenges to hatch it — its personality depends on which topics you play most. Tap it to cheer it up!',
-      },
-      {
-        sel: '#hcIndoorTitle',
-        icon: '🏠',
-        title: cs ? 'Domácí výzva' : 'Home challenge',
-        text: cs
-          ? 'Klepni sem pro výzvu doma. Vyber téma — příroda, jazyk, logika, umění nebo svět. Každá správná odpověď přináší semínka 🌱 a pomáhá Greamíkovi růst. Špatná odpověď tě vyhodí a vezme semínka!'
-          : 'Tap here to play a home challenge. Choose a topic — nature, language, logic, arts or world. Correct answers earn seeds 🌱. Wrong answers kick you out and cost seeds!',
-      },
-      {
-        sel: '#seedNum',
-        icon: '🌱',
-        title: cs ? 'Semínka' : 'Seeds',
-        text: cs
-          ? 'Semínka jsou tvoje herní měna. Sbíráš je splněním výzev — čím těžší, tím víc! Utrácíš je za krmení Greamíků (tlačítko 🍃 v zahradě), skiny nebo boosters v záložce Greamíci.'
-          : 'Seeds are your currency. Earn them by completing challenges — harder ones give more! Spend them feeding Greams (🍃 in garden), or on skins and boosters in the Greams tab.',
-      },
-      {
-        sel: '#streakNum',
-        icon: '🔥',
-        title: cs ? 'Série dní' : 'Day streak',
-        text: cs
-          ? 'Hraj každý den a buduj sérii! Číslo vedle plamínku říká, kolik dní v řadě hraješ. Přerušení série tě vrátí na nulu — zkus ji co nejdéle udržet!'
-          : 'Play every day to build your streak! The number by the flame shows how many days in a row you\'ve played. Break it and you start over — keep it going!',
-      },
-      {
-        sel: '#tab-hub',
-        icon: '⭐',
-        title: cs ? 'Záložka JÁ' : 'ME tab',
-        text: cs
-          ? 'Záložka JÁ — tady vidíš celý svůj postup. Odznaky za splněné výzvy, žebříček hráčů, správu Greamíků, historii a nastavení.'
-          : 'The ME tab — see your full progress. Badges, ranking, Gream management, history and settings.',
-      },
-      {
-        sel: '#tab-map',
-        icon: '🗺️',
-        title: cs ? 'Záložka SVĚT' : 'WORLD tab',
-        text: cs
-          ? 'Záložka SVĚT — mapa s venkovními místy poblíž tebe. Navštiv je a hraj výzvy na místě pro bonusová semínka! Venkovní výzvy přidávají přírodní bonus k péči o Greamíka.'
-          : 'The WORLD tab — map with outdoor locations near you. Visit them and play on-site for bonus seeds! Outdoor challenges add a nature bonus to Gream care.',
-      },
-    ];
+    const t = tr();
+    const SELS = ['#greamStage', '.garden-gream-slot.is-active, .garden-gream-slot, #homeJarWrap', '.home-choice-indoor', '.seed-pill', '.streak-pill', '#tab-hub', '#tab-map'];
+    const steps = SELS.map((sel, i) => ({ sel, icon: t.tut_steps[i][0], title: t.tut_steps[i][1], text: t.tut_steps[i][2] }));
 
     let prevEl = null;
 
@@ -2630,55 +2513,51 @@ window.App = {
       let target = null;
       for (const s of selectors) { target = document.querySelector(s); if (target) break; }
 
-      // Position card above or below target
-      let cardTop = null, cardBottom = null, arrowClass = '';
       if (target) {
-        const r = target.getBoundingClientRect();
-        const midY = r.top + r.height / 2;
-        if (midY < window.innerHeight * 0.55) {
-          // Element in top half → card below
-          cardTop = Math.min(r.bottom + 18, window.innerHeight - 240);
-          arrowClass = 'tut-arrow-up';
-        } else {
-          // Element in bottom half → card above
-          cardBottom = window.innerHeight - r.top + 18;
-          arrowClass = 'tut-arrow-down';
-        }
-        // Fixed-position ring that doesn't disturb target layout
+        const r = target.getBoundingClientRect(), PAD = 8;
+        // Kruh kolem cíle (oříznutý do obrazovky – velká zahrada nesmí vyčnívat pod lištu)
+        const top = Math.max(4, r.top - PAD), bottom = Math.min(window.innerHeight - 4, r.bottom + PAD);
         ringEl = document.createElement('div');
         ringEl.id = 'tutRing';
-        const PAD = 8;
-        ringEl.style.cssText = `position:fixed;pointer-events:none;z-index:5001;border-radius:18px;border:3px solid var(--green-mid);box-shadow:0 0 0 9999px rgba(0,0,0,0.6),0 0 20px rgba(74,138,46,0.5);transition:all 0.25s;left:${r.left-PAD}px;top:${r.top-PAD}px;width:${r.width+PAD*2}px;height:${r.height+PAD*2}px`;
+        ringEl.style.cssText = `position:fixed;pointer-events:none;z-index:5001;border-radius:18px;border:3px solid var(--green-mid);box-shadow:0 0 0 9999px rgba(0,0,0,0.6),0 0 20px rgba(74,138,46,0.5);transition:all 0.25s;left:${r.left-PAD}px;top:${top}px;width:${r.width+PAD*2}px;height:${bottom-top}px`;
         document.body.appendChild(ringEl);
         prevEl = target;
-      } else {
-        cardBottom = 110;
       }
 
-      cardEl.className = `tut-card ${arrowClass}`;
-      cardEl.style.top = cardTop !== null ? `${cardTop}px` : '';
-      cardEl.style.bottom = cardBottom !== null ? `${cardBottom}px` : '';
-
-      // Progress dots
       const dotsHtml = steps.map((_, di) =>
         `<div style="width:8px;height:8px;border-radius:50%;background:${di === i ? 'var(--green-mid)' : '#e0e0e0'};transition:background 0.2s"></div>`
       ).join('');
-
+      cardEl.className = 'tut-card';
+      cardEl.style.top = '0px'; cardEl.style.bottom = ''; cardEl.style.visibility = 'hidden';
       cardEl.innerHTML = `
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-          <span style="font-size:32px;flex-shrink:0">${step.icon}</span>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span style="font-size:30px;flex-shrink:0">${step.icon}</span>
           <div style="font-size:17px;font-weight:900;color:var(--green-deep)">${step.title}</div>
           <div style="margin-left:auto;font-size:11px;font-weight:700;color:#bbb">${i+1}/${steps.length}</div>
         </div>
-        <div style="font-size:14px;font-weight:700;color:#444;line-height:1.55;margin-bottom:16px">${step.text}</div>
-        <div style="display:flex;gap:5px;justify-content:center;margin-bottom:14px">${dotsHtml}</div>
-        <button id="tutNext" class="btn-primary" style="width:100%;padding:13px;font-size:15px">
-          ${isLast ? (cs ? 'Jdeme na to! 🌱' : "Let's go! 🌱") : (cs ? 'Rozumím, dál →' : 'Got it, next →')}
-        </button>
-        <button id="tutSkip" style="width:100%;padding:7px;font-size:12px;color:#bbb;font-weight:700;background:none;border:none;cursor:pointer;margin-top:4px">
-          ${cs ? 'Přeskočit' : 'Skip'}
-        </button>
+        <div style="font-size:14px;font-weight:700;color:#444;line-height:1.5;margin-bottom:12px">${step.text}</div>
+        <div style="display:flex;gap:5px;justify-content:center;margin-bottom:12px">${dotsHtml}</div>
+        <button id="tutNext" class="btn-primary" style="width:100%;padding:13px;font-size:15px">${isLast ? t.tut_done : t.tut_next}</button>
+        <button id="tutSkip" style="width:100%;padding:7px;font-size:12px;color:#999;font-weight:700;background:none;border:none;cursor:pointer;margin-top:2px">${t.tut_skip}</button>
       `;
+      // Umístění podle skutečné výšky karty: vždy mezi horním okrajem (výřez) a spodní lištou, nikdy přes ni
+      const css = getComputedStyle(document.documentElement);
+      const sat = parseFloat(css.getPropertyValue('--sat')) || 0;
+      const tabs = document.querySelector('.tab-bar');
+      const tr_ = tabs?.getBoundingClientRect();   // lišta je position:fixed → offsetParent je vždy null, rozhoduje viditelnost a výška
+      const tabTop = tr_ && tr_.height > 0 && getComputedStyle(tabs).display !== 'none' && getComputedStyle(tabs).visibility !== 'hidden' ? tr_.top : window.innerHeight;
+      const minY = sat + 8, maxY = tabTop - 10, h = cardEl.offsetHeight;
+      let y, arrow = '';
+      if (target) {
+        const r = target.getBoundingClientRect();
+        const below = r.bottom + 14, above = Math.min(r.top, maxY) - 14 - h;
+        if (below + h <= maxY) { y = below; arrow = 'tut-arrow-up'; }
+        else if (above >= minY) { y = above; arrow = 'tut-arrow-down'; }
+        else y = Math.max(minY, maxY - h);   // velký cíl (zahrada): karta dole nad lištou, přes cíl
+      } else y = Math.max(minY, maxY - h);
+      cardEl.className = `tut-card ${arrow}`;
+      cardEl.style.top = `${Math.round(Math.max(minY, Math.min(y, maxY - h)))}px`;
+      cardEl.style.visibility = '';
 
       document.getElementById('tutNext').onclick = () => showStep(i + 1);
       document.getElementById('tutSkip').onclick = () => { cleanup(); overlay.remove(); cardEl.remove(); };
@@ -3289,7 +3168,13 @@ window.App = {
         onPoisLoaded: pois => {
           const loading = document.getElementById('mapLoading');
           if (loading) loading.style.display = 'none';
-          try { const st = Expedition.ensure(p.id, pois, MapView.userPos() || pos); MapView.markExpedition(st); this._renderExpeditionChip(st, pois); } catch (e) { console.warn('[Expedition]', e); }
+          try {
+            const here = MapView.userPos() || pos;
+            const st = Expedition.ensure(p.id, pois, here);
+            const basketEmpty = !Gream.all(p.id).some(g => !g.archived && (g.stage < 2 || !g.archetype)) && Gream.all(p.id).filter(g => !g.archived).length < 6;
+            Expedition.eggSpot(p.id, pois, here, basketEmpty);
+            MapView.markExpedition(Expedition.get(p.id) || st); this._renderExpeditionChip(Expedition.get(p.id) || st, pois);
+          } catch (e) { console.warn('[Expedition]', e); }
           const count = pois.length;
           this._setText('mapViewSub', count > 0
             ? (lang === 'cs' ? `${count} míst v okolí` : `${count} places nearby`)
@@ -3355,7 +3240,7 @@ window.App = {
     let chip = document.getElementById('expChip');
     if (!chip) { chip = document.createElement('button'); chip.id = 'expChip'; chip.className = 'exp-chip'; mapEl.appendChild(chip); }
     const done = st.done.length, n = st.ids.length;
-    chip.innerHTML = `⭐ ${t.exp_title} ${done}/${n}${st.rare && !st.rareDone ? ' · ✦' : ''} · ${t.exp_explored(Expedition.cells().length)}`;
+    chip.innerHTML = `${st.egg ? '🥚 · ' : ''}⭐ ${t.exp_title} ${done}/${n}${st.rare && !st.rareDone ? ' · ✦' : ''} · ${t.exp_explored(Expedition.cells().length)}`;
     chip.onclick = () => {
       document.getElementById('expSheet')?.remove();
       const me = MapView.userPos();
@@ -3364,6 +3249,7 @@ window.App = {
         return `<button class="exp-row${ok ? ' ok' : ''}" data-id="${id}"><span>${rare ? '✦' : ok ? '✅' : this._poiIcon(p.kind)}</span><b>${escAttr(p.name || t.poi_kind?.[p.kind] || t.exp_place)}</b><small>${ok ? t.exp_done : d(p)}</small></button>`; };
       const sh = document.createElement('div'); sh.id = 'expSheet'; sh.className = 'exp-sheet';
       sh.innerHTML = `<div class="exp-card"><div class="exp-h">⭐ ${t.exp_title}</div><div class="exp-sub">${t.exp_how(EXP_REWARD.place, EXP_REWARD.all, EXP_REWARD.rare)}</div>
+        ${st.egg ? `<div class="exp-sub" style="margin-top:4px">${t.exp_egg}</div>${row(st.egg, false).replace(/<span>[^<]*<\/span>/, '<span>🥚</span>')}` : ''}
         ${st.ids.map(id => row(id, false)).join('')}${st.rare ? `<div class="exp-sub" style="margin-top:8px">✦ ${t.exp_rare}</div>${row(st.rare, true)}` : ''}
         <div class="exp-sub" style="margin-top:8px">🗺️ ${t.exp_explored_long(Expedition.cells().length)}</div>
         <button class="btn-primary" style="width:100%;margin-top:10px">${t.nav_close}</button></div>`;
