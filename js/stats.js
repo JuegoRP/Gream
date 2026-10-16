@@ -20,7 +20,7 @@ export const Stats = {
     const stats = Profiles.getStats(p.id);
     // Body = stejný výpočet jako v Žebříčku (Ranking.summary) pro všechny profily v zařízení
     const lb = Profiles.all()
-      .map(x => ({ id: x.id, name: x.name, avatar: x.avatar, score: Ranking.summary(x, Gream.active(x.id)).score }))
+      .map(x => ({ id: x.id, name: x.name, avatar: x.avatar, score: Ranking.summary(x, Gream.all(x.id)).score }))
       .sort((a, b) => b.score - a.score);
 
     container.innerHTML = `

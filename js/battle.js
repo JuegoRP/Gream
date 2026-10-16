@@ -6,7 +6,7 @@
 //  Greamík z odpovídajícího světa → delší čas. Vstup stojí 1/4 výhry (venku 1/8).
 // ═══════════════════════════════════
 
-import { shuffle } from './shuffle.js';
+import { shuffle, stripEmoji } from './shuffle.js';
 import { tr, getLang } from './i18n.js';
 import { Profiles } from './profiles.js';
 import { Gream, ARCHETYPES, EVOLUTION_TASKS } from './gream.js';
@@ -607,7 +607,7 @@ export const Battle = {
           const shuffled = shuffle(ch.choices);
           let removed = 0;
           shuffled.forEach(c => {
-            const b = document.createElement('button'); b.className = 'bt-choice'; b.textContent = c.text;
+            const b = document.createElement('button'); b.className = 'bt-choice'; b.textContent = stripEmoji(c.text);
             const right = String(c.value ?? c.text).toLowerCase() === correctVal;
             if (me.fiftyNext && !right && !removed && shuffled.length >= 3) { b.classList.add('gone'); removed++; }
             b.dataset.right = right ? '1' : '';

@@ -1772,3 +1772,31 @@ canvas.aura, #greamSpriteCanvas.aura { filter:drop-shadow(0 0 4px #ffd84d) drop-
 .ob-art-logo { width:min(320px, 82vw); height:auto; min-height:150px; }
 .ob-logo { position:relative; z-index:1; width:100%; height:auto; animation:obFloat 3s ease-in-out infinite; filter:drop-shadow(0 6px 14px rgba(45,90,27,.18)); }
 .ob-art-logo + .ob-title { font-size:clamp(19px, 5.6vw, 24px); white-space:nowrap; max-width:none; }
+/* Žebříček 1.1 */
+.rk-list { width:100%; max-width:420px; margin:0 auto; display:flex; flex-direction:column; gap:6px; }
+.rk-own { background:linear-gradient(135deg,#4a8a2e,#2d6518); border-radius:18px; padding:14px 16px; color:#fff; display:flex; align-items:center; gap:12px; }
+.rk-own-av { font-size:34px; } .rk-own-name { font-size:18px; font-weight:900; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.rk-own-sub { font-size:12px; opacity:.85; } .rk-own-stats { text-align:right; } .rk-own-stats b { display:block; font-size:20px; font-weight:900; } .rk-own-stats small { font-size:11px; opacity:.8; }
+.rk-head { background:#fff; border-radius:var(--radius-md); padding:var(--space-3); text-align:center; font-size:var(--text-md); color:var(--green-deep); margin-bottom:4px; }
+.rk-head small { display:block; font-size:var(--text-xs); color:var(--ink-soft); font-weight:700; margin-top:2px; line-height:1.4; }
+.rk-sub { font-size:var(--text-xs); font-weight:900; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.5px; margin:var(--space-2) 0 2px; }
+.rk-list .lg-row { background:#fff; } .rk-list .lg-row.up { background:#eef9e4; } .rk-list .lg-row.down { background:#fdeeea; }
+.rk-list .lg-row small { font-size:11px; color:var(--ink-soft); font-weight:700; margin-left:4px; }
+.rk-av { font-style:normal; margin-right:6px; }
+.rk-empty { text-align:center; padding:var(--space-4); color:var(--ink-muted); font-weight:700; font-size:var(--text-sm); }
+.rk-note { font-size:11px; color:var(--ink-muted); margin-top:var(--space-2); text-align:center; }
+.rk-lock { background:#fff; border-radius:var(--radius-md); padding:var(--space-4); text-align:center; font-weight:800; color:var(--green-deep); display:flex; flex-direction:column; gap:var(--space-2); align-items:center; }
+.rk-cta { width:100%; margin-top:var(--space-3); }
+.ss-name-box { display:flex; align-items:center; gap:var(--space-2); min-width:0; }
+.ss-name-box b { font-size:var(--text-md); font-weight:900; color:var(--green-deep); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:120px; }
+.ss-name-btn { padding:6px 10px; border-radius:var(--radius-full); border:2px solid var(--line); background:#fff; font-family:inherit; font-weight:800; font-size:var(--text-xs); color:var(--green-deep); white-space:nowrap; }
+/* Výzva: postup jen čísly (otázka X ze 3, odznak a/b · chybí n) */
+.bp-card .bp-steps { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
+.bp-q-lbl { flex:1; font-size:var(--text-md); font-weight:900; color:var(--green-deep); }
+.bp-dot { width:30px; height:30px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:900; font-size:14px; border:2.5px solid var(--green-pale); color:var(--green-mid); background:#fff; }
+.bp-dot.active { border-color:var(--amber); background:#fff8e8; color:#8a5200; }
+.bp-dot.done { border-color:var(--green-mid); background:var(--green-mid); color:#fff; }
+.bp-card .bp-title { text-transform:none; letter-spacing:0; font-size:var(--text-sm); margin-bottom:6px; }
+.bp-bar { height:8px; border-radius:var(--radius-full); background:var(--green-pale); overflow:hidden; }
+.bp-bar i { display:block; height:100%; background:var(--green-mid); border-radius:inherit; transition:width .4s; }
+.ch-icon { font-size:30px; margin-bottom:4px; }

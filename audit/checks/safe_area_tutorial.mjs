@@ -7,6 +7,8 @@ const eng = NAME.startsWith('android') ? chromium : webkit;
 const b = await eng.launch();
 const ctx = await b.newContext({ viewport: { width: +W, height: +H }, deviceScaleFactor: 2, hasTouch: true });
 const page = await ctx.newPage();
+// Testy NESMÍ zapisovat na ostrý server (žebříčky, souboje, ligy): zápisy na API se podvrhnou, čtení projde
+await page.route(/3rstudio\.eu\/api\/gream\//, (r) => r.request().method() === 'GET' ? r.continue() : r.fulfill({ contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: '{"ok":true}' }));
 const errs = []; page.on('pageerror', e => errs.push(String(e).slice(0, 200)));
 const fixEnv = (t) => t.replace(/env\(\s*safe-area-inset-top[^)]*\)/g, SAT + 'px').replace(/env\(\s*safe-area-inset-bottom[^)]*\)/g, SAB + 'px').replace(/env\(\s*safe-area-inset-(left|right)[^)]*\)/g, '0px');
 await page.route(/\.(css|js|html)(\?.*)?$/, async (r) => { const res = await r.fetch(); r.fulfill({ response: res, body: fixEnv(await res.text()) }); });

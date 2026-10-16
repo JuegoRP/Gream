@@ -188,8 +188,15 @@ function _renderNavOverlay() {
     ov = document.createElement('div');
     ov.id = 'navOverlay';
     ov.className = 'gm-nav';
-    ov.innerHTML = `<div id="navArrow" class="gm-nav-arrow">⬆️</div>
-      <div style="line-height:1.25;min-width:0"><div id="navLabel" class="gm-nav-label"></div><div id="navDist" class="gm-nav-dist"></div><div id="navHint" class="gm-nav-hint">${tr().map_compass_hint}</div></div>
+    // Kompas: kreslená šipka v kruhu, kruh se barví podle vzdálenosti (studeno → hoří), jako hra „přihořívá“
+    ov.innerHTML = `<button id="navArrow" class="gm-nav-compass" aria-label="${tr().map_compass_hint}">
+        <svg class="gm-nav-ticks" viewBox="0 0 64 64" aria-hidden="true">${Array.from({ length: 12 }, (_, i) => `<line x1="32" y1="3" x2="32" y2="${i % 3 ? 7 : 10}" transform="rotate(${i * 30} 32 32)"/>`).join('')}</svg>
+        <svg class="gm-nav-needle" viewBox="0 0 64 64" aria-hidden="true">
+          <defs><linearGradient id="gmNeedle" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe066"/><stop offset="1" stop-color="#ff8a1f"/></linearGradient></defs>
+          <path d="M32 9 L46 40 Q32 33 18 40 Z" fill="url(#gmNeedle)" stroke="#fff" stroke-width="3" stroke-linejoin="round"/>
+          <circle cx="32" cy="43" r="5" fill="#fff"/>
+        </svg></button>
+      <div style="line-height:1.25;min-width:0;flex:1"><div id="navLabel" class="gm-nav-label"></div><div id="navDist" class="gm-nav-dist"></div><div id="navWarm" class="gm-nav-warm"></div><div id="navHint" class="gm-nav-hint">${tr().map_compass_hint}</div></div>
       <button id="navClose" class="gm-nav-close" aria-label="${tr().nav_close}">✕</button>`;
     MapView._container.appendChild(ov);
     ov.querySelector('#navClose').onclick = () => MapView.clearDestination();
@@ -202,8 +209,17 @@ function _updateNav() {
   const dist = Math.round(distM(_userPos, _destination));
   const rel = _heading != null ? ((bearing(_userPos, _destination) - _heading + 360) % 360) : bearing(_userPos, _destination);
   const arrow = document.getElementById('navArrow'), dEl = document.getElementById('navDist'), hint = document.getElementById('navHint');
-  if (arrow) arrow.style.transform = `rotate(${rel}deg)`;
-  if (dEl) dEl.textContent = dist <= PROXIMITY_M ? '📍 Jsi na místě!' : `${dist} m`;
+  const t = tr();
+  const needle = arrow?.querySelector('.gm-nav-needle');
+  if (needle) needle.style.transform = `rotate(${rel}deg)`;
+  // Přihořívá: barva kruhu a slovo podle vzdálenosti + jestli se hráč přibližuje
+  const warm = dist <= PROXIMITY_M ? 'here' : dist <= 150 ? 'hot' : dist <= 400 ? 'warm' : 'cold';
+  if (arrow) arrow.dataset.warm = warm;
+  const prev = _destination._lastDist; _destination._lastDist = dist;
+  const trend = prev == null || Math.abs(prev - dist) < 6 ? '' : dist < prev ? ' · ' + t.nav_closer : ' · ' + t.nav_farther;
+  if (dEl) dEl.textContent = dist <= PROXIMITY_M ? t.nav_here : `${dist} m`;
+  const wEl = document.getElementById('navWarm');
+  if (wEl) wEl.textContent = dist <= PROXIMITY_M ? '' : t.nav_warm[warm] + trend;
   if (hint) hint.style.display = _heading == null ? 'block' : 'none';
 }
 
@@ -240,11 +256,16 @@ function injectStyles() {
     .gm-poi.egg::before{content:'🥚';position:absolute;top:-14px;right:-12px;font-size:20px;filter:drop-shadow(0 2px 2px rgba(0,0,0,.3));animation:eggWobble 1.6s ease-in-out infinite;transform-origin:50% 90%}
     .gm-poi-badge{position:absolute;top:-10px;right:-14px;background:#1a3d0a;color:#fff;border-radius:10px;font:800 10px 'Nunito',sans-serif;padding:1px 6px;white-space:nowrap;box-shadow:0 1px 4px rgba(0,0,0,.3)}
     .gm-dest{font-size:28px;filter:drop-shadow(0 2px 3px rgba(0,0,0,.4));pointer-events:none}
-    .gm-nav{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);z-index:600;background:rgba(26,61,10,.94);color:#fff;border-radius:16px;padding:12px 16px;display:flex;align-items:center;gap:14px;box-shadow:0 4px 18px rgba(0,0,0,.3);font-family:Nunito,sans-serif;max-width:88%}
-    .gm-nav-arrow{font-size:30px;line-height:1;transition:transform .15s ease-out;cursor:pointer}
-    .gm-nav-label{font-weight:900;font-size:14px}.gm-nav-dist{font-weight:800;font-size:13px;opacity:.9}.gm-nav-hint{font-size:11px;opacity:.75;display:none}
+    .gm-nav{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);z-index:600;width:min(340px,calc(100% - 24px));box-sizing:border-box;background:rgba(26,61,10,.94);color:#fff;border-radius:16px;padding:12px 16px;display:flex;align-items:center;gap:14px;box-shadow:0 4px 18px rgba(0,0,0,.3);font-family:Nunito,sans-serif;max-width:88%}
+    .gm-nav-compass{--w:#5aa9e6;position:relative;flex:none;width:64px;height:64px;padding:0;border-radius:50%;border:4px solid var(--w);background:radial-gradient(circle at 50% 40%,#2f6d1a,#163a08);box-shadow:0 0 0 3px rgba(255,255,255,.18),0 0 18px var(--w);cursor:pointer;transition:border-color .4s,box-shadow .4s}
+    .gm-nav-compass[data-warm=warm]{--w:#ffb020}.gm-nav-compass[data-warm=hot]{--w:#ff4d2e;animation:navHot 1s ease-in-out infinite}.gm-nav-compass[data-warm=here]{--w:#7be04a}
+    @keyframes navHot{50%{box-shadow:0 0 0 3px rgba(255,255,255,.18),0 0 28px var(--w)}}
+    .gm-nav-ticks{position:absolute;inset:0;width:100%;height:100%;stroke:rgba(255,255,255,.55);stroke-width:2;stroke-linecap:round}
+    .gm-nav-needle{position:absolute;inset:0;width:100%;height:100%;transition:transform .25s ease-out;filter:drop-shadow(0 2px 2px rgba(0,0,0,.35))}
+    .gm-nav-warm{font-weight:900;font-size:13px;margin-top:1px}
+    .gm-nav-label{font-weight:900;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.gm-nav-dist{font-weight:900;font-size:18px}.gm-nav-hint{font-size:11px;opacity:.75;display:none}
     .gm-nav-close{background:rgba(255,255,255,.18);border:none;color:#fff;width:32px;height:32px;border-radius:50%;font-size:15px;font-weight:900;cursor:pointer;flex:none}
-    @media (prefers-reduced-motion: reduce){.gm-pulse,.gm-poi.near,.gm-poi.rare{animation:none}}
+    @media (prefers-reduced-motion: reduce){.gm-pulse,.gm-poi.near,.gm-poi.rare,.gm-nav-compass{animation:none}}
   `;
   document.head.appendChild(s);
 }

@@ -8,6 +8,8 @@ fs.mkdirSync(OUT, { recursive: true });
 const browser = await (ENGINE === 'chromium' ? chromium : webkit).launch();
 const ctx = await browser.newContext({ ...devices['iPhone 13'], ...(AUTH ? { httpCredentials: { username: AUTH.split(':')[0], password: AUTH.split(':').slice(1).join(':') } } : {}) });
 const page = await ctx.newPage();
+// Testy NESMÍ zapisovat na ostrý server (žebříčky, souboje, ligy): zápisy na API se podvrhnou, čtení projde
+await page.route(/3rstudio\.eu\/api\/gream\//, (r) => r.request().method() === 'GET' ? r.continue() : r.fulfill({ contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: '{"ok":true}' }));
 const issues = [];
 page.on('console', m => { if (m.type() === 'error') issues.push(`console: ${m.text().slice(0, 160)}`); });
 page.on('pageerror', e => issues.push(`pageerror: ${String(e).slice(0, 160)}`));

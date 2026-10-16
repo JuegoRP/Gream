@@ -348,6 +348,7 @@ const server = http.createServer((req, res) => {
       badges:     Math.max(0, Math.min(1000, Number(d.badges) || 0)),
       streak:     Math.max(0, Math.min(1e5, Number(d.streak) || 0)),
       greamStage: Math.max(0, Math.min(4,   Number(d.greamStage) || 0)),
+      greams:     Math.max(0, Math.min(24,  Number(d.greams) || 0)),   // 1.1: různí greamíci ve sbírce
       ts: Date.now(),
     };
     // cap stored entries (keep the 500 highest scores)
@@ -363,8 +364,9 @@ const server = http.createServer((req, res) => {
   });
 
   if (req.method === 'GET' && p === '/rank/top') {
-    const board = Object.values(rank).sort((a, b) => b.score - a.score).slice(0, 50)
-      .map(x => ({ name: x.name, avatar: x.avatar, score: x.score, tasks: x.tasks, badges: x.badges, streak: x.streak, greamStage: x.greamStage }));
+    const me = String(u.searchParams.get('pid') || '').slice(0, 40);   // jen příznak „to jsi ty“, ID ostatních se neposílá
+    const board = Object.entries(rank).sort((a, b) => b[1].score - a[1].score).slice(0, 50)
+      .map(([id, x]) => ({ name: x.name, avatar: x.avatar, score: x.score, tasks: x.tasks, badges: x.badges, streak: x.streak, greamStage: x.greamStage, greams: x.greams || 0, ...(me && id === me ? { me: true } : {}) }));
     return send(res, 200, board);
   }
 

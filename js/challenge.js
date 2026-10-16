@@ -5,7 +5,7 @@
 //  + Skin unlock check after task completion
 // ═══════════════════════════════════
 
-import { shuffle } from './shuffle.js';
+import { shuffle, stripEmoji } from './shuffle.js';
 import { factCard } from './facts.js';
 import { Expedition } from './expedition.js';
 import { Playtime } from './parents.js';
@@ -185,8 +185,14 @@ export const Challenge = {
     this._set('chText',       challenge.text);
     this._set('chHint',       challenge.hint);
     this._set('chReportLbl',  lang === 'cs' ? 'Nahlásit otázku' : 'Report question');
-    this._set('chStepBadge',  `${badge.e} ${t.step_lbl(Math.min(stepsDone, 2) + 1)} / 3`);
-    this._set('bp-title',     t.bp_title);
+    // Nahoře jen čísla (Roman 2026-10-16): otázka X ze 3 a kolik výzev chybí do další úrovně odznaku
+    const chStepEl = document.getElementById('chStepBadge'); if (chStepEl) chStepEl.style.display = 'none';
+    const wt = (p.worldTasks || {})[world] || 0, TH = t.badgeThresholds || [0, 10, 20, 30, 40, 50, 100];
+    const nextI = TH.findIndex(x => x > wt), prevT = nextI > 0 ? TH[nextI - 1] : TH[TH.length - 1];
+    const nextT = nextI >= 0 ? TH[nextI] : null, nextLvl = nextI >= 0 ? t.badgeLevels?.[world]?.[nextI] : null;
+    this._set('bp-title', nextT ? t.bp_progress(nextLvl?.n || '', wt, nextT, nextT - wt) : t.bp_max(wt));
+    const bpBar = document.getElementById('bpBar');
+    if (bpBar) bpBar.style.width = nextT ? Math.round(100 * (wt - prevT) / Math.max(1, nextT - prevT)) + '%' : '100%';
 
     // Reset hint button state for new step
     const hintBtn  = document.getElementById('chHintBtn');
@@ -213,43 +219,18 @@ export const Challenge = {
         modeBadgeEl.textContent = t.geo_outdoor_bonus;
         modeBadgeEl.style.display = 'inline-flex';
       } else if (mode === 'outdoor_required' && this._targetPOI) {
-        modeBadgeEl.textContent = '📍 ' + this._targetPOI.name;
+        modeBadgeEl.textContent = '📍 ' + t.poi_challenge_title;
         modeBadgeEl.style.display = 'inline-flex';
       } else {
         modeBadgeEl.style.display = 'none';
       }
     }
 
-    // Label for the CURRENT step should match the actual challenge type shown
-    // (the pool cycles types, so the generic per-world stepDef can mislead).
-    const TYPE_LABEL = {
-      choice:     { icon: '🎯', cs: 'Vyber',    en: 'Choose' },
-      number:     { icon: '🔢', cs: 'Spočítej', en: 'Count' },
-      fill_blank: { icon: '✍️', cs: 'Doplň',    en: 'Fill in' },
-      sort:       { icon: '↕️', cs: 'Seřaď',    en: 'Sort' },
-      match:      { icon: '🔗', cs: 'Přiřaď',   en: 'Match' },
-      map_pin:    { icon: '📍', cs: 'Kde to je?', en: 'Where is it?' },
-    };
-    const curType = TYPE_LABEL[challenge.check?.type];
-
+    // Otázka X ze 3: číslované kroužky (splněné ✓, aktuální zvýrazněná)
     const bpSteps = document.getElementById('bpSteps');
     if (bpSteps) {
-      bpSteps.innerHTML = '';
-      stepDefs.forEach((sd, i) => {
-        const done   = i < stepsDone;
-        const active = i === stepsDone && !done;
-        const icon   = active && curType ? curType.icon : sd.icon;
-        const label  = active && curType ? (lang === 'cs' ? curType.cs : curType.en) : sd.label;
-        const div    = document.createElement('div');
-        div.className = `bp-step${done ? ' done' : active ? ' active' : ''}`;
-        div.innerHTML = `
-          <div class="bp-step-num">${t.step_lbl(i + 1)}</div>
-          <span class="bp-step-icon">${icon}</span>
-          <div class="bp-step-label">${label}</div>
-          ${done ? '<div class="bp-step-check">✓</div>' : ''}
-        `;
-        bpSteps.appendChild(div);
-      });
+      bpSteps.innerHTML = `<span class="bp-q-lbl">${t.bp_question(Math.min(stepsDone, 2) + 1)}</span>` + [0, 1, 2].map(i =>
+        `<span class="bp-dot${i < stepsDone ? ' done' : i === stepsDone ? ' active' : ''}">${i < stepsDone ? '✓' : i + 1}</span>`).join('');
     }
 
     const actionType = challenge.action || stepDefs[Math.min(stepsDone, 2)]?.type || 'choice';
@@ -306,7 +287,7 @@ export const Challenge = {
       const btn = document.createElement('button');
       btn.className = 'btn-action btn-choice';
       btn.style.cssText = 'width:100%;max-width:420px;text-align:left;padding:14px 18px;font-size:15px';
-      btn.textContent = choice.text;
+      btn.textContent = stripEmoji(choice.text);   // emoji u jedné odpovědi by prozradilo správnou
       btn.onclick = () => {
         // Deselect all
         container.querySelectorAll('.btn-choice').forEach(b => {
@@ -756,7 +737,7 @@ export const Challenge = {
     const meta = {
       outdoor: this._wasOutdoor,
       geo:     this._proofGeo || null,
-      poiName: this._targetPOI?.name || null,
+      poiName: this._targetPOI ? 'outdoor' : null,   // místa se nepojmenovávají – jen příznak „venku“
       text:    this._currentChallenge?.text || null
     };
     const result    = Profiles.completeTask(p.id, this._world, this._currentStep, meta);
@@ -787,7 +768,7 @@ export const Challenge = {
     // ─── Archetype reveal overlay at hatching ───
     if (greamResult?.archetypeResolved && greamResult.resolvedArchetype) {
       Gream.setBirth(p.id, greamResult.gream.id, { place: this._targetPOI?.name, outdoor: this._wasOutdoor, world: this._world });
-      greamResult.birthPlace = this._targetPOI?.name || null;
+      greamResult.birthPlace = this._targetPOI ? tr().poi_outdoors : null;
       setTimeout(() => this._showArchetypeReveal(greamResult), 600);
     } else if (greamResult?.evolved && greamResult.gream?.archetype) {
       setTimeout(() => this._showEvolution(greamResult), 600);
