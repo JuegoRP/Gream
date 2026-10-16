@@ -339,12 +339,12 @@ export const Battle = {
     this._rival = this._localRival(diff, Math.random, this.botAccFor(p.id, diff));
     const myRating = loadStats(p.id).rating || 1000;
     const fromServer = Net.battleOpponent(diff, myRating, p.id).then(o => { if (o && !o.bot && Array.isArray(o.answers) && o.answers.length >= 5 && ARCHES.includes(o.arch)) this._rival = { ...o, stage: o.stage || 2 }; });   // bez nahrávky (starší souboj) zůstává bot – nepřebírat jméno skutečného hráče
-    // Hledání soupeře: nahrávka hráče ze stejné ligy a obtížnosti; server čekáme nejdéle 10 s (slabý signál venku), pak bot
+    // Hledání soupeře: nahrávka hráče ze stejné ligy a obtížnosti (asynchronní – nikdo živý se nečeká); server max 2 s, pak bot
     const look = document.createElement('div'); look.className = 'pg-overlay bt-search';
     look.innerHTML = `<div class="pg-card"><div class="bt-search-dots"><span></span><span></span><span></span></div><div class="pg-title">${escHtml(tr().battle_searching)}</div></div>`;
     document.body.appendChild(look);
     const shown = Date.now();
-    Promise.race([fromServer, new Promise(r => setTimeout(r, 10000))])
+    Promise.race([fromServer, new Promise(r => setTimeout(r, 2000))])
       .then(() => new Promise(r => setTimeout(r, Math.max(0, 700 - (Date.now() - shown)))))   // ať hledání neprobliká
       .then(() => { look.remove(); this._run(pick); });
   },
