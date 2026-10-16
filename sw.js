@@ -5,7 +5,7 @@
 //  Navigace (index.html) network-first. PŘI KAŽDÉ ZMĚNĚ APLIKACE ZVÝŠIT VERSION.
 // ═══════════════════════════════════
 
-const VERSION = 'gream-v42';
+const VERSION = 'gream-v43';
 const STATIC_CACHE = `${VERSION}-static`;
 const TILES_CACHE  = `gream-tiles-v2`;   // vektorové dlaždice z 3rstudio.eu/api/gream/tiles
 

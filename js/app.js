@@ -2170,7 +2170,13 @@ window.App = {
       • Týdenní liga: body ze soubojů pod náhodným ID hráče (žebříček ligy ukazuje přezdívky)<br>
       • Nahlášení špatné otázky (které a proč)<br>
       • <strong>Přibližnou polohu</strong> (zaokrouhlenou na ≈ 500 m) a výřez mapy – náš server podle ní najde zajímavá místa v okolí a pošle mapu. Neukládáme ji a není spojená s tebou ani s přezdívkou.<br>
+      • Nahrávku souboje (odpovědi, čas a greamík), aby proti ní mohli hrát ostatní<br>
+      • Při stahování nových otázek jen číslo verze otázek, kterou už máš<br>
+      • Zadaný promo kód (k ověření; server si pamatuje jen, že byl použit)<br>
       Přezdívku si volíš ty a je vidět ostatním — nedávej do ní osobní údaje. Nevhodné přezdívky server automaticky nahradí.</p>
+
+      <p><strong>Gream Plus (předplatné)</strong><br>
+      Platí se jen přes Google Play – platební údaje zpracovává Google, my je nevidíme. Do hry přijde jen informace, že je předplatné aktivní (uloží se v zařízení). Nákup chrání otázka pro dospělé, zrušit jde kdykoli v Google Play.</p>
 
       <p><strong>3. Co Gream NEDĚLÁ</strong><br>
       • Žádné reklamy<br>
@@ -2211,7 +2217,13 @@ window.App = {
       • Weekly league: battle points under a random player ID (the league table shows nicknames)<br>
       • Bad-question reports (which one and why)<br>
       • <strong>Approximate location</strong> (rounded to ≈ 500 m) and the map area – our server uses it to find interesting places nearby and to send the map. It is not stored and not linked to you or your nickname.<br>
+      • A battle recording (answers, time and Gream) so others can play against it<br>
+      • When downloading new questions, only the version number you already have<br>
+      • An entered promo code (to check it; the server only remembers that it was used)<br>
       You choose your nickname and others can see it — don't put personal details in it. The server automatically replaces inappropriate nicknames.</p>
+
+      <p><strong>Gream Plus (subscription)</strong><br>
+      Paid only through Google Play – payment details are handled by Google and we never see them. The game only learns that the subscription is active (stored on the device). Purchases are protected by a question for adults; cancel any time in Google Play.</p>
 
       <p><strong>3. What Gream does NOT do</strong><br>
       • No ads<br>
