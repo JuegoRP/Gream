@@ -17,7 +17,9 @@ const ML_JS  = 'vendor/maplibre/maplibre-gl.js';
 const ML_CSS = 'vendor/maplibre/maplibre-gl.css';
 
 // Must be within this many metres to interact with a POI
-const PROXIMITY_M = 60;
+// Dosah pro výzvu/souboj na místě (Roman 2026-10-16: 60 → 120 m – GPS ve městě kolísá o desítky metrů,
+// místa bývají za plotem, v parku nebo přes silnici; děti nemusí lézt až k bodu na mapě)
+export const PROXIMITY_M = 120;
 const TERRITORY_COLOR = '#5aa02c';
 
 // ─── Styl mapy „Gream“: papír, měkká zeleň, světlá voda, bílé cesty, žádné popisky ───
@@ -213,7 +215,7 @@ function _updateNav() {
   const needle = arrow?.querySelector('.gm-nav-needle');
   if (needle) needle.style.transform = `rotate(${rel}deg)`;
   // Přihořívá: barva kruhu a slovo podle vzdálenosti + jestli se hráč přibližuje
-  const warm = dist <= PROXIMITY_M ? 'here' : dist <= 150 ? 'hot' : dist <= 400 ? 'warm' : 'cold';
+  const warm = dist <= PROXIMITY_M ? 'here' : dist <= 300 ? 'hot' : dist <= 700 ? 'warm' : 'cold';
   if (arrow) arrow.dataset.warm = warm;
   const prev = _destination._lastDist; _destination._lastDist = dist;
   const trend = prev == null || Math.abs(prev - dist) < 6 ? '' : dist < prev ? ' · ' + t.nav_closer : ' · ' + t.nav_farther;

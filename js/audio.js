@@ -32,6 +32,7 @@ let _el           = null;   // the ONE audio element (created on first play)
 let _cryEl        = null;   // separate element for creature "cries" (voice SFX)
 let _currentScene = null;   // scene whose src is loaded in _el
 let _desiredScene = null;   // scene we want to hear (survives mute)
+let _hidden = false;   // aplikace je na pozadí / displej zhasnutý
 let _enabled      = true;
 let _generation   = 0;      // cancels stale fades / pending swaps
 let _fadeTimer    = null;
@@ -78,12 +79,29 @@ function _fadeTo(target, durationMs, onDone) {
 export const Audio = {
   init() {
     try { _enabled = localStorage.getItem('gream_sound') !== 'off'; } catch {}
+    // Aplikace na pozadí / zhasnutý displej → hudba hned stop; po návratu pokračuje (Roman 2026-10-16)
+    document.addEventListener('visibilitychange', () => (document.hidden ? this.background() : this.foreground()));
+    window.addEventListener('pagehide', () => this.background());
+  },
+
+  // Okamžité ztišení bez prolínání (časovače na pozadí neběží); zapamatovaná scéna zůstává
+  background() {
+    _hidden = true;
+    _generation++; _clearFade();
+    try { _el && _el.pause(); } catch {}
+    _currentScene = null;
+  },
+  foreground() {
+    if (!_hidden) return;
+    _hidden = false;
+    if (!_enabled) return;
+    this.switchScene(_desiredScene || 'menu');   // když prohlížeč přehrání zablokuje, spustí ho další dotyk
   },
 
   // Called on every touch/click — (re)start the desired scene if nothing plays.
   // Reuses the single element, so it can never spawn a second track.
   onUserGesture() {
-    if (!_enabled) return;
+    if (!_enabled || _hidden) return;
     if (_el && !_el.paused) return;         // already playing
     const scene = _desiredScene || _currentScene || 'menu';
     _currentScene = null;                    // force switchScene to (re)load
@@ -93,7 +111,7 @@ export const Audio = {
   switchScene(scene) {
     if (!SCENE_MUSIC[scene]) return;
     _desiredScene = scene;
-    if (!_enabled) return;
+    if (!_enabled || _hidden || (typeof document !== 'undefined' && document.hidden)) return;
     // Already on this scene and audibly playing → nothing to do.
     if (scene === _currentScene && _el && !_el.paused) return;
 

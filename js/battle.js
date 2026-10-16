@@ -28,7 +28,13 @@ const WORLDS = ['nature','language','logic','feelings','arts','world'];
 const WORLD_ICONS = { nature:'🌿', language:'📖', logic:'🧩', feelings:'💛', arts:'🎨', world:'🌍' };
 
 const ROUNDS = 10;
-const BASE_TIME_MS = 11000;                 // base time per question
+const BASE_TIME_MS = 11000;                 // původní čas na otázku (měřítko pro nahrávky a boty)
+// Čas na otázku podle délky (Roman 2026-10-16: aspoň 15 s, delší otázky víc): 15 s + 60 ms za každý znak
+// otázky a možností nad 80 znaků, nejvýš 30 s. Boti i nahrávky se škálují stejně → férové.
+export function questionTimeMs(ch) {
+  const len = String(ch?.text || '').length + (ch?.choices || []).reduce((n, c) => n + String(c?.text || '').length, 0);
+  return Math.min(30000, 15000 + Math.max(0, len - 80) * 60);
+}
 const MATCH_BONUS_MS = 3000;                // matching-world Gream present
 const MATCH_EVOLVED_BONUS_MS = 2000;        // + if that Gream is stage >= 3
 const BOT_ACC = { easy:0.55, medium:0.65, hard:0.72, extreme:0.78 };   // jen výchozí odhad dovednosti hráče (statistiky)
@@ -562,14 +568,16 @@ export const Battle = {
 
   // Odpověď soupeře v kole (nahraný hráč nebo bot); během otázky „živě“ ukáže, že už odpověděl
   _oppAnswer(round) {
-    const a = this._rival.answers?.[round] || { ok: false, ms: BASE_TIME_MS };
+    const raw = this._rival.answers?.[round] || { ok: false, ms: BASE_TIME_MS };
+    const base = this._curBaseMs || BASE_TIME_MS;
+    const a = { ...raw, ms: raw.ms * base / BASE_TIME_MS };   // soupeř má na delší otázku úměrně víc času
     const f1 = this._f[1];
     const qWorld = this._curWorld;
     const domain = f1.ownWorldNext ? 1 : domainFor(f1.arch, qWorld, this._curCh, this._daily ? 'medium' : this._diff);
     const ok = a.ok || (f1.fiftyNext && !a.ok && Math.random() < 0.25);   // 50:50 pomůže i soupeři
     f1.fiftyNext = false; f1.ownWorldNext = false;
     if (ok) this._correct[1]++;
-    return { ok, domain, speedFrac: ok ? Math.max(0, 1 - a.ms / BASE_TIME_MS) : 0 };
+    return { ok, domain, speedFrac: ok ? Math.max(0, 1 - a.ms / base) : 0 };
   },
 
   // Otázka kola: vrací { ok, domain, speedFrac }. Hráč může před odpovědí použít speciál.
@@ -581,17 +589,18 @@ export const Battle = {
     const me = this._f[side], foe = this._f[1 - side];
     return new Promise((resolve) => {
       const pid = this._family ? this._family.pids[side] : p.id;
-      let answered = false, start = Date.now(), timeMs = BASE_TIME_MS + (pid ? timeBonusForWorld(pid, world) : 0), paused = 0;
+      const baseMs = questionTimeMs(ch); this._curBaseMs = baseMs;
+      let answered = false, start = Date.now(), timeMs = baseMs + (pid ? timeBonusForWorld(pid, world) : 0), paused = 0;
       const elQ = scr.querySelector('#btQ'), elC = scr.querySelector('#btChoices'), bar = scr.querySelector('#btTime');
       const spBtn = scr.querySelector('#btSpecial');
       scr.querySelector('#btRound').textContent = `⚔️ ${t.battle_round} ${round + 1}/${ROUNDS}${this._family ? ` · ${this._family.names[side]}` : ''}`;
       const opCard = scr.querySelector('.ar-op .ar-card'); opCard?.classList.remove('answered');
-      const oppMs = side === 0 && !this._family ? this._rival.answers?.[round]?.ms : null;
+      const oppMs = side === 0 && !this._family && this._rival.answers?.[round]?.ms ? this._rival.answers[round].ms * baseMs / BASE_TIME_MS : null;
       const oppTimer = oppMs ? setTimeout(() => opCard?.classList.add('answered'), oppMs) : null;
 
       const render = () => {
         this._curWorld = world; this._curCh = ch;
-        const bonus = timeMs - BASE_TIME_MS;
+        const bonus = timeMs - baseMs;
         const dom = me.ownWorldNext ? 1 : domainFor(me.arch, world, ch, this._daily ? 'medium' : this._diff);
         scr.querySelector('#btWorld').textContent = `${WORLD_ICONS[world]} ${t.worlds?.[world] || world}${bonus > 0 ? ` · +${Math.round(bonus / 1000)} s` : ''}${dom >= 1 ? ` · ${t.battle_super_eff}` : dom > 0 ? ` · ${t.battle_half_eff}` : ''}`;
         elQ.textContent = ch.text;
@@ -650,7 +659,7 @@ export const Battle = {
         const domain = me.ownWorldNext ? 1 : domainFor(me.arch, world, ch, this._daily ? 'medium' : this._diff);
         me.fiftyNext = false; me.ownWorldNext = false;
         if (ok) { this._correct[side]++; Feedback.success?.(); } else if (!ko) { Feedback.error?.(); if (side === 0 || this._family) this._missed.push({ q: ch.text, a: correctText, world, diff: this._daily ? 'medium' : this._diff, ch, who: this._family?.names[side] }); }
-        if (side === 0) this._log.push({ ok: !!ok, ms: Math.round(Date.now() - start - paused) });
+        if (side === 0) this._log.push({ ok: !!ok, ms: Math.round((Date.now() - start - paused) * BASE_TIME_MS / baseMs) });   // nahrávka v měřítku 11 s (při přehrání se přepočítá na délku otázky)
         setTimeout(() => resolve({ ok: !!ok && !ko, domain, speedFrac: ok ? left : 0 }), ok ? 250 : 700);
       };
 

@@ -13,7 +13,7 @@ import { Stats } from './stats.js';
 import { Feedback } from './feedback.js';
 import { Geo, WORLD_EMOJIS, isBattleSpot } from './geo.js';
 import { Skins, SKIN_CATALOG } from './skins.js';
-import { MapView } from './mapview.js';
+import { MapView, PROXIMITY_M } from './mapview.js';
 import { Dev } from './dev.js';
 import { Battle, clearPoolCache } from './battle.js';
 import { Net } from './net.js';
@@ -425,6 +425,10 @@ window.App = {
   _initNativeBack() {
     const CapApp = window.Capacitor?.isNativePlatform?.() && window.Capacitor.Plugins?.App;
     if (!CapApp) return;
+    // Android: aplikace na pozadí / zamčený telefon → hudba stop (WebView nemusí poslat visibilitychange)
+    CapApp.addListener('appStateChange', ({ isActive }) => (isActive ? Audio.foreground() : Audio.background()));
+    CapApp.addListener('pause', () => Audio.background());
+    CapApp.addListener('resume', () => Audio.foreground());
     CapApp.addListener('backButton', () => {
       // Souboj a průvodce: Zpět nic nedělá (žádný omylem přerušený souboj)
       if (document.getElementById('battleOverlay') || document.getElementById('battleBoardOverlay') || document.getElementById('tutOverlay')) return;
@@ -1949,15 +1953,17 @@ window.App = {
       chosen = allWorlds[Math.floor(Math.random() * allWorlds.length)];
     } else {
       // Otherwise: suggest based on Gream needs, or pick least-played
-      if (pet) {
+      // Vylíhnutý greamík: svět podle jeho potřeb. Vajíčko: náhodně mezi nejméně hranými světy – jinak by všichni
+      // noví hráči dostali stejný svět a stejného prvního greamíka
+      if (pet && pet.stage >= 2 && pet.archetype) {
         const suggested = Gream.suggestWorld(pet);
         if (suggested) chosen = suggested;
       }
       if (!chosen) {
-        // Pick the world with fewest completions for this profile
         const worldCounts = p.worldTasks || {};
-        const sorted = allWorlds.slice().sort((a, b) => (worldCounts[a] || 0) - (worldCounts[b] || 0));
-        chosen = sorted[0];
+        const min = Math.min(...allWorlds.map(w => worldCounts[w] || 0));
+        const least = allWorlds.filter(w => (worldCounts[w] || 0) === min);
+        chosen = least[Math.floor(Math.random() * least.length)];
       }
     }
     Subscription.recordIndoor(p.id);
@@ -3310,7 +3316,7 @@ window.App = {
         ${tooFar ? `
           <div style="background:#fff6e6;border:2px solid rgba(245,166,35,0.5);border-radius:14px;padding:12px 14px;margin-bottom:14px;text-align:center">
             <div style="font-size:14px;font-weight:800;color:#8a5200">📍 ${lang==='cs'?`Jsi ${info.dist} m daleko`:`You're ${info.dist} m away`}</div>
-            <div style="font-size:11px;color:#a05000;font-weight:600;margin-top:3px;line-height:1.35">${lang==='cs'?'Přijď blíž (max 60 m) a můžeš hrát výzvu nebo souboj. Zatím tě sem navedu.':'Come within 60 m to play a challenge or battle. For now, let me guide you here.'}</div>
+            <div style="font-size:11px;color:#a05000;font-weight:600;margin-top:3px;line-height:1.35">${tr().poi_come_closer(PROXIMITY_M)}</div>
           </div>
           <button onclick="App.navigateToPoi()"
             style="width:100%;padding:14px;border-radius:14px;border:none;background:var(--green-mid);color:#fff;font-family:inherit;font-weight:900;font-size:15px;cursor:pointer;margin-bottom:8px">🧭 ${lang==='cs'?'Navigovat sem':'Navigate here'}</button>
