@@ -162,6 +162,7 @@ export const T = {
     ss_privacy_title:   "Privacy & legal",
     ss_privacy_lbl:     "Privacy policy",
     ss_feedback_lbl:    "Send feedback (testing)",
+    report_q:           "🚩 Report this question",
     ss_terms_lbl:       "Terms of use",
     ss_data_info:       "Your data is stored only on this device. Tap below to permanently delete everything (GDPR right to erasure).",
     // Stats
@@ -1656,6 +1657,7 @@ export const T = {
     ss_privacy_title:   "Soukromí a právní",
     ss_privacy_lbl:     "Zásady ochrany soukromí",
     ss_feedback_lbl:    "Napsat zpětnou vazbu (testování)",
+    report_q:           "🚩 Nahlásit otázku",
     ss_terms_lbl:       "Podmínky použití",
     ss_data_info:       "Tvá data jsou uložena pouze v tomto zařízení. Klepnutím níže je trvale smažeš (právo na výmaz dle GDPR).",
     // Souboje 1.1 — aréna

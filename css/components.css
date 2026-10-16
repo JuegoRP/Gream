@@ -1800,3 +1800,6 @@ canvas.aura, #greamSpriteCanvas.aura { filter:drop-shadow(0 0 4px #ffd84d) drop-
 .bp-bar { height:8px; border-radius:var(--radius-full); background:var(--green-pale); overflow:hidden; }
 .bp-bar i { display:block; height:100%; background:var(--green-mid); border-radius:inherit; transition:width .4s; }
 .ch-icon { font-size:30px; margin-bottom:4px; }
+/* Nahlásit otázku i po odpovědi (výzva, správně/špatně, přehled po souboji) */
+.report-link { display:block; margin:var(--space-2) auto 0; padding:6px 10px; background:none; border:none; color:#9a9a9a; font-family:inherit; font-weight:700; font-size:12px; cursor:pointer; }
+.report-link.small { display:inline-block; margin:4px 0 0; padding:2px 0; font-size:11px; }
