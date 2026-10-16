@@ -19,6 +19,19 @@ import { Battle } from './battle.js';
 import { Net } from './net.js';
 import { hasProfanity } from './profanity.js';
 import { shinySource } from './shiny.js';
+import { GardenLife } from './garden-life.js';
+
+// Rozmístění ve 2D zahradě (% světa; y = spodní hrana předmětu, čím víc, tím blíž)
+const GARDEN_LAYOUT = {
+  nest:           { x: 18, y: 80 },
+  deco_flowerbed: { x: 6,  y: 99 },
+  deco_bench:     { x: 31, y: 81 },
+  deco_birdhouse: { x: 45, y: 74 },
+  deco_lantern:   { x: 57, y: 83 },
+  deco_pond:      { x: 72, y: 99 },
+  deco_mushroom:  { x: 89, y: 79 },
+  deco_rainbow:   { x: 62, y: 36 },
+};
 import { Gream, ARCHETYPES, spritePath, smartSpritePath } from './gream.js';
 import { Subscription, FREE_DAILY_INDOOR, PREMIUM_DAILY_INDOOR, INDOOR_MAX_TOTAL, FREE_DAILY_OUTDOOR, SEED_COST_EXTRA_TASK } from './subscription.js';
 import { Ranking } from './ranking.js';
@@ -1048,97 +1061,141 @@ window.App = {
     bar.style.justifyContent = 'center';
   },
 
+  // ─── 2D zahrada: posuvný „svět“ (panorama) uvnitř #greamStage; ovládací prvky zůstávají pevně v rámu ───
+  _gardenWorld() {
+    const stage = document.getElementById('greamStage');
+    if (!stage) return null;
+    let scroll = stage.querySelector('.garden-scroll');
+    if (!scroll) {
+      scroll = document.createElement('div'); scroll.className = 'garden-scroll';
+      const world = document.createElement('div'); world.className = 'garden-world';
+      scroll.appendChild(world);
+      (stage.querySelector('.gream-floor') || stage.firstChild)?.after(scroll);
+      if (!this._gardenResize) {
+        this._gardenResize = () => this._sizeGardenWorld();
+        window.addEventListener('resize', this._gardenResize);
+      }
+    }
+    return scroll.querySelector('.garden-world');
+  },
+  // Šířka světa: panorama 3 : 2 podle výšky scény (posouvá se do stran); kupované pozadí = jen šířka rámu
+  _sizeGardenWorld() {
+    const stage = document.getElementById('greamStage'), world = stage?.querySelector('.garden-world');
+    if (!world) return;
+    const wide = world.dataset.wide === '1';
+    // panorama zvětšené 1,3× a ukotvené dole → méně oblohy, víc trávníku (obrázek 3 : 2)
+    world.style.width = (wide ? Math.max(stage.clientWidth, Math.round(stage.clientHeight * 1.3 * 1.5)) : stage.clientWidth) + 'px';
+    world.style.setProperty('--stage-w', stage.clientWidth + 'px');
+    this._updateGardenArrows();
+  },
+  // Šipky na okrajích: ukazují, že zahrada pokračuje, a klepnutím ji posunou
+  _updateGardenArrows() {
+    const stage = document.getElementById('greamStage'), scroll = stage?.querySelector('.garden-scroll');
+    if (!scroll) return;
+    ['left', 'right'].forEach(side => {
+      let b = stage.querySelector('.garden-arrow.' + side);
+      if (!b) {
+        b = document.createElement('button'); b.className = 'garden-arrow ' + side; b.type = 'button';
+        b.setAttribute('aria-label', side === 'left' ? '←' : '→'); b.textContent = side === 'left' ? '‹' : '›';
+        b.onclick = (e) => { e.stopPropagation(); scroll.scrollBy({ left: (side === 'left' ? -1 : 1) * scroll.clientWidth * 0.7, behavior: 'smooth' }); };
+        stage.appendChild(b);
+      }
+      const more = side === 'left' ? scroll.scrollLeft > 8 : scroll.scrollLeft < scroll.scrollWidth - scroll.clientWidth - 8;
+      b.classList.toggle('show', more);
+    });
+    if (!scroll._arrows) { scroll._arrows = true; scroll.addEventListener('scroll', () => this._updateGardenArrows(), { passive: true }); }
+  },
+
   _renderGardenGreams(allGreams, activeGream, lang) {
     const stage = document.getElementById('greamStage');
-    if (!stage) return;
+    const world = this._gardenWorld();
+    if (!stage || !world) return;
+    this._gardenLife?.stop();
+    world.querySelectorAll('.garden-gream-slot, .garden-nest, .gw-fx').forEach(el => el.remove());
+    stage.querySelectorAll(':scope > .garden-gream-slot, :scope > .garden-nest').forEach(el => el.remove());   // starý 1D rozvrh
+    this._sizeGardenWorld();
 
-    stage.querySelectorAll('.garden-gream-slot').forEach(el => el.remove());
-
-    const POSITIONS = {
-      1: [50],
-      2: [30, 70],
-      3: [22, 50, 78],
-      4: [18, 38, 62, 82],
-      5: [14, 32, 50, 68, 86],          // až 6 greamíků (jeden za každý svět) – dřív se 5. a 6. kreslili přes sebe
-      6: [12, 27, 42, 58, 73, 88]
-    };
-    // Vejce leží v košíčku (stálé místo líhnutí), vylíhnutí greamíci se rozestaví po zahradě
+    // Vejce leží v košíčku (stálé místo líhnutí), vylíhnutí greamíci chodí po zahradě
     const isEgg = (g) => g.stage < 2 || !g.archetype;
     const hatched = allGreams.filter(g => !isEgg(g));
     const eggs = allGreams.filter(isEgg);
-    const xPositions = POSITIONS[hatched.length] || POSITIONS[1];
-    const crowded = hatched.length >= 5;   // plná zahrada: neaktivní menší, každý druhý v zadní řadě
-    const nestX = hatched.length ? 86 : 50, nestB = hatched.length ? 66 : 8;   // s greamíky stojí košíček vzadu vpravo (nad tlačítkem)
-    stage.querySelectorAll('.garden-nest').forEach(el => el.remove());
+    const NEST = GARDEN_LAYOUT.nest;
     const nest = document.createElement('img');
     nest.className = 'garden-nest';
     nest.src = 'img/zahrada/nest.png'; nest.alt = '';
-    nest.style.cssText = `position:absolute;left:${nestX}%;bottom:${nestB}px;width:${hatched.length ? 60 : 92}px;transform:translateX(-50%);image-rendering:pixelated;z-index:${eggs.length ? (hatched.length ? 2 : 5) : 1};pointer-events:none;filter:drop-shadow(0 3px 3px rgba(0,0,0,.25))`;
-    stage.appendChild(nest);
+    nest.style.cssText = `left:${NEST.x}%;top:${NEST.y}%;width:calc(var(--stage-w) * ${hatched.length ? 0.2 : 0.3});z-index:${Math.round(NEST.y * 10)}`;
+    world.appendChild(nest);
 
+    const actors = [];
     allGreams.forEach((g) => {
       const isActive = g.id === activeGream?.id;
       const showJar = isEgg(g);
-      const i = showJar ? eggs.indexOf(g) : hatched.indexOf(g);
-      const xPct = showJar ? nestX + (eggs.length > 1 ? (i - (eggs.length - 1) / 2) * 5 : 0) : (xPositions[i] || 50);
-
       const slot = document.createElement('div');
-      slot.className = 'garden-gream-slot';
-      slot.style.cssText = `
-        position:absolute;
-        left:${xPct}%;
-        bottom:${showJar ? nestB + (hatched.length ? 16 : 30) : crowded && !isActive && i % 2 ? 50 : 18}px;
-        transform:translateX(-50%) scale(${showJar ? (hatched.length ? 0.72 : 1.05) : isActive ? 1.0 : crowded ? (i % 2 ? 0.6 : 0.68) : 0.78});
-        transform-origin: bottom center;
-        opacity:${isActive || showJar ? 1 : 0.7};
-        z-index:${showJar ? (hatched.length ? 1 : 4) : isActive ? 4 : crowded && i % 2 ? 2 : 3};
-        transition:transform 0.3s,opacity 0.3s;
-        cursor:pointer;
-        display:flex;flex-direction:column;align-items:center;
-      `;
+      slot.className = 'garden-gream-slot' + (showJar ? ' gw-egg' : ' gw-slot idle') + (isActive ? ' is-active' : '');
 
       if (showJar) {
         // Vejce v košíčku: blízko vylíhnutí (8+ výzev) se kolébá
-        slot.innerHTML = `
-          <img src="img/greamici/seed_1.png" alt="" style="width:48px;height:48px;image-rendering:pixelated;display:block;transform-origin:50% 90%;
-            ${g.tasksFor >= 8 ? 'animation:eggWobble 1.6s ease-in-out infinite;' : ''}${isActive ? '' : 'filter:brightness(.92);'}">
-        `;
+        const i = eggs.indexOf(g);
+        const nw = hatched.length ? 0.2 : 0.3;   // šířka košíčku vůči rámu; vejce sedí spodkem v půlce výšky košíčku (78×46)
+        slot.style.cssText = `left:${NEST.x + (eggs.length > 1 ? (i - (eggs.length - 1) / 2) * 2.4 : 0)}%;top:calc(${NEST.y}% - var(--stage-w) * ${(nw * 46 / 78 * 0.5).toFixed(3)});z-index:${Math.round(NEST.y * 10) - 1};width:calc(var(--stage-w) * ${hatched.length ? 0.1 : 0.15})`;
+        slot.innerHTML = `<img src="img/greamici/seed_1.png" alt="" style="width:100%;image-rendering:pixelated;display:block;transform-origin:50% 90%;
+            ${g.tasksFor >= 8 ? 'animation:eggWobble 1.6s ease-in-out infinite;' : ''}${isActive ? '' : 'filter:brightness(.92);'}">`;
       } else {
         const arch = g.archetype;
         const stageN = Math.min(g.stage, 4);
-        // Bigger evolution → visibly bigger. stage2 = base, +20% at 3, +30% again at 4.
+        // Větší stádium → viditelně větší (stádium 2 = základ)
         const STAGE_SCALE = { 1: 0.85, 2: 1.0, 3: 1.2, 4: 1.56 };
-        const gSize = Math.round(80 * (STAGE_SCALE[stageN] || 1));
-        const shW = Math.round(gSize * (isActive ? 0.62 : 0.5));
+        const gSize = Math.round(76 * (STAGE_SCALE[stageN] || 1));
+        const accId = isActive ? (Skins.getAccessory(Profiles.active()?.id) || '') : '';
+        const aura = accId === 'acc_star';
+        const an = [g.isShiny && 'greamShinyGlow 3s ease-in-out infinite', aura && 'auraPulse 2.4s ease-in-out infinite'].filter(Boolean);
         slot.innerHTML = `
-          <canvas data-sprite-sheet="img/greamici/${arch}_${stageN}.png"
-            data-sprite-mood="${g.mood || 'happy'}" data-arch="${arch}" data-shiny="${g.isShiny ? '1' : ''}" ${isActive ? `data-acc="${Skins.getAccessory(Profiles.active()?.id) || ''}"` : ''}
-            width="${gSize}" height="${gSize}"
-            style="width:${gSize}px;height:${gSize}px;image-rendering:pixelated;display:block;
-              ${(() => {   // inline styl by jinak přebil třídy .aura/.shiny → animace skládáme tady
-                const aura = isActive && Skins.getAccessory(Profiles.active()?.id) === 'acc_star';
-                const an = [isActive && 'greamWalkBlock 1.1s ease-in-out infinite', g.isShiny && 'greamShinyGlow 3s ease-in-out infinite', aura && 'auraPulse 2.4s ease-in-out infinite'].filter(Boolean);
-                return (an.length ? `animation:${an.join(', ')};` : '') + (aura ? 'filter:drop-shadow(0 0 4px #ffd84d) drop-shadow(0 0 12px rgba(255,196,40,.95)) drop-shadow(0 0 24px rgba(255,214,90,.7));' : `filter:drop-shadow(0 4px 8px rgba(0,0,0,${isActive ? '0.3' : '0.15'}));`);
-              })()}
-            "></canvas>
-          <div style="position:absolute;bottom:2px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,${isActive ? '0.22' : '0.1'});width:${shW}px;height:${Math.round(shW*0.16)}px;border-radius:50%;${isActive ? 'animation:greamWalkShadow 1.1s ease-in-out infinite;' : ''}"></div>
-        `;
+          <div class="gw-body"><div class="gw-hop"><div class="gw-bob">
+            <canvas data-sprite-sheet="img/greamici/${arch}_${stageN}.png"
+              data-sprite-mood="${g.mood || 'happy'}" data-arch="${arch}" data-shiny="${g.isShiny ? '1' : ''}" ${accId ? `data-acc="${accId}"` : ''}
+              width="${gSize}" height="${gSize}"
+              style="width:${gSize}px;height:${gSize}px;image-rendering:pixelated;display:block;${an.length ? `animation:${an.join(', ')};` : ''}${aura ? 'filter:drop-shadow(0 0 4px #ffd84d) drop-shadow(0 0 12px rgba(255,196,40,.95)) drop-shadow(0 0 24px rgba(255,214,90,.7));' : 'filter:drop-shadow(0 4px 6px rgba(0,0,0,0.22));'}"></canvas>
+          </div></div></div>
+          <div class="gw-shadow" style="width:${Math.round(gSize * 0.6)}px"></div>`;
+        actors.push({ el: slot, id: g.id, active: isActive });
       }
 
-      slot.addEventListener('click', () => {
+      slot.addEventListener('click', (e) => {
+        e.stopPropagation();
         if (!isActive) {
           Gream.setActive(Profiles.active()?.id, g.id);
           this.renderMap();
           Feedback.tap();
         } else {
-          this.tapGream();
+          this._gardenLife?.poke(g.id);
+          this.tapGream(slot);
         }
       });
-
-      stage.appendChild(slot);
+      world.appendChild(slot);
     });
 
-    this._initSpriteCanvases(stage);
+    this._initSpriteCanvases(world);
+
+    // Chování: greamíci chodí k předmětům v zahradě (výzdoba + košíček, když v něm je vejce)
+    const p = Profiles.active();
+    const props = (p ? Skins.shownDecor(p.id) : []).map(it => ({ id: it.id, ...(GARDEN_LAYOUT[it.id] || { x: it.x, y: it.y }) }));
+    if (eggs.length) props.push({ id: 'nest', ...NEST });
+    const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    this._gardenLife = new GardenLife(world, { reduced });
+    this._gardenLife.setProps(props);
+    this._gardenLife.setActors(actors);
+    this._gardenLife.start();
+
+    // Na začátku ukázat aktivního greamíka (nebo vejce) uprostřed rámu
+    requestAnimationFrame(() => {
+      const scroll = stage.querySelector('.garden-scroll');
+      const focus = world.querySelector('.garden-gream-slot.is-active') || world.querySelector('.garden-gream-slot');
+      if (scroll && focus && !this._gardenScrolled) {
+        scroll.scrollLeft = Math.max(0, focus.offsetLeft - scroll.clientWidth / 2);
+        this._gardenScrolled = true;
+        this._updateGardenArrows();
+      }
+    });
 
     const activePet = activeGream;
     if (activePet) {
@@ -1359,19 +1416,27 @@ window.App = {
     }
   },
 
-  tapGream() {
+  tapGream(slot = null) {
     Feedback.pop();
     // Cute per-archetype cry (deeper the bigger the Gream)
     const _tp = Profiles.active();
     const _pet = _tp ? Gream.active(_tp.id) : null;
     if (_pet?.archetype && _pet.stage >= 2) Audio.playCry(_pet.archetype, _pet.stage);
     // Works with both canvas (sprite sheet) and original img element
-    const target = document.getElementById('greamSpriteCanvas') || document.getElementById('greamSprite');
-    if (!target) return;
-    target.classList.remove('tapped');
-    void target.offsetWidth; // reflow
-    target.classList.add('tapped');
-    setTimeout(() => target.classList.remove('tapped'), 400);
+    // 2D zahrada: poskočení dělá GardenLife.poke, tady jen jiskry v místě greamíka
+    const target = slot ? null : (document.getElementById('greamSpriteCanvas') || document.getElementById('greamSprite'));
+    if (!slot && !target) return;
+    if (target) {
+      target.classList.remove('tapped');
+      void target.offsetWidth; // reflow
+      target.classList.add('tapped');
+      setTimeout(() => target.classList.remove('tapped'), 400);
+    }
+    let sparkAt = 'left:50%;top:42%;';
+    if (slot) {
+      const r = slot.getBoundingClientRect(), sr = document.getElementById('greamStage')?.getBoundingClientRect();
+      if (sr) sparkAt = `left:${Math.round(r.left - sr.left + r.width / 2)}px;top:${Math.round(r.top - sr.top + r.height * 0.45)}px;`;
+    }
 
     // Sparkle particle burst
     const stage = document.getElementById('greamStage');
@@ -1385,7 +1450,7 @@ window.App = {
         p.style.cssText = `
           position:absolute;width:7px;height:7px;border-radius:50%;
           background:${colors[i % colors.length]};
-          left:50%;top:42%;pointer-events:none;z-index:20;
+          ${sparkAt}pointer-events:none;z-index:20;
           --sx:${(Math.cos(angle) * dist).toFixed(1)}px;
           --sy:${(Math.sin(angle) * dist).toFixed(1)}px;
           animation:sparkleOut 0.55s ease forwards;
@@ -1511,13 +1576,17 @@ window.App = {
 
   // ─── Dynamic SVG scene behind Greamík ───
   _renderGreamScene(pet) {
-    const bg = document.getElementById('greamStage');
-    if (!bg) return;
+    const stage = document.getElementById('greamStage');
+    const bg = this._gardenWorld();   // pozadí nese posuvný svět zahrady (2D)
+    if (!stage || !bg) return;
+    stage.style.backgroundImage = '';
 
     // Apply purchased background image if equipped
     const p = Profiles.active();
     const equippedBg = p ? Skins.getEquippedBg(p.id) : null;
     if (equippedBg?.file) {
+      bg.dataset.wide = '';   // kupovaná pozadí jsou na výšku → bez posouvání
+      this._sizeGardenWorld();
       bg.style.backgroundImage = `url('img/backgrounds/${equippedBg.file}')`;
       bg.style.backgroundSize = 'cover';
       bg.style.backgroundPosition = 'center bottom';
@@ -1527,10 +1596,12 @@ window.App = {
       return; // skip procedural SVG generation
     }
 
-    // No custom shop bg — use the painted default garden + living overlay
-    bg.style.backgroundImage = "url('img/bg/garden_bg.jpg')";
-    bg.style.backgroundSize = 'cover';
-    bg.style.backgroundPosition = 'center bottom';
+    // Výchozí zahrada: široké panorama (img/bg/garden_wide.jpg, 3 : 2), posouvá se do stran
+    bg.dataset.wide = '1';
+    this._sizeGardenWorld();
+    bg.style.backgroundImage = "url('img/bg/garden_wide.jpg')";
+    bg.style.backgroundSize = 'auto 130%';
+    bg.style.backgroundPosition = 'left bottom';
     this._applyTodTint(bg);
     bg.querySelector('svg.scene-svg')?.remove();
     this._applyLivingOverlay(bg);
@@ -2383,9 +2454,11 @@ window.App = {
           slot.appendChild(bubble);
         }
         bubble.textContent = pair[idx] || '...';
-        // bublina nesmí přetéct přes okraj zahrady (greamík na kraji)
+        // bublina nesmí přetéct přes okraj zahrady (greamík na kraji); greamík mimo záběr (2D zahrada) nemluví
         bubble.style.transform = 'translateX(-50%)';
         const st = document.getElementById('greamStage')?.getBoundingClientRect(), br = bubble.getBoundingClientRect();
+        const sr = slot.getBoundingClientRect();
+        if (st && (sr.right < st.left + 10 || sr.left > st.right - 10)) return;
         if (st && br.width) {
           const scale = br.width / bubble.offsetWidth || 1;   // slot bývá zmenšený (scale)
           const dx = br.left < st.left + 6 ? st.left + 6 - br.left : br.right > st.right - 6 ? st.right - 6 - br.right : 0;
@@ -3688,9 +3761,13 @@ window.App = {
     const p = Profiles.active();
     const stage = document.getElementById('greamStage');
     if (!p || !stage) return;
-    let layer = stage.querySelector('.garden-decor');
-    if (!layer) { layer = document.createElement('div'); layer.className = 'garden-decor'; (stage.querySelector('.gream-floor') || stage.firstChild)?.after(layer); }
-    layer.innerHTML = Skins.shownDecor(p.id).map(it => `<img src="${it.img}" alt="" style="left:${it.x}%;top:${it.y}%;width:${it.w}%">`).join('');
+    const world = this._gardenWorld();
+    stage.querySelector(':scope > .garden-decor')?.remove();   // starý 1D rozvrh
+    let layer = world.querySelector('.garden-decor');
+    if (!layer) { layer = document.createElement('div'); layer.className = 'garden-decor'; world.prepend(layer); }
+    // šířka podle rámu (ne světa) → stejná velikost jako dřív; hloubka (z-index) podle spodní hrany, ať se greamíci můžou schovat za předmět
+    layer.innerHTML = Skins.shownDecor(p.id).map(it => { const L = GARDEN_LAYOUT[it.id] || it;
+      return `<img src="${it.img}" alt="" data-id="${it.id}" style="left:${L.x}%;top:${L.y}%;width:calc(var(--stage-w) * ${it.w / 100});z-index:${Math.round(L.y * 10)}">`; }).join('');
   },
 
   // ─── Výzdoba zahrady: koupit / ukázat-schovat ───

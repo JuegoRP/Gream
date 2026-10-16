@@ -1532,6 +1532,32 @@ canvas.aura, #greamSpriteCanvas.aura { filter:drop-shadow(0 0 4px #ffd84d) drop-
 
 /* Výzdoba v zahradě */
 .garden-decor { position:absolute; inset:0; pointer-events:none; z-index:1; }
+/* ─── 2D zahrada: posuvný svět (panorama) – predměty i greamíci v jedné vrstvě, hloubka = z-index podle spodní hrany ─── */
+.garden-scroll { position:absolute; inset:0; overflow-x:auto; overflow-y:hidden; z-index:2; scrollbar-width:none; overscroll-behavior-x:contain; -webkit-overflow-scrolling:touch; }
+.garden-scroll::-webkit-scrollbar { display:none; }
+.garden-world { position:relative; height:100%; min-width:100%; background-repeat:no-repeat; }
+.garden-world .garden-decor { display:contents; }
+.garden-world .garden-decor img, .garden-world .garden-nest { position:absolute; transform:translate(-50%,-100%); image-rendering:pixelated; pointer-events:none; filter:drop-shadow(0 3px 2px rgba(0,0,0,.18)); }
+.garden-world .garden-gream-slot { position:absolute; transform:translate(-50%,-100%); cursor:pointer; }
+.gw-slot { transform:translate(-50%,-100%) scale(var(--gw-scale,1)) !important; transform-origin:50% 100%; transition:opacity .5s; -webkit-tap-highlight-color:transparent; }
+.gw-body { transform:scaleX(var(--gw-dir,1)); transform-origin:50% 100%; }
+.gw-hop.gw-jump { animation:gwJump .5s cubic-bezier(.3,.7,.4,1); }
+@keyframes gwJump { 40% { transform:translateY(-22%); } 70% { transform:translateY(2%); } }
+.gw-slot.walking .gw-bob { animation:greamWalkBlock .62s ease-in-out infinite; }
+.gw-slot.idle .gw-bob { animation:greamBob 2.6s ease-in-out infinite; }
+.gw-slot.act-sit .gw-bob { animation:none; transform:translateY(8%) scaleY(.94); transform-origin:50% 100%; }
+.gw-slot.act-look .gw-bob { animation:none; transform:rotate(-7deg); transform-origin:50% 100%; }
+.gw-slot.act-sniff .gw-bob { animation:gwSniff 1.1s ease-in-out infinite; transform-origin:50% 100%; }
+@keyframes gwSniff { 0%, 100% { transform:rotate(0); } 50% { transform:rotate(9deg) translateY(4%); } }
+.gw-slot.act-hide { opacity:.15; }
+.gw-slot.act-warm .gw-bob, .gw-slot.act-guard .gw-bob { animation:greamBob 1.8s ease-in-out infinite; }
+.gw-shadow { position:absolute; left:50%; bottom:-3px; height:7px; transform:translateX(-50%); border-radius:50%; background:rgba(0,0,0,.16); z-index:-1; }
+.gw-slot.is-active .gw-shadow { background:rgba(0,0,0,.24); }
+.gw-slot.walking .gw-shadow { animation:greamWalkShadow .62s ease-in-out infinite; }
+.gw-fx { position:absolute; transform:translate(-50%,-100%); margin-top:-74px; font-size:18px; pointer-events:none; animation:gwFx 1.5s ease-out forwards; }
+.gw-fx.peek { margin-top:-40px; }
+@keyframes gwFx { 0% { opacity:0; transform:translate(-50%,-40%) scale(.6); } 15% { opacity:1; transform:translate(-50%,-100%) scale(1); } 100% { opacity:0; transform:translate(-50%,-260%) scale(1.05); } }
+@media (prefers-reduced-motion: reduce) { .gw-slot .gw-bob, .gw-hop, .gw-fx { animation:none !important; } }
 .garden-decor img { position:absolute; transform:translate(-50%,-100%); image-rendering:pixelated; filter:drop-shadow(0 3px 2px rgba(0,0,0,.18)); }
 
 /* Rodinný souboj – předání telefonu */
@@ -1617,3 +1643,6 @@ canvas.aura, #greamSpriteCanvas.aura { filter:drop-shadow(0 0 4px #ffd84d) drop-
 .evo-reduced .evo-after { animation:none; opacity:1; }
 /* Pohupování bez posunu do strany (greamIdle počítá s left:50% + translateX(-50%) v zahradě) */
 @keyframes greamBob { 0%, 100% { transform:translateY(0); } 50% { transform:translateY(-4px); } }
+.garden-arrow { position:absolute; top:50%; z-index:9; width:30px; height:44px; margin-top:-22px; border:none; border-radius:14px; background:rgba(255,255,255,.72); color:var(--green-deep); font:900 26px/1 var(--font, sans-serif); box-shadow:0 2px 8px rgba(0,0,0,.15); opacity:0; pointer-events:none; transition:opacity .3s; cursor:pointer; }
+.garden-arrow.left { left:6px; } .garden-arrow.right { right:6px; }
+.garden-arrow.show { opacity:.9; pointer-events:auto; }

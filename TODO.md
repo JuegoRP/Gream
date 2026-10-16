@@ -30,8 +30,9 @@
 - [x] Ekonomika: ceny obchodu ×2, bonus za odznak 10→6, plná odměna jen za 5 výher soubojů denně (2026-10-16)
 - [x] Boti v souboji: síla podle hráče (klouzavý průměr úspěšnosti), přezdívky „🤖 Zvídavý Brouk“ (2026-10-16)
 - [x] Podkategorie otázek (32, jen klasifikace): content/subcats-*, js/subcats.js, kontrola v npm test (2026-10-16)
-- [ ] Podkategorie: poloviční výhoda v souboji pro vedlejší podkategorii (ověřit simulací), noví greamíci podle podkategorií
-- [ ] Zahrada 2D: greamíci chodí po zahradě a používají předměty (lavička, jezírko, košíček) – čeká na Romanovo rozhodnutí
+- [x] Souboj „Účinné!“: poloviční bonus světa přes podkategorii, balanc ověřen (N=20000), Objetí 14 (2026-10-16)
+- [ ] Noví greamíci podle podkategorií
+- [x] Zahrada 2D: posuvné panorama, greamíci chodí a používají předměty (lavička, jezírko, hříbek, budka, záhonek, lucerna, košíček), potkávají se; js/garden-life.js (2026-10-16)
 - [ ] Rodiště na mapě (špendlík), přihlášení Google Play Games (úspěchy) – po vydání 1.0
 
 ## Před vydáním (cíl Q4 2026 — Google Play + App Store)
