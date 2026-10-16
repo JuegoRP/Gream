@@ -31,13 +31,15 @@ const ROUNDS = 10;
 const BASE_TIME_MS = 11000;                 // base time per question
 const MATCH_BONUS_MS = 3000;                // matching-world Gream present
 const MATCH_EVOLVED_BONUS_MS = 2000;        // + if that Gream is stage >= 3
-const BOT_ACC = { easy:0.55, medium:0.65, hard:0.72, extreme:0.78 };
+const BOT_ACC = { easy:0.55, medium:0.65, hard:0.72, extreme:0.78 };   // jen výchozí odhad dovednosti hráče (statistiky)
 const WIN_REWARD = { easy:5, medium:8, hard:12, extreme:18 };  // seeds on win
 // Denní strop: plnou odměnu dávají jen první výhry dne, pak čtvrtina (min. 1) – souboje se nedají „farmit“ na semínka
 export const FULL_REWARD_WINS = 5;
 // Bot podle hráče: přesnost bota sleduje hráčovu průměrnou úspěšnost v soubojích (klouzavý průměr),
 // o trochu níž → hráč vyhrává zhruba 50–60 %. Meze kolem výchozí přesnosti obtížnosti.
-const BOT_EDGE = 0.04, BOT_MIN = 0.4, BOT_MAX = 0.93, SKILL_ALPHA = 0.3;
+// Bot má PEVNÝ standard podle obtížnosti (Roman 2026-10-16: nepřizpůsobovat se hráči, nenechávat vyhrávat,
+// ale dělat viditelné chyby). Skutečná úspěšnost vč. tipování; každý bot ± BOT_SPREAD (různé povahy).
+const BOT_EFF = { easy: 0.70, medium: 0.75, hard: 0.80, extreme: 0.84 }, BOT_SPREAD = 0.04, SKILL_ALPHA = 0.3;
 const KEY_STATS = 'gream_battle_stats';
 // 1 = otázka z mého světa (Super účinné), 0.5 = týká se mého světa zčásti přes podkategorii (Účinné), 0 = jinak
 // Greamíci podkategorií: 1 = jejich podkategorie, 0.5 = zbytek jejich světa (pravidla v battle-rules.js domainWeightFor)
@@ -57,6 +59,7 @@ function groupPool(group, difficulty) {
 // jinak by její greamík v lehkém souboji nikdy nedostal „Super účinné“
 const NEAR_DIFF = { easy: ['medium', 'hard'], medium: ['easy', 'hard'], hard: ['medium', 'extreme'], extreme: ['hard', 'medium'] };
 const _gpCache = new Map();
+export const clearPoolCache = () => _gpCache.clear();   // po přidání otázek ze serveru (content.js)
 function groupPoolCached(group, difficulty) {
   const k = getLang() + group + difficulty;
   if (!_gpCache.has(k)) {
@@ -348,11 +351,11 @@ export const Battle = {
 
   // Bot: přesnost podle obtížnosti, časy odpovědí náhodně (rychlejší, když ví)
   // Přesnost bota pro hráče: klouzavý průměr jeho správných odpovědí v soubojích na dané obtížnosti
-  botAccFor(pid, diff) {
-    const base = BOT_ACC[diff] || 0.65;
-    const sk = loadStats(pid).skill?.[diff];
-    if (sk == null) return base;
-    return Math.min(BOT_MAX, Math.max(BOT_MIN, Math.max(base - 0.15, sk - BOT_EDGE)));
+  // Vrací pravděpodobnost, že bot otázku VÍ; navíc tipuje (1/3), takže skutečná úspěšnost = (1 + 2·acc) / 3.
+  // Standard podle obtížnosti, nezávisle na hráči (pid zůstává kvůli volání); rng = povaha konkrétního bota
+  botAccFor(_pid, diff, rng = Math.random) {
+    const eff = (BOT_EFF[diff] || BOT_EFF.medium) + (rng() * 2 - 1) * BOT_SPREAD;
+    return Math.max(0, (3 * eff - 1) / 2);
   },
   _recordSkill(pid, diff, correct) {
     const s = loadStats(pid); s.skill = s.skill || {};
@@ -367,7 +370,7 @@ export const Battle = {
     return `${a[Math.floor(rng() * a.length)]} ${n[Math.floor(rng() * n.length)]}`;
   },
 
-  _localRival(diff, rng = Math.random, acc = BOT_ACC[diff] || 0.65) {
+  _localRival(diff, rng = Math.random, acc = this.botAccFor(null, diff, rng)) {
     const answers = Array.from({ length: ROUNDS }, () => {
       const knows = rng() < acc;
       const ok = knows || rng() < 1 / 3;
@@ -884,7 +887,7 @@ export const Battle = {
       const bonus = timeBonusForWorld(pid, world);         // more time → better odds
       const eff = Math.min(0.98, playerAcc + bonus / 40000);
       if (Math.random() < eff) pScore++;
-      if (Math.random() < (BOT_ACC[diff] || 0.65)) bScore++;
+      if (Math.random() < (BOT_EFF[diff] || BOT_EFF.medium)) bScore++;
     }
     const win = pScore >= bScore;
     const s = loadStats(pid);

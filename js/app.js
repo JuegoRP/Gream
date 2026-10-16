@@ -15,7 +15,7 @@ import { Geo, WORLD_EMOJIS, isBattleSpot } from './geo.js';
 import { Skins, SKIN_CATALOG } from './skins.js';
 import { MapView } from './mapview.js';
 import { Dev } from './dev.js';
-import { Battle } from './battle.js';
+import { Battle, clearPoolCache } from './battle.js';
 import { Net } from './net.js';
 import { hasProfanity } from './profanity.js';
 import { shinySource } from './shiny.js';
@@ -41,6 +41,7 @@ import { Gream, ARCHETYPES, BASE_ARCHETYPES, eggLeaning, spritePath, smartSprite
 import { Subscription, FREE } from './subscription.js';
 const NAME_CHANGE_COST = 50;   // semínek za změnu jména (nejvýš jednou za 7 dní)
 import { Paywall } from './paywall.js';
+import { Content } from './content.js';
 import { Billing } from './billing.js';
 import { Ranking } from './ranking.js';
 import { Audio } from './audio.js';
@@ -285,6 +286,9 @@ window.App = {
     const active   = Profiles.active();
     console.log('[Gream] Profiles:', profiles.length, 'Active:', active?.name || 'none');
 
+    // Nové otázky ze serveru: uložená kopie hned, novější verze na pozadí (jen data, přísně ověřená)
+    try { Content.loadCached(); } catch {}
+    Content.refresh().then(n => { if (n) clearPoolCache(); }).catch(() => {});
     if (active) this.applyCosmetics();
     // Doplňky byly zrušeny (2026-10-16): kdo nějaký koupil, dostane semínka zpět
     try {

@@ -48,4 +48,5 @@ export const Net = {
   rankSubmit:     (data)             => req('POST', '/rank/submit', data),
   rankTop:        (pid)              => req('GET', '/rank/top' + (pid ? '?pid=' + encodeURIComponent(pid) : '')),
   promo:          (code)             => req('POST', '/promo', { code }),
+  contentQuestions: (since)          => req('GET', '/content/questions?since=' + (Number(since) || 0), null, 15000),
 };

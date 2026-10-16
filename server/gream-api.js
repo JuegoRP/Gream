@@ -55,6 +55,15 @@ function promoLimited(ip) {
   return arr.length > 6;
 }
 
+// Obsah (nové otázky): čte se podle času změny souboru, ať publikace z 3R Control platí hned bez restartu
+const CONTENT_FILE = process.env.GREAM_CONTENT_FILE || '/content/questions.json';
+let _content = { mtime: 0, data: { version: 0, items: [] } };
+function loadContent() {
+  try { const st = fs.statSync(CONTENT_FILE); if (st.mtimeMs !== _content.mtime) { const d = JSON.parse(fs.readFileSync(CONTENT_FILE, 'utf8')); _content = { mtime: st.mtimeMs, data: { version: Number(d.version) || 0, items: Array.isArray(d.items) ? d.items : [] } }; } }
+  catch { /* zatím žádný obsah */ }
+  return _content.data;
+}
+
 const timers = {};
 function persist(name, file, obj) {
   if (timers[name]) return;
@@ -188,6 +197,15 @@ const server = http.createServer((req, res) => {
   const p = u.pathname.replace(/\/+$/, '') || '/';
 
   if (req.method === 'GET' && (p === '/health' || p === '/')) return send(res, 200, { ok: true, service: 'gream-api' });
+
+  // ─── Nové otázky (1.1+): schválené v 3R Control, soubor zapisuje 3R Control (CONTENT_FILE, jen ke čtení) ───
+  //     { version, items: [{ id, v, sub, w, d, cs:{text,choices[správná první]}, en:{…}, fact? }] }; aplikace stahuje jen přírůstek (v > since)
+  if (req.method === 'GET' && p === '/content/questions') {
+    const c = loadContent(), since = Number(u.searchParams.get('since')) || 0;
+    res.setHeader('Cache-Control', 'public, max-age=300');
+    // jen přírůstek: otázky zveřejněné po verzi, kterou aplikace má (pole v = verze zveřejnění)
+    return send(res, 200, { version: c.version, items: c.version > since ? c.items.filter(q => (Number(q?.v) || 0) > since) : [] });
+  }
 
   // Rate limit writes (anti-spam / anti-inflation).
   if (req.method === 'POST') {
