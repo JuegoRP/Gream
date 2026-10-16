@@ -158,6 +158,7 @@ export class Arena {
     const mon = this.el.side[from].querySelector('.ar-mon');
     mon.classList.remove('lunge'); void mon.offsetWidth; mon.classList.add('lunge');
     if (hit.domain) this.banner(this.L.superEffective, 'dom');
+    else if (hit.half && this.L.effective) this.banner(this.L.effective, 'dom');
     else if (hit.crit) this.banner(this.L.crit, 'crit');
     if (REDUCED()) { this._hitFx(to, hit); return wait(450); }
     const a = this._center(from), b = this._center(to);

@@ -18,6 +18,7 @@ import { RULES, SPECIALS, ARCH_WORLD, ARCHES, newFighter, useSpecial, canSpecial
 import { Arena, drawFighter } from './arena.js';
 import { factFor } from './facts.js';
 import { numTolerance } from './validator.js';
+import { subcatOf } from './subcats.js';
 import { Playtime } from './parents.js';
 const ARCHETYPE_NAME = (a) => ARCHETYPES[a]?.name?.[getLang() === 'cs' ? 'cs' : 'en'] || a;
 
@@ -37,6 +38,13 @@ export const FULL_REWARD_WINS = 5;
 // o trochu níž → hráč vyhrává zhruba 50–60 %. Meze kolem výchozí přesnosti obtížnosti.
 const BOT_EDGE = 0.04, BOT_MIN = 0.4, BOT_MAX = 0.93, SKILL_ALPHA = 0.3;
 const KEY_STATS = 'gream_battle_stats';
+// 1 = otázka z mého světa (Super účinné), 0.5 = týká se mého světa zčásti přes podkategorii (Účinné), 0 = jinak
+function domainFor(arch, world, ch, diff) {
+  const mine = ARCH_WORLD[arch];
+  if (world === mine) return 1;
+  const sc = ch?.text ? subcatOf(world, diff, ch.text, getLang()) : null;
+  return sc && (sc.mainWorld === mine || sc.sideWorld === mine) ? 0.5 : 0;
+}
 const KEY_BADGES = 'gream_battle_badges';
 
 const DIFFS = [
@@ -457,7 +465,7 @@ export const Battle = {
     this._arena = new Arena(scr.querySelector('.ar-wrap'), {
       me: { ...pick, acc: this._family ? this._family.acc[0] : Skins.getAccessory(p.id), name: `${this._family ? this._family.names[0] : t.battle_you} · ${pick.name || ARCHETYPE_NAME(pick.arch)}` },
       op: { arch: rival.arch, stage: rival.stage, shiny: !!rival.shiny, acc: rival.acc || null, name: `${rival.name} · ${ARCHETYPE_NAME(rival.arch)}` },
-      labels: { energy: t.battle_energy, superEffective: t.battle_super_eff, crit: t.battle_crit },
+      labels: { energy: t.battle_energy, superEffective: t.battle_super_eff, effective: t.battle_half_eff, crit: t.battle_crit },
     });
     this._arena.update(this._f);
     await new Promise(r => setTimeout(r, 400));
@@ -508,7 +516,7 @@ export const Battle = {
     const a = this._rival.answers?.[round] || { ok: false, ms: BASE_TIME_MS };
     const f1 = this._f[1];
     const qWorld = this._curWorld;
-    const domain = f1.ownWorldNext || qWorld === ARCH_WORLD[f1.arch];
+    const domain = f1.ownWorldNext ? 1 : domainFor(f1.arch, qWorld, this._curCh, this._daily ? 'medium' : this._diff);
     const ok = a.ok || (f1.fiftyNext && !a.ok && Math.random() < 0.25);   // 50:50 pomůže i soupeři
     f1.fiftyNext = false; f1.ownWorldNext = false;
     if (ok) this._correct[1]++;
@@ -533,10 +541,10 @@ export const Battle = {
       const oppTimer = oppMs ? setTimeout(() => opCard?.classList.add('answered'), oppMs) : null;
 
       const render = () => {
-        this._curWorld = world;
+        this._curWorld = world; this._curCh = ch;
         const bonus = timeMs - BASE_TIME_MS;
-        const dom = world === ARCH_WORLD[me.arch] || me.ownWorldNext;
-        scr.querySelector('#btWorld').textContent = `${WORLD_ICONS[world]} ${t.worlds?.[world] || world}${bonus > 0 ? ` · +${Math.round(bonus / 1000)} s` : ''}${dom ? ` · ${t.battle_super_eff}` : ''}`;
+        const dom = me.ownWorldNext ? 1 : domainFor(me.arch, world, ch, this._daily ? 'medium' : this._diff);
+        scr.querySelector('#btWorld').textContent = `${WORLD_ICONS[world]} ${t.worlds?.[world] || world}${bonus > 0 ? ` · +${Math.round(bonus / 1000)} s` : ''}${dom >= 1 ? ` · ${t.battle_super_eff}` : dom > 0 ? ` · ${t.battle_half_eff}` : ''}`;
         elQ.textContent = ch.text;
         elC.innerHTML = '';
         if (ch.check?.type === 'number') {
@@ -592,7 +600,7 @@ export const Battle = {
         spBtn.hidden = true;
         elC.querySelectorAll('button').forEach(b => { b.disabled = true; if (!ok && b.dataset.right) b.classList.add('ok'); });
         const left = Math.max(0, 1 - (Date.now() - start - paused) / timeMs);
-        const domain = world === ARCH_WORLD[me.arch] || me.ownWorldNext;
+        const domain = me.ownWorldNext ? 1 : domainFor(me.arch, world, ch, this._daily ? 'medium' : this._diff);
         me.fiftyNext = false; me.ownWorldNext = false;
         if (ok) { this._correct[side]++; Feedback.success?.(); } else if (!ko) { Feedback.error?.(); if (side === 0 || this._family) this._missed.push({ q: ch.text, a: correctText, world, diff: this._daily ? 'medium' : this._diff, ch, who: this._family?.names[side] }); }
         if (side === 0) this._log.push({ ok: !!ok, ms: Math.round(Date.now() - start - paused) });

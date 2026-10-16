@@ -17,12 +17,13 @@ export const RULES = {
 };
 
 // Speciály – témata podle světa. Čísla ověřená simulací (test/battle-balance.mjs, 2,16 mil. zápasů):
-// každý greamík vyhrává 47,6–51,8 % na úrovni začátečník / průměr / expert, nejsilnější dvojice 58 : 42.
+// každý greamík vyhrává 47,6–51,9 % na úrovni začátečník / průměr / expert, nejsilnější dvojice 57 : 43
+// (od 2026-10-16 včetně „Účinné!“ – poloviční bonus světa přes podkategorii, HALF_SHARE).
 export const SPECIALS = {
   lilek:  { id: 'leafstorm', mult: 2, dmg: 2 },            // Listová smršť: 2 poškození hned + příští zásah 2×
   jiskra: { id: 'bolt', dmg: 10, stun: 0.8 },              // Blesk: 10 poškození + soupeřův příští útok −20 %
   kamen:  { id: 'wall', block: 0.25, hits: 2, dmg: 7 },    // Kamenná zeď: 7 poškození + další 2 zásahy soupeře −25 %
-  srodik:  { id: 'hug', heal: 13, energy: 0 },              // Objetí: vyléčí 13
+  srodik:  { id: 'hug', heal: 14, energy: 0 },              // Objetí: vyléčí 14 (2026-10-16: 13 → 14 po zavedení „Účinné!“ z podkategorií)
   vlnka:  { id: 'wave', dmg: 1, mult: 2 },                 // Barevná vlna: 1 poškození + příští otázka bez jedné špatné možnosti + příští zásah 2×
   atlas:  { id: 'compass', dmg: 10 },                      // Kompas: 10 poškození + příští otázka z mého světa (jistý „Super účinné!“)
 };
@@ -61,9 +62,11 @@ export function aiWantsSpecial(me) {
 }
 
 // Poškození jedné správné odpovědi (před štítem soupeře).
-// speedFrac = 0..1 (podíl zbylého času), domain = otázka ze světa útočníka
-export function attackDamage(me, { speedFrac = 0, domain = false } = {}) {
-  const raw = RULES.BASE_DMG + (domain ? RULES.DOMAIN_DMG : 0) + RULES.SPEED_DMG * Math.max(0, Math.min(1, speedFrac));
+// speedFrac = 0..1 (podíl zbylého času), domain = 1 otázka ze světa útočníka („Super účinné!“),
+// 0.5 = otázka se jeho světa týká zčásti přes podkategorii („Účinné!“), 0 = jinak (true/false se bere jako 1/0)
+export const domainWeight = (d) => d === true ? 1 : Math.max(0, Math.min(1, +d || 0));
+export function attackDamage(me, { speedFrac = 0, domain = 0 } = {}) {
+  const raw = RULES.BASE_DMG + RULES.DOMAIN_DMG * domainWeight(domain) + RULES.SPEED_DMG * Math.max(0, Math.min(1, speedFrac));
   return raw * me.mult * me.stun;
 }
 
@@ -80,7 +83,8 @@ export function resolveRound(f, a, b) {
       let blocked = false;
       if (op.wall > 0) { d *= 1 - SPECIALS.kamen.block; op.wall--; blocked = true; }
       op.hp -= d;
-      hits.push({ from: i, dmg: Math.round(d), crit: (r.speedFrac || 0) >= RULES.CRIT_SPEED, domain: !!r.domain, blocked, boosted: usedMult });
+      const dw = domainWeight(r.domain);
+      hits.push({ from: i, dmg: Math.round(d), crit: (r.speedFrac || 0) >= RULES.CRIT_SPEED, domain: dw >= 1, half: dw > 0 && dw < 1, blocked, boosted: usedMult });
       me.mult = 1;   // Listová smršť platí na jeden zásah
     }
   });
@@ -98,16 +102,19 @@ export function winner(f) {
 
 // ─── Simulace (test balancu a ladění) ───
 // K = pravděpodobnost, že hráč odpověď zná; jinak tipuje mezi `choices` možnostmi.
+// HALF_SHARE = podíl otázek, které se přes podkategorii týkají i jiného světa (změřeno na datech 1.1: 26 %)
+export const HALF_SHARE = 0.26;
 export function simulate(archA, archB, K, rnd = Math.random, choices = 3) {
   const f = [newFighter(archA), newFighter(archB)];
   for (let r = 0; r < RULES.ROUNDS; r++) {
     for (let i = 0; i < 2; i++) if (aiWantsSpecial(f[i])) useSpecial(f[i], f[1 - i]);
     if (f[0].hp <= 0 || f[1].hp <= 0) break;
     const qWorld = ARCHES[Math.floor(rnd() * 6)];
+    const halfWorld = rnd() < HALF_SHARE ? ARCHES.filter(a => a !== qWorld)[Math.floor(rnd() * 5)] : null;
     const ans = f.map(me => {
       const knows = rnd() < K;
       const ok = knows || rnd() < (me.fiftyNext ? 1 / (choices - 1) : 1 / choices);
-      const domain = me.ownWorldNext || qWorld === me.arch;
+      const domain = me.ownWorldNext || qWorld === me.arch ? 1 : halfWorld === me.arch ? 0.5 : 0;
       me.fiftyNext = false; me.ownWorldNext = false;
       return { ok, domain, speedFrac: ok ? (knows ? 0.4 + rnd() * 0.6 : rnd() * 0.35) : 0 };
     });
