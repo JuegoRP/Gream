@@ -29,16 +29,21 @@ try {
   // Zpětná vazba testerů: uloží se, prázdná ne, HTML značky pryč
   ok((await post('/feedback', { fun: 4, liked: 'Souboje <b>super</b>', problems: 'nic', who: 'Pepa', lang: 'cs' })).ok === true, 'feedback: uloženo');
   ok((await post('/feedback', { who: 'x' })).error === 'empty', 'feedback: prázdný se neuloží');
+  ok((await post('/report', { challengeId: 'nature:easy:#x', world: 'nature', text: 'Q', textCs: 'Otázka', answer: '8', reason: 'wrong' })).ok === true, 'hlášení: uloženo');
+  await sleep(1000);
+  const rep = JSON.parse(fs.readFileSync(path.join(dir, 'reports.json'), 'utf8')).at(-1);
+  ok(rep.textCs === 'Otázka' && rep.answer === '8', 'hlášení: české znění a správná odpověď');
   const fb = fs.readFileSync(path.join(dir, 'feedback.jsonl'), 'utf8').trim().split('\n').map(l => JSON.parse(l));
   ok(fb.length === 1 && fb[0].fun === 4 && !/[<>]/.test(fb[0].liked), 'feedback: jeden záznam, bez HTML');
   // Nové otázky: bez souboru prázdné, po zveřejnění nová verze, se starou verzí nic navíc
   let c = await fetch(B + '/content/questions?since=0').then(r => r.json());
   ok(c.version === 0 && c.items.length === 0, 'obsah: zatím prázdný');
-  fs.writeFileSync(path.join(dir, 'content.json'), JSON.stringify({ version: 3, items: [{ id: 'q1', v: 2 }, { id: 'q2', v: 3 }] }));
+  fs.writeFileSync(path.join(dir, 'content.json'), JSON.stringify({ version: 3, items: [{ id: 'q1', v: 2 }, { id: 'q2', v: 3 }], blocked: ['nature:easy:#abc'] }));
   c = await fetch(B + '/content/questions?since=0').then(r => r.json());
   ok(c.version === 3 && c.items.length === 2, 'obsah: zveřejněná verze 3 se 2 otázkami');
   c = await fetch(B + '/content/questions?since=2').then(r => r.json());
   ok(c.version === 3 && c.items.length === 1 && c.items[0].id === 'q2', 'obsah: jen přírůstek od verze 2');
+  ok(Array.isArray(c.blocked) && c.blocked[0] === 'nature:easy:#abc', 'obsah: seznam vyřazených otázek');
   c = await fetch(B + '/content/questions?since=3').then(r => r.json());
   ok(c.version === 3 && c.items.length === 0, 'obsah: aktuální aplikace nedostane nic navíc');
   // Promo kódy: neplatný, platný, limit použití, vypnutý kód; bez identifikace zařízení

@@ -1035,7 +1035,7 @@ window.App = {
       this._showToast(cs ? '🚩 Díky, nahlášeno!' : '🚩 Thanks, reported!');
       Net.report({
         challengeId: info.id, world: info.world, difficulty: info.difficulty,
-        text: info.enText || info.text, lang: getLang(), reason, note, pid: p?.id || '',
+        text: info.enText || info.text, textCs: getLang() === 'cs' ? info.text : '', answer: info.answer || '', lang: getLang(), reason, note, pid: p?.id || '',
       });
     };
   },
