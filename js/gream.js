@@ -142,7 +142,7 @@ export const Gream = {
     const active = list.filter(x => !x.archived);
     if (active.length >= 4) return null;
     const egg = {
-      id: 'gream_' + Date.now(),
+      id: 'gream_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
       archetype: null,
       stage: 1,
       tasksFor: 0,
@@ -174,7 +174,7 @@ export const Gream = {
     if (existing) return existing;
 
     const newGream = {
-      id:           'gream_' + Date.now(),
+      id:           'gream_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
       archetype:    null,          // mystery until hatching
       stage:        1,
       tasksFor:     0,
@@ -330,6 +330,15 @@ export const Gream = {
     if (changed) save(data);
   },
 
+  // ─── Rodný list: kde a kdy se greamík vylíhl (jen v zařízení; místo = název místa, žádné souřadnice) ───
+  setBirth(profileId, greamId, info) {
+    const data = load();
+    const g = (data[profileId] || []).find(x => x.id === greamId);
+    if (!g || g.birth) return;
+    g.birth = { place: info.place ? String(info.place).slice(0, 60) : null, outdoor: !!info.outdoor, world: info.world || null, at: Date.now() };
+    save(data);
+  },
+
   // ─── Set name (only after stage 2) ───
   setName(profileId, greamId, name) {
     const data = load();
@@ -388,7 +397,7 @@ export const Gream = {
     if (active.some(g => g.archetype === archetype)) return null;
 
     const newGream = {
-      id:           'gream_' + Date.now(),
+      id:           'gream_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
       archetype,
       stage:        1,
       tasksFor:     0,

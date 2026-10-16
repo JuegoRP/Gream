@@ -774,6 +774,8 @@ export const Challenge = {
 
     // ─── Archetype reveal overlay at hatching ───
     if (greamResult?.archetypeResolved && greamResult.resolvedArchetype) {
+      Gream.setBirth(p.id, greamResult.gream.id, { place: this._targetPOI?.name, outdoor: this._wasOutdoor, world: this._world });
+      greamResult.birthPlace = this._targetPOI?.name || null;
       setTimeout(() => this._showArchetypeReveal(greamResult), 600);
     } else if (greamResult?.evolved && greamResult.gream?.archetype) {
       setTimeout(() => this._showEvolution(greamResult), 600);
@@ -912,7 +914,7 @@ export const Challenge = {
     `;
     card.innerHTML = `
       ${gream.archetype
-        ? `<canvas data-sprite-sheet="img/greamici/${gream.archetype}_${gream.stage}.png" data-sprite-mood="happy"
+        ? `<canvas data-sprite-sheet="img/greamici/${gream.archetype}_${Math.min(gream.stage, 4)}.png" data-sprite-mood="happy" data-arch="${gream.archetype}" data-shiny="${gream.isShiny ? '1' : ''}"
              width="96" height="96"
              style="width:96px;height:96px;image-rendering:pixelated;display:block;margin:0 auto 12px"></canvas>`
         : `<div style="font-size:64px;text-align:center;margin:0 auto 12px">🥚</div>`
@@ -1017,8 +1019,8 @@ export const Challenge = {
         <div class="evo-kicker">${t.evo_kicker}</div>
         <div class="evo-stage${greamResult.isShiny ? ' evo-shiny' : ''}">
           <div class="evo-rays"></div>
-          <canvas class="evo-old" data-sprite-sheet="img/greamici/${arch}_${from}.png" data-sprite-mood="happy" width="150" height="150"></canvas>
-          <canvas class="evo-new" data-sprite-sheet="img/greamici/${arch}_${to}.png" data-sprite-mood="happy" width="150" height="150"></canvas>
+          <canvas class="evo-old" data-sprite-sheet="img/greamici/${arch}_${from}.png" data-sprite-mood="happy" data-arch="${arch}" data-shiny="${g.isShiny ? '1' : ''}" width="150" height="150"></canvas>
+          <canvas class="evo-new" data-sprite-sheet="img/greamici/${arch}_${to}.png" data-sprite-mood="happy" data-arch="${arch}" data-shiny="${greamResult.isShiny ? '1' : ''}" width="150" height="150"></canvas>
           <div class="evo-flash"></div>
         </div>
         <div class="evo-after">
@@ -1056,11 +1058,12 @@ export const Challenge = {
         <div style="font-size:14px;font-weight:800;color:rgba(255,255,255,0.6);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;animation:slideUp 0.4s ease 0.1s both">
           ${lang === 'cs' ? 'Vajíčko se vylíhlo!' : 'Your egg has hatched!'}
         </div>
-        <canvas data-sprite-sheet="img/greamici/${arch}_2.png" data-sprite-mood="happy"
+        <canvas data-sprite-sheet="img/greamici/${arch}_2.png" data-sprite-mood="happy" data-arch="${arch}" data-shiny="${greamResult.isShiny ? '1' : ''}"
           width="120" height="120"
           style="width:120px;height:120px;image-rendering:pixelated;display:block;margin:0 auto 12px;animation:scaleIn 0.5s cubic-bezier(0.2,0.8,0.3,1.2) 0.3s both,greamBob 2s ease-in-out 0.8s infinite"></canvas>
         <div style="font-size:20px;font-weight:900;color:white;margin-bottom:6px;animation:slideUp 0.4s ease 0.5s both">${defaultName}</div>
         <div style="font-size:14px;font-weight:700;color:rgba(135,194,109,0.9);margin-bottom:8px;animation:fadeIn 0.3s ease 0.65s both">${archTitle}</div>
+        <div style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.75);margin-bottom:8px;animation:fadeIn 0.3s ease 0.7s both">🐣 ${greamResult.birthPlace ? tr().birth_at(greamResult.birthPlace) : tr().birth_home}</div>
         ${greamResult.isShiny ? `<div style="font-size:13px;font-weight:800;color:#f5d020;margin-bottom:14px">✨ ${lang === 'cs' ? 'A je VZÁCNÝ!' : "And it's SHINY!"}</div>` : ''}
         <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-bottom:20px;animation:fadeIn 0.3s ease 0.8s both">
           ${lang === 'cs' ? '(Klepni na jméno v zahradě pro přejmenování)' : '(Tap the name in garden to rename)'}

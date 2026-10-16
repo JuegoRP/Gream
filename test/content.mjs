@@ -101,6 +101,16 @@ for (const w of Object.keys(T.cs.challenges)) for (const d of Object.keys(T.cs.c
   a.forEach((ch, i) => { if (b[i] && ch.action === 'map_pin' && (b[i].check?.lat !== ch.check.lat)) issues.push(`${w}|${d}[${i}] map_pin cs/en jiné místo`); });
 }
 
+// Podkategorie (1.1): nové otázky je potřeba zařadit (scripts/classify-subcats.mjs → build-subcats.mjs); toleruje se 1 % nezařazených
+{
+  const { subcatOf } = await import('../js/subcats.js');
+  let n = 0, miss = 0;
+  for (const l of ['cs', 'en']) for (const w of Object.keys(T[l].challenges)) for (const d of Object.keys(T[l].challenges[w]))
+    T[l].challenges[w][d].forEach(ch => { n++; if (!subcatOf(w, d, ch.text, l)) miss++; });
+  if (miss > n * 0.01) issues.push(`podkategorie: nezařazeno ${miss} z ${n} otázek – spusť scripts/classify-subcats.mjs`);
+  else console.log(`✓ Podkategorie: zařazeno ${n - miss}/${n}`);
+}
+
 let total = 0; for (const w of Object.keys(T.en.challenges)) for (const d of Object.keys(T.en.challenges[w])) total += T.en.challenges[w][d].length;
 console.log(`Zkontrolováno ${total} výzev/jazyk (${total*2} celkem).`);
 const all = issues.concat(behav);

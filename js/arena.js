@@ -7,6 +7,7 @@
 
 import { RULES } from './battle-rules.js';
 import { drawAccessory } from './accessories.js';
+import { shinySource } from './shiny.js';
 
 const REDUCED = () => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
 
@@ -34,8 +35,9 @@ export function spriteSrc(arch, stage) {
 }
 // mood: 'happy' (spodní buňka) | 'sad' (horní buňka)
 export async function drawFighter(canvas, arch, stage, { mood = 'happy', flip = false, shiny = false, acc = null } = {}) {
-  const img = await loadImg(spriteSrc(arch, stage));
+  let img = await loadImg(spriteSrc(arch, stage));
   if (!img || !canvas?.getContext) return;
+  if (shiny) img = shinySource(img, arch);
   const dpr = Math.min(window.devicePixelRatio || 1, 3);
   const css = canvas.clientWidth || 120;
   canvas.width = canvas.height = Math.round(css * dpr);
@@ -56,7 +58,7 @@ export async function drawFighter(canvas, arch, stage, { mood = 'happy', flip = 
   ctx.save();
   if (flip) { ctx.translate(W, 0); ctx.scale(-1, 1); }
   ctx.drawImage(off, x0, y0, w, h, Math.round((W - dw) / 2), W - dh, dw, dh);
-  if (acc) drawAccessory(ctx, { x: Math.round((W - dw) / 2), y: W - dh, w: dw, h: dh }, acc, arch, () => drawFighter(canvas, arch, stage, { mood, flip, shiny, acc }));
+  if (acc) drawAccessory(ctx, { x: Math.round((W - dw) / 2), y: W - dh, w: dw, h: dh }, acc, arch, () => drawFighter(canvas, arch, stage, { mood, flip, shiny, acc }), stage);
   ctx.restore();
   canvas.classList.toggle('shiny', !!shiny);
   canvas.classList.toggle('aura', acc === 'acc_star');

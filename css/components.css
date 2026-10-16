@@ -682,10 +682,15 @@ body.bg-starry { background:linear-gradient(180deg,#0d1b3d,#2c3e7a 50%,#4a5fa3);
 .gream-sprite.shiny {
   animation: greamWalk 1.1s ease-in-out infinite, greamShinyGlow 3s ease-in-out infinite;
 }
+/* Zářivý = stříbrné jiskření (jiné barvy kreslí shiny.js); zlatá svatozář patří doplňku Hvězdná záře (auraPulse) */
 @keyframes greamShinyGlow {
-  0%, 100% { filter: drop-shadow(0 4px 8px rgba(255,215,0,0.4)) drop-shadow(0 0 12px rgba(255,215,0,0.3)); }
-  50%      { filter: drop-shadow(0 4px 12px rgba(255,215,0,0.7)) drop-shadow(0 0 20px rgba(255,215,0,0.5)); }
+  0%, 100% { filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25)) drop-shadow(0 0 2px rgba(255,255,255,0.9)); }
+  12%      { filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25)) drop-shadow(0 0 6px #fff) drop-shadow(0 0 14px rgba(170,225,255,0.9)); }
+  24%      { filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25)) drop-shadow(0 0 2px rgba(255,255,255,0.9)); }
+  36%      { filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25)) drop-shadow(0 0 5px #fff) drop-shadow(0 0 10px rgba(200,170,255,0.8)); }
+  48%      { filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25)) drop-shadow(0 0 2px rgba(255,255,255,0.9)); }
 }
+.ar-sprite.shiny { animation: greamShinyGlow 3s ease-in-out infinite; }
 .gream-sprite.tapped {
   animation: greamPop 0.4s ease;
 }
@@ -1503,8 +1508,8 @@ body.bg-starry { background:linear-gradient(180deg,#0d1b3d,#2c3e7a 50%,#4a5fa3);
 .wrong-card .btn-primary { width:100%; }
 
 /* Doplněk „Hvězdná záře“ */
-canvas.aura, #greamSpriteCanvas.aura { filter:drop-shadow(0 0 6px #ffe27a) drop-shadow(0 0 14px rgba(255,214,90,.7)); animation:auraPulse 2.4s ease-in-out infinite; }
-@keyframes auraPulse { 50% { filter:drop-shadow(0 0 10px #fff3b0) drop-shadow(0 0 22px rgba(255,214,90,.9)); } }
+canvas.aura, #greamSpriteCanvas.aura { filter:drop-shadow(0 0 4px #ffd84d) drop-shadow(0 0 12px rgba(255,196,40,.95)) drop-shadow(0 0 24px rgba(255,214,90,.7)); animation:auraPulse 2.4s ease-in-out infinite; }
+@keyframes auraPulse { 0%, 100% { filter:drop-shadow(0 0 4px #ffd84d) drop-shadow(0 0 12px rgba(255,196,40,.95)) drop-shadow(0 0 24px rgba(255,214,90,.7)); } 50% { filter:drop-shadow(0 0 6px #fff3b0) drop-shadow(0 0 18px rgba(255,200,60,1)) drop-shadow(0 0 34px rgba(255,214,90,.9)); } }
 @media (prefers-reduced-motion: reduce) { canvas.aura { animation:none; } }
 
 /* Obchůdek */

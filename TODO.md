@@ -21,7 +21,18 @@
 - [x] Balíčky: výběr tématu v souboji (i rodinném); film a hudba 160, věda 163, sport 151, historie 151, jídlo 162, Česko 132 otázek (2026-10-15)
 - [ ] Balíček Česko doplnit na 150+
 - [x] Mapa: body drží na místě při zoomu (oprava i ve větvích 1.0) (2026-10-15)
-- [x] Vzácné „zářivé“ greamíky – už existují (1 : 100, zlatá záře v zahradě i aréně), ponecháno (2026-10-15)
+- [x] Zářivé greamíky přepracovány: jiné barvy (shiny.js) + stříbrné jiskření, odlišné od Hvězdné záře; viditelné i v aréně (2026-10-16)
+- [x] Obchůdek: lišta záložek se nesmršťuje a drží nahoře (2026-10-16)
+- [x] Animace vývoje 2→3 a 3→4; galerie `tools/greamici.html` (stádia, doplňky, zahrada, velké chvíle, aréna) (2026-10-16)
+- [x] Doplňky: kotvy pro každý druh a stádium (accessories.js ANCHORS), kontrola v galerii (2026-10-16)
+- [x] Opraveny průhledné díry v obrázcích (Kámen 4 tvář, Atlas 4 zorničky, odlesky očí) – scripts/fix-sprite-holes.py (2026-10-16)
+- [x] Zahrada: 5. a 6. greamík už se nekreslí přes sebe; košíček na vejce (stálé místo líhnutí); rodný list (místo a datum vylíhnutí) (2026-10-16)
+- [x] Ekonomika: ceny obchodu ×2, bonus za odznak 10→6, plná odměna jen za 5 výher soubojů denně (2026-10-16)
+- [x] Boti v souboji: síla podle hráče (klouzavý průměr úspěšnosti), přezdívky „🤖 Zvídavý Brouk“ (2026-10-16)
+- [x] Podkategorie otázek (32, jen klasifikace): content/subcats-*, js/subcats.js, kontrola v npm test (2026-10-16)
+- [ ] Podkategorie: poloviční výhoda v souboji pro vedlejší podkategorii (ověřit simulací), noví greamíci podle podkategorií
+- [ ] Zahrada 2D: greamíci chodí po zahradě a používají předměty (lavička, jezírko, košíček) – čeká na Romanovo rozhodnutí
+- [ ] Rodiště na mapě (špendlík), přihlášení Google Play Games (úspěchy) – po vydání 1.0
 
 ## Před vydáním (cíl Q4 2026 — Google Play + App Store)
 

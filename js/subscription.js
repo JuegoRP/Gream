@@ -3,6 +3,10 @@
 //  Free:    max 2 úkoly DOMA/den + max 6 CELKEM/den (doma i venku dohromady)
 //  Premium: NEOMEZENĚ úkolů + extrémní obtížnost + souboje
 //  Cena:    69 Kč/měs · 599 Kč/rok   Trial: 7 dní Premium zdarma
+//  Plán po zapnutí plateb (odsouhlaseno 2026-10-16, zatím NEZAPNUTO – PAYWALL_ENABLED = false):
+//    Free:    všechny druhy otázek, 6 výzev/den (2 doma), 5 soubojů/den, liga + žebříček, 1 greamík navíc
+//    Premium: neomezeně výzev i soubojů, extrémní obtížnost, další místa pro greamíky, rodinný souboj, měsíční doplněk
+//    Nikdy: semínka za peníze, výhoda v souboji za peníze (Families policy, férovost)
 // ═══════════════════════════════════
 
 const KEY_SUB = 'gream_sub';

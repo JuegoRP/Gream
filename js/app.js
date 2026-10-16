@@ -18,6 +18,7 @@ import { Dev } from './dev.js';
 import { Battle } from './battle.js';
 import { Net } from './net.js';
 import { hasProfanity } from './profanity.js';
+import { shinySource } from './shiny.js';
 import { Gream, ARCHETYPES, spritePath, smartSpritePath } from './gream.js';
 import { Subscription, FREE_DAILY_INDOOR, PREMIUM_DAILY_INDOOR, INDOOR_MAX_TOTAL, FREE_DAILY_OUTDOOR, SEED_COST_EXTRA_TASK } from './subscription.js';
 import { Ranking } from './ranking.js';
@@ -1057,39 +1058,50 @@ window.App = {
       1: [50],
       2: [30, 70],
       3: [22, 50, 78],
-      4: [18, 38, 62, 82]
+      4: [18, 38, 62, 82],
+      5: [14, 32, 50, 68, 86],          // až 6 greamíků (jeden za každý svět) – dřív se 5. a 6. kreslili přes sebe
+      6: [12, 27, 42, 58, 73, 88]
     };
-    const xPositions = POSITIONS[allGreams.length] || POSITIONS[1];
+    // Vejce leží v košíčku (stálé místo líhnutí), vylíhnutí greamíci se rozestaví po zahradě
+    const isEgg = (g) => g.stage < 2 || !g.archetype;
+    const hatched = allGreams.filter(g => !isEgg(g));
+    const eggs = allGreams.filter(isEgg);
+    const xPositions = POSITIONS[hatched.length] || POSITIONS[1];
+    const crowded = hatched.length >= 5;   // plná zahrada: neaktivní menší, každý druhý v zadní řadě
+    const nestX = hatched.length ? 86 : 50, nestB = hatched.length ? 66 : 8;   // s greamíky stojí košíček vzadu vpravo (nad tlačítkem)
+    stage.querySelectorAll('.garden-nest').forEach(el => el.remove());
+    const nest = document.createElement('img');
+    nest.className = 'garden-nest';
+    nest.src = 'img/zahrada/nest.png'; nest.alt = '';
+    nest.style.cssText = `position:absolute;left:${nestX}%;bottom:${nestB}px;width:${hatched.length ? 60 : 92}px;transform:translateX(-50%);image-rendering:pixelated;z-index:${eggs.length ? (hatched.length ? 2 : 5) : 1};pointer-events:none;filter:drop-shadow(0 3px 3px rgba(0,0,0,.25))`;
+    stage.appendChild(nest);
 
-    allGreams.forEach((g, i) => {
+    allGreams.forEach((g) => {
       const isActive = g.id === activeGream?.id;
-      const xPct = xPositions[i] || 50;
-      const showJar = g.stage < 2 || !g.archetype;
+      const showJar = isEgg(g);
+      const i = showJar ? eggs.indexOf(g) : hatched.indexOf(g);
+      const xPct = showJar ? nestX + (eggs.length > 1 ? (i - (eggs.length - 1) / 2) * 5 : 0) : (xPositions[i] || 50);
 
       const slot = document.createElement('div');
       slot.className = 'garden-gream-slot';
       slot.style.cssText = `
         position:absolute;
         left:${xPct}%;
-        bottom:18px;
-        transform:translateX(-50%) scale(${isActive ? 1.0 : 0.78});
+        bottom:${showJar ? nestB + (hatched.length ? 16 : 30) : crowded && !isActive && i % 2 ? 50 : 18}px;
+        transform:translateX(-50%) scale(${showJar ? (hatched.length ? 0.72 : 1.05) : isActive ? 1.0 : crowded ? (i % 2 ? 0.6 : 0.68) : 0.78});
         transform-origin: bottom center;
-        opacity:${isActive ? 1 : 0.7};
-        z-index:${isActive ? 4 : 3};
+        opacity:${isActive || showJar ? 1 : 0.7};
+        z-index:${showJar ? (hatched.length ? 1 : 4) : isActive ? 4 : crowded && i % 2 ? 2 : 3};
         transition:transform 0.3s,opacity 0.3s;
         cursor:pointer;
         display:flex;flex-direction:column;align-items:center;
       `;
 
       if (showJar) {
+        // Vejce v košíčku: blízko vylíhnutí (8+ výzev) se kolébá
         slot.innerHTML = `
-          <div style="width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,0.25);border:2px solid rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;
-            ${g.tasksFor >= 8 ? 'animation:greamBob 1s ease-in-out infinite;' : ''}
-          ">
-            <img src="img/greamici/seed_1.png" style="width:38px;height:38px;image-rendering:pixelated" onerror="this.style.display='none';this.nextSibling.style.display='block'">
-            <span style="font-size:28px;display:none">🥚</span>
-          </div>
-          ${isActive ? '<div style="position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.18);width:40px;height:8px;border-radius:50%"></div>' : ''}
+          <img src="img/greamici/seed_1.png" alt="" style="width:48px;height:48px;image-rendering:pixelated;display:block;transform-origin:50% 90%;
+            ${g.tasksFor >= 8 ? 'animation:eggWobble 1.6s ease-in-out infinite;' : ''}${isActive ? '' : 'filter:brightness(.92);'}">
         `;
       } else {
         const arch = g.archetype;
@@ -1100,12 +1112,14 @@ window.App = {
         const shW = Math.round(gSize * (isActive ? 0.62 : 0.5));
         slot.innerHTML = `
           <canvas data-sprite-sheet="img/greamici/${arch}_${stageN}.png"
-            data-sprite-mood="${g.mood || 'happy'}" data-arch="${arch}" ${isActive ? `data-acc="${Skins.getAccessory(Profiles.active()?.id) || ''}"` : ''}
+            data-sprite-mood="${g.mood || 'happy'}" data-arch="${arch}" data-shiny="${g.isShiny ? '1' : ''}" ${isActive ? `data-acc="${Skins.getAccessory(Profiles.active()?.id) || ''}"` : ''}
             width="${gSize}" height="${gSize}"
             style="width:${gSize}px;height:${gSize}px;image-rendering:pixelated;display:block;
-              ${isActive ? 'animation:greamWalkBlock 1.1s ease-in-out infinite;' : ''}
-              filter:drop-shadow(0 4px 8px rgba(0,0,0,${isActive ? '0.3' : '0.15'}));
-              ${g.isShiny ? 'filter:drop-shadow(0 4px 8px rgba(255,215,0,0.5));' : ''}
+              ${(() => {   // inline styl by jinak přebil třídy .aura/.shiny → animace skládáme tady
+                const aura = isActive && Skins.getAccessory(Profiles.active()?.id) === 'acc_star';
+                const an = [isActive && 'greamWalkBlock 1.1s ease-in-out infinite', g.isShiny && 'greamShinyGlow 3s ease-in-out infinite', aura && 'auraPulse 2.4s ease-in-out infinite'].filter(Boolean);
+                return (an.length ? `animation:${an.join(', ')};` : '') + (aura ? 'filter:drop-shadow(0 0 4px #ffd84d) drop-shadow(0 0 12px rgba(255,196,40,.95)) drop-shadow(0 0 24px rgba(255,214,90,.7));' : `filter:drop-shadow(0 4px 8px rgba(0,0,0,${isActive ? '0.3' : '0.15'}));`);
+              })()}
             "></canvas>
           <div style="position:absolute;bottom:2px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,${isActive ? '0.22' : '0.1'});width:${shW}px;height:${Math.round(shW*0.16)}px;border-radius:50%;${isActive ? 'animation:greamWalkShadow 1.1s ease-in-out infinite;' : ''}"></div>
         `;
@@ -1182,7 +1196,8 @@ window.App = {
   },
 
   // Draw sprite sheet cell onto canvas, cropped to content and centered
-  _drawSpriteCell(ctx, img, sx, sy, canvasW, canvasH, acc = null, arch = null) {
+  _drawSpriteCell(ctx, img, sx, sy, canvasW, canvasH, acc = null, arch = null, shiny = false) {
+    if (shiny && arch) img = shinySource(img, arch);
     // Use offscreen canvas to detect content bbox
     const off = document.createElement('canvas');
     off.width = 128; off.height = 128;
@@ -1228,7 +1243,7 @@ window.App = {
     );
     // Doplněk (čepice, brýle…) přes greamíka
     if (acc) drawAccessory(ctx, { x: dx + PAD * scale, y: dy + PAD * scale, w: dw - 2 * PAD * scale, h: dh - 2 * PAD * scale }, acc, arch,
-      () => this._drawSpriteCell(ctx, img, sx, sy, canvasW, canvasH, acc, arch));
+      () => this._drawSpriteCell(ctx, img, sx, sy, canvasW, canvasH, acc, arch, shiny), +((img.src || '').match(/_(\d)\.png/)?.[1] || 2));
   },
 
   _initSpriteCanvases(root) {
@@ -1250,7 +1265,7 @@ window.App = {
       canvas.classList.toggle('aura', acc === 'acc_star');
       const draw = () => {
         const ctx = canvas.getContext('2d');
-        this._drawSpriteCell(ctx, img, sx, sy, cssW * dpr, cssH * dpr, acc, canvas.dataset.arch || null);
+        this._drawSpriteCell(ctx, img, sx, sy, cssW * dpr, cssH * dpr, acc, canvas.dataset.arch || null, canvas.dataset.shiny === '1');
       };
       if (img.complete) draw();
       else { img.onload = draw; img.onerror = () => {}; }
@@ -1324,14 +1339,15 @@ window.App = {
 
     const accId = Skins.getAccessory(Profiles.active()?.id) || '';
     canvas.classList.toggle('aura', accId === 'acc_star');
-    const redraw = canvas.dataset.src !== src || canvas.dataset.mood !== mood || canvas.dataset.acc !== accId;
+    const redraw = canvas.dataset.src !== src || canvas.dataset.mood !== mood || canvas.dataset.acc !== accId || canvas.dataset.shiny !== (pet.isShiny ? '1' : '');
     if (redraw) {
       canvas.dataset.src  = src;
       canvas.dataset.mood = mood;
       canvas.dataset.acc  = accId;
+      canvas.dataset.shiny = pet.isShiny ? '1' : '';
       const img = new Image();
       img.src = src;
-      const draw = () => this._drawSpriteCell(canvas.getContext('2d'), img, sx, sy, bufW, bufW, accId, pet.archetype);
+      const draw = () => this._drawSpriteCell(canvas.getContext('2d'), img, sx, sy, bufW, bufW, accId, pet.archetype, !!pet.isShiny);
       img.onerror = () => {
         // Stage 3/4 not uploaded yet — fall back to stage 2
         const fallback = new Image();
@@ -3736,7 +3752,7 @@ window.App = {
       card.innerHTML = `
         <div style="flex-shrink:0;position:relative;width:64px;height:64px;border-radius:12px;background:${color}18;overflow:hidden;display:flex;align-items:center;justify-content:center">
           ${g.archetype && g.stage >= 2
-            ? `<canvas data-sprite-sheet="img/greamici/${g.archetype}_${g.stage}.png" data-sprite-mood="${g.mood||'happy'}"
+            ? `<canvas data-sprite-sheet="img/greamici/${g.archetype}_${Math.min(g.stage, 4)}.png" data-sprite-mood="${g.mood||'happy'}" data-arch="${g.archetype}" data-shiny="${g.isShiny ? '1' : ''}"
                  width="64" height="64"
                  style="width:64px;height:64px;image-rendering:pixelated;display:block"></canvas>`
             : `<img src="img/greamici/seed_1.png" style="width:48px;height:48px;object-fit:contain;image-rendering:pixelated" onerror="this.style.fontSize='32px';this.textContent='🥚'">`
@@ -3747,7 +3763,8 @@ window.App = {
         </div>
         <div style="flex:1;min-width:0">
           <div style="font-size:16px;font-weight:900;color:var(--green-deep)">${g.name || (arch.name?.[lang] || arch.name?.cs || 'Gream')}</div>
-          <div style="font-size:12px;font-weight:700;color:${color};margin-bottom:6px">${sName} · ${g.tasksFor} ${lang==='cs'?'úkolů':'tasks'}</div>
+          <div style="font-size:12px;font-weight:700;color:${color};margin-bottom:${g.birth ? 2 : 6}px">${sName} · ${g.tasksFor} ${lang==='cs'?'úkolů':'tasks'}</div>
+          ${g.birth ? `<div style="font-size:11px;font-weight:700;color:#8a7a55;margin-bottom:6px">🐣 ${tr().birth_line(g.birth.place, new Date(g.birth.at).toLocaleDateString(lang === 'cs' ? 'cs-CZ' : 'en-GB'))}</div>` : ''}
           ${next ? `
             <div style="background:#f0f0f0;border-radius:50px;height:6px;overflow:hidden">
               <div style="background:${color};height:100%;width:${prog}%;border-radius:50px;transition:width 0.4s"></div>
@@ -3810,7 +3827,7 @@ window.App = {
         row.innerHTML = `
           <div style="flex-shrink:0;width:44px;height:44px;border-radius:10px;background:${color}14;overflow:hidden;display:flex;align-items:center;justify-content:center;filter:grayscale(0.5)">
             ${g.archetype && g.stage >= 2
-              ? `<canvas data-sprite-sheet="img/greamici/${g.archetype}_${g.stage}.png" data-sprite-mood="${g.mood||'happy'}" width="44" height="44" style="width:44px;height:44px;image-rendering:pixelated;display:block"></canvas>`
+              ? `<canvas data-sprite-sheet="img/greamici/${g.archetype}_${Math.min(g.stage, 4)}.png" data-sprite-mood="${g.mood||'happy'}" data-arch="${g.archetype}" data-shiny="${g.isShiny ? '1' : ''}" width="44" height="44" style="width:44px;height:44px;image-rendering:pixelated;display:block"></canvas>`
               : `<img src="img/greamici/seed_1.png" style="width:34px;height:34px;object-fit:contain;image-rendering:pixelated">`}
           </div>
           <div style="flex:1;min-width:0">

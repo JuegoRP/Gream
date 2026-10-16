@@ -9,6 +9,21 @@
 <meta name="theme-color" content="#2d5a1b">
 <meta name="format-detection" content="telephone=no">
 <title>Gream</title>
+<script>
+// Ukázka pro vývojářskou galerii (tools/greamici.html): ?demo=1 → hra běží nad kopií ukázkových dat v paměti
+// (sessionStorage 'gream_demo'), skutečná data v zařízení se nečtou ani nemění. Bez parametru se nic neděje.
+(function () {
+  if (!/[?&]demo=1(&|$)/.test(location.search)) return;
+  try {
+    var m = new Map(Object.entries(JSON.parse(sessionStorage.getItem('gream_demo') || '{}')));
+    var st = { getItem: function (k) { return m.has(k) ? m.get(k) : null; }, setItem: function (k, v) { m.set(k, String(v)); },
+      removeItem: function (k) { m.delete(k); }, clear: function () { m.clear(); }, key: function (i) { return Array.from(m.keys())[i] || null; } };
+    Object.defineProperty(st, 'length', { get: function () { return m.size; } });
+    Object.defineProperty(window, 'localStorage', { value: st, configurable: true });
+    window.__greamDemo = true;
+  } catch (e) {}
+})();
+</script>
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">

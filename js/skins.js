@@ -45,21 +45,21 @@ export const SKIN_CATALOG = {
     { id: 'av_master',  emoji: '🌟',  name: { cs: 'Mistr',      en: 'Master' },   unlock: { type: 'totalTasks', count: 100 } },
     { id: 'av_legend',  emoji: '👑',  name: { cs: 'Legenda',    en: 'Legend' },   unlock: { type: 'totalTasks', count: 300 } },
     // Purchasable emoji
-    { id: 'av_cat',    emoji: '😺', name: { cs: 'Kočička',       en: 'Cat'    }, cost: 10,  unlock: { type: 'buy' } },
-    { id: 'av_fox',    emoji: '🦊', name: { cs: 'Liška',         en: 'Fox'    }, cost: 10,  unlock: { type: 'buy' } },
-    { id: 'av_frog',   emoji: '🐸', name: { cs: 'Žabka',         en: 'Frog'   }, cost: 15,  unlock: { type: 'buy' } },
-    { id: 'av_alien',  emoji: '👾', name: { cs: 'Mimozemšťan',   en: 'Alien'  }, cost: 20,  unlock: { type: 'buy' } },
-    { id: 'av_robot',  emoji: '🤖', name: { cs: 'Robot',         en: 'Robot'  }, cost: 20,  unlock: { type: 'buy' } },
-    { id: 'av_ninja',  emoji: '🥷', name: { cs: 'Ninja',         en: 'Ninja'  }, cost: 25,  unlock: { type: 'buy' } },
+    { id: 'av_cat',    emoji: '😺', name: { cs: 'Kočička',       en: 'Cat'    }, cost: 20,  unlock: { type: 'buy' } },
+    { id: 'av_fox',    emoji: '🦊', name: { cs: 'Liška',         en: 'Fox'    }, cost: 20,  unlock: { type: 'buy' } },
+    { id: 'av_frog',   emoji: '🐸', name: { cs: 'Žabka',         en: 'Frog'   }, cost: 30,  unlock: { type: 'buy' } },
+    { id: 'av_alien',  emoji: '👾', name: { cs: 'Mimozemšťan',   en: 'Alien'  }, cost: 40,  unlock: { type: 'buy' } },
+    { id: 'av_robot',  emoji: '🤖', name: { cs: 'Robot',         en: 'Robot'  }, cost: 40,  unlock: { type: 'buy' } },
+    { id: 'av_ninja',  emoji: '🥷', name: { cs: 'Ninja',         en: 'Ninja'  }, cost: 50,  unlock: { type: 'buy' } },
   ],
 
   // ─── FRAMES — bought with eggs ───
   frames: [
     { id: 'fr_none',    name: { cs: 'Bez rámečku', en: 'No frame' }, cssClass: '', cost: 0 },
-    { id: 'fr_leaf',    name: { cs: 'Lístkový',    en: 'Leaf' },     cssClass: 'frame-leaf',    cost: 30 },
-    { id: 'fr_gold',    name: { cs: 'Zlatý',       en: 'Gold' },     cssClass: 'frame-gold',    cost: 80 },
-    { id: 'fr_rainbow', name: { cs: 'Duhový',      en: 'Rainbow' },  cssClass: 'frame-rainbow', cost: 150 },
-    { id: 'fr_galaxy',  name: { cs: 'Galaxie',     en: 'Galaxy' },   cssClass: 'frame-galaxy',  cost: 250 },
+    { id: 'fr_leaf',    name: { cs: 'Lístkový',    en: 'Leaf' },     cssClass: 'frame-leaf',    cost: 60 },
+    { id: 'fr_gold',    name: { cs: 'Zlatý',       en: 'Gold' },     cssClass: 'frame-gold',    cost: 160 },
+    { id: 'fr_rainbow', name: { cs: 'Duhový',      en: 'Rainbow' },  cssClass: 'frame-rainbow', cost: 300 },
+    { id: 'fr_galaxy',  name: { cs: 'Galaxie',     en: 'Galaxy' },   cssClass: 'frame-galaxy',  cost: 500 },
   ],
 
   // ─── FRAMES — bought with eggs (cheaper) ───
@@ -68,11 +68,11 @@ export const SKIN_CATALOG = {
   // ─── BACKGROUNDS — bought with seeds ───
   backgrounds: [
     { id: 'bg_default',      name: { cs: 'Výchozí louka',     en: 'Default meadow' },   file: null,                    cost: 0   },
-    { id: 'bg_rain_jungle',  name: { cs: 'Deštný les',        en: 'Rain jungle' },      file: 'bg_rain_jungle.png',    cost: 80  },
-    { id: 'bg_cyberpunk',    name: { cs: 'Kybernetické město',en: 'Cyberpunk city' },   file: 'bg_cyberpunk.png',      cost: 120 },
-    { id: 'bg_cave',         name: { cs: 'Krystalová jeskyně',en: 'Crystal cave' },     file: 'bg_cave.png',           cost: 150 },
-    { id: 'bg_ruins',        name: { cs: 'Záhadné ruiny',     en: 'Ancient ruins' },    file: 'bg_ruins.png',          cost: 200 },
-    { id: 'bg_town',         name: { cs: 'Středověké město',  en: 'Medieval town' },    file: 'bg_town.png',           cost: 250 },
+    { id: 'bg_rain_jungle',  name: { cs: 'Deštný les',        en: 'Rain jungle' },      file: 'bg_rain_jungle.png',    cost: 160  },
+    { id: 'bg_cyberpunk',    name: { cs: 'Kybernetické město',en: 'Cyberpunk city' },   file: 'bg_cyberpunk.png',      cost: 240 },
+    { id: 'bg_cave',         name: { cs: 'Krystalová jeskyně',en: 'Crystal cave' },     file: 'bg_cave.png',           cost: 300 },
+    { id: 'bg_ruins',        name: { cs: 'Záhadné ruiny',     en: 'Ancient ruins' },    file: 'bg_ruins.png',          cost: 400 },
+    { id: 'bg_town',         name: { cs: 'Středověké město',  en: 'Medieval town' },    file: 'bg_town.png',           cost: 500 },
   ],
 
   // ─── BOOSTS — jednorázové efekty za vajíčka ───
@@ -86,32 +86,32 @@ export const SKIN_CATALOG = {
   // ─── GREAM ACCESSORIES — doplňky viditelné na greamíkovi (zahrada, aréna, výběr do souboje) ───
   // slot: head = na hlavě, face = přes oči, neck = na krku, aura = záře kolem (bez obrázku)
   accessories: [
-    { id: 'acc_bow',     name: { cs: 'Mašlička',       en: 'Bow' },          emoji: '🎀', cost: 25,  slot: 'head', img: 'img/doplnky/acc_bow.png' },
-    { id: 'acc_cap',     name: { cs: 'Kšiltovka',      en: 'Cap' },          emoji: '🧢', cost: 30,  slot: 'head', img: 'img/doplnky/acc_cap.png' },
-    { id: 'acc_glasses', name: { cs: 'Brýle',          en: 'Glasses' },      emoji: '🕶️', cost: 35,  slot: 'face', img: 'img/doplnky/acc_glasses.png' },
-    { id: 'acc_scarf',   name: { cs: 'Šála',           en: 'Scarf' },        emoji: '🧣', cost: 35,  slot: 'neck', img: 'img/doplnky/acc_scarf.png' },
-    { id: 'acc_hat',     name: { cs: 'Cylindr',        en: 'Top hat' },      emoji: '🎩', cost: 40,  slot: 'head', img: 'img/doplnky/acc_hat.png' },
-    { id: 'acc_flowers', name: { cs: 'Věneček',        en: 'Flower crown' }, emoji: '🌸', cost: 45,  slot: 'head', img: 'img/doplnky/acc_flowers.png' },
-    { id: 'acc_wizard',  name: { cs: 'Kouzelnický klobouk', en: 'Wizard hat' }, emoji: '🧙', cost: 60, slot: 'head', img: 'img/doplnky/acc_wizard.png' },
-    { id: 'acc_star',    name: { cs: 'Hvězdná záře',   en: 'Star aura' },    emoji: '⭐', cost: 60,  slot: 'aura' },
-    { id: 'acc_crown',   name: { cs: 'Korunka',        en: 'Crown' },        emoji: '👑', cost: 80,  slot: 'head', img: 'img/doplnky/acc_crown.png' },
+    { id: 'acc_bow',     name: { cs: 'Mašlička',       en: 'Bow' },          emoji: '🎀', cost: 50,  slot: 'head', img: 'img/doplnky/acc_bow.png' },
+    { id: 'acc_cap',     name: { cs: 'Kšiltovka',      en: 'Cap' },          emoji: '🧢', cost: 60,  slot: 'head', img: 'img/doplnky/acc_cap.png' },
+    { id: 'acc_glasses', name: { cs: 'Brýle',          en: 'Glasses' },      emoji: '🕶️', cost: 70,  slot: 'face', img: 'img/doplnky/acc_glasses.png' },
+    { id: 'acc_scarf',   name: { cs: 'Šála',           en: 'Scarf' },        emoji: '🧣', cost: 70,  slot: 'neck', img: 'img/doplnky/acc_scarf.png' },
+    { id: 'acc_hat',     name: { cs: 'Cylindr',        en: 'Top hat' },      emoji: '🎩', cost: 80,  slot: 'head', img: 'img/doplnky/acc_hat.png' },
+    { id: 'acc_flowers', name: { cs: 'Věneček',        en: 'Flower crown' }, emoji: '🌸', cost: 90,  slot: 'head', img: 'img/doplnky/acc_flowers.png' },
+    { id: 'acc_wizard',  name: { cs: 'Kouzelnický klobouk', en: 'Wizard hat' }, emoji: '🧙', cost: 120, slot: 'head', img: 'img/doplnky/acc_wizard.png' },
+    { id: 'acc_star',    name: { cs: 'Hvězdná záře',   en: 'Star aura' },    emoji: '⭐', cost: 120,  slot: 'aura' },
+    { id: 'acc_crown',   name: { cs: 'Korunka',        en: 'Crown' },        emoji: '👑', cost: 160,  slot: 'head', img: 'img/doplnky/acc_crown.png' },
   ],
 
   // ─── VÝZDOBA ZAHRADY — vše koupené se ukáže v zahradě (jde vypnout); x/y = % scény, w = % šířky ───
   decor: [
-    { id: 'deco_flowerbed', name: { cs: 'Záhonek',        en: 'Flower bed' },   cost: 20,  img: 'img/zahrada/deco_flowerbed.png', x: 14, y: 92, w: 22 },
-    { id: 'deco_bench',     name: { cs: 'Lavička',        en: 'Bench' },        cost: 30,  img: 'img/zahrada/deco_bench.png',     x: 80, y: 90, w: 24 },
-    { id: 'deco_birdhouse', name: { cs: 'Budka pro ptáčky', en: 'Birdhouse' },  cost: 35,  img: 'img/zahrada/deco_birdhouse.png', x: 90, y: 66, w: 10 },
-    { id: 'deco_lantern',   name: { cs: 'Lucernička',     en: 'Lantern' },      cost: 40,  img: 'img/zahrada/deco_lantern.png',   x: 32, y: 84, w: 10 },
-    { id: 'deco_pond',      name: { cs: 'Jezírko',        en: 'Pond' },         cost: 60,  img: 'img/zahrada/deco_pond.png',      x: 66, y: 97, w: 26 },
-    { id: 'deco_mushroom',  name: { cs: 'Hříbkový domeček', en: 'Mushroom house' }, cost: 90, img: 'img/zahrada/deco_mushroom.png', x: 10, y: 70, w: 16 },
-    { id: 'deco_rainbow',   name: { cs: 'Duha',           en: 'Rainbow' },      cost: 120, img: 'img/zahrada/deco_rainbow.png',   x: 70, y: 22, w: 30 },
+    { id: 'deco_flowerbed', name: { cs: 'Záhonek',        en: 'Flower bed' },   cost: 40,  img: 'img/zahrada/deco_flowerbed.png', x: 14, y: 92, w: 22 },
+    { id: 'deco_bench',     name: { cs: 'Lavička',        en: 'Bench' },        cost: 60,  img: 'img/zahrada/deco_bench.png',     x: 80, y: 90, w: 24 },
+    { id: 'deco_birdhouse', name: { cs: 'Budka pro ptáčky', en: 'Birdhouse' },  cost: 70,  img: 'img/zahrada/deco_birdhouse.png', x: 90, y: 66, w: 10 },
+    { id: 'deco_lantern',   name: { cs: 'Lucernička',     en: 'Lantern' },      cost: 80,  img: 'img/zahrada/deco_lantern.png',   x: 32, y: 84, w: 10 },
+    { id: 'deco_pond',      name: { cs: 'Jezírko',        en: 'Pond' },         cost: 120,  img: 'img/zahrada/deco_pond.png',      x: 66, y: 97, w: 26 },
+    { id: 'deco_mushroom',  name: { cs: 'Hříbkový domeček', en: 'Mushroom house' }, cost: 180, img: 'img/zahrada/deco_mushroom.png', x: 10, y: 70, w: 16 },
+    { id: 'deco_rainbow',   name: { cs: 'Duha',           en: 'Rainbow' },      cost: 240, img: 'img/zahrada/deco_rainbow.png',   x: 70, y: 22, w: 30 },
   ],
 };
 
 // ─── Seeds earned per event ───
 const SEEDS_PER_TASK   = 2;   // base × difficulty multiplier below
-const SEEDS_PER_BADGE  = 10;  // bonus for completing full 3-step badge
+const SEEDS_PER_BADGE  = 6;   // bonus for completing full 3-step badge (2026-10: 10 → 6, obchod se nemá dát vykoupit za týden)
 const SEEDS_PER_STREAK = 5;
 const SEEDS_OUTDOOR_BONUS = 3; // added on top of base when outdoor
 const SEEDS_DAILY_BONUS = 4;   // daily login bonus

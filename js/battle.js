@@ -31,6 +31,11 @@ const MATCH_BONUS_MS = 3000;                // matching-world Gream present
 const MATCH_EVOLVED_BONUS_MS = 2000;        // + if that Gream is stage >= 3
 const BOT_ACC = { easy:0.55, medium:0.65, hard:0.72, extreme:0.78 };
 const WIN_REWARD = { easy:5, medium:8, hard:12, extreme:18 };  // seeds on win
+// Denní strop: plnou odměnu dávají jen první výhry dne, pak čtvrtina (min. 1) – souboje se nedají „farmit“ na semínka
+export const FULL_REWARD_WINS = 5;
+// Bot podle hráče: přesnost bota sleduje hráčovu průměrnou úspěšnost v soubojích (klouzavý průměr),
+// o trochu níž → hráč vyhrává zhruba 50–60 %. Meze kolem výchozí přesnosti obtížnosti.
+const BOT_EDGE = 0.04, BOT_MIN = 0.4, BOT_MAX = 0.93, SKILL_ALPHA = 0.3;
 const KEY_STATS = 'gream_battle_stats';
 const KEY_BADGES = 'gream_battle_badges';
 
@@ -201,9 +206,11 @@ export const Battle = {
       const diff = sel[0];
       const { reward, entry } = this.economy(diff, outdoor);
       const seeds = Skins.getSeeds(p.id);
-      econ.textContent = cs
-        ? `Vstup ${entry} 🌱 · výhra +${reward} 🌱 (máš ${seeds})`
-        : `Entry ${entry} 🌱 · win +${reward} 🌱 (you have ${seeds})`;
+      const fullLeft = Math.max(0, FULL_REWARD_WINS - this.winsToday(p.id));
+      const winR = fullLeft ? reward : Math.max(1, Math.round(reward / 4));
+      econ.textContent = (cs
+        ? `Vstup ${entry} 🌱 · výhra +${winR} 🌱 (máš ${seeds})`
+        : `Entry ${entry} 🌱 · win +${winR} 🌱 (you have ${seeds})`) + ' · ' + (fullLeft ? tr().battle_full_left(fullLeft) : tr().battle_full_none);
       const extremeLocked = diff === 'extreme' && !premium;
       let blocked = false, reason = '';
       if (extremeLocked) { blocked = true; reason = cs?'⚡ Extrémní jen v Premium':'⚡ Extreme is Premium'; }
@@ -283,22 +290,41 @@ export const Battle = {
     this._q = pickQuestions(diff, null, this._pack);
     document.getElementById('battleOverlay')?.remove();
     // Hned lokální soupeř (hra nikdy nečeká na síť); skutečný nahraný hráč ze serveru ho nahradí, pokud dorazí do 1,5 s
-    this._rival = this._localRival(diff);
+    this._rival = this._localRival(diff, Math.random, this.botAccFor(p.id, diff));
     const myRating = loadStats(p.id).rating || 1000;
     const fromServer = Net.battleOpponent(diff, myRating, p.id).then(o => { if (o && !o.bot && Array.isArray(o.answers) && o.answers.length >= 5 && ARCHES.includes(o.arch)) this._rival = { ...o, stage: o.stage || 2 }; });   // bez nahrávky (starší souboj) zůstává bot – nepřebírat jméno skutečného hráče
     Promise.race([fromServer, new Promise(r => setTimeout(r, 1500))]).then(() => this._run(pick));
   },
 
   // Bot: přesnost podle obtížnosti, časy odpovědí náhodně (rychlejší, když ví)
-  _localRival(diff, rng = Math.random) {
-    const acc = BOT_ACC[diff] || 0.65;
+  // Přesnost bota pro hráče: klouzavý průměr jeho správných odpovědí v soubojích na dané obtížnosti
+  botAccFor(pid, diff) {
+    const base = BOT_ACC[diff] || 0.65;
+    const sk = loadStats(pid).skill?.[diff];
+    if (sk == null) return base;
+    return Math.min(BOT_MAX, Math.max(BOT_MIN, Math.max(base - 0.15, sk - BOT_EDGE)));
+  },
+  _recordSkill(pid, diff, correct) {
+    const s = loadStats(pid); s.skill = s.skill || {};
+    const prev = s.skill[diff] ?? (BOT_ACC[diff] || 0.65);
+    s.skill[diff] = Math.round((prev * (1 - SKILL_ALPHA) + (correct / ROUNDS) * SKILL_ALPHA) * 1000) / 1000;
+    saveStats(pid, s);
+  },
+  // Kolikátá výhra dne (pro denní strop odměny)
+  winsToday(pid) { const s = loadStats(pid); return s.winDay === today() ? (s.winsToday || 0) : 0; },
+  _botName(rng = Math.random) {
+    const t = tr(), a = t.bot_adj || ['Gream'], n = t.bot_noun || ['Bot'];
+    return `${a[Math.floor(rng() * a.length)]} ${n[Math.floor(rng() * n.length)]}`;
+  },
+
+  _localRival(diff, rng = Math.random, acc = BOT_ACC[diff] || 0.65) {
     const answers = Array.from({ length: ROUNDS }, () => {
       const knows = rng() < acc;
       const ok = knows || rng() < 1 / 3;
       return { ok, ms: Math.round(ok && knows ? 1800 + rng() * 5500 : 5000 + rng() * 5500) };
     });
     const arch = ARCHES[Math.floor(rng() * ARCHES.length)];
-    return { name: 'Gream Bot', arch, stage: 2 + Math.floor(rng() * 3), answers, rating: 1000, bot: true };
+    return { name: `🤖 ${this._botName(rng)}`, arch, stage: 2 + Math.floor(rng() * 3), answers, rating: 1000, bot: true };
   },
 
   // ─── Daily round: same date-seeded questions for everyone, ranked per day, 1×/den, free ───
@@ -643,8 +669,14 @@ export const Battle = {
     s.bestStreak = Math.max(s.bestStreak || 0, s.streak);
     s.total = (s.total || 0) + 1;
     saveStats(p.id, s);
+    this._recordSkill(p.id, this._diff, myCorrect);
     let reward = 0;
-    if (win) { reward = this._reward; Skins.addSeeds(p.id, reward); Feedback.celebrate?.(); }
+    if (win) {
+      const n = this.winsToday(p.id);
+      reward = n < FULL_REWARD_WINS ? this._reward : Math.max(1, Math.round(this._reward / 4));
+      const st = loadStats(p.id); st.winDay = today(); st.winsToday = n + 1; saveStats(p.id, st);
+      Skins.addSeeds(p.id, reward); Feedback.celebrate?.();
+    }
     else Feedback.error?.();
     const newBadges = this._checkBadges(p.id, s, win, this._diff);
 
