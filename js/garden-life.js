@@ -147,8 +147,9 @@ export class GardenLife {
     return { ...t, x: Math.max(3, Math.min(97, t.x)), y: loose ? Math.max(GROUND.top - 6, Math.min(99, t.y)) : Math.max(GROUND.top, Math.min(GROUND.bottom, t.y)) };
   }
 
-  // Obdélník, přes který se nechodí: šířka předmětu × jeho podstava
-  _rect(p, m = 1.5) { return { x0: p.x - p.w / 2 - m, x1: p.x + p.w / 2 + m, y0: p.y - p.d - 0.5, y1: p.y + 1 }; }
+  // Obdélník, přes který se nechodí: celý předmět (šířka × výška) + polovina šířky greamíka, ať se s ním ani
+  // vizuálně nepřekrývá – greamíci chodí jen před předměty nebo kolem nich, ne „skrz“ ani těsně za nimi
+  _rect(p, m = 3.5) { return { x0: p.x - p.w / 2 - m, x1: p.x + p.w / 2 + m, y0: p.y - (p.h || p.d) - 1, y1: p.y + 1.5 }; }
   _inRect(pt, r) { return pt.x > r.x0 && pt.x < r.x1 && pt.y > r.y0 && pt.y < r.y1; }
   // Cíl uvnitř předmětu → posunout před něj
   _free(t, ignore = null) {

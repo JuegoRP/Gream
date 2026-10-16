@@ -149,6 +149,21 @@ export class Arena {
     return { x: (s.left - r.left + s.width / 2) * this._dpr, y: (s.top - r.top + s.height * 0.55) * this._dpr };
   }
 
+  // Odpočet před prvním kolem: „Ema vs Bot“, pak 3 · 2 · 1 · Souboj! (≈ 3,5 s; s omezeným pohybem jen krátce)
+  async countdown(goText, onTick) {
+    const st = this.el.stage, el = document.createElement('div');
+    el.className = 'ar-count';
+    st.appendChild(el);
+    const show = async (txt, cls, ms) => { el.className = 'ar-count ' + cls; el.textContent = txt; void el.offsetWidth; el.classList.add('pop'); onTick?.(txt); await wait(ms); };
+    if (REDUCED()) { await show(goText, 'go', 700); el.remove(); return; }
+    st.classList.add('ar-intro');
+    await wait(900);
+    for (const n of ['3', '2', '1']) await show(n, 'num', 700);
+    await show(goText, 'go', 800);
+    st.classList.remove('ar-intro');
+    el.remove();
+  }
+
   banner(text, cls = '') {
     const b = this.el.banner; b.className = 'ar-banner show ' + cls; b.textContent = text;
     clearTimeout(this._bt); this._bt = setTimeout(() => { b.className = 'ar-banner'; }, 1100);

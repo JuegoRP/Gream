@@ -28,16 +28,15 @@ import { SUBCAT_TAXONOMY, subcatName, groupName } from './subcats.js';
 // lavička a lucerna na jejím okraji, jezírko a hříbek na trávě vpravo, košíček a záhonek vlevo dole.
 // base = podíl výšky obrázku, který tvoří podstavu (přes ni se nechodí)
 const GARDEN_LAYOUT = {
-  nest:           { x: 24, y: 92, base: 0.5 },
-  deco_flowerbed: { x: 9,  y: 99, base: 0.55 },
+  nest:           { x: 14, y: 92, base: 0.5 },
+  deco_flowerbed: { x: 37, y: 99, base: 0.55 },
   deco_bench:     { x: 45, y: 75, base: 0.35 },
   deco_lantern:   { x: 55, y: 79, base: 0.15 },
   deco_birdhouse: { x: 63, y: 67, base: 0.06 },
   deco_pond:      { x: 81, y: 77, base: 0.85 },
   deco_mushroom:  { x: 94, y: 71, base: 0.3 },
-  deco_rainbow:   { x: 62, y: 36, base: 0 },
 };
-const DECOR_ASPECT = { nest: 46 / 78, deco_flowerbed: 0.67, deco_bench: 0.75, deco_lantern: 1.67, deco_birdhouse: 2.77, deco_pond: 0.64, deco_mushroom: 1.14, deco_rainbow: 0.53 };
+const DECOR_ASPECT = { nest: 46 / 78, deco_flowerbed: 0.67, deco_bench: 0.75, deco_lantern: 1.67, deco_birdhouse: 2.77, deco_pond: 0.64, deco_mushroom: 1.14 };
 import { Gream, ARCHETYPES, BASE_ARCHETYPES, eggLeaning, spritePath, smartSpritePath } from './gream.js';
 import { Subscription, FREE_DAILY_INDOOR, PREMIUM_DAILY_INDOOR, INDOOR_MAX_TOTAL, FREE_DAILY_OUTDOOR, SEED_COST_EXTRA_TASK } from './subscription.js';
 import { Ranking } from './ranking.js';
@@ -286,7 +285,7 @@ window.App = {
     if (active) this.applyCosmetics();
     // Doplňky byly zrušeny (2026-10-16): kdo nějaký koupil, dostane semínka zpět
     try {
-      let back = 0; Profiles.all().forEach(pr => { back += Skins.refundAccessories(pr.id); });
+      let back = 0; Profiles.all().forEach(pr => { back += Skins.refundAccessories(pr.id) + Skins.refundRemovedDecor(pr.id); });
       if (back) setTimeout(() => this._showToast(tr().acc_refund(back)), 2500);
     } catch {}
 
@@ -1123,6 +1122,32 @@ window.App = {
     if (!scroll._arrows) { scroll._arrows = true; scroll.addEventListener('scroll', () => this._updateGardenArrows(), { passive: true }); }
   },
 
+  // Počká na obrázky aktuální obrazovky (img i pozadí zahrady i zdroje sprite canvasů), nejdéle maxMs
+  async _imagesReady(maxMs = 2500) {
+    const urls = new Set();
+    const scr = document.querySelector('.screen:not(.hidden)') || document;
+    scr.querySelectorAll('img[src]').forEach(i => urls.add(i.src));
+    scr.querySelectorAll('canvas[data-sprite-sheet]').forEach(c => urls.add(c.dataset.spriteSheet));
+    scr.querySelectorAll('.garden-world, .gream-stage').forEach(el => { const m = (el.style.backgroundImage || '').match(/url\(["']?([^"')]+)/); if (m) urls.add(m[1]); });
+    const load = (u) => new Promise(res => { const i = new Image(); i.onload = i.onerror = () => (i.decode ? i.decode().catch(() => {}).then(res) : res()); i.src = u; });
+    await Promise.race([Promise.all([...urls].map(load)), new Promise(r => setTimeout(r, maxMs))]);
+  },
+
+  // Výběr jiného greamíka v zahradě: jen přepnout „aktivního“ (velikost, jméno, pozdrav), nic znovu nevykreslovat
+  _switchActiveInGarden(g, slot) {
+    const p = Profiles.active(); if (!p) return;
+    Gream.setActive(p.id, g.id);
+    const lang = getLang(), world = slot.closest('.garden-world');
+    world?.querySelectorAll('.garden-gream-slot.is-active').forEach(el => el.classList.remove('is-active'));
+    slot.classList.add('is-active');
+    (this._gardenLife?.actors || []).forEach(a => { a.active = a.id === g.id; this._gardenLife._place(a); });
+    const egg = g.stage < 2 || !g.archetype;
+    this._setText('greamDisplayName', egg ? (lang === 'cs' ? '🌱 Záhadné vajíčko' : '🌱 Mystery egg') : Gream.getDisplayName(g, lang));
+    this._setText('mapGreeting', Gream.getGreeting(g, lang));
+    this._gardenLife?.poke(g.id);
+    if (g.archetype && g.stage >= 2) Audio.playCry(g.archetype, g.stage);
+  },
+
   _renderGardenGreams(allGreams, activeGream, lang) {
     const stage = document.getElementById('greamStage');
     const world = this._gardenWorld();
@@ -1178,9 +1203,8 @@ window.App = {
 
       slot.addEventListener('click', (e) => {
         e.stopPropagation();
-        if (!isActive) {
-          Gream.setActive(Profiles.active()?.id, g.id);
-          this.renderMap();
+        if (!slot.classList.contains('is-active')) {
+          this._switchActiveInGarden(g, slot);   // bez překreslení zahrady (dřív všichni problikli)
           Feedback.tap();
         } else {
           this._gardenLife?.poke(g.id);
@@ -1197,7 +1221,8 @@ window.App = {
     // rozměry předmětů v % světa (šířka) a % výšky scény (podstava) – greamíci je obcházejí
     const sw = stage.clientWidth || 360, sh = stage.clientHeight || 440, ww = world.clientWidth || sw;
     const dims = (id, wPctOfStage) => { const L = GARDEN_LAYOUT[id] || {}, wpx = wPctOfStage / 100 * sw;
-      return { w: wpx / ww * 100, d: wpx * (DECOR_ASPECT[id] || 0.7) * (L.base ?? 0.4) / sh * 100 }; };
+      const hpx = wpx * (DECOR_ASPECT[id] || 0.7);
+      return { w: wpx / ww * 100, d: hpx * (L.base ?? 0.4) / sh * 100, h: hpx / sh * 100 }; };
     const props = (p ? Skins.shownDecor(p.id) : []).map(it => ({ id: it.id, ...(GARDEN_LAYOUT[it.id] || { x: it.x, y: it.y }), ...dims(it.id, it.w) }));
     props.push({ id: 'nest', ...NEST, ...dims('nest', hatched.length ? 20 : 30), egg: eggs.length > 0 });
     const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
@@ -4501,9 +4526,11 @@ window.MapView = MapView; // expose for router cleanup
 (async function startGream() {
   try {
     await App.init();
-    // Remove loading fallback once started
+    // Úvodní obrazovku schovat až po načtení obrázků zahrady (pozadí, greamíci, výzdoba) – jinak se scéna
+    // skládá po kouscích; nejdéle 2,5 s, ať pomalé připojení nezdrží hru
+    await App._imagesReady(2500);
     const fallback = document.getElementById('appLoadingFallback');
-    if (fallback) fallback.style.display = 'none';
+    if (fallback) { fallback.style.transition = 'opacity .35s'; fallback.style.opacity = '0'; setTimeout(() => { fallback.style.display = 'none'; }, 360); }
   } catch (err) {
     console.error('[Gream] Init crashed:', err);
     const msg = document.getElementById('appLoadingMsg');

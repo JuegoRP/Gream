@@ -1,6 +1,6 @@
 # Převod vygenerovaných greamíků (Assety/greamici-podkategorie/<jméno>_<stádium>.png, 1024 px, průhledné pozadí)
 # na herní list 256×256 (buňka 128 px vpravo nahoře = smutný, vpravo dole = veselý; zde stejné).
-# Uzavřené průhledné „díry“ (oči, číslice, záře) se vyplní barvou předlohy na světlém podkladu; mezery < 12 px zůstávají.
+# Uzavřené průhledné „díry“ (oči, číslice, záře) se vyplní barvou předlohy na světlém podkladu.
 # python3 scripts/build-new-greams.py
 from PIL import Image
 from collections import deque
@@ -45,6 +45,16 @@ def dark_eyes(px):
             for y in range(y0 - 1, y1 + 2):
                 if (x, y) in c or (px[x, y][3] > 0 and sum(px[x, y][:3]) > 400): px[x, y] = (24, 18, 40, 255)
         for d in ((1, 1), (2, 1), (1, 2), (2, 2)): px[x0 + d[0], y0 + d[1]] = (255, 255, 255, 255)
+# Hvězdík 4: bílý pás mezi prstencem planet a hlavou → průhledný (odlesky na planetách zůstanou)
+def white_band(px):
+    for y in range(64):
+        for x in range(128):
+            if 44 < x < 84 and y >= 40: continue
+            r, g, b, a = px[x, y]
+            if not a or not (r > 150 and g > 150 and b > 150 and max(r, g, b) - min(r, g, b) < 50): continue
+            nb = [px[x + dx, y + dy] for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)) if 0 <= x + dx < 128 and 0 <= y + dy < 128]
+            if sum(1 for v in nb if v[3] and not (v[0] > 150 and v[1] > 150 and v[2] > 150)) >= 4: continue
+            px[x, y] = (0, 0, 0, 0)
 for n in NAMES:
     for st in (2, 3, 4):
         src = Image.open(f'Assety/greamici-podkategorie/{n}_{st}.png').convert('RGBA')
@@ -59,11 +69,12 @@ for n in NAMES:
         cell = Image.new('RGBA', (128, 128), (0, 0, 0, 0)); ox, oy = (128 - w) // 2, 126 - h; cell.paste(sm, (ox, oy), sm)
         cp = cell.load()
         for c in holes(cp):
-            if len(c) < 12: continue
+            pass   # i malé díry (odlesky v očích) – jinak prosvítá pozadí
             for (x, y) in c:
                 sx, sy = x - ox, y - oy
                 if 0 <= sx < w and 0 <= sy < h: cp[x, y] = lp[sx, sy]
         if (n, st) in DARK_EYES: dark_eyes(cp)
+        if (n, st) == ('hvezdik', 4): white_band(cp)
         sheet = Image.new('RGBA', (256, 256), (0, 0, 0, 0)); sheet.paste(cell, (128, 0)); sheet.paste(cell, (128, 128))
         sheet.save(f'img/greamici/{n}_{st}.png', optimize=True)
 print('hotovo')

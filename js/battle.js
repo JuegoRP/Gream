@@ -490,7 +490,11 @@ export const Battle = {
       labels: { energy: t.battle_energy, superEffective: t.battle_super_eff, effective: t.battle_half_eff, crit: t.battle_crit },
     });
     this._arena.update(this._f);
-    await new Promise(r => setTimeout(r, 400));
+    // Odpočet: otázka a časomíra se ukážou až po „Souboj!“
+    const panel = [...scr.querySelectorAll('.bt-top, .bt-time, .bt-q, .bt-choices, .bt-report')];
+    panel.forEach(el => { el.style.visibility = 'hidden'; });
+    await this._arena.countdown(t.battle_go, (txt) => { try { txt === t.battle_go ? Feedback.success?.() : Feedback.tap?.(); } catch {} });
+    panel.forEach(el => { el.style.visibility = ''; });
 
     for (let round = 0; round < ROUNDS && round < this._q.length; round++) {
       const f = this._f;

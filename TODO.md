@@ -37,6 +37,12 @@
 - [x] Záložka Já přeskládaná: Greamíci (vlastní obrazovka s detailem) a Obchůdek zvlášť, Statistiky viditelně vedle Odznaků (2026-10-16)
 - [x] Obchůdek: jednotná karta ve všech záložkách; pozadí předělána na panoramata ve stylu zahrady (+ Zimní zahrada, Zahrada u moře) (2026-10-16)
 - [x] Vajíčko sedí v košíčku viditelně (2026-10-16)
+- [x] Odpočet před soubojem (soupeři najedou, 3 · 2 · 1 · Souboj!) (2026-10-16)
+- [x] Načítání: úvodní obrazovka do načtení obrázků zahrady, soubory z mezipaměti verze (sw.js) (2026-10-16)
+- [x] Opravy obrázků: Hvězdík 4, Lilek 2, Ahojík 3, Maska 2, Míček 4, Lvíček 2; duha z výzdoby zrušena (semínka zpět) (2026-10-16)
+- [x] Zahrada: výběr greamíka bez problikání, předměty blokují celou výšku (greamíci je obcházejí) (2026-10-16)
+- [ ] Otázky ze serveru (balíčky obsahu bez nové verze aplikace) – navrženo, čeká na Romana
+- [ ] Sloučit release-1.1 do main (PR Gream#4, 3Rstudio.eu#3, 3r-control#2) – Roman schválil, sloučení musí klepnout sám (pojistka Claude Code)
 - [x] 24 greamíků podle témat (4 v každém světě, každý své téma) – líhnutí podle nejčastějšího tématu odpovědí, souboj losuje rovnoměrně ze 24 skupin, balanc N=20000 48,9–51,7 % (2026-10-16)
 - [x] +419 otázek (cs+en) pro slabé skupiny: knihy a pohádky, cizí jazyky, hádanky a řady, mysl, zdraví a bezpečí, vztahy, divadlo a stavby – ručně posouzeno, 70 vyřazeno (2026-10-16)
 - [x] OPRAVA: míchání možností bylo zaujaté – správná odpověď na 1. místě ve 44 % místo 33 % (js/shuffle.js) (2026-10-16)

@@ -1,12 +1,11 @@
 // ═══════════════════════════════════
 //  GREAM — sw.js  v3
-//  Strategy: network-first for app code + CSS, vždy s ověřením na serveru (cache:'no-cache' → 304, levné)
-//            cache-first for media (audio, images, fonts, MapLibre, map tiles); po nové verzi se média
-//            stahují znovu s ověřením, takže opravený obrázek nezůstane viset ze staré mezipaměti prohlížeče.
-//  2026-10-16: dřív CSS cache-first + přednačtení z HTTP mezipaměti → po aktualizaci se ukazoval starý vzhled/obrázky.
+//  Strategie (2026-10-16): vše vlastní cache-first v rámci VERZE (rychlé načítání), první stažení vždy s ověřením
+//  na serveru (cache:'no-cache'), takže nová verze nepřevezme staré soubory z HTTP mezipaměti prohlížeče.
+//  Navigace (index.html) network-first. PŘI KAŽDÉ ZMĚNĚ APLIKACE ZVÝŠIT VERSION.
 // ═══════════════════════════════════
 
-const VERSION = 'gream-v31';
+const VERSION = 'gream-v32';
 const STATIC_CACHE = `${VERSION}-static`;
 const TILES_CACHE  = `gream-tiles-v2`;   // vektorové dlaždice z 3rstudio.eu/api/gream/tiles
 
@@ -58,20 +57,11 @@ self.addEventListener('fetch', e => {
   }
   if (url.hostname !== self.location.hostname) return;   // nic jiného cizího aplikace nenačítá
 
-  // Local: JS modules / screens / json / CSS / HTML → network-first (always fresh code)
-  if (url.pathname.match(/\.(js|json|css|html)$/) || url.pathname.includes('/screens/')) {
-    e.respondWith(networkFirst(e.request));
-    return;
-  }
-
-  // Local: images, audio, fonts → cache-first
-  if (url.pathname.match(/\.(png|jpg|jpeg|svg|webp|gif|wav|mp3|ogg|woff2)$/)) {
-    e.respondWith(cacheFirst(e.request, STATIC_CACHE));
-    return;
-  }
-
-  // Default: network-first
-  e.respondWith(networkFirst(e.request));
+  // Vlastní soubory: z mezipaměti této verze (rychlý start bez desítek dotazů na server); co v ní ještě není,
+  // stáhne se s ověřením a uloží. Nová verze (VERSION) = nová mezipaměť → po aktualizaci vše čerstvé.
+  // Výjimka: index.html / navigace – network-first, aby se nová verze SW vůbec dozvěděla.
+  if (e.request.mode === 'navigate') { e.respondWith(networkFirst(e.request)); return; }
+  e.respondWith(cacheFirst(e.request, STATIC_CACHE));
 });
 
 // ─── Strategies ───

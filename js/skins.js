@@ -138,7 +138,6 @@ export const SKIN_CATALOG = {
     { id: 'deco_lantern',   name: { cs: 'Lucernička',     en: 'Lantern' },      cost: 80,  img: 'img/zahrada/deco_lantern.png',   x: 32, y: 84, w: 10 },
     { id: 'deco_pond',      name: { cs: 'Jezírko',        en: 'Pond' },         cost: 120,  img: 'img/zahrada/deco_pond.png',      x: 66, y: 97, w: 26 },
     { id: 'deco_mushroom',  name: { cs: 'Hříbkový domeček', en: 'Mushroom house' }, cost: 180, img: 'img/zahrada/deco_mushroom.png', x: 10, y: 70, w: 16 },
-    { id: 'deco_rainbow',   name: { cs: 'Duha',           en: 'Rainbow' },      cost: 240, img: 'img/zahrada/deco_rainbow.png',   x: 70, y: 22, w: 30 },
   ],
 };
 
@@ -377,6 +376,20 @@ export const Skins = {
     const back = owned.reduce((s, id) => s + (ACC_REFUND[id] || 0), 0);
     m[profileId] = m[profileId].filter(id => !id.startsWith('acc_')); saveMap(KEY_OWNED_COSMETIC, m);
     const e = loadMap(KEY_EQUIPPED); if (e[profileId]) { delete e[profileId].accessory; saveMap(KEY_EQUIPPED, e); }
+    this.addSeeds(profileId, back);
+    return back;
+  },
+
+  // Duha zrušena 2026-10-16 (na jiných pozadích nedávala smysl) → semínka zpět. Vrací počet vrácených semínek.
+  refundRemovedDecor(profileId) {
+    const REMOVED = { deco_rainbow: 240 };
+    const m = loadMap(KEY_DECOR), d = m[profileId];
+    if (!d?.owned) return 0;
+    const gone = d.owned.filter(id => REMOVED[id]);
+    if (!gone.length) return 0;
+    d.owned = d.owned.filter(id => !REMOVED[id]); d.hidden = (d.hidden || []).filter(id => !REMOVED[id]);
+    saveMap(KEY_DECOR, m);
+    const back = gone.reduce((s, id) => s + REMOVED[id], 0);
     this.addSeeds(profileId, back);
     return back;
   },
