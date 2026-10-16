@@ -98,6 +98,7 @@ export const Profiles = {
       const photo = this.getPhoto(profile.id);
       if (photo) { el.innerHTML = `<img src="${photo}" alt="${profile.name}">`; return el; }
     }
+    if (profile.avatarImg) { el.innerHTML = `<img src="${profile.avatarImg}" alt="" style="width:100%;height:100%;object-fit:contain">`; return el; }
     el.textContent = profile.avatar || '🧒';
     return el;
   },

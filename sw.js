@@ -4,7 +4,7 @@
 //            cache-first for media (audio, images, fonts, MapLibre, map tiles from our server)
 // ═══════════════════════════════════
 
-const VERSION = 'gream-v25';
+const VERSION = 'gream-v26';
 const STATIC_CACHE = `${VERSION}-static`;
 const TILES_CACHE  = `gream-tiles-v2`;   // vektorové dlaždice z 3rstudio.eu/api/gream/tiles
 

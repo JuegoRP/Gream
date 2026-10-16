@@ -1690,3 +1690,30 @@ canvas.aura, #greamSpriteCanvas.aura { filter:drop-shadow(0 0 4px #ffd84d) drop-
 .shop-seg { grid-column:1/-1; display:flex; gap:4px; background:rgba(0,0,0,0.05); border-radius:14px; padding:4px; }
 .shop-seg button { flex:1; padding:9px; border-radius:11px; border:none; font-family:inherit; font-weight:800; font-size:13px; cursor:pointer; background:transparent; color:#999; }
 .shop-seg button.on { background:#fff; color:var(--green-deep); box-shadow:0 1px 4px rgba(0,0,0,0.12); }
+
+/* ─── Odznaky (přepracováno 2026-10-16) ─── */
+.bdg-summary { width:100%; max-width:420px; display:flex; align-items:center; gap:14px; padding:14px 16px; margin-bottom:14px; border-radius:18px; background:linear-gradient(135deg,#fff7df,#ffe7a8); box-shadow:0 3px 12px rgba(200,140,40,.18); }
+.bdg-sum-num { font-size:30px; font-weight:900; color:#a0620a; line-height:1; } .bdg-sum-num small { font-size:15px; color:#c48d3a; }
+.bdg-sum-txt { flex:1; } .bdg-sum-txt > b { font-size:13px; color:#7a4a00; }
+.bdg-section { width:100%; max-width:420px; margin-bottom:16px; }
+.bdg-h { font-size:13px; font-weight:900; color:var(--green-deep); margin:0 4px 8px; }
+.bdg-worlds { display:flex; flex-direction:column; gap:8px; }
+.bdg-world { display:flex; gap:12px; align-items:center; background:#fff; border-radius:16px; padding:10px 12px; box-shadow:0 2px 10px rgba(0,0,0,.06); border-left:5px solid var(--wc); }
+.bdg-medal { position:relative; flex-shrink:0; width:58px; height:58px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:28px; background:radial-gradient(circle at 35% 30%, #fff, color-mix(in srgb, var(--wc) 35%, #fff)); box-shadow:inset 0 0 0 4px color-mix(in srgb, var(--wc) 70%, #fff), 0 3px 8px rgba(0,0,0,.12); }
+.bdg-medal.lvl0 { filter:saturate(.4); opacity:.75; }
+.bdg-medal.lvl5, .bdg-medal.lvl6 { box-shadow:inset 0 0 0 4px #f2c14e, 0 0 12px rgba(242,193,78,.7); }
+.bdg-medal i { position:absolute; right:-3px; bottom:-3px; width:22px; height:22px; border-radius:50%; background:var(--wc); color:#fff; font:900 11px/22px var(--font, sans-serif); text-align:center; font-style:normal; border:2px solid #fff; }
+.bdg-info { flex:1; min-width:0; }
+.bdg-name { font-size:14px; font-weight:900; color:var(--green-deep); } .bdg-name small { font-weight:800; color:var(--wc); font-size:12px; }
+.bdg-bar { height:7px; border-radius:7px; background:#eef0ea; overflow:hidden; margin:5px 0 3px; } .bdg-bar b { display:block; height:100%; border-radius:7px; background:var(--wc, #e0a030); }
+.bdg-next { font-size:11px; font-weight:700; color:#8a9a80; }
+.bdg-path { display:flex; gap:3px; margin-top:4px; } .bdg-path span { width:22px; height:22px; border-radius:50%; background:#f1f3ee; display:flex; align-items:center; justify-content:center; font-size:12px; color:#c5ccbf; } .bdg-path span.on { background:color-mix(in srgb, var(--wc) 18%, #fff); }
+.bdg-medals { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.bdg-m { background:#fff; border-radius:14px; padding:10px 6px; display:flex; flex-direction:column; align-items:center; gap:3px; box-shadow:0 2px 8px rgba(0,0,0,.05); text-align:center; }
+.bdg-ring { width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:24px; background:#f1f3ee; }
+.bdg-m.on .bdg-ring { background:radial-gradient(circle at 35% 30%, #fffbe8, #ffd877); box-shadow:0 0 0 3px #f2c14e, 0 3px 8px rgba(200,140,40,.3); }
+.bdg-m b { font-size:12px; font-weight:900; color:var(--green-deep); } .bdg-m small { font-size:10px; font-weight:700; color:#8a9a80; line-height:1.2; }
+.bdg-m:not(.on) b { color:#7d8a74; } .bdg-m:not(.on) .bdg-ring { font-size:18px; }
+.bdg-medals.four { grid-template-columns:repeat(4,1fr); } .bdg-medals.four .bdg-ring { width:42px; height:42px; } .bdg-medals.four b { font-size:11px; }
+.av-opt img { width:100%; height:100%; object-fit:contain; display:block; }
+.avatar-row { display:grid !important; grid-template-columns:repeat(3, 58px); justify-content:center; gap:12px 16px !important; } .avatar-row .av-opt { width:58px; height:58px; }

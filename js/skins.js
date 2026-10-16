@@ -21,6 +21,27 @@ const KEY_DECOR         = 'gream_decor';            // map { profileId: { owned:
 // type = 'avatar' (replaces emoji), 'frame' (border around avatar), 'bg' (background pattern)
 export const SKIN_CATALOG = {
   // ─── GREAM AVATARS — unlocked by having that greamík at stage ≥ 2 ───
+  // ─── POSTAVIČKY: kreslené avatary ve stylu hry (Assety/avatary-1.1), 6 zdarma, ostatní za semínka ───
+  char_avatars: [
+    { id: 'chr_fox', img: 'img/avatars/fox.png', emoji: '🦊', name: { cs: 'Liška', en: 'Fox' }, cost: 0 },
+    { id: 'chr_cat', img: 'img/avatars/cat.png', emoji: '🐱', name: { cs: 'Kočička', en: 'Kitten' }, cost: 0 },
+    { id: 'chr_owl', img: 'img/avatars/owl.png', emoji: '🦉', name: { cs: 'Sovička', en: 'Owl' }, cost: 0 },
+    { id: 'chr_frog', img: 'img/avatars/frog.png', emoji: '🐸', name: { cs: 'Žabka', en: 'Frog' }, cost: 0 },
+    { id: 'chr_bear', img: 'img/avatars/bear.png', emoji: '🐻', name: { cs: 'Medvídek', en: 'Bear cub' }, cost: 0 },
+    { id: 'chr_bunny', img: 'img/avatars/bunny.png', emoji: '🐰', name: { cs: 'Zajíček', en: 'Bunny' }, cost: 0 },
+    { id: 'chr_panda', img: 'img/avatars/panda.png', emoji: '🐼', name: { cs: 'Panda', en: 'Panda' }, cost: 40 },
+    { id: 'chr_penguin', img: 'img/avatars/penguin.png', emoji: '🐧', name: { cs: 'Tučňák', en: 'Penguin' }, cost: 40 },
+    { id: 'chr_hedgehog', img: 'img/avatars/hedgehog.png', emoji: '🦔', name: { cs: 'Ježek', en: 'Hedgehog' }, cost: 50 },
+    { id: 'chr_raccoon', img: 'img/avatars/raccoon.png', emoji: '🦝', name: { cs: 'Mýval', en: 'Raccoon' }, cost: 50 },
+    { id: 'chr_dino', img: 'img/avatars/dino.png', emoji: '🦖', name: { cs: 'Dino', en: 'Dino' }, cost: 60 },
+    { id: 'chr_unicorn', img: 'img/avatars/unicorn.png', emoji: '🦄', name: { cs: 'Jednorožec', en: 'Unicorn' }, cost: 80 },
+    { id: 'chr_robot', img: 'img/avatars/robot.png', emoji: '🤖', name: { cs: 'Robot', en: 'Robot' }, cost: 80 },
+    { id: 'chr_astronaut', img: 'img/avatars/astronaut.png', emoji: '🧑‍🚀', name: { cs: 'Kosmonaut', en: 'Astronaut' }, cost: 100 },
+    { id: 'chr_wizard', img: 'img/avatars/wizard.png', emoji: '🧙', name: { cs: 'Čaroděj', en: 'Wizard' }, cost: 100 },
+    { id: 'chr_knight', img: 'img/avatars/knight.png', emoji: '🛡️', name: { cs: 'Rytíř', en: 'Knight' }, cost: 120 },
+    { id: 'chr_pirate', img: 'img/avatars/pirate.png', emoji: '🏴‍☠️', name: { cs: 'Pirát', en: 'Pirate' }, cost: 120 },
+    { id: 'chr_dragon', img: 'img/avatars/dragon.png', emoji: '🐉', name: { cs: 'Dráček', en: 'Dragon' }, cost: 150 },
+  ],
   gream_avatars: [
     { id: 'gream_lilek',  archetype: 'lilek',  name: { cs: 'Lilek',  en: 'Lilek'  } },
     { id: 'gream_jiskra', archetype: 'jiskra', name: { cs: 'Jiskra', en: 'Jiskra' } },
@@ -240,12 +261,13 @@ export const Skins = {
     const owned = new Set(m[profileId] || []);
     SKIN_CATALOG.frames.forEach(f => { if (f.cost === 0) owned.add(f.id); });
     SKIN_CATALOG.backgrounds.forEach(b => { if (b.cost === 0) owned.add(b.id); });
+    SKIN_CATALOG.char_avatars.forEach(c => { if (c.cost === 0) owned.add(c.id); });
     return owned;
   },
 
-  // ─── Buy avatar emoji ───
+  // ─── Buy avatar emoji / postavička ───
   buyAvatar(profileId, id) {
-    const item = SKIN_CATALOG.avatars.find(a => a.id === id && a.unlock?.type === 'buy');
+    const item = SKIN_CATALOG.avatars.find(a => a.id === id && a.unlock?.type === 'buy') || SKIN_CATALOG.char_avatars.find(a => a.id === id && a.cost > 0);
     if (!item) return { ok: false, reason: 'not-found' };
     const owned = this.getOwned(profileId);
     if (owned.has(id)) return { ok: true, reason: 'already-owned' };

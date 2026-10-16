@@ -251,7 +251,7 @@ function _floraWorld(season, tod) {
     <polygon points="320,138 332,150 345,130" fill="white" opacity="0.35"/>`;
   return globe + compass + mountains;
 }
-const AVATAR_POOL = ['🧒','👧','👦','🧑','🌟','🦊','🐻','🐸'];
+const AVATAR_POOL = ['chr_fox','chr_cat','chr_owl','chr_frog','chr_bear','chr_bunny'];   // postavičky zdarma (img/avatars)
 let _obAv = AVATAR_POOL[Math.floor(Math.random() * AVATAR_POOL.length)];
 
 // ═══════════════════════════════════
@@ -680,11 +680,13 @@ window.App = {
       return;
     }
     Feedback.success();
+    const chr = SKIN_CATALOG.char_avatars.find(c => c.id === _obAv);   // postavička (výchozí výběr)
     const p = Profiles.create({
       name,
-      avatar: _obAv === '__photo__' ? '🧒' : _obAv,
+      avatar: _obAv === '__photo__' ? '🧒' : chr ? chr.emoji : _obAv,
       lang: getLang()
     });
+    if (chr) { Profiles.update(p.id, { avatarImg: chr.img }); Skins.setEquipped(p.id, 'avatar', chr.id); }
     if (_obAv === '__photo__' && window._pendingPhoto) {
       Profiles.savePhoto(p.id, window._pendingPhoto);
       window._pendingPhoto = null;
@@ -1364,6 +1366,7 @@ window.App = {
       const photo = Profiles.getPhoto(p.id);
       if (photo) { el.innerHTML = `<img src="${photo}" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`; return; }
     }
+    if (p.avatarImg) { el.innerHTML = `<img src="${p.avatarImg}" alt="" style="width:100%;height:100%;object-fit:contain">`; return; }
     el.textContent = p.avatar || '🧒';
   },
 
@@ -2850,46 +2853,61 @@ window.App = {
   async renderBadges() {
     const p = Profiles.active();
     if (!p) return;
-    const t = tr();
+    const t = tr(), lang = getLang();
     this._setText('bc-title', t.my_badges);
-    this._setText('streak-title', t.streak_title);
+    this._setText('streak-title', t.bdg_streak);
+    this._setText('bdgWorldsTitle', t.bdg_worlds);
+    this._setText('bdgBattleTitle', t.bdg_battles);
+    const WC = { nature:'#4a8a2e', language:'#5a4a8a', logic:'#2d7abf', feelings:'#d46d94', arts:'#c87030', world:'#a8743c' };
+    const TH = [0, 10, 20, 30, 40, 50, 100];
+    let got = 0, all = 0;
 
-    // Streak badges
-    const row = document.getElementById('streakRow');
-    if (row) {
-      row.innerHTML = '';
-      (t.streakBadges || []).forEach(sb => {
-        const earned = Badges.streakEarned(p, sb);
-        const el = document.createElement('div');
-        el.className = 'sbi' + (earned ? ' earned' : '');
-        el.innerHTML = `<div class="sbi-ring">${earned ? sb.e : '🔒'}</div><div class="sbi-lbl">${sb.desc}</div>`;
-        row.appendChild(el);
-      });
-    }
-
-    // World badges — evolving
+    // ── Světy: medaile aktuální úrovně, název, pruh k další úrovni, cesta 7 úrovní ──
     const grid = document.getElementById('worldBadgeGrid');
     if (grid) {
       grid.innerHTML = '';
       WORLDS.forEach(w => {
         const tasks = p.worldTasks?.[w] || 0;
-        const badge = Badges.getBadge(w, tasks);
-        const next  = Badges.nextThreshold(tasks);
-        const cell  = document.createElement('div');
-        cell.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:4px;';
-        const badgeEl = Badges.renderWorldBadge(w, tasks, 62);
-        const worldLbl = document.createElement('div');
-        worldLbl.style.cssText = 'font-size:11px;font-weight:900;color:var(--green-dark);text-align:center;margin-top:2px';
-        worldLbl.textContent = t.worlds[w];
-        const subLbl = document.createElement('div');
-        subLbl.style.cssText = 'font-size:9.5px;font-weight:700;color:var(--green-mid);text-align:center;line-height:1.3';
-        subLbl.innerHTML = `${badge.n}<br>${next ? `${tasks}/${next}` : `${tasks} ★`}`;
-        cell.appendChild(badgeEl);
-        cell.appendChild(worldLbl);
-        cell.appendChild(subLbl);
-        grid.appendChild(cell);
+        const lvl = Badges.getLevelIndex(tasks);
+        const levels = t.badgeLevels?.[w] || [];
+        const cur = levels[lvl] || {}, next = Badges.nextThreshold(tasks);
+        const from = TH[lvl], pct = next ? Math.round((tasks - from) / (next - from) * 100) : 100;
+        got += lvl; all += TH.length - 1;
+        const card = document.createElement('div');
+        card.className = 'bdg-world';
+        card.style.setProperty('--wc', WC[w]);
+        card.innerHTML = `
+          <div class="bdg-medal lvl${lvl}"><span>${cur.e || '🏅'}</span><i>${lvl + 1}</i></div>
+          <div class="bdg-info">
+            <div class="bdg-name">${t.worlds[w]} <small>· ${cur.n || ''}</small></div>
+            <div class="bdg-bar"><b style="width:${pct}%"></b></div>
+            <div class="bdg-next">${next ? t.bdg_next(next - tasks, levels[lvl + 1]?.n || '') : t.bdg_max}</div>
+            <div class="bdg-path">${levels.map((L, i) => `<span class="${i <= lvl ? 'on' : ''}" title="${L.n}">${i <= lvl ? L.e : '·'}</span>`).join('')}</div>
+          </div>`;
+        grid.appendChild(card);
       });
     }
+
+    // ── Série dní ──
+    const medal = (on, e, label, sub) => `<div class="bdg-m ${on ? 'on' : ''}"><div class="bdg-ring">${on ? e : '🔒'}</div><b>${label}</b>${sub ? `<small>${sub}</small>` : ''}</div>`;
+    const row = document.getElementById('streakRow');
+    if (row) {
+      row.innerHTML = (t.streakBadges || []).map(sb => {
+        const on = Badges.streakEarned(p, sb); all++; if (on) got++;
+        return medal(on, sb.e, t.bdg_days(sb.days), sb.desc.replace(/^\d+\s*\S+\s*—\s*/, '').replace(/^\d+ dny v řadě|^\d+ days in a row/, ''));
+      }).join('');
+    }
+
+    // ── Souboje (dřív jen ve statistikách) ──
+    const brow = document.getElementById('bdgBattleRow');
+    if (brow) {
+      let bb = {}; try { bb = JSON.parse(localStorage.getItem('gream_battle_badges') || '{}')[p.id] || {}; } catch {}
+      const B = [['first_win', '🥇'], ['wins_10', '🏆'], ['streak_5', '🔥'], ['extreme_win', '⚡']];
+      brow.innerHTML = B.map(([k, e]) => { const on = !!bb[k]; all++; if (on) got++; return medal(on, e, t.bdg_battle[k], ''); }).join('');
+    }
+
+    const sum = document.getElementById('bdgSummary');
+    if (sum) sum.innerHTML = `<div class="bdg-sum-num">${got}<small>/${all}</small></div><div class="bdg-sum-txt"><b>${t.bdg_summary}</b><div class="bdg-bar"><b style="width:${Math.round(got / all * 100)}%"></b></div></div>`;
   },
 
   // ─── SETTINGS ───
@@ -3024,34 +3042,17 @@ window.App = {
     const box = document.getElementById('ssMenuMusic');
     if (!box) return;
     const cs = getLang() === 'cs';
-    const p  = Profiles.active();
-    const COST = 30;
     box.innerHTML = '';
     const title = document.createElement('div');
     title.style.cssText = 'font-size:12px;font-weight:800;color:var(--green-mid);margin-bottom:6px';
-    title.textContent = cs ? '🎵 Hudba v menu' : '🎵 Menu music';
+    title.textContent = cs ? '🎵 Hudba v menu' : '🎵 Menu music';   // nová skladba je výchozí a zdarma (úvod hraje původní)
     box.appendChild(title);
 
-    if (!Audio.menuAltOwned()) {
-      const buy = document.createElement('button');
-      buy.style.cssText = 'width:100%;padding:10px 12px;text-align:left;font-weight:700;border-radius:10px;border:2px solid rgba(245,166,35,0.4);background:#fffbf0;color:#8a5200;font-family:inherit;cursor:pointer';
-      buy.textContent = cs ? `🔓 Odemknout novou skladbu (${COST} 🌱)` : `🔓 Unlock new track (${COST} 🌱)`;
-      buy.onclick = () => {
-        if (!p) return;
-        if (Skins.getSeeds(p.id) < COST) { this._showToast(cs ? `Potřebuješ ${COST} 🌱` : `You need ${COST} 🌱`); return; }
-        Skins.spendSeeds(p.id, COST);
-        Audio.setMenuAltOwned(true);
-        Audio.setMenuTrack('alt');
-        Feedback.celebrate();
-        this._showToast(cs ? '🎵 Nová menu hudba odemčena!' : '🎵 New menu music unlocked!');
-        this._renderMenuMusicSetting();
-      };
-      box.appendChild(buy);
-    } else {
+    {
       const cur = Audio.getMenuTrack();
       const row = document.createElement('div');
       row.style.cssText = 'display:flex;gap:6px';
-      [['default', cs ? 'Původní' : 'Original'], ['alt', cs ? 'Nová' : 'New']].forEach(([val, label]) => {
+      [['alt', cs ? 'Nová (výchozí)' : 'New (default)'], ['default', cs ? 'Původní' : 'Original']].forEach(([val, label]) => {
         const active = cur === val;
         const b = document.createElement('button');
         b.style.cssText = `flex:1;padding:9px;border-radius:10px;border:2px solid ${active ? 'var(--green-mid)' : 'rgba(0,0,0,0.1)'};background:${active ? 'var(--green-pale)' : 'white'};font-family:inherit;font-weight:800;font-size:13px;cursor:pointer;color:var(--green-deep)`;
@@ -3569,7 +3570,7 @@ window.App = {
   //  WARDROBE
   // ═══════════════════════════════════
   _wardTab: 'acc',
-  _wardAvatarSub: 'greams',   // avatars sub-tab: 'greams' | 'emoji'
+  _wardAvatarSub: 'chars',   // avatars sub-tab: 'chars' | 'greams' | 'emoji'
 
   wardAvatarSub(sub) {
     this._wardAvatarSub = sub;
@@ -4015,7 +4016,7 @@ window.App = {
     if (tab === 'avatars') {
       const cs = lang === 'cs';
       const seeds = Skins.getSeeds(p.id);
-      const sub = this._wardAvatarSub || 'greams';
+      const sub = this._wardAvatarSub || 'chars';
       const bestStage = {};
       Gream.all(p.id).filter(g => !g.archived && g.stage >= 2 && g.archetype).forEach(g => {
         if (!bestStage[g.archetype] || g.stage > bestStage[g.archetype]) bestStage[g.archetype] = g.stage;
@@ -4025,7 +4026,7 @@ window.App = {
       // ── Přepínač: Greamíci | Emoji (přes celou šířku mřížky) ──
       const sw = document.createElement('div');
       sw.className = 'shop-seg';
-      [['greams', cs ? '🐾 Greamíci' : '🐾 Greams'], ['emoji', '🎭 Emoji']].forEach(([id, label]) => {
+      [['chars', cs ? '🦊 Postavičky' : '🦊 Characters'], ['greams', cs ? '🐾 Greamíci' : '🐾 Greams'], ['emoji', '😺 Emoji']].forEach(([id, label]) => {
         const b = document.createElement('button');
         b.textContent = label; b.className = sub === id ? 'on' : '';
         b.onclick = () => this.wardAvatarSub(id);
@@ -4033,15 +4034,35 @@ window.App = {
       });
       grid.appendChild(sw);
 
-      const equipAvatar = (id, emoji) => {
+      const equipAvatar = (id, emoji, img = null) => {
         Feedback.pop();
         Skins.setEquipped(p.id, 'avatar', id);
-        Profiles.update(p.id, { avatar: emoji });
+        Profiles.update(p.id, { avatar: emoji, avatarImg: img });   // emoji zůstává pro žebříčky na serveru
         this._applyAvatarToEl(document.getElementById('hubAv'), Profiles.active());
         this._applyAvatarToEl(document.getElementById('mapAv'), Profiles.active());
         this._renderWardrobeGrid('avatars');
       };
-      if (sub === 'greams') {
+      if (sub === 'chars') {
+        SKIN_CATALOG.char_avatars.forEach(c => {
+          const isOwned = owned.has(c.id);
+          const isEquipped = equipped.avatar === c.id;
+          grid.appendChild(this._shopCard({
+            thumb: `<img src="${c.img}" alt="" style="width:58px;height:58px;image-rendering:auto">`,
+            name: c.name[lang] || c.name.cs,
+            state: isEquipped ? t.shop_equipped : isOwned ? t.ward_equip : '🌱 ' + c.cost,
+            cls: isEquipped ? 'on' : isOwned ? 'owned' : seeds < c.cost ? 'poor' : '',
+            onClick: () => {
+              if (isEquipped) return;
+              if (!isOwned) {
+                if (seeds < c.cost) { Feedback.error(); this._showToast(t.shop_no_seeds); return; }
+                if (!Skins.buyAvatar(p.id, c.id).ok) { Feedback.error(); return; }
+                Feedback.coin(); this._setText('wardSeeds', Skins.getSeeds(p.id));
+              }
+              equipAvatar(c.id, c.emoji, c.img);
+            },
+          }));
+        });
+      } else if (sub === 'greams') {
         SKIN_CATALOG.gream_avatars.forEach(ga => {
           const arch = ga.archetype;
           const isUnlocked = !!bestStage[arch];
@@ -4427,11 +4448,11 @@ document.addEventListener('screen:ready', ({ detail: { screenId } }) => {
   switch (screenId) {
     case 'onboarding':
       App.renderOnboarding();
-      Audio.switchScene('menu');
+      Audio.switchScene('intro');
       break;
     case 'profiles':
       App.renderProfiles();
-      Audio.switchScene('menu');
+      Audio.switchScene('intro');
       break;
     case 'map':
     case 'home':
