@@ -88,7 +88,7 @@ export function smartSpritePath(gream) {
 // Stage 3 = dospívající  → po 60 úkolech
 // Stage 4 = dospělý      → po 250 úkolech
 // Po dosažení dospělého + 50 úkolů → lze přidat dalšího Greamíka
-const EVOLUTION_TASKS = { 1: 0, 2: 12, 3: 60, 4: 250 };
+export const EVOLUTION_TASKS = { 1: 0, 2: 12, 3: 60, 4: 250 };
 const UNLOCK_NEXT_GREAM_TASKS = 300; // total tasks before 2nd gream unlocks
 
 // How long until pet gets sad (ms)

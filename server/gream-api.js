@@ -95,7 +95,11 @@ function cleanAnswers(a) {
   return out.length >= 5 ? out : null;
 }
 function pickOpponent(diff, rating, pid) {
-  const pool = (battle.runs[diff] || []).filter(r => r.rating != null && (!pid || r.pid !== pid));
+  let pool = (battle.runs[diff] || []).filter(r => r.rating != null && (!pid || r.pid !== pid));
+  // Přednostně nahrávka hráče ze stejné ligy (stejná obtížnost je daná už výběrem); jinak kdokoli podle hodnocení, nakonec bot
+  const myTier = league.tier[pid] || 'bronze';
+  const sameTier = pool.filter(r => (league.tier[r.pid] || 'bronze') === myTier);
+  if (sameTier.length) pool = sameTier;
   if (pool.length) {
     // closest by rating, small randomness so it's not always the same
     pool.sort((a, b) => Math.abs(a.rating - rating) - Math.abs(b.rating - rating));
@@ -217,7 +221,8 @@ const server = http.createServer((req, res) => {
   }
 
   // ─── Gream Plus promo kódy (pro známé / testery): promo.json se čte při každém pokusu, takže kód jde
-  //     přidat nebo zrušit úpravou souboru bez restartu. { "KOD": { "max": 20, "used": 0, "off": false, "note": "" } }
+  //     přidat nebo zrušit bez restartu. Generátor: scripts/promo-codes.mjs (jednorázové kódy, max 1).
+  //     { "GREAM-XXXX-XXXX": { "max": 1, "used": 0, "off": false, "note": "", "created": "RRRR-MM-DD" } }
   //     Bez identifikace zařízení ani hráče – jen počet použití kódu (soukromí, Families policy).
   if (req.method === 'POST' && p === '/promo') return readBody(req, (d) => {
     const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket.remoteAddress || 'x';

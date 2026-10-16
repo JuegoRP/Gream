@@ -34,6 +34,13 @@ try {
   ok((await post('/promo', { code: 'ZNAMI-2026' })).error === 'used', 'promo: 3. použití – vyčerpaný');
   ok((await post('/promo', { code: 'STARY' })).ok === false, 'promo: vypnutý kód');
   ok(JSON.parse(fs.readFileSync(path.join(dir, 'promo.json'), 'utf8'))['ZNAMI-2026'].used === 2, 'promo: počítadlo uložené');
+  // Generátor: jednorázové kódy
+  const { execFileSync } = await import('node:child_process');
+  const gen = execFileSync(process.execPath, [new URL('../scripts/promo-codes.mjs', import.meta.url).pathname, 'add', '2', 'test'], { env: { ...process.env, PROMO_FILE: path.join(dir, 'promo.json') } }).toString().trim().split('\n');
+  ok(gen.length === 2 && gen.every(c => /^GREAM-[A-Z2-9]{4}-[A-Z2-9]{4}$/.test(c)), 'generátor: 2 kódy ' + gen.join(','));
+  ok((await post('/promo', { code: gen[0].toLowerCase() })).ok === true, 'generátor: kód platí');
+  ok((await post('/promo', { code: gen[0] })).error === 'used', 'generátor: kód jen na jedno použití');
+  ok(JSON.parse(fs.readFileSync(path.join(dir, 'promo.json'), 'utf8'))['ZNAMI-2026'], 'generátor: starší kódy zůstaly');
   await sleep(1200);
   const f = path.join(dir, 'league.json'); const d = JSON.parse(fs.readFileSync(f, 'utf8')); d.week = '2020-W01'; fs.writeFileSync(f, JSON.stringify(d));
   srv.kill(); await sleep(300); srv = start(); await sleep(800);

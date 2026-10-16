@@ -34,6 +34,7 @@ export const T = {
 
     // ─── Onboarding v4 (with parent notice + GDPR) ───
     ob_v4_step1_title: "Welcome to Gream",
+    slogan:            "Quiz. Hatch. Explore.",
     ob_v4_step1_sub:   "A magical world where curiosity helps things grow. Made for kids and families.",
     ob_v4_step1_btn:   "Let's begin",
 
@@ -215,6 +216,10 @@ export const T = {
     battle_pick:        "Who goes into battle?",
     battle_loan:        "on loan",
     battle_loan_note:   "No hatched Gream yet – borrow one to try.",
+    battle_need_gream_title: "Battles start with your first Gream",
+    battle_need_gream: (n) => `Your egg needs ${n} more ${n === 1 ? "challenge" : "challenges"} to hatch. Then your Gream can battle!`,
+    battle_need_gream_ok: "Got it",
+    battle_searching: "Looking for an opponent…",
     battle_how:         "Correct answer = attack. A question from your Gream's world hits harder. 3 correct answers charge its special.",
     battle_energy:      "Energy",
     battle_super_eff:   "Super effective!", battle_half_eff: "Effective!",
@@ -1506,6 +1511,7 @@ export const T = {
 
     // ─── Onboarding v4 ───
     ob_v4_step1_title: "Vítej v Gream",
+    slogan:            "Vylušti. Vylíhni. Vyraž ven.",
     ob_v4_step1_sub:   "Svět, kde zvědavost pomáhá věcem růst. Pro děti i celou rodinu.",
     ob_v4_step1_btn:   "Pojďme začít",
 
@@ -1676,6 +1682,10 @@ export const T = {
     battle_pick:        "Kdo půjde do souboje?",
     battle_loan:        "na zkoušku",
     battle_loan_note:   "Zatím nemáš vylíhnutého greamíka – půjč si jednoho na zkoušku.",
+    battle_need_gream_title: "Souboje začnou s prvním greamíkem",
+    battle_need_gream: (n) => `Vajíčku chybí ještě ${n} ${n === 1 ? "výzva" : n < 5 ? "výzvy" : "výzev"} do vylíhnutí. Pak se tvůj greamík může utkat!`,
+    battle_need_gream_ok: "Rozumím",
+    battle_searching: "Hledám soupeře…",
     battle_how:         "Správná odpověď = útok. Otázka ze světa tvého greamíka udeří silněji. 3 správné odpovědi nabijí jeho speciál.",
     battle_energy:      "Energie",
     battle_super_eff:   "Super účinné!", battle_half_eff: "Účinné!",

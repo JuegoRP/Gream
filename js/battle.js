@@ -9,7 +9,7 @@
 import { shuffle } from './shuffle.js';
 import { tr, getLang } from './i18n.js';
 import { Profiles } from './profiles.js';
-import { Gream, ARCHETYPES } from './gream.js';
+import { Gream, ARCHETYPES, EVOLUTION_TASKS } from './gream.js';
 import { Skins } from './skins.js';
 import { Subscription, FREE } from './subscription.js';
 import { Paywall } from './paywall.js';
@@ -158,6 +158,7 @@ export const Battle = {
   intro(opts = {}) {
     const p = Profiles.active(); if (!p) return;
     if (!Playtime.allow(p.id, () => this.intro(opts))) return;   // denní limit od rodiče
+    if (!Gream.all(p.id).some(g => g.stage >= 2 && g.archetype)) return this._lockedNoGream(p);   // souboj až s vylíhnutým greamíkem
     const cs = getLang() === 'cs';
     const outdoor = !!opts.outdoor;
     const stats = loadStats(p.id);
@@ -306,6 +307,21 @@ export const Battle = {
     });
   },
 
+  // Bez vylíhnutého greamíka se nebojuje: ukázat, kolik výzev vajíčku chybí
+  _lockedNoGream(p) {
+    const t = tr(), egg = Gream.all(p.id).find(g => g.stage < 2 || !g.archetype);
+    const left = Math.max(1, EVOLUTION_TASKS[2] - (egg?.tasksFor || 0));
+    document.getElementById('battleOverlay')?.remove();
+    const ov = document.createElement('div'); ov.id = 'battleOverlay'; ov.className = 'pg-overlay';
+    ov.innerHTML = `<div class="pg-card anim-pop"><div style="font-size:44px">🥚⚔️</div>
+      <div class="pg-title">${escHtml(t.battle_need_gream_title)}</div>
+      <div class="pg-reason">${escHtml(t.battle_need_gream(left))}</div>
+      <button class="btn-primary">${escHtml(t.battle_need_gream_ok)}</button></div>`;
+    ov.onclick = e => { if (e.target === ov) ov.remove(); };
+    ov.querySelector('button').onclick = () => ov.remove();
+    document.body.appendChild(ov);
+  },
+
   _start(diff, outdoor, entry, reward, pick) {
     const p = Profiles.active(); if (!p) return;
     if (!Subscription.canStartBattle().allowed) { Paywall.open('battle'); return; }
@@ -320,7 +336,14 @@ export const Battle = {
     this._rival = this._localRival(diff, Math.random, this.botAccFor(p.id, diff));
     const myRating = loadStats(p.id).rating || 1000;
     const fromServer = Net.battleOpponent(diff, myRating, p.id).then(o => { if (o && !o.bot && Array.isArray(o.answers) && o.answers.length >= 5 && ARCHES.includes(o.arch)) this._rival = { ...o, stage: o.stage || 2 }; });   // bez nahrávky (starší souboj) zůstává bot – nepřebírat jméno skutečného hráče
-    Promise.race([fromServer, new Promise(r => setTimeout(r, 1500))]).then(() => this._run(pick));
+    // Hledání soupeře: nahrávka hráče ze stejné ligy a obtížnosti; server čekáme nejdéle 10 s (slabý signál venku), pak bot
+    const look = document.createElement('div'); look.className = 'pg-overlay bt-search';
+    look.innerHTML = `<div class="pg-card"><div class="bt-search-dots"><span></span><span></span><span></span></div><div class="pg-title">${escHtml(tr().battle_searching)}</div></div>`;
+    document.body.appendChild(look);
+    const shown = Date.now();
+    Promise.race([fromServer, new Promise(r => setTimeout(r, 10000))])
+      .then(() => new Promise(r => setTimeout(r, Math.max(0, 700 - (Date.now() - shown)))))   // ať hledání neprobliká
+      .then(() => { look.remove(); this._run(pick); });
   },
 
   // Bot: přesnost podle obtížnosti, časy odpovědí náhodně (rychlejší, když ví)

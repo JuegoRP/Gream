@@ -1096,13 +1096,34 @@ window.App = {
       if (!b) {
         b = document.createElement('button'); b.className = 'garden-arrow ' + side; b.type = 'button';
         b.setAttribute('aria-label', side === 'left' ? '←' : '→');
-        b.onclick = (e) => { e.stopPropagation(); scroll.scrollBy({ left: (side === 'left' ? -1 : 1) * scroll.clientWidth * 0.7, behavior: 'smooth' }); };
+        // Vlastní animace místo scrollBy smooth: na iPhonu klepnutí během dojezdu po swipu jen zastavilo pohyb / smooth se přepsal.
+        // Reaguje hned na dotyk (pointerdown), dojezd zastaví (overflow hidden na okamžik) a opakované klepnutí navazuje na cíl.
+        const go = (e) => { e.preventDefault(); e.stopPropagation(); this._gardenScrollBy(scroll, (side === 'left' ? -1 : 1) * scroll.clientWidth * 0.7); };
+        b.addEventListener('pointerdown', go);
+        b.onclick = (e) => { e.stopPropagation(); if (!e.detail) go(e); };   // klávesnice / čtečka (bez ukazatele)
         stage.appendChild(b);
       }
       const more = side === 'left' ? scroll.scrollLeft > 8 : scroll.scrollLeft < scroll.scrollWidth - scroll.clientWidth - 8;
       b.classList.toggle('show', more);
     });
     if (!scroll._arrows) { scroll._arrows = true; scroll.addEventListener('scroll', () => this._updateGardenArrows(), { passive: true }); }
+  },
+
+  _gardenScrollBy(scroll, dx) {
+    const max = scroll.scrollWidth - scroll.clientWidth;
+    const from = scroll.scrollLeft;
+    const to = Math.max(0, Math.min(max, (scroll._target ?? from) + dx));
+    scroll._target = to;
+    scroll.style.overflowX = 'hidden';                 // zastaví setrvačný dojezd swipu (iOS)
+    cancelAnimationFrame(scroll._raf);
+    const t0 = performance.now(), dur = 320;
+    const step = (now) => {
+      const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+      scroll.scrollLeft = from + (to - from) * e;
+      if (k < 1) scroll._raf = requestAnimationFrame(step);
+      else { scroll._target = null; scroll.style.overflowX = ''; this._updateGardenArrows(); }
+    };
+    scroll._raf = requestAnimationFrame(step);
   },
 
   // Počká na obrázky aktuální obrazovky (img i pozadí zahrady i zdroje sprite canvasů), nejdéle maxMs
