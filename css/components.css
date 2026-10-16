@@ -1381,7 +1381,7 @@ body.bg-starry { background:linear-gradient(180deg,#0d1b3d,#2c3e7a 50%,#4a5fa3);
 
 /* Zahrada: scéna vyplní volnou výšku (žádné prázdné místo pod tlačítky), hlavní akce výrazná */
 #screen-map .gream-stage, #screen-home .gream-stage {
-  flex:1 1 auto; height:auto; min-height:260px; max-height:560px; max-width:480px;
+  flex:1 1 auto; height:auto; min-height:180px; max-height:560px; max-width:480px;
 }
 .home-actions {
   width:100%; max-width:480px; flex-shrink:0;
@@ -1768,3 +1768,7 @@ canvas.aura, #greamSpriteCanvas.aura { filter:drop-shadow(0 0 4px #ffd84d) drop-
 .bt-search-dots span { width:12px; height:12px; border-radius:50%; background:var(--green-mid); animation:btDot 1s ease-in-out infinite; }
 .bt-search-dots span:nth-child(2) { animation-delay:.15s; } .bt-search-dots span:nth-child(3) { animation-delay:.3s; }
 @keyframes btDot { 0%,100% { transform:translateY(0); opacity:.4; } 50% { transform:translateY(-8px); opacity:1; } }
+/* Úvod: oficiální logo */
+.ob-art-logo { width:min(320px, 82vw); height:auto; min-height:150px; }
+.ob-logo { position:relative; z-index:1; width:100%; height:auto; animation:obFloat 3s ease-in-out infinite; filter:drop-shadow(0 6px 14px rgba(45,90,27,.18)); }
+.ob-art-logo + .ob-title { font-size:clamp(19px, 5.6vw, 24px); white-space:nowrap; max-width:none; }

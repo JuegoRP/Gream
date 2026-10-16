@@ -24,6 +24,7 @@
   } catch (e) {}
 })();
 </script>
+<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
@@ -41,18 +42,21 @@
 </head>
 <body>
 
-<!-- LOADING fallback (visible until JS replaces it) -->
-<div id="appLoadingFallback" style="position:fixed;inset:0;top:0;right:0;bottom:0;left:0;display:flex;align-items:center;justify-content:center;flex-direction:column;background:#cbe3a0;font-family:'Nunito','Helvetica',sans-serif;color:#1a3d0a;z-index:9999">
-  <div style="font-size:48px;margin-bottom:14px;animation:pulse 2s infinite">🌱</div>
-  <div style="font-size:16px;font-weight:800">Gream</div>
-  <div id="appLoadingMsg" style="font-size:12px;margin-top:8px;opacity:0.7">Loading...</div>
-  <style>@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}</style>
+<!-- LOADING: oficiální logo + podtitul (do načtení hry) -->
+<div id="appLoadingFallback" style="position:fixed;inset:0;top:0;right:0;bottom:0;left:0;display:flex;align-items:center;justify-content:center;flex-direction:column;background:#cbe3a0;font-family:'Nunito','Helvetica',sans-serif;color:#1a3d0a;z-index:9999;padding:24px">
+  <img src="img/logo/gream-logo.png" alt="Gream" width="300" height="140" style="width:min(300px,78vw);height:auto;animation:glogo 2.6s ease-in-out infinite">
+  <div id="appLoadingSlogan" style="font-size:17px;font-weight:900;color:#2d5a1b;margin-top:14px;letter-spacing:.3px">Vylušti. Vylíhni. Vyraž ven.</div>
+  <div id="appLoadingMsg" style="margin-top:22px;display:flex;gap:7px" aria-label="Loading"><i></i><i></i><i></i></div>
+  <style>@keyframes glogo{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+  #appLoadingMsg i{width:9px;height:9px;border-radius:50%;background:#4a8a2e;opacity:.35;animation:gdot 1s ease-in-out infinite}
+  #appLoadingMsg i:nth-child(2){animation-delay:.15s}#appLoadingMsg i:nth-child(3){animation-delay:.3s}
+  @keyframes gdot{50%{opacity:1;transform:translateY(-4px)}}</style>
+  <script>try{if((localStorage.getItem('gream_lang')||(navigator.language||'').slice(0,2))!=='cs'){document.getElementById('appLoadingSlogan').textContent='Quiz. Hatch. Explore.'}}catch(e){}</script>
 </div>
 
 <noscript>
   <div style="position:fixed;inset:0;top:0;right:0;bottom:0;left:0;display:flex;align-items:center;justify-content:center;flex-direction:column;background:#cbe3a0;font-family:'Nunito',sans-serif;color:#1a3d0a;text-align:center;padding:20px;z-index:9999">
-    <div style="font-size:48px;margin-bottom:14px">🌱</div>
-    <h1 style="font-size:22px;margin:0 0 8px">Gream</h1>
+    <img src="img/logo/gream-logo.png" alt="Gream" style="width:min(300px,78vw);height:auto;margin-bottom:10px">
     <p style="font-size:14px">JavaScript is required. Please enable it.</p>
     <p style="font-size:12px;opacity:0.7;margin-top:8px">JavaScript je nutný. Prosím povolte ho.</p>
   </div>
