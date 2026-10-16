@@ -3,6 +3,8 @@
 //  Vše jen v zařízení (localStorage) – na server nic nejde, Data safety beze změny.
 // ═══════════════════════════════════
 
+import { isBattleSpot } from './geo.js';
+
 const KEY_EXP = 'gream_expedition';   // { [pid]: { date, ids:[], done:[], rare, rareDone, paid } }
 const KEY_EXPLORED = 'gream_explored'; // [ "lat,lon" buněk 0,002° (~200 m) ]
 const CELL = 0.002, MAX_CELLS = 4000;
@@ -25,15 +27,16 @@ export const Expedition = {
   ensure(pid, pois, pos) {
     const all = load(KEY_EXP, {});
     let st = all[pid];
-    if (st && st.date === today() && st.ids.every(id => pois.some(p => p.id === id))) return st;
+    if (st && st.date === today() && st.ids.every(id => pois.some(p => p.id === id && !isBattleSpot(p)))) return st;
     if (st && st.date === today() && st.ids.length) return st;   // místa mimo dosah (jiné okolí) – výprava platí dál
     const area = `${Math.round(pos.lat * 50) / 50},${Math.round(pos.lon * 50) / 50}`;
     const r = rng(today() + '|' + area);
-    const near = pois.filter(p => p.id && !p.kind?.startsWith('battle') && dist(pos, p) <= EXP_RADIUS);
+    // místa souboje (≈ 1 z 10) nabízí jen souboj → do výpravy ani na vajíčko se nehodí (splňuje se výzvou)
+    const near = pois.filter(p => p.id && !isBattleSpot(p) && dist(pos, p) <= EXP_RADIUS);
     const pick = [];
     const pool = [...near].sort((a, b) => a.id < b.id ? -1 : 1);
     while (pick.length < EXP_COUNT && pool.length) pick.push(pool.splice(Math.floor(r() * pool.length), 1)[0].id);
-    const rarePool = pois.filter(p => p.id && !pick.includes(p.id) && dist(pos, p) <= RARE_RADIUS).sort((a, b) => a.id < b.id ? -1 : 1);
+    const rarePool = pois.filter(p => p.id && !isBattleSpot(p) && !pick.includes(p.id) && dist(pos, p) <= RARE_RADIUS).sort((a, b) => a.id < b.id ? -1 : 1);
     const rare = rarePool.length ? rarePool[Math.floor(r() * rarePool.length)].id : null;
     st = { date: today(), ids: pick, done: [], rare, rareDone: false, paid: false };
     all[pid] = st; save(KEY_EXP, all);
@@ -47,10 +50,10 @@ export const Expedition = {
     const all = load(KEY_EXP, {}); const st = all[pid];
     if (!st) return null;
     if (!basketEmpty) { if (st.egg) { st.egg = null; save(KEY_EXP, all); } return null; }
-    if (st.egg && pois.some(p => p.id === st.egg)) return st.egg;
+    if (st.egg && pois.some(p => p.id === st.egg && !isBattleSpot(p))) return st.egg;
     const area = `${Math.round(pos.lat * 50) / 50},${Math.round(pos.lon * 50) / 50}`;
     const r = rng('egg|' + today() + '|' + area + '|' + (st.eggsFound || 0));
-    const pool = pois.filter(p => p.id && !st.ids.includes(p.id) && p.id !== st.rare && dist(pos, p) <= EGG_RADIUS).sort((a, b) => a.id < b.id ? -1 : 1);
+    const pool = pois.filter(p => p.id && !isBattleSpot(p) && !st.ids.includes(p.id) && p.id !== st.rare && dist(pos, p) <= EGG_RADIUS).sort((a, b) => a.id < b.id ? -1 : 1);
     st.egg = pool.length ? pool[Math.floor(r() * pool.length)].id : null;
     all[pid] = st; save(KEY_EXP, all);
     return st.egg;
