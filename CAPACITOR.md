@@ -33,3 +33,21 @@ Zatím ne (priorita Google Play). Postup z dřívější verze tohoto souboru je
 
 ## Vydání na Google Play
 Viz `CLOSED_TESTING.md` a `STORE_LISTING.md`.
+
+
+## iOS (App Store) – připraveno 17. 10. 2026
+Projekt `ios/` (Capacitor 8, Swift Package Manager – CocoaPods není potřeba; nákupní plugin `cordova-plugin-purchase` se zabalí sám).
+Hotové: bundle `com.gream.app`, název Gream, ikona 1024 (bez průhlednosti), úvodní obrazovka s logem, jen na výšku,
+text pro polohu (EN v Info.plist, CZ v `ios/App/App/cs.lproj/InfoPlist.strings`), nákupy přes App Store (`js/billing.js` podle platformy),
+okraje displeje řeší CSS (`contentInset: never`).
+
+**Na Macu (Romanův nebo manželky) – jednou:**
+1. App Store → nainstalovat **Xcode** (zdarma, ~15 GB), spustit a odsouhlasit licenci.
+2. Node.js 20+ (https://nodejs.org), pak v repu: `npm ci && npm run build:ios && npx cap open ios`.
+3. V Xcode: projekt App → Signing & Capabilities → Team = Apple Developer účet (99 USD/rok), přidat capability **In-App Purchase**.
+   Poprvé přidat do projektu složky `cs.lproj` a `en.lproj` (pravým na App → Add Files…), ať se přeloží text k poloze.
+4. Spustit v simulátoru (iPhone 15) → otestovat; pak Product → Archive → Distribute → App Store Connect → **TestFlight**.
+
+**App Store Connect:** aplikace `com.gream.app`, předplatné ve skupině „Gream Plus“: `gream_plus_monthly` (89 Kč), `gream_plus_yearly` (749 Kč), bez free trial;
+Agreements, Tax and Banking (bankovní účet, W-8BEN); App Privacy podle `STORE_LISTING.md` §4; věková kategorie 4+; Kids category NE (mixed audience).
+Po každé změně webové části: `npm run build:ios` (zkopíruje `www/` do `ios/`).

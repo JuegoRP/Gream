@@ -1,7 +1,7 @@
 // ═══════════════════════════════════
-//  GREAM — billing.js  (Gream Plus přes Google Play Billing – plugin cordova-plugin-purchase 13)
-//  Jen v aplikaci z Google Play (window.CdvPurchase). Na webu / v náhledu je nákup nedostupný.
-//  Produkty v Play Console: předplatné gream_plus_monthly (89 Kč) a gream_plus_yearly (749 Kč).
+//  GREAM — billing.js  (Gream Plus přes Google Play / App Store – plugin cordova-plugin-purchase 13)
+//  Jen v nativní aplikaci (window.CdvPurchase). Na webu / v náhledu je nákup nedostupný.
+//  Produkty (stejná ID v Play Console i App Store Connect): gream_plus_monthly (89 Kč) a gream_plus_yearly (749 Kč).
 //  Ověření nákupu zatím lokálně (bez serverového validátoru); Google Play sám hlídá platnost.
 // ═══════════════════════════════════
 import { Subscription, PRODUCT_IDS, PAYWALL_ENABLED } from './subscription.js';
@@ -18,14 +18,16 @@ export const Billing = {
     if (!PAYWALL_ENABLED || !store() || _ready) return _ready;
     const { ProductType, Platform } = window.CdvPurchase;
     const s = store();
-    s.register(Object.values(PRODUCT_IDS).map(id => ({ id, type: ProductType.PAID_SUBSCRIPTION, platform: Platform.GOOGLE_PLAY })));
+    // iPhone → App Store, jinak Google Play (Capacitor.getPlatform: 'ios' | 'android')
+    const platform = window.Capacitor?.getPlatform?.() === 'ios' ? Platform.APPLE_APPSTORE : Platform.GOOGLE_PLAY;
+    s.register(Object.values(PRODUCT_IDS).map(id => ({ id, type: ProductType.PAID_SUBSCRIPTION, platform })));
     s.when()
       .approved(t => t.verify())
       .verified(r => r.finish())
       .productUpdated(() => this._sync())
       .receiptUpdated(() => this._sync());
     s.error(e => console.warn('[Billing]', e?.code, e?.message));
-    _ready = s.initialize([Platform.GOOGLE_PLAY]).then(() => this._sync()).catch(e => console.warn('[Billing] init', e));
+    _ready = s.initialize([platform]).then(() => this._sync()).catch(e => console.warn('[Billing] init', e));
     return _ready;
   },
 

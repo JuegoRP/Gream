@@ -2176,7 +2176,7 @@ window.App = {
       Přezdívku si volíš ty a je vidět ostatním — nedávej do ní osobní údaje. Nevhodné přezdívky server automaticky nahradí.</p>
 
       <p><strong>Gream Plus (předplatné)</strong><br>
-      Platí se jen přes Google Play – platební údaje zpracovává Google, my je nevidíme. Do hry přijde jen informace, že je předplatné aktivní (uloží se v zařízení). Nákup chrání otázka pro dospělé, zrušit jde kdykoli v Google Play.</p>
+      Platí se jen přes Google Play nebo App Store – platební údaje zpracovává Google / Apple, my je nevidíme. Do hry přijde jen informace, že je předplatné aktivní (uloží se v zařízení). Nákup chrání otázka pro dospělé, zrušit jde kdykoli v nastavení obchodu.</p>
 
       <p><strong>3. Co Gream NEDĚLÁ</strong><br>
       • Žádné reklamy<br>
@@ -2223,7 +2223,7 @@ window.App = {
       You choose your nickname and others can see it — don't put personal details in it. The server automatically replaces inappropriate nicknames.</p>
 
       <p><strong>Gream Plus (subscription)</strong><br>
-      Paid only through Google Play – payment details are handled by Google and we never see them. The game only learns that the subscription is active (stored on the device). Purchases are protected by a question for adults; cancel any time in Google Play.</p>
+      Paid only through Google Play or the App Store – payment details are handled by Google / Apple and we never see them. The game only learns that the subscription is active (stored on the device). Purchases are protected by a question for adults; cancel any time in the store settings.</p>
 
       <p><strong>3. What Gream does NOT do</strong><br>
       • No ads<br>
