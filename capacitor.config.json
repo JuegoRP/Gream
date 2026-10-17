@@ -8,7 +8,7 @@
     "hostname": "app"
   },
   "ios": {
-    "contentInset": "always",
+    "contentInset": "never",
     "scheme": "Gream",
     "backgroundColor": "#cbe3a0"
   },

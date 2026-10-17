@@ -1,0 +1,3 @@
+/* Gream – texty systémových dotazů (česky) */
+"NSLocationWhenInUseUsageDescription" = "Gream používá polohu jen během hraní, aby ukázal výzvy a vajíčka na místech kolem tebe. Přesná poloha nikdy neopustí telefon.";
+"CFBundleDisplayName" = "Gream";
