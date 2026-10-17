@@ -1339,9 +1339,9 @@ window.App = {
         }
       }
     }
-    if (maxX < minX) { // empty
+    if (maxX < minX) { // empty (nebo obrázek ještě nedekódovaný – volající zkusí znovu)
       ctx.clearRect(0, 0, canvasW, canvasH);
-      return;
+      return false;
     }
 
     // Content dimensions with a small padding
@@ -1363,6 +1363,7 @@ window.App = {
       sx + minX - PAD, sy + minY - PAD, cw, ch,  // source: content bbox + padding
       dx, dy, dw, dh                               // dest: centered on canvas
     );
+    return true;
   },
 
   _initSpriteCanvases(root) {
@@ -1380,12 +1381,16 @@ window.App = {
       canvas.style.height = cssH + 'px';
       const img = new Image();
       img.src = src;
-      const draw = () => {
-        const ctx = canvas.getContext('2d');
-        this._drawSpriteCell(ctx, img, sx, sy, cssW * dpr, cssH * dpr, null, canvas.dataset.arch || null, canvas.dataset.shiny === '1');
+      // Kreslit až po dekódování; WebKit (iPhone) občas hlásí obrázek „complete“, ale nakreslí prázdno –
+      // pak by greamík zůstal neviditelný, dokud se zahrada nepřekreslí. Prázdný výsledek → zkusit znovu.
+      const draw = (n = 0) => {
+        if (!canvas.isConnected && n > 0) return;
+        const ok = this._drawSpriteCell(canvas.getContext('2d'), img, sx, sy, cssW * dpr, cssH * dpr, null, canvas.dataset.arch || null, canvas.dataset.shiny === '1');
+        if (!ok && n < 20) setTimeout(() => draw(n + 1), 120);
       };
-      if (img.complete) draw();
-      else { img.onload = draw; img.onerror = () => {}; }
+      const ready = () => (img.decode ? img.decode().catch(() => {}) : Promise.resolve()).then(() => draw());
+      if (img.complete && img.naturalWidth) ready();
+      else { img.onload = ready; img.onerror = () => {}; }
     });
   },
 
@@ -1462,7 +1467,8 @@ window.App = {
       canvas.dataset.shiny = pet.isShiny ? '1' : '';
       const img = new Image();
       img.src = src;
-      const draw = () => this._drawSpriteCell(canvas.getContext('2d'), img, sx, sy, bufW, bufW, null, pet.archetype, !!pet.isShiny);
+      const paint = (n = 0) => { if (!this._drawSpriteCell(canvas.getContext('2d'), img, sx, sy, bufW, bufW, null, pet.archetype, !!pet.isShiny) && n < 20) setTimeout(() => paint(n + 1), 120); };
+      const draw = () => (img.decode ? img.decode().catch(() => {}) : Promise.resolve()).then(() => paint());
       img.onerror = () => {
         // Stage 3/4 not uploaded yet — fall back to stage 2
         const fallback = new Image();
