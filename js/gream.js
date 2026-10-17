@@ -318,32 +318,16 @@ export const Gream = {
     return this.feedFromTask(profileId, world);
   },
 
-  // ─── Decay HP over time, set mood ───
-  // Should be called on app open
+  // ─── Nálada (2026-10-17): greamíci NIKDY nesmutní ani neochabnou zanedbáním – bez „hladu“ a poklesu potřeb.
+  // Nálady řeší js/moods.js jen texty; tady jen srovnat staré uložené „sad“ na happy (vizuál vždy spokojený).
   tickMood(profileId) {
     const data = load();
     const list = data[profileId] || [];
     let changed = false;
     for (const g of list) {
       if (g.archived) continue;
-      if (!g.hp) g.hp = { water:50, sun:50, food:50, love:50, color:50, space:50 };
-      const elapsed = Date.now() - (g.lastFedAt || g.createdAt);
-      // Decay each need by 1 per 6 hours
-      const decayPoints = Math.floor(elapsed / (6 * 60 * 60 * 1000));
-      if (decayPoints > 0) {
-        for (const k of Object.keys(g.hp)) {
-          g.hp[k] = Math.max(0, g.hp[k] - decayPoints);
-        }
-        g.lastDecayAt = Date.now();
-        changed = true;
-      }
-      // Update mood
-      const totalHp = Object.values(g.hp).reduce((a,b) => a+b, 0);
-      const avgHp   = totalHp / Object.keys(g.hp).length;
-      const oldMood = g.mood;
-      if (avgHp < 40) g.mood = 'sad';
-      else            g.mood = 'happy';
-      if (oldMood !== g.mood) changed = true;
+      if (!g.hp) { g.hp = { water:50, sun:50, food:50, love:50, color:50, space:50 }; changed = true; }
+      if (g.mood !== 'happy') { g.mood = 'happy'; changed = true; }
     }
     if (changed) save(data);
   },
