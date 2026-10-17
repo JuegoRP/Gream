@@ -38,6 +38,7 @@ const GARDEN_LAYOUT = {
 };
 const DECOR_ASPECT = { nest: 46 / 78, deco_flowerbed: 0.67, deco_bench: 0.75, deco_lantern: 1.67, deco_birdhouse: 2.77, deco_pond: 0.64, deco_mushroom: 1.14 };
 import { Gream, ARCHETYPES, BASE_ARCHETYPES, eggLeaning, spritePath, smartSpritePath } from './gream.js';
+import { Moods } from './moods.js';
 import { Subscription, FREE } from './subscription.js';
 const NAME_CHANGE_COST = 50;   // semínek za změnu jména (nejvýš jednou za 7 dní)
 import { Paywall } from './paywall.js';
@@ -788,6 +789,7 @@ window.App = {
     }
 
     Gream.tickMood(p.id);
+    Moods.visit(p.id);   // po 2+ dnech pauzy: radost z návratu (nikdy smutek)
 
     let pet = Gream.active(p.id);
     if (!pet) {
@@ -803,7 +805,7 @@ window.App = {
     if (mapAvEl) this._applyAvatarToEl(mapAvEl, fresh);
 
     // Greeting
-    this._setText('mapGreeting', Gream.getGreeting(pet, lang));
+    this._setText('mapGreeting', (pet?.stage >= 2 && Moods.greeting(pet, fresh)) || Gream.getGreeting(pet, lang));
     this._setText('mapName', fresh.name);
     this._setText('streakNum', fresh.streak || 0);
     this._setText('seedNum',   Skins.getSeeds(fresh.id));
@@ -867,7 +869,7 @@ window.App = {
     // ─── Speech bubble greeting ───
     const speech = document.getElementById('greamSpeech');
     if (speech) {
-      speech.textContent = Gream.getGreeting(pet, lang);
+      speech.textContent = (pet?.stage >= 2 && Moods.greeting(pet, fresh)) || Gream.getGreeting(pet, lang);
       speech.classList.add('show');
       setTimeout(() => speech.classList.remove('show'), 4000);
     }
@@ -882,8 +884,9 @@ window.App = {
       this._greamIdleTimer = setInterval(() => {
         const el = document.getElementById('greamSpeech');
         if (!el) { clearInterval(this._greamIdleTimer); return; }
+        const pr = Profiles.active(), g = pr && Gream.active(pr.id);
         const arr = idleLines[getLang()] || idleLines.en;
-        el.textContent = arr[Math.floor(Math.random() * arr.length)];
+        el.textContent = (g && Moods.idle(g, pr)) || arr[Math.floor(Math.random() * arr.length)];
         el.classList.add('show');
         setTimeout(() => el.classList.remove('show'), 2500);
       }, 18000 + Math.random() * 14000);
@@ -1159,7 +1162,7 @@ window.App = {
     (this._gardenLife?.actors || []).forEach(a => { a.active = a.id === g.id; this._gardenLife._place(a); });
     const egg = g.stage < 2 || !g.archetype;
     this._setText('greamDisplayName', egg ? (lang === 'cs' ? '🌱 Záhadné vajíčko' : '🌱 Mystery egg') : Gream.getDisplayName(g, lang));
-    this._setText('mapGreeting', Gream.getGreeting(g, lang));
+    this._setText('mapGreeting', (g.stage >= 2 && Moods.greeting(g, Profiles.active())) || Gream.getGreeting(g, lang));
     this._gardenLife?.poke(g.id);
     if (g.archetype && g.stage >= 2) Audio.playCry(g.archetype, g.stage);
   },
@@ -1528,10 +1531,21 @@ window.App = {
         en: ['Hehehe!', "That tickles!", 'Again!', 'Hi!', '<3']
       };
       const arr = tapLines[lang] || tapLines.cs;
-      speech.textContent = arr[Math.floor(Math.random() * arr.length)];
+      speech.textContent = (pet.stage >= 2 && Moods.tap(pet, p)) || arr[Math.floor(Math.random() * arr.length)];
       speech.classList.add('show');
-      setTimeout(() => speech.classList.remove('show'), 1500);
+      setTimeout(() => speech.classList.remove('show'), 2200);
     }
+    // Popisek nálady pod jménem jen po klepnutí (Roman 2026-10-17), na chvíli
+    if (pet.stage >= 2) this._showMoodLabel(Moods.label(pet, p));
+  },
+
+  _showMoodLabel(text) {
+    const nameEl = document.getElementById('greamDisplayName');
+    if (!nameEl || !text) return;
+    let el = document.getElementById('greamMoodLbl');
+    if (!el) { el = document.createElement('div'); el.id = 'greamMoodLbl'; el.className = 'gream-mood-lbl'; nameEl.after(el); }
+    el.textContent = text; el.classList.add('show');
+    clearTimeout(this._moodLblT); this._moodLblT = setTimeout(() => el.classList.remove('show'), 2800);
   },
 
   // ─── Helper: time until midnight ───
@@ -2406,14 +2420,11 @@ window.App = {
     const p = Profiles.active();
     if (!p) return;
     const lang = getLang();
-    if (Skins.getSeeds(p.id) < 1) {
-      this._showToast(lang === 'cs' ? '🌱 Nemáš semínka!' : '🌱 No seeds!');
-      return;
-    }
-    Skins.spendSeeds(p.id, 1);
+    // Pamlsek je zdarma a dobrovolný (2026-10-17) – žádná povinnost ani placení semínky
     Gream.manualFeed(p.id);
     Feedback.pop();
-    this._setText('seedNum', Skins.getSeeds(p.id));
+    const sp = document.getElementById('greamSpeech');
+    if (sp) { sp.textContent = Moods.fed(); sp.classList.add('show'); setTimeout(() => sp.classList.remove('show'), 2000); }
 
     const stage = document.getElementById('greamStage');
     if (stage) {
@@ -2437,6 +2448,7 @@ window.App = {
 
   // ─── Chat bubbles when 2+ greams are present ───
   _startGardenChat(hatchedGreams, lang) {
+    if (Moods.sleeping()) { this._chatTimer = setTimeout(() => this._startGardenChat(hatchedGreams, lang), 60000); return; }   // v noci spí
     const chatLines = {
       cs: [['Ahoj!','Čau!'],['Jak se máš?','Super!'],['Pojď si hrát!','Jdu!'],['Dnes bylo hezky','Hmm!'],['✨','🌱']],
       en: [['Hello!','Hi there!'],['How are you?','Great!'],['Let\'s play!','Coming!'],['Nice day','Hmm!'],['✨','🌱']]

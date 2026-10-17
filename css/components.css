@@ -1803,3 +1803,6 @@ canvas.aura, #greamSpriteCanvas.aura { filter:drop-shadow(0 0 4px #ffd84d) drop-
 /* Nahlásit otázku i po odpovědi (výzva, správně/špatně, přehled po souboji) */
 .report-link { display:block; margin:var(--space-2) auto 0; padding:6px 10px; background:none; border:none; color:#9a9a9a; font-family:inherit; font-weight:700; font-size:12px; cursor:pointer; }
 .report-link.small { display:inline-block; margin:4px 0 0; padding:2px 0; font-size:11px; }
+/* Nálada greamíka – jen chvíli po klepnutí */
+.gream-mood-lbl { text-align:center; font-size:var(--text-sm); font-weight:800; color:var(--green-mid); min-height:0; height:0; opacity:0; overflow:hidden; transition:opacity .3s, height .3s; }
+.gream-mood-lbl.show { opacity:1; height:20px; }
